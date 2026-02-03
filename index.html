@@ -319,16 +319,17 @@
             </p>
 
             <div class="flex flex-wrap gap-4">
-              <button
+              <a
+                href="#menu"
                 class="bg-primary hover:bg-primary-dark text-white px-8 py-4 lg:px-12 rounded-full font-medium transition-all shadow-lg hover:shadow-xl flex items-center gap-2"
               >
                 Explore Food
-              </button>
-              <button
-                class="bg-white hover:bg-gray-50 text-dark px-8 py-4 lg:px-12 rounded-full font-medium transition-all border-2 border-dark/10 flex items-center gap-2"
-              >
-                🔍 Search
-              </button>
+              </a>
+              <input
+                type="text"
+                placeholder="Search"
+                class="bg-white hover:bg-gray-50 text-dark px-8 py-4 rounded-full font-medium transition-all border-2 border-dark/10 flex items-center gap-2"
+              />
             </div>
           </div>
 
@@ -491,7 +492,7 @@
                 <div class="flex items-center justify-between">
                   <span class="font-display text-2xl text-dark">₹35.00</span>
                   <button
-                    class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all"
+                    class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full border-primary border-2 font-medium transition-all"
                   >
                     Add to Cart
                   </button>
@@ -528,7 +529,7 @@
                 <div class="flex items-center justify-between">
                   <span class="font-display text-2xl text-dark">₹55.00</span>
                   <button
-                    class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all"
+                    class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full border-primary border-2 font-medium transition-all"
                   >
                     Add to Cart
                   </button>
@@ -565,7 +566,7 @@
                 <div class="flex items-center justify-between">
                   <span class="font-display text-2xl text-dark">₹35.00</span>
                   <button
-                    class="bg-primary hover:bg-primary-dark text-white px-6 py-2 rounded-full font-medium transition-all"
+                    class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full border-primary border-2 font-medium transition-all"
                   >
                     Add to Cart
                   </button>
@@ -602,7 +603,7 @@
                 <div class="flex items-center justify-between">
                   <span class="font-display text-2xl text-dark">₹35.00</span>
                   <button
-                    class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all"
+                    class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full border-primary border-2 font-medium transition-all"
                   >
                     Add to Cart
                   </button>
@@ -639,7 +640,7 @@
                 <div class="flex items-center justify-between">
                   <span class="font-display text-2xl text-dark">₹55.00</span>
                   <button
-                    class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all"
+                    class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full border-primary border-2 font-medium transition-all"
                   >
                     Add to Cart
                   </button>
@@ -676,7 +677,7 @@
                 <div class="flex items-center justify-between">
                   <span class="font-display text-2xl text-dark">₹35.00</span>
                   <button
-                    class="bg-primary hover:bg-primary-dark text-white px-6 py-2 rounded-full font-medium transition-all"
+                    class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full border-primary border-2 font-medium transition-all"
                   >
                     Add to Cart
                   </button>
@@ -775,43 +776,43 @@
         <!-- Category Filter -->
         <div class="flex flex-wrap justify-center gap-3 mb-12">
           <button
-            class="category-btn active bg-primary text-white px-6 py-3 rounded-full font-medium transition-all"
+            class="category-btn active bg-primary text-white px-6 py-3 rounded-full border-primary border-2 font-medium transition-all"
             data-category="breakfast"
           >
             Breakfast
           </button>
           <button
-            class="category-btn bg-cream hover:bg-primary hover:text-white px-6 py-3 rounded-full font-medium transition-all"
+            class="category-btn bg-cream hover:bg-primary hover:text-white px-6 py-3 rounded-full border-primary border-2 font-medium transition-all"
             data-category="noodles"
           >
             Noodles
           </button>
           <button
-            class="category-btn bg-cream hover:bg-primary hover:text-white px-6 py-3 rounded-full font-medium transition-all"
+            class="category-btn bg-cream hover:bg-primary hover:text-white px-6 py-3 rounded-full border-primary border-2 font-medium transition-all"
             data-category="salad"
           >
             Salad
           </button>
           <button
-            class="category-btn bg-cream hover:bg-primary hover:text-white px-6 py-3 rounded-full font-medium transition-all"
+            class="category-btn bg-cream hover:bg-primary hover:text-white px-6 py-3 rounded-full border-primary border-2 font-medium transition-all"
             data-category="japanese"
           >
             Japanese
           </button>
           <button
-            class="category-btn bg-cream hover:bg-primary hover:text-white px-6 py-3 rounded-full font-medium transition-all"
+            class="category-btn bg-cream hover:bg-primary hover:text-white px-6 py-3 rounded-full border-primary border-2 font-medium transition-all"
             data-category="drinks"
           >
             Drinks
           </button>
           <button
-            class="category-btn bg-cream hover:bg-primary hover:text-white px-6 py-3 rounded-full font-medium transition-all"
+            class="category-btn bg-cream hover:bg-primary hover:text-white px-6 py-3 rounded-full border-primary border-2 font-medium transition-all"
             data-category="lunch"
           >
             Lunch
           </button>
           <button
-            class="category-btn bg-cream hover:bg-primary hover:text-white px-6 py-3 rounded-full font-medium transition-all"
+            class="category-btn bg-cream hover:bg-primary hover:text-white px-6 py-3 rounded-full border-primary border-2 font-medium transition-all"
             data-category="mini-breakfast"
           >
             Mini breakfast
@@ -848,7 +849,7 @@
             <div class="flex items-center justify-between">
               <span class="font-display text-2xl text-dark">₹12.00</span>
               <button
-                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full border-primary border-2 font-medium transition-all text-sm"
               >
                 Add to Cart
               </button>
@@ -881,7 +882,7 @@
             <div class="flex items-center justify-between">
               <span class="font-display text-2xl text-dark">₹5.00</span>
               <button
-                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full border-primary border-2 font-medium transition-all text-sm"
               >
                 Add to Cart
               </button>
@@ -914,7 +915,7 @@
             <div class="flex items-center justify-between">
               <span class="font-display text-2xl text-dark">₹8.00</span>
               <button
-                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full border-primary border-2 font-medium transition-all text-sm"
               >
                 Add to Cart
               </button>
@@ -947,7 +948,7 @@
             <div class="flex items-center justify-between">
               <span class="font-display text-2xl text-dark">₹12.00</span>
               <button
-                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full border-primary border-2 font-medium transition-all text-sm"
               >
                 Add to Cart
               </button>
@@ -982,7 +983,7 @@
             <div class="flex items-center justify-between">
               <span class="font-display text-2xl text-dark">₹22.00</span>
               <button
-                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full border-primary border-2 font-medium transition-all text-sm"
               >
                 Add to Cart
               </button>
@@ -1015,7 +1016,7 @@
             <div class="flex items-center justify-between">
               <span class="font-display text-2xl text-dark">₹20.00</span>
               <button
-                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full border-primary border-2 font-medium transition-all text-sm"
               >
                 Add to Cart
               </button>
@@ -1048,7 +1049,7 @@
             <div class="flex items-center justify-between">
               <span class="font-display text-2xl text-dark">₹19.00</span>
               <button
-                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full border-primary border-2 font-medium transition-all text-sm"
               >
                 Add to Cart
               </button>
@@ -1081,7 +1082,7 @@
             <div class="flex items-center justify-between">
               <span class="font-display text-2xl text-dark">₹18.00</span>
               <button
-                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full border-primary border-2 font-medium transition-all text-sm"
               >
                 Add to Cart
               </button>
@@ -1116,7 +1117,7 @@
             <div class="flex items-center justify-between">
               <span class="font-display text-2xl text-dark">₹16.00</span>
               <button
-                class="bg-primary hover:bg-primary-dark text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+                class="bg-primary hover:bg-primary-dark text-white px-6 py-2 rounded-full border-primary border-2 font-medium transition-all text-sm"
               >
                 Add to Cart
               </button>
@@ -1147,7 +1148,7 @@
             <div class="flex items-center justify-between">
               <span class="font-display text-2xl text-dark">₹15.00</span>
               <button
-                class="bg-primary hover:bg-primary-dark text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+                class="bg-primary hover:bg-primary-dark text-white px-6 py-2 rounded-full border-primary border-2 font-medium transition-all text-sm"
               >
                 Add to Cart
               </button>
@@ -1178,7 +1179,7 @@
             <div class="flex items-center justify-between">
               <span class="font-display text-2xl text-dark">₹18.00</span>
               <button
-                class="bg-primary hover:bg-primary-dark text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+                class="bg-primary hover:bg-primary-dark text-white px-6 py-2 rounded-full border-primary border-2 font-medium transition-all text-sm"
               >
                 Add to Cart
               </button>
@@ -1211,7 +1212,7 @@
             <div class="flex items-center justify-between">
               <span class="font-display text-2xl text-dark">₹17.00</span>
               <button
-                class="bg-primary hover:bg-primary-dark text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+                class="bg-primary hover:bg-primary-dark text-white px-6 py-2 rounded-full border-primary border-2 font-medium transition-all text-sm"
               >
                 Add to Cart
               </button>
@@ -1244,7 +1245,7 @@
             <div class="flex items-center justify-between">
               <span class="font-display text-2xl text-dark">₹30.00</span>
               <button
-                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full border-primary border-2 font-medium transition-all text-sm"
               >
                 Add to Cart
               </button>
@@ -1275,7 +1276,7 @@
             <div class="flex items-center justify-between">
               <span class="font-display text-2xl text-dark">₹24.00</span>
               <button
-                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full border-primary border-2 font-medium transition-all text-sm"
               >
                 Add to Cart
               </button>
@@ -1308,7 +1309,7 @@
             <div class="flex items-center justify-between">
               <span class="font-display text-2xl text-dark">₹28.00</span>
               <button
-                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full border-primary border-2 font-medium transition-all text-sm"
               >
                 Add to Cart
               </button>
@@ -1341,7 +1342,7 @@
             <div class="flex items-center justify-between">
               <span class="font-display text-2xl text-dark">₹20.00</span>
               <button
-                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full border-primary border-2 font-medium transition-all text-sm"
               >
                 Add to Cart
               </button>
@@ -1374,7 +1375,7 @@
             <div class="flex items-center justify-between">
               <span class="font-display text-2xl text-dark">₹6.00</span>
               <button
-                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full border-primary border-2 font-medium transition-all text-sm"
               >
                 Add to Cart
               </button>
@@ -1405,7 +1406,7 @@
             <div class="flex items-center justify-between">
               <span class="font-display text-2xl text-dark">₹8.00</span>
               <button
-                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full border-primary border-2 font-medium transition-all text-sm"
               >
                 Add to Cart
               </button>
@@ -1438,7 +1439,7 @@
             <div class="flex items-center justify-between">
               <span class="font-display text-2xl text-dark">₹9.00</span>
               <button
-                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full border-primary border-2 font-medium transition-all text-sm"
               >
                 Add to Cart
               </button>
@@ -1469,7 +1470,7 @@
             <div class="flex items-center justify-between">
               <span class="font-display text-2xl text-dark">₹7.00</span>
               <button
-                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full border-primary border-2 font-medium transition-all text-sm"
               >
                 Add to Cart
               </button>
@@ -1504,7 +1505,7 @@
             <div class="flex items-center justify-between">
               <span class="font-display text-2xl text-dark">₹15.00</span>
               <button
-                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full border-primary border-2 font-medium transition-all text-sm"
               >
                 Add to Cart
               </button>
@@ -1535,7 +1536,7 @@
             <div class="flex items-center justify-between">
               <span class="font-display text-2xl text-dark">₹12.00</span>
               <button
-                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full border-primary border-2 font-medium transition-all text-sm"
               >
                 Add to Cart
               </button>
@@ -1566,7 +1567,7 @@
             <div class="flex items-center justify-between">
               <span class="font-display text-2xl text-dark">₹25.00</span>
               <button
-                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full border-primary border-2 font-medium transition-all text-sm"
               >
                 Add to Cart
               </button>
@@ -1597,7 +1598,7 @@
             <div class="flex items-center justify-between">
               <span class="font-display text-2xl text-dark">₹16.00</span>
               <button
-                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full border-primary border-2 font-medium transition-all text-sm"
               >
                 Add to Cart
               </button>
@@ -1632,7 +1633,7 @@
             <div class="flex items-center justify-between">
               <span class="font-display text-2xl text-dark">₹5.00</span>
               <button
-                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full border-primary border-2 font-medium transition-all text-sm"
               >
                 Add to Cart
               </button>
@@ -1665,7 +1666,7 @@
             <div class="flex items-center justify-between">
               <span class="font-display text-2xl text-dark">₹4.00</span>
               <button
-                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full border-primary border-2 font-medium transition-all text-sm"
               >
                 Add to Cart
               </button>
@@ -1698,7 +1699,7 @@
             <div class="flex items-center justify-between">
               <span class="font-display text-2xl text-dark">₹12.00</span>
               <button
-                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full border-primary border-2 font-medium transition-all text-sm"
               >
                 Add to Cart
               </button>
@@ -1731,7 +1732,7 @@
             <div class="flex items-center justify-between">
               <span class="font-display text-2xl text-dark">₹8.00</span>
               <button
-                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full border-primary border-2 font-medium transition-all text-sm"
               >
                 Add to Cart
               </button>
@@ -1757,7 +1758,7 @@
               reservation.
             </p>
             <button
-              class="bg-primary hover:bg-primary-dark text-white px-8 py-4 rounded-full font-medium transition-all shadow-lg hover:shadow-xl"
+              class="bg-primary hover:bg-primary-dark text-white px-8 py-4 rounded-full border-primary border-2 font-medium transition-all shadow-lg hover:shadow-xl"
             >
               Book a Table
             </button>
