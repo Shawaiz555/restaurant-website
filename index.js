@@ -246,24 +246,6 @@ document.addEventListener('DOMContentLoaded', function () {
       lastScroll = currentScroll;
    });
 
-   // ===== Add to Cart Functionality =====
-   const addToCartButtons = document.querySelectorAll('[class*="Add to Cart"]');
-   let cartCount = 0;
-
-   // This is a simple demo - in production, you'd use a proper cart system
-   function addToCart(productName, price) {
-      cartCount++;
-
-      // Show a simple notification
-      showNotification(`Added ${productName} to cart!`);
-
-      // Update cart badge if it exists
-      const cartBadge = document.querySelector('.cart-badge');
-      if (cartBadge) {
-         cartBadge.textContent = cartCount;
-      }
-   }
-
    // ===== Notification System =====
    function showNotification(message, type = 'success') {
       // Create notification element
@@ -286,6 +268,226 @@ document.addEventListener('DOMContentLoaded', function () {
          }, 300);
       }, 3000);
    }
+
+   // ===== Shopping Cart Functionality =====
+   let cart = storage.get('cart') || [];
+   const TAX_RATE = 0.18; // 18% GST
+
+   // Cart elements
+   const cartBtn = document.getElementById('cartBtn');
+   const cartDrawer = document.getElementById('cartDrawer');
+   const closeCartBtn = document.getElementById('closeCartBtn');
+   const cartBadge = document.getElementById('cartBadge');
+   const cartItemCount = document.getElementById('cartItemCount');
+   const cartItems = document.getElementById('cartItems');
+   const cartItemsContainer = document.getElementById('cartItemsContainer');
+   const emptyCartMessage = document.getElementById('emptyCartMessage');
+   const cartFooter = document.getElementById('cartFooter');
+   const cartSubtotal = document.getElementById('cartSubtotal');
+   const cartTax = document.getElementById('cartTax');
+   const cartTotal = document.getElementById('cartTotal');
+   const placeOrderBtn = document.getElementById('placeOrderBtn');
+
+   // Toggle cart drawer
+   function toggleCart() {
+      cartDrawer.classList.toggle('active');
+      overlay.classList.toggle('active');
+      document.body.style.overflow = cartDrawer.classList.contains('active') ? 'hidden' : '';
+   }
+
+   cartBtn.addEventListener('click', toggleCart);
+   closeCartBtn.addEventListener('click', toggleCart);
+
+   // Close cart when clicking overlay (only if mobile menu is not active)
+   overlay.addEventListener('click', function() {
+      if (cartDrawer.classList.contains('active')) {
+         toggleCart();
+      }
+   });
+
+   // Close cart on escape key
+   document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && cartDrawer.classList.contains('active')) {
+         toggleCart();
+      }
+   });
+
+   // Add item to cart
+   function addToCart(product) {
+      const existingItem = cart.find(item => item.id === product.id);
+
+      if (existingItem) {
+         existingItem.quantity += 1;
+      } else {
+         cart.push({
+            ...product,
+            quantity: 1
+         });
+      }
+
+      storage.set('cart', cart);
+      updateCart();
+      showNotification(`Added ${product.name} to cart!`);
+   }
+
+   // Remove item from cart
+   function removeFromCart(productId) {
+      cart = cart.filter(item => item.id !== productId);
+      storage.set('cart', cart);
+      updateCart();
+      showNotification('Item removed from cart', 'info');
+   }
+
+   // Update item quantity
+   function updateQuantity(productId, change) {
+      const item = cart.find(item => item.id === productId);
+
+      if (item) {
+         item.quantity += change;
+
+         if (item.quantity <= 0) {
+            removeFromCart(productId);
+         } else {
+            storage.set('cart', cart);
+            updateCart();
+         }
+      }
+   }
+
+   // Calculate cart totals
+   function calculateTotals() {
+      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const tax = subtotal * TAX_RATE;
+      const total = subtotal + tax;
+
+      return { subtotal, tax, total };
+   }
+
+   // Update cart UI
+   function updateCart() {
+      const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+      // Update badge
+      if (itemCount > 0) {
+         cartBadge.textContent = itemCount;
+         cartBadge.classList.remove('hidden');
+      } else {
+         cartBadge.classList.add('hidden');
+      }
+
+      // Update item count
+      cartItemCount.textContent = `(${itemCount})`;
+
+      // Update cart items display
+      if (cart.length === 0) {
+         emptyCartMessage.classList.remove('hidden');
+         cartItems.classList.add('hidden');
+         cartFooter.classList.add('hidden');
+      } else {
+         emptyCartMessage.classList.add('hidden');
+         cartItems.classList.remove('hidden');
+         cartFooter.classList.remove('hidden');
+
+         // Render cart items
+         cartItems.innerHTML = cart.map(item => `
+            <div class="cart-item bg-cream-light rounded-2xl p-4 flex gap-4">
+               <img src="${item.image}" alt="${item.name}" class="cart-item-image">
+               <div class="flex-1">
+                  <h4 class="font-display text-lg text-dark mb-1">${item.name}</h4>
+                  <p class="text-primary font-medium mb-3">₹${item.price.toFixed(2)}</p>
+
+                  <!-- Quantity Controls -->
+                  <div class="flex items-center gap-3">
+                     <button onclick="updateQuantity('${item.id}', -1)" class="quantity-btn">
+                        <span class="text-lg font-bold">−</span>
+                     </button>
+                     <span class="font-medium text-dark w-8 text-center">${item.quantity}</span>
+                     <button onclick="updateQuantity('${item.id}', 1)" class="quantity-btn">
+                        <span class="text-lg font-bold">+</span>
+                     </button>
+                     <button onclick="removeFromCart('${item.id}')" class="ml-auto remove-item-btn text-xl" title="Remove item">
+                        🗑️
+                     </button>
+                  </div>
+               </div>
+               <div class="text-right">
+                  <p class="font-display text-lg text-dark">₹${(item.price * item.quantity).toFixed(2)}</p>
+               </div>
+            </div>
+         `).join('');
+      }
+
+      // Update totals
+      const { subtotal, tax, total } = calculateTotals();
+      cartSubtotal.textContent = `₹${subtotal.toFixed(2)}`;
+      cartTax.textContent = `₹${tax.toFixed(2)}`;
+      cartTotal.textContent = `₹${total.toFixed(2)}`;
+   }
+
+   // Place order
+   placeOrderBtn.addEventListener('click', function() {
+      if (cart.length === 0) return;
+
+      const { total } = calculateTotals();
+      showNotification(`Order placed successfully! Total: ₹${total.toFixed(2)}`, 'success');
+
+      // Clear cart
+      cart = [];
+      storage.set('cart', cart);
+      updateCart();
+
+      // Close drawer after a short delay
+      setTimeout(() => {
+         if (cartDrawer.classList.contains('active')) {
+            toggleCart();
+         }
+      }, 1500);
+   });
+
+   // Make functions globally available for onclick handlers
+   window.updateQuantity = updateQuantity;
+   window.removeFromCart = removeFromCart;
+
+   // Add to cart button click handler using event delegation
+   document.addEventListener('click', function(e) {
+      const addToCartBtn = e.target.closest('button');
+
+      if (addToCartBtn && addToCartBtn.textContent.trim() === 'Add to Cart') {
+         // Find the product details from the parent card
+         const productCard = addToCartBtn.closest('.swiper-slide, .menu-item');
+
+         if (productCard) {
+            const productName = productCard.querySelector('h3')?.textContent.trim();
+            const imageUrl = productCard.querySelector('img')?.src;
+
+            // Find the price span - it's the sibling of the button in the same flex container
+            const priceElement = addToCartBtn.parentElement?.querySelector('.font-display');
+            const priceText = priceElement?.textContent.trim();
+
+            // Extract price number from text like "₹35.00"
+            const price = parseFloat(priceText?.replace('₹', '').replace(',', '') || '0');
+
+            // Create unique ID from name
+            const productId = productName?.toLowerCase().replace(/\s+/g, '-') || Math.random().toString(36);
+
+            if (productName && price && imageUrl) {
+               const product = {
+                  id: productId,
+                  name: productName,
+                  price: price,
+                  image: imageUrl
+               };
+
+               addToCart(product);
+            } else {
+               console.log('Missing product data:', { productName, price, imageUrl, priceText });
+            }
+         }
+      }
+   });
+
+   // Initialize cart on page load
+   updateCart();
 
    // ===== Form Validation (if you add forms later) =====
    function validateEmail(email) {

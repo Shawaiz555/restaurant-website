@@ -106,9 +106,15 @@
           <!-- Right Side -->
           <div class="flex items-center gap-4">
             <button
-              class="w-10 h-10 rounded-full border-2 border-dark/10 flex items-center justify-center hover:bg-primary hover:border-primary transition-all"
+              id="cartBtn"
+              class="relative w-10 h-10 rounded-full border-2 border-dark/10 flex items-center justify-center hover:bg-primary hover:border-primary transition-all"
             >
               🛒
+              <span
+                id="cartBadge"
+                class="absolute -top-1 -right-1 bg-primary text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center hidden"
+                >0</span
+              >
             </button>
             <button
               class="hidden lg:block bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-full font-medium transition-all shadow-lg hover:shadow-xl"
@@ -195,6 +201,87 @@
       id="overlay"
       class="fixed inset-0 bg-black/50 z-30 opacity-0 pointer-events-none transition-opacity duration-300"
     ></div>
+
+    <!-- Cart Drawer -->
+    <div
+      id="cartDrawer"
+      class="fixed top-0 right-0 h-full w-full sm:w-96 bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-300 flex flex-col"
+    >
+      <!-- Cart Header -->
+      <div
+        class="p-6 border-b border-gray-200 flex items-center justify-between bg-cream-light"
+      >
+        <h2 class="font-display text-2xl text-dark flex items-center gap-2">
+          <span>🛒</span>
+          <span>Your Cart</span>
+          <span id="cartItemCount" class="text-lg text-primary">(0)</span>
+        </h2>
+        <button
+          id="closeCartBtn"
+          class="w-10 h-10 rounded-full hover:bg-cream transition-all flex items-center justify-center text-2xl"
+        >
+          ✕
+        </button>
+      </div>
+
+      <!-- Cart Items Container -->
+      <div id="cartItemsContainer" class="flex-1 overflow-y-auto p-6">
+        <!-- Empty Cart Message -->
+        <div
+          id="emptyCartMessage"
+          class="flex flex-col items-center justify-center h-full text-center"
+        >
+          <div class="text-6xl mb-4">🛒</div>
+          <h3 class="font-display text-xl text-dark mb-2">
+            Your cart is empty
+          </h3>
+          <p class="text-dark-gray text-sm">
+            Add some delicious items to get started!
+          </p>
+        </div>
+
+        <!-- Cart Items will be dynamically inserted here -->
+        <div id="cartItems" class="space-y-4 hidden"></div>
+      </div>
+
+      <!-- Cart Footer -->
+      <div
+        id="cartFooter"
+        class="border-t border-gray-200 bg-cream-light p-6 hidden"
+      >
+        <!-- Subtotal -->
+        <div class="flex justify-between items-center mb-3">
+          <span class="text-dark-gray font-medium">Subtotal</span>
+          <span id="cartSubtotal" class="font-display text-xl text-dark"
+            >₹0.00</span
+          >
+        </div>
+
+        <!-- Tax (18% GST) -->
+        <div class="flex justify-between items-center mb-3">
+          <span class="text-dark-gray text-sm">Tax (18% GST)</span>
+          <span id="cartTax" class="text-dark-gray text-sm">₹0.00</span>
+        </div>
+
+        <!-- Total -->
+        <div
+          class="flex justify-between items-center mb-6 pt-3 border-t border-gray-300"
+        >
+          <span class="font-display text-lg text-dark">Total</span>
+          <span id="cartTotal" class="font-display text-2xl text-primary"
+            >₹0.00</span
+          >
+        </div>
+
+        <!-- Order Button -->
+        <button
+          id="placeOrderBtn"
+          class="w-full bg-primary hover:bg-primary-dark text-white py-4 rounded-full font-display text-lg transition-all shadow-lg hover:shadow-xl"
+        >
+          Place Order
+        </button>
+      </div>
+    </div>
 
     <!-- Hero Section -->
     <section id="home" class="pt-20 pb-20 lg:pt-28 lg:pb-20 overflow-hidden">
