@@ -1,0 +1,2050 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bites - Restaurant Landing Page</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Swiper CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Righteous&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="index.css" />
+
+    <!-- Tailwind Config -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#F4A340",
+              "primary-dark": "#E89530",
+              cream: "#FFF8F0",
+              "cream-light": "#FFFBF5",
+              dark: "#1E1E1E",
+              "dark-gray": "#4A4A4A",
+            },
+            fontFamily: {
+              display: ["Righteous", "cursive"],
+              body: ["Poppins", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="font-body bg-cream-light text-dark">
+    <!-- Navigation -->
+    <nav
+      class="fixed top-0 left-0 right-0 bg-cream-light/95 backdrop-blur-sm z-50 shadow-sm"
+    >
+      <div class="container mx-auto px-6 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-20">
+          <!-- Logo -->
+          <div class="flex items-center gap-2">
+            <div
+              class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-2xl"
+            >
+              🍽️
+            </div>
+            <span class="font-display text-2xl text-dark">Bites</span>
+          </div>
+
+          <!-- Desktop Menu -->
+          <div class="hidden lg:flex items-center gap-8">
+            <a
+              href="#home"
+              class="text-dark hover:text-primary transition-colors font-medium"
+              >About Us</a
+            >
+            <a
+              href="#menu"
+              class="text-dark hover:text-primary transition-colors font-medium"
+              >Menu</a
+            >
+            <a
+              href="#reviews"
+              class="text-dark hover:text-primary transition-colors font-medium"
+              >Reviews</a
+            >
+            <a
+              href="#cheffs"
+              class="text-dark hover:text-primary transition-colors font-medium"
+              >Cheffs</a
+            >
+            <a
+              href="#contact"
+              class="text-dark hover:text-primary transition-colors font-medium"
+              >Contacts</a
+            >
+          </div>
+
+          <!-- Right Side -->
+          <div class="flex items-center gap-4">
+            <button
+              class="w-10 h-10 rounded-full border-2 border-dark/10 flex items-center justify-center hover:bg-primary hover:border-primary transition-all"
+            >
+              🛒
+            </button>
+            <button
+              class="hidden lg:block bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-full font-medium transition-all shadow-lg hover:shadow-xl"
+            >
+              Reserve Table
+            </button>
+
+            <!-- Mobile Menu Button -->
+            <button
+              id="menuBtn"
+              class="lg:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5"
+            >
+              <span class="menu-line w-6 h-0.5 bg-dark transition-all"></span>
+              <span class="menu-line w-6 h-0.5 bg-dark transition-all"></span>
+              <span class="menu-line w-6 h-0.5 bg-dark transition-all"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Mobile Drawer -->
+    <div
+      id="mobileDrawer"
+      class="fixed top-0 left-0 h-full w-80 bg-white shadow-2xl z-40 transform -translate-x-full transition-transform duration-300"
+    >
+      <div class="p-8">
+        <div class="flex items-center gap-2 mb-12">
+          <div
+            class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-2xl"
+          >
+            🍕
+          </div>
+          <span class="font-display text-2xl text-dark">Bites</span>
+        </div>
+
+        <div class="flex flex-col gap-6">
+          <a
+            href="#home"
+            class="text-dark hover:text-primary transition-colors font-medium text-lg drawer-link"
+            >About Us</a
+          >
+          <a
+            href="#menu"
+            class="text-dark hover:text-primary transition-colors font-medium text-lg drawer-link"
+            >Menu</a
+          >
+          <a
+            href="#reviews"
+            class="text-dark hover:text-primary transition-colors font-medium text-lg drawer-link"
+            >Reviews</a
+          >
+          <a
+            href="#cheffs"
+            class="text-dark hover:text-primary transition-colors font-medium text-lg drawer-link"
+            >Cheffs</a
+          >
+          <a
+            href="#contact"
+            class="text-dark hover:text-primary transition-colors font-medium text-lg drawer-link"
+            >Contacts</a
+          >
+          <button
+            class="bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-full font-medium transition-all mt-4"
+          >
+            Reserve Table
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Overlay -->
+    <div
+      id="overlay"
+      class="fixed inset-0 bg-black/50 z-30 opacity-0 pointer-events-none transition-opacity duration-300"
+    ></div>
+
+    <!-- Hero Section -->
+    <section id="home" class="pt-20 pb-20 lg:pt-28 lg:pb-20 overflow-hidden">
+      <div class="container mx-auto px-6 sm:px-6 lg:px-8">
+        <div
+          class="flex flex-col-reverse lg:grid lg:grid-cols-2 gap-5 items-center"
+        >
+          <!-- Left Content -->
+          <div class="relative">
+            <!-- Decorative Pattern -->
+            <div class="absolute -top-10 -left-10 w-20 h-20 opacity-20">
+              <div class="grid grid-cols-3 gap-2">
+                <div class="w-2 h-2 rounded-full bg-primary"></div>
+                <div class="w-2 h-2 rounded-full bg-primary"></div>
+                <div class="w-2 h-2 rounded-full bg-primary"></div>
+                <div class="w-2 h-2 rounded-full bg-primary"></div>
+                <div class="w-2 h-2 rounded-full bg-primary"></div>
+                <div class="w-2 h-2 rounded-full bg-primary"></div>
+                <div class="w-2 h-2 rounded-full bg-primary"></div>
+                <div class="w-2 h-2 rounded-full bg-primary"></div>
+                <div class="w-2 h-2 rounded-full bg-primary"></div>
+              </div>
+            </div>
+
+            <h1
+              class="font-display text-5xl lg:text-6xl xl:text-7xl leading-tight mb-6"
+            >
+              We Serve The Test You Love 😋
+            </h1>
+
+            <p class="text-dark-gray text-lg mb-8 max-w-lg">
+              This is a type of restaurant which typically serves food and
+              drinks, in addition to light refreshments such as baked goods or
+              snacks. The term comes from the ranch word meaning food.
+            </p>
+
+            <div class="flex flex-wrap gap-4">
+              <button
+                class="bg-primary hover:bg-primary-dark text-white px-8 py-4 lg:px-12 rounded-full font-medium transition-all shadow-lg hover:shadow-xl flex items-center gap-2"
+              >
+                Explore Food
+              </button>
+              <button
+                class="bg-white hover:bg-gray-50 text-dark px-8 py-4 lg:px-12 rounded-full font-medium transition-all border-2 border-dark/10 flex items-center gap-2"
+              >
+                🔍 Search
+              </button>
+            </div>
+          </div>
+
+          <!-- Right Content -->
+          <div
+            class="relative min-h-[500px] lg:min-h-[600px] flex items-center justify-center"
+          >
+            <!-- Decorative Circle -->
+            <div
+              class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-w-lg md:max-w-xl lg:max-w-2xl rounded-full bg-cream border-4 border-gray-200 -z-10"
+            ></div>
+
+            <!-- Main Content Container -->
+            <div class="relative w-full max-w-5xl mx-auto">
+              <!-- Food Image -->
+              <div class="relative z-10 px-4 md:px-8 lg:px-12">
+                <img
+                  src="/assets/images/FoodPlateImg.png"
+                  alt="Delicious biryani"
+                  class="w-full max-w-md lg:max-w-2xl mx-auto rounded-full floating"
+                />
+              </div>
+
+              <!-- Category Badges -->
+              <div
+                class="hidden lg:flex absolute right-4 lg:right-0 top-1/2 -translate-y-1/2 flex-col gap-3 z-20"
+              >
+                <div
+                  class="bg-white rounded-full px-5 py-2.5 shadow-lg flex items-center gap-2.5 hover:scale-105 transition-transform cursor-pointer whitespace-nowrap"
+                >
+                  <span class="text-xl">🍽️</span>
+                  <span class="font-medium text-sm">Dishes</span>
+                </div>
+                <div
+                  class="bg-white rounded-full px-5 py-2.5 shadow-lg flex items-center gap-2.5 hover:scale-105 transition-transform cursor-pointer whitespace-nowrap"
+                >
+                  <span class="text-xl">🧁</span>
+                  <span class="font-medium text-sm">Dessert</span>
+                </div>
+                <div
+                  class="bg-white rounded-full px-5 py-2.5 shadow-lg flex items-center gap-2.5 hover:scale-105 transition-transform cursor-pointer whitespace-nowrap"
+                >
+                  <span class="text-xl">🥤</span>
+                  <span class="font-medium text-sm">Drinks</span>
+                </div>
+                <div
+                  class="bg-white rounded-full px-5 py-2.5 shadow-lg flex items-center gap-2.5 hover:scale-105 transition-transform cursor-pointer whitespace-nowrap"
+                >
+                  <span class="text-xl">🍱</span>
+                  <span class="font-medium text-sm">Platter</span>
+                </div>
+                <div
+                  class="bg-primary text-white rounded-full px-5 py-2.5 shadow-lg flex items-center gap-2.5 hover:scale-105 transition-transform cursor-pointer whitespace-nowrap"
+                >
+                  <span class="text-xl">🥗</span>
+                  <span class="font-medium text-sm">Salads</span>
+                </div>
+              </div>
+
+              <!-- Mobile Category Badges (Below Image) -->
+              <div class="lg:hidden mt-8 flex flex-wrap justify-center gap-3">
+                <div
+                  class="bg-white rounded-full px-4 py-2 shadow-lg flex items-center gap-2 hover:scale-105 transition-transform cursor-pointer"
+                >
+                  <span class="text-lg">🍽️</span>
+                  <span class="font-medium text-sm">Dishes</span>
+                </div>
+                <div
+                  class="bg-white rounded-full px-4 py-2 shadow-lg flex items-center gap-2 hover:scale-105 transition-transform cursor-pointer"
+                >
+                  <span class="text-lg">🧁</span>
+                  <span class="font-medium text-sm">Dessert</span>
+                </div>
+                <div
+                  class="bg-white rounded-full px-4 py-2 shadow-lg flex items-center gap-2 hover:scale-105 transition-transform cursor-pointer"
+                >
+                  <span class="text-lg">🥤</span>
+                  <span class="font-medium text-sm">Drinks</span>
+                </div>
+                <div
+                  class="bg-white rounded-full px-4 py-2 shadow-lg flex items-center gap-2 hover:scale-105 transition-transform cursor-pointer"
+                >
+                  <span class="text-lg">🍱</span>
+                  <span class="font-medium text-sm">Platter</span>
+                </div>
+                <div
+                  class="bg-primary text-white rounded-full px-4 py-2 shadow-lg flex items-center gap-2 hover:scale-105 transition-transform cursor-pointer"
+                >
+                  <span class="text-lg">🥗</span>
+                  <span class="font-medium text-sm">Salads</span>
+                </div>
+              </div>
+
+              <!-- Decorative Dots -->
+              <div
+                class="hidden lg:block absolute -bottom-10 -right-10 w-20 h-20 opacity-20"
+              >
+                <div class="grid grid-cols-4 gap-2">
+                  <div class="w-2 h-2 rounded-full bg-primary"></div>
+                  <div class="w-2 h-2 rounded-full bg-primary"></div>
+                  <div class="w-2 h-2 rounded-full bg-primary"></div>
+                  <div class="w-2 h-2 rounded-full bg-primary"></div>
+                  <div class="w-2 h-2 rounded-full bg-primary"></div>
+                  <div class="w-2 h-2 rounded-full bg-primary"></div>
+                  <div class="w-2 h-2 rounded-full bg-primary"></div>
+                  <div class="w-2 h-2 rounded-full bg-primary"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Popular Dishes Section -->
+    <section class="py-16 lg:py-24">
+      <div class="container mx-auto px-6 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between mb-12">
+          <h2 class="font-display text-4xl lg:text-5xl">Popular Dishes</h2>
+          <div class="flex gap-2">
+            <button
+              class="swiper-button-prev-custom w-12 h-12 rounded-full bg-white border-2 border-dark/10 flex items-center justify-center hover:bg-primary hover:border-primary hover:text-white transition-all"
+            >
+              ←
+            </button>
+            <button
+              class="swiper-button-next-custom w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center hover:bg-primary-dark transition-all"
+            >
+              →
+            </button>
+          </div>
+        </div>
+
+        <div class="swiper popularDishesSwiper">
+          <div class="swiper-wrapper pb-8">
+            <!-- Dish 1 -->
+            <div class="swiper-slide">
+              <div
+                class="bg-white rounded-3xl p-6 hover:shadow-xl transition-all duration-300 group"
+              >
+                <div class="mb-4 overflow-hidden rounded-2xl">
+                  <img
+                    src="https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=400&h=300&fit=crop"
+                    alt="Pasta"
+                    class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                </div>
+                <h3 class="font-display text-xl mb-2 text-center">Pasta</h3>
+                <div class="flex justify-center gap-1 mb-2">
+                  <span class="text-primary">⭐</span>
+                  <span class="text-primary">⭐</span>
+                  <span class="text-primary">⭐</span>
+                  <span class="text-primary">⭐</span>
+                  <span class="text-gray-300">⭐</span>
+                </div>
+                <p class="text-dark-gray text-sm text-center mb-4">
+                  Pasta is a type of food typically made from an unleavened
+                  dough.
+                </p>
+                <div class="flex items-center justify-between">
+                  <span class="font-display text-2xl text-dark">₹35.00</span>
+                  <button
+                    class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all"
+                  >
+                    Add to Cart
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dish 2 -->
+            <div class="swiper-slide">
+              <div
+                class="bg-white rounded-3xl p-6 hover:shadow-xl transition-all duration-300 group"
+              >
+                <div class="mb-4 overflow-hidden rounded-2xl">
+                  <img
+                    src="https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=400&h=300&fit=crop"
+                    alt="French Fries"
+                    class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                </div>
+                <h3 class="font-display text-xl mb-2 text-center">
+                  French Fries
+                </h3>
+                <div class="flex justify-center gap-1 mb-2">
+                  <span class="text-primary">⭐</span>
+                  <span class="text-primary">⭐</span>
+                  <span class="text-primary">⭐</span>
+                  <span class="text-primary">⭐</span>
+                  <span class="text-primary">⭐</span>
+                </div>
+                <p class="text-dark-gray text-sm text-center mb-4">
+                  Pasta is a type of food typically made from an unleavened
+                  dough.
+                </p>
+                <div class="flex items-center justify-between">
+                  <span class="font-display text-2xl text-dark">₹55.00</span>
+                  <button
+                    class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all"
+                  >
+                    Add to Cart
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dish 3 -->
+            <div class="swiper-slide">
+              <div
+                class="bg-white rounded-3xl p-6 hover:shadow-xl transition-all duration-300 group"
+              >
+                <div class="mb-4 overflow-hidden rounded-2xl">
+                  <img
+                    src="https://images.unsplash.com/photo-1626200419199-391ae4be7a41?w=400&h=300&fit=crop"
+                    alt="Chicken Shawarma"
+                    class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                </div>
+                <h3 class="font-display text-xl mb-2 text-center">
+                  Chicken Shawarma
+                </h3>
+                <div class="flex justify-center gap-1 mb-2">
+                  <span class="text-primary">⭐</span>
+                  <span class="text-primary">⭐</span>
+                  <span class="text-primary">⭐</span>
+                  <span class="text-primary">⭐</span>
+                  <span class="text-gray-300">⭐</span>
+                </div>
+                <p class="text-dark-gray text-sm text-center mb-4">
+                  Pasta is a type of food typically made from an unleavened
+                  dough.
+                </p>
+                <div class="flex items-center justify-between">
+                  <span class="font-display text-2xl text-dark">₹35.00</span>
+                  <button
+                    class="bg-primary hover:bg-primary-dark text-white px-6 py-2 rounded-full font-medium transition-all"
+                  >
+                    Add to Cart
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dish 4 -->
+            <div class="swiper-slide">
+              <div
+                class="bg-white rounded-3xl p-6 hover:shadow-xl transition-all duration-300 group"
+              >
+                <div class="mb-4 overflow-hidden rounded-2xl">
+                  <img
+                    src="https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=400&h=300&fit=crop"
+                    alt="Fish Curry"
+                    class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                </div>
+                <h3 class="font-display text-xl mb-2 text-center">
+                  Fish Curry
+                </h3>
+                <div class="flex justify-center gap-1 mb-2">
+                  <span class="text-primary">⭐</span>
+                  <span class="text-primary">⭐</span>
+                  <span class="text-primary">⭐</span>
+                  <span class="text-primary">⭐</span>
+                  <span class="text-primary">⭐</span>
+                </div>
+                <p class="text-dark-gray text-sm text-center mb-4">
+                  Pasta is a type of food typically made from an unleavened
+                  dough.
+                </p>
+                <div class="flex items-center justify-between">
+                  <span class="font-display text-2xl text-dark">₹35.00</span>
+                  <button
+                    class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all"
+                  >
+                    Add to Cart
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="py-16 lg:py-24 bg-white">
+      <div class="container mx-auto px-6 sm:px-6 lg:px-8">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+          <!-- Chef Image -->
+          <div class="relative order-1 lg:order-2">
+            <div class="relative z-10">
+              <img
+                src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=600&h=600&fit=crop"
+                alt="Chef"
+                class="rounded-full w-full max-w-xl mx-auto shadow-2xl"
+              />
+            </div>
+          </div>
+
+          <!-- Content -->
+          <div class="order-1 lg:order-2">
+            <h2 class="font-display text-4xl lg:text-5xl mb-6">
+              We Are More Than Multiple Service
+            </h2>
+            <p class="text-dark-gray text-lg mb-8">
+              This is a type of restaurant which typically serves food and
+              drinks, in addition to light refreshments such as baked goods or
+              snacks. The term comes from the ranch word meaning food.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+              <div class="flex items-start gap-3">
+                <span class="text-primary text-2xl mt-1">📦</span>
+                <div>
+                  <h4 class="font-semibold text-lg mb-1">Online Order</h4>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <span class="text-primary text-2xl mt-1">📅</span>
+                <div>
+                  <h4 class="font-semibold text-lg mb-1">Pre-Reservation</h4>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <span class="text-primary text-2xl mt-1">⏰</span>
+                <div>
+                  <h4 class="font-semibold text-lg mb-1">24/7 Service</h4>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <span class="text-primary text-2xl mt-1">🏢</span>
+                <div>
+                  <h4 class="font-semibold text-lg mb-1">
+                    Organized Foodie Place
+                  </h4>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <span class="text-primary text-2xl mt-1">🧹</span>
+                <div>
+                  <h4 class="font-semibold text-lg mb-1">Clean Kitchen</h4>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <span class="text-primary text-2xl mt-1">👨‍🍳</span>
+                <div>
+                  <h4 class="font-semibold text-lg mb-1">Super Chefs</h4>
+                </div>
+              </div>
+            </div>
+
+            <button
+              class="bg-primary hover:bg-primary-dark text-white px-8 py-4 rounded-full font-medium transition-all shadow-lg hover:shadow-xl"
+            >
+              About Us
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Menu Pack Section -->
+    <section id="menu" class="py-16 lg:py-24">
+      <div class="container mx-auto px-6 sm:px-6 lg:px-8">
+        <h2 class="font-display text-4xl lg:text-5xl text-center mb-4">
+          Our Regular Menu Pack
+        </h2>
+
+        <!-- Category Filter -->
+        <div class="flex flex-wrap justify-center gap-3 mb-12">
+          <button
+            class="category-btn active bg-primary text-white px-6 py-3 rounded-full font-medium transition-all"
+            data-category="breakfast"
+          >
+            Breakfast
+          </button>
+          <button
+            class="category-btn bg-cream hover:bg-primary hover:text-white px-6 py-3 rounded-full font-medium transition-all"
+            data-category="noodles"
+          >
+            Noodles
+          </button>
+          <button
+            class="category-btn bg-cream hover:bg-primary hover:text-white px-6 py-3 rounded-full font-medium transition-all"
+            data-category="salad"
+          >
+            Salad
+          </button>
+          <button
+            class="category-btn bg-cream hover:bg-primary hover:text-white px-6 py-3 rounded-full font-medium transition-all"
+            data-category="japanese"
+          >
+            Japanese
+          </button>
+          <button
+            class="category-btn bg-cream hover:bg-primary hover:text-white px-6 py-3 rounded-full font-medium transition-all"
+            data-category="drinks"
+          >
+            Drinks
+          </button>
+          <button
+            class="category-btn bg-cream hover:bg-primary hover:text-white px-6 py-3 rounded-full font-medium transition-all"
+            data-category="lunch"
+          >
+            Lunch
+          </button>
+          <button
+            class="category-btn bg-cream hover:bg-primary hover:text-white px-6 py-3 rounded-full font-medium transition-all"
+            data-category="mini-breakfast"
+          >
+            Mini breakfast
+          </button>
+        </div>
+
+        <!-- Menu Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+          <!-- Breakfast -->
+          <div
+            class="bg-white rounded-3xl p-6 hover:shadow-xl transition-all duration-300 group menu-item"
+            data-category="breakfast"
+          >
+            <div class="mb-4 overflow-hidden rounded-2xl">
+              <img
+                src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=500&q=80"
+                alt="Fluffy Pancakes"
+                class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+              />
+            </div>
+            <h3 class="font-display text-xl mb-2 text-center">
+              Fluffy Pancakes
+            </h3>
+            <div class="flex justify-center gap-1 mb-2">
+              <span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span>
+            </div>
+            <p class="text-dark-gray text-sm text-center mb-4">
+              Golden fluffy pancakes served with fresh berries and maple syrup.
+            </p>
+            <div class="flex items-center justify-between">
+              <span class="font-display text-2xl text-dark">₹12.00</span>
+              <button
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+          <div
+            class="bg-white rounded-3xl p-6 hover:shadow-xl transition-all duration-300 group menu-item"
+            data-category="breakfast"
+          >
+            <div class="mb-4 overflow-hidden rounded-2xl">
+              <img
+                src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=500&q=80"
+                alt="Fresh Croissant"
+                class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+              />
+            </div>
+            <h3 class="font-display text-xl mb-2 text-center">
+              Fresh Croissant
+            </h3>
+            <div class="flex justify-center gap-1 mb-2">
+              <span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span>
+            </div>
+            <p class="text-dark-gray text-sm text-center mb-4">
+              Buttery, flaky French pastry baked fresh.
+            </p>
+            <div class="flex items-center justify-between">
+              <span class="font-display text-2xl text-dark">₹5.00</span>
+              <button
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+          <div
+            class="bg-white rounded-3xl p-6 hover:shadow-xl transition-all duration-300 group menu-item"
+            data-category="breakfast"
+          >
+            <div class="mb-4 overflow-hidden rounded-2xl">
+              <img
+                src="https://images.unsplash.com/photo-1488477181946-6428a0291777?w=500&q=80"
+                alt="Yogurt Parfait"
+                class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+              />
+            </div>
+            <h3 class="font-display text-xl mb-2 text-center">
+              Yogurt Parfait
+            </h3>
+            <div class="flex justify-center gap-1 mb-2">
+              <span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span>
+            </div>
+            <p class="text-dark-gray text-sm text-center mb-4">
+              Layers of yogurt, granola, and fresh fruits.
+            </p>
+            <div class="flex items-center justify-between">
+              <span class="font-display text-2xl text-dark">₹8.00</span>
+              <button
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+          <div
+            class="bg-white rounded-3xl p-6 hover:shadow-xl transition-all duration-300 group menu-item"
+            data-category="breakfast"
+          >
+            <div class="mb-4 overflow-hidden rounded-2xl">
+              <img
+                src="https://images.unsplash.com/photo-1510693206972-df098062cb71?w=500&q=80"
+                alt="Classic Omelette"
+                class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+              />
+            </div>
+            <h3 class="font-display text-xl mb-2 text-center">
+              Classic Omelette
+            </h3>
+            <div class="flex justify-center gap-1 mb-2">
+              <span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-gray-300">⭐</span>
+            </div>
+            <p class="text-dark-gray text-sm text-center mb-4">
+              Three-egg omelette filled with cheese, mushrooms, and herbs.
+            </p>
+            <div class="flex items-center justify-between">
+              <span class="font-display text-2xl text-dark">₹12.00</span>
+              <button
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <!-- Noodles -->
+          <div
+            class="bg-white rounded-3xl p-6 hover:shadow-xl transition-all duration-300 group menu-item"
+            data-category="noodles"
+          >
+            <div class="mb-4 overflow-hidden rounded-2xl">
+              <img
+                src="https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=500&q=80"
+                alt="Spicy Miso Ramen"
+                class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+              />
+            </div>
+            <h3 class="font-display text-xl mb-2 text-center">
+              Spicy Miso Ramen
+            </h3>
+            <div class="flex justify-center gap-1 mb-2">
+              <span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span>
+            </div>
+            <p class="text-dark-gray text-sm text-center mb-4">
+              Rich miso broth with ramen noodles, pork chashu, and egg.
+            </p>
+            <div class="flex items-center justify-between">
+              <span class="font-display text-2xl text-dark">₹22.00</span>
+              <button
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+          <div
+            class="bg-white rounded-3xl p-6 hover:shadow-xl transition-all duration-300 group menu-item"
+            data-category="noodles"
+          >
+            <div class="mb-4 overflow-hidden rounded-2xl">
+              <img
+                src="https://images.unsplash.com/photo-1559314809-0d155014e29e?w=500&q=80"
+                alt="Shrimp Pad Thai"
+                class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+              />
+            </div>
+            <h3 class="font-display text-xl mb-2 text-center">
+              Shrimp Pad Thai
+            </h3>
+            <div class="flex justify-center gap-1 mb-2">
+              <span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-gray-300">⭐</span>
+            </div>
+            <p class="text-dark-gray text-sm text-center mb-4">
+              Stir-fried rice noodles with shrimp, peanuts, and lime.
+            </p>
+            <div class="flex items-center justify-between">
+              <span class="font-display text-2xl text-dark">₹20.00</span>
+              <button
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+          <div
+            class="bg-white rounded-3xl p-6 hover:shadow-xl transition-all duration-300 group menu-item"
+            data-category="noodles"
+          >
+            <div class="mb-4 overflow-hidden rounded-2xl">
+              <img
+                src="https://images.unsplash.com/photo-1585032226651-759b368d7246?w=500&q=80"
+                alt="Beef Chow Mein"
+                class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+              />
+            </div>
+            <h3 class="font-display text-xl mb-2 text-center">
+              Beef Chow Mein
+            </h3>
+            <div class="flex justify-center gap-1 mb-2">
+              <span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span>
+            </div>
+            <p class="text-dark-gray text-sm text-center mb-4">
+              Savory stir-fried noodles with tender beef and vegetables.
+            </p>
+            <div class="flex items-center justify-between">
+              <span class="font-display text-2xl text-dark">₹19.00</span>
+              <button
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+          <div
+            class="bg-white rounded-3xl p-6 hover:shadow-xl transition-all duration-300 group menu-item"
+            data-category="noodles"
+          >
+            <div class="mb-4 overflow-hidden rounded-2xl">
+              <img
+                src="https://images.unsplash.com/photo-1552611052-33e04de081de?w=500&q=80"
+                alt="Udon Noodle Soup"
+                class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+              />
+            </div>
+            <h3 class="font-display text-xl mb-2 text-center">
+              Udon Noodle Soup
+            </h3>
+            <div class="flex justify-center gap-1 mb-2">
+              <span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-gray-300">⭐</span>
+            </div>
+            <p class="text-dark-gray text-sm text-center mb-4">
+              Thick wheat noodles in a hot savory broth with scallions.
+            </p>
+            <div class="flex items-center justify-between">
+              <span class="font-display text-2xl text-dark">₹18.00</span>
+              <button
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <!-- Salad -->
+          <div
+            class="bg-white rounded-3xl p-6 hover:shadow-xl transition-all duration-300 group menu-item"
+            data-category="salad"
+          >
+            <div class="mb-4 overflow-hidden rounded-2xl">
+              <img
+                src="https://images.unsplash.com/photo-1550304943-4f24f54ddde9?w=500&q=80"
+                alt="Chicken Caesar Salad"
+                class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+              />
+            </div>
+            <h3 class="font-display text-xl mb-2 text-center">
+              Chicken Caesar
+            </h3>
+            <div class="flex justify-center gap-1 mb-2">
+              <span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span>
+            </div>
+            <p class="text-dark-gray text-sm text-center mb-4">
+              Crisp romaine lettuce, parmesan, croutons, and grilled chicken.
+            </p>
+            <div class="flex items-center justify-between">
+              <span class="font-display text-2xl text-dark">₹16.00</span>
+              <button
+                class="bg-primary hover:bg-primary-dark text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+          <div
+            class="bg-white rounded-3xl p-6 hover:shadow-xl transition-all duration-300 group menu-item"
+            data-category="salad"
+          >
+            <div class="mb-4 overflow-hidden rounded-2xl">
+              <img
+                src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=500&q=80"
+                alt="Fresh Greek Salad"
+                class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+              />
+            </div>
+            <h3 class="font-display text-xl mb-2 text-center">Greek Salad</h3>
+            <div class="flex justify-center gap-1 mb-2">
+              <span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-gray-300">⭐</span>
+            </div>
+            <p class="text-dark-gray text-sm text-center mb-4">
+              Cucumbers, tomatoes, olives, red onion, and feta cheese.
+            </p>
+            <div class="flex items-center justify-between">
+              <span class="font-display text-2xl text-dark">₹15.00</span>
+              <button
+                class="bg-primary hover:bg-primary-dark text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+          <div
+            class="bg-white rounded-3xl p-6 hover:shadow-xl transition-all duration-300 group menu-item"
+            data-category="salad"
+          >
+            <div class="mb-4 overflow-hidden rounded-2xl">
+              <img
+                src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500&q=80"
+                alt="Cobb Salad"
+                class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+              />
+            </div>
+            <h3 class="font-display text-xl mb-2 text-center">Cobb Salad</h3>
+            <div class="flex justify-center gap-1 mb-2">
+              <span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span>
+            </div>
+            <p class="text-dark-gray text-sm text-center mb-4">
+              Garden salad with bacon, eggs, avocado, and blue cheese.
+            </p>
+            <div class="flex items-center justify-between">
+              <span class="font-display text-2xl text-dark">₹18.00</span>
+              <button
+                class="bg-primary hover:bg-primary-dark text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+          <div
+            class="bg-white rounded-3xl p-6 hover:shadow-xl transition-all duration-300 group menu-item"
+            data-category="salad"
+          >
+            <div class="mb-4 overflow-hidden rounded-2xl">
+              <img
+                src="https://images.unsplash.com/photo-1505576399279-565b52d4ac71?w=500&q=80"
+                alt="Quinoa Power Bowl"
+                class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+              />
+            </div>
+            <h3 class="font-display text-xl mb-2 text-center">
+              Quinoa Power Bowl
+            </h3>
+            <div class="flex justify-center gap-1 mb-2">
+              <span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span>
+            </div>
+            <p class="text-dark-gray text-sm text-center mb-4">
+              Healthy quinoa with avocado, roasted chickpeas, and greens.
+            </p>
+            <div class="flex items-center justify-between">
+              <span class="font-display text-2xl text-dark">₹17.00</span>
+              <button
+                class="bg-primary hover:bg-primary-dark text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <!-- Japanese -->
+          <div
+            class="bg-white rounded-3xl p-6 hover:shadow-xl transition-all duration-300 group menu-item"
+            data-category="japanese"
+          >
+            <div class="mb-4 overflow-hidden rounded-2xl">
+              <img
+                src="https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=500&q=80"
+                alt="Sushi Platter"
+                class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+              />
+            </div>
+            <h3 class="font-display text-xl mb-2 text-center">Sushi Platter</h3>
+            <div class="flex justify-center gap-1 mb-2">
+              <span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span>
+            </div>
+            <p class="text-dark-gray text-sm text-center mb-4">
+              Assorted fresh nigiri and maki rolls with wasabi.
+            </p>
+            <div class="flex items-center justify-between">
+              <span class="font-display text-2xl text-dark">₹30.00</span>
+              <button
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+          <div
+            class="bg-white rounded-3xl p-6 hover:shadow-xl transition-all duration-300 group menu-item"
+            data-category="japanese"
+          >
+            <div class="mb-4 overflow-hidden rounded-2xl">
+              <img
+                src="https://images.unsplash.com/photo-1627308595229-7830a5c91f9f?w=500&q=80"
+                alt="Tempura Set"
+                class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+              />
+            </div>
+            <h3 class="font-display text-xl mb-2 text-center">Tempura Set</h3>
+            <div class="flex justify-center gap-1 mb-2">
+              <span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-gray-300">⭐</span>
+            </div>
+            <p class="text-dark-gray text-sm text-center mb-4">
+              Crispy batter-fried shrimp and vegetables.
+            </p>
+            <div class="flex items-center justify-between">
+              <span class="font-display text-2xl text-dark">₹24.00</span>
+              <button
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+          <div
+            class="bg-white rounded-3xl p-6 hover:shadow-xl transition-all duration-300 group menu-item"
+            data-category="japanese"
+          >
+            <div class="mb-4 overflow-hidden rounded-2xl">
+              <img
+                src="https://images.unsplash.com/photo-1534482421-64566f976cfa?w=500&q=80"
+                alt="Salmon Sashimi"
+                class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+              />
+            </div>
+            <h3 class="font-display text-xl mb-2 text-center">
+              Salmon Sashimi
+            </h3>
+            <div class="flex justify-center gap-1 mb-2">
+              <span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span>
+            </div>
+            <p class="text-dark-gray text-sm text-center mb-4">
+              Premium fresh raw salmon slices with soy sauce.
+            </p>
+            <div class="flex items-center justify-between">
+              <span class="font-display text-2xl text-dark">₹28.00</span>
+              <button
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+          <div
+            class="bg-white rounded-3xl p-6 hover:shadow-xl transition-all duration-300 group menu-item"
+            data-category="japanese"
+          >
+            <div class="mb-4 overflow-hidden rounded-2xl">
+              <img
+                src="https://images.unsplash.com/photo-1559314809-0d155014e29e?w=500&q=80"
+                alt="Shrimp Pad Thai"
+                class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+              />
+            </div>
+            <h3 class="font-display text-xl mb-2 text-center">
+              Shrimp Pad Thai
+            </h3>
+            <div class="flex justify-center gap-1 mb-2">
+              <span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-gray-300">⭐</span>
+            </div>
+            <p class="text-dark-gray text-sm text-center mb-4">
+              Stir-fried rice noodles with shrimp, peanuts, and lime.
+            </p>
+            <div class="flex items-center justify-between">
+              <span class="font-display text-2xl text-dark">₹20.00</span>
+              <button
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <!-- Drinks -->
+          <div
+            class="bg-white rounded-3xl p-6 hover:shadow-xl transition-all duration-300 group menu-item"
+            data-category="drinks"
+          >
+            <div class="mb-4 overflow-hidden rounded-2xl">
+              <img
+                src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=500&q=80"
+                alt="Iced Latte"
+                class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+              />
+            </div>
+            <h3 class="font-display text-xl mb-2 text-center">Iced Latte</h3>
+            <div class="flex justify-center gap-1 mb-2">
+              <span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-gray-300">⭐</span>
+            </div>
+            <p class="text-dark-gray text-sm text-center mb-4">
+              Refreshing espresso with cold milk and ice cubes.
+            </p>
+            <div class="flex items-center justify-between">
+              <span class="font-display text-2xl text-dark">₹6.00</span>
+              <button
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+          <div
+            class="bg-white rounded-3xl p-6 hover:shadow-xl transition-all duration-300 group menu-item"
+            data-category="drinks"
+          >
+            <div class="mb-4 overflow-hidden rounded-2xl">
+              <img
+                src="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=500&q=80"
+                alt="Mint Mojito"
+                class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+              />
+            </div>
+            <h3 class="font-display text-xl mb-2 text-center">Mint Mojito</h3>
+            <div class="flex justify-center gap-1 mb-2">
+              <span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span>
+            </div>
+            <p class="text-dark-gray text-sm text-center mb-4">
+              Cool lime and mint mocktail for a summer breeze.
+            </p>
+            <div class="flex items-center justify-between">
+              <span class="font-display text-2xl text-dark">₹8.00</span>
+              <button
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+          <div
+            class="bg-white rounded-3xl p-6 hover:shadow-xl transition-all duration-300 group menu-item"
+            data-category="drinks"
+          >
+            <div class="mb-4 overflow-hidden rounded-2xl">
+              <img
+                src="https://images.unsplash.com/photo-1505252585461-04db1eb84625?w=500&q=80"
+                alt="Berry Smoothie"
+                class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+              />
+            </div>
+            <h3 class="font-display text-xl mb-2 text-center">
+              Berry Smoothie
+            </h3>
+            <div class="flex justify-center gap-1 mb-2">
+              <span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span>
+            </div>
+            <p class="text-dark-gray text-sm text-center mb-4">
+              Blended forest berries with yogurt and honey.
+            </p>
+            <div class="flex items-center justify-between">
+              <span class="font-display text-2xl text-dark">₹9.00</span>
+              <button
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+          <div
+            class="bg-white rounded-3xl p-6 hover:shadow-xl transition-all duration-300 group menu-item"
+            data-category="drinks"
+          >
+            <div class="mb-4 overflow-hidden rounded-2xl">
+              <img
+                src="https://images.unsplash.com/photo-1613478223719-2ab802602423?w=500&q=80"
+                alt="Orange Juice"
+                class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+              />
+            </div>
+            <h3 class="font-display text-xl mb-2 text-center">Fresh Juice</h3>
+            <div class="flex justify-center gap-1 mb-2">
+              <span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-gray-300">⭐</span>
+            </div>
+            <p class="text-dark-gray text-sm text-center mb-4">
+              Freshly squeezed orange juice, full of vitamins.
+            </p>
+            <div class="flex items-center justify-between">
+              <span class="font-display text-2xl text-dark">₹7.00</span>
+              <button
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <!-- Lunch -->
+          <div
+            class="bg-white rounded-3xl p-6 hover:shadow-xl transition-all duration-300 group menu-item"
+            data-category="lunch"
+          >
+            <div class="mb-4 overflow-hidden rounded-2xl">
+              <img
+                src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500&q=80"
+                alt="Classic Burger"
+                class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+              />
+            </div>
+            <h3 class="font-display text-xl mb-2 text-center">
+              Classic Burger
+            </h3>
+            <div class="flex justify-center gap-1 mb-2">
+              <span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span>
+            </div>
+            <p class="text-dark-gray text-sm text-center mb-4">
+              Juicy beef patty with lettuce, tomato, and cheese.
+            </p>
+            <div class="flex items-center justify-between">
+              <span class="font-display text-2xl text-dark">₹15.00</span>
+              <button
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+          <div
+            class="bg-white rounded-3xl p-6 hover:shadow-xl transition-all duration-300 group menu-item"
+            data-category="lunch"
+          >
+            <div class="mb-4 overflow-hidden rounded-2xl">
+              <img
+                src="https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=500&q=80"
+                alt="Club Sandwich"
+                class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+              />
+            </div>
+            <h3 class="font-display text-xl mb-2 text-center">Club Sandwich</h3>
+            <div class="flex justify-center gap-1 mb-2">
+              <span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-gray-300">⭐</span>
+            </div>
+            <p class="text-dark-gray text-sm text-center mb-4">
+              Triple-decker toasted sandwich with chicken and bacon.
+            </p>
+            <div class="flex items-center justify-between">
+              <span class="font-display text-2xl text-dark">₹12.00</span>
+              <button
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+          <div
+            class="bg-white rounded-3xl p-6 hover:shadow-xl transition-all duration-300 group menu-item"
+            data-category="lunch"
+          >
+            <div class="mb-4 overflow-hidden rounded-2xl">
+              <img
+                src="https://images.unsplash.com/photo-1600891964092-4316c288032e?w=500&q=80"
+                alt="Grilled Steak"
+                class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+              />
+            </div>
+            <h3 class="font-display text-xl mb-2 text-center">Grilled Steak</h3>
+            <div class="flex justify-center gap-1 mb-2">
+              <span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span>
+            </div>
+            <p class="text-dark-gray text-sm text-center mb-4">
+              Tender grilled steak with herb butter and sides.
+            </p>
+            <div class="flex items-center justify-between">
+              <span class="font-display text-2xl text-dark">₹25.00</span>
+              <button
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+          <div
+            class="bg-white rounded-3xl p-6 hover:shadow-xl transition-all duration-300 group menu-item"
+            data-category="lunch"
+          >
+            <div class="mb-4 overflow-hidden rounded-2xl">
+              <img
+                src="https://images.unsplash.com/photo-1598214886806-c87b84b7078b?w=500&q=80"
+                alt="Creamy Pasta"
+                class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+              />
+            </div>
+            <h3 class="font-display text-xl mb-2 text-center">Creamy Pasta</h3>
+            <div class="flex justify-center gap-1 mb-2">
+              <span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-gray-300">⭐</span>
+            </div>
+            <p class="text-dark-gray text-sm text-center mb-4">
+              Fettuccine alfredo with rich creamy sauce.
+            </p>
+            <div class="flex items-center justify-between">
+              <span class="font-display text-2xl text-dark">₹16.00</span>
+              <button
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <!-- Mini Breakfast -->
+          <div
+            class="bg-white rounded-3xl p-6 hover:shadow-xl transition-all duration-300 group menu-item"
+            data-category="mini-breakfast"
+          >
+            <div class="mb-4 overflow-hidden rounded-2xl">
+              <img
+                src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=500&q=80"
+                alt="Fresh Croissant"
+                class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+              />
+            </div>
+            <h3 class="font-display text-xl mb-2 text-center">
+              Fresh Croissant
+            </h3>
+            <div class="flex justify-center gap-1 mb-2">
+              <span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span>
+            </div>
+            <p class="text-dark-gray text-sm text-center mb-4">
+              Buttery, flaky French pastry baked fresh.
+            </p>
+            <div class="flex items-center justify-between">
+              <span class="font-display text-2xl text-dark">₹5.00</span>
+              <button
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+          <div
+            class="bg-white rounded-3xl p-6 hover:shadow-xl transition-all duration-300 group menu-item"
+            data-category="mini-breakfast"
+          >
+            <div class="mb-4 overflow-hidden rounded-2xl">
+              <img
+                src="https://images.unsplash.com/photo-1607958996333-41aef7caefaa?w=500&q=80"
+                alt="Blueberry Muffin"
+                class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+              />
+            </div>
+            <h3 class="font-display text-xl mb-2 text-center">
+              Blueberry Muffin
+            </h3>
+            <div class="flex justify-center gap-1 mb-2">
+              <span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-gray-300">⭐</span>
+            </div>
+            <p class="text-dark-gray text-sm text-center mb-4">
+              Soft baked muffin bursting with blueberries.
+            </p>
+            <div class="flex items-center justify-between">
+              <span class="font-display text-2xl text-dark">₹4.00</span>
+              <button
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+          <div
+            class="bg-white rounded-3xl p-6 hover:shadow-xl transition-all duration-300 group menu-item"
+            data-category="mini-breakfast"
+          >
+            <div class="mb-4 overflow-hidden rounded-2xl">
+              <img
+                src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=500&q=80"
+                alt="Fluffy Pancakes"
+                class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+              />
+            </div>
+            <h3 class="font-display text-xl mb-2 text-center">
+              Fluffy Pancakes
+            </h3>
+            <div class="flex justify-center gap-1 mb-2">
+              <span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span>
+            </div>
+            <p class="text-dark-gray text-sm text-center mb-4">
+              Golden fluffy pancakes served with fresh berries and maple syrup.
+            </p>
+            <div class="flex items-center justify-between">
+              <span class="font-display text-2xl text-dark">₹12.00</span>
+              <button
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+          <div
+            class="bg-white rounded-3xl p-6 hover:shadow-xl transition-all duration-300 group menu-item"
+            data-category="mini-breakfast"
+          >
+            <div class="mb-4 overflow-hidden rounded-2xl">
+              <img
+                src="https://images.unsplash.com/photo-1488477181946-6428a0291777?w=500&q=80"
+                alt="Yogurt Parfait"
+                class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+              />
+            </div>
+            <h3 class="font-display text-xl mb-2 text-center">
+              Yogurt Parfait
+            </h3>
+            <div class="flex justify-center gap-1 mb-2">
+              <span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span
+              ><span class="text-primary">⭐</span>
+            </div>
+            <p class="text-dark-gray text-sm text-center mb-4">
+              Layers of yogurt, granola, and fresh fruits.
+            </p>
+            <div class="flex items-center justify-between">
+              <span class="font-display text-2xl text-dark">₹8.00</span>
+              <button
+                class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-all text-sm"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reservation Section -->
+    <section class="py-12 lg:py-24 bg-white">
+      <div class="container mx-auto px-6 sm:px-6 lg:px-8">
+        <div
+          class="flex flex-col-reverse lg:grid lg:grid-cols-2 gap-12 items-center"
+        >
+          <div>
+            <h2 class="font-display text-4xl lg:text-5xl mb-6">
+              Do You Have Any Dinner Plan Today? Reserve Your Table
+            </h2>
+            <p class="text-dark-gray text-lg mb-8">
+              Make online reservations, read restaurant reviews from diners, and
+              earn points towards free meals. Open Table is a real-time online
+              reservation.
+            </p>
+            <button
+              class="bg-primary hover:bg-primary-dark text-white px-8 py-4 rounded-full font-medium transition-all shadow-lg hover:shadow-xl"
+            >
+              Book a Table
+            </button>
+          </div>
+
+          <div class="relative">
+            <div class="relative z-10">
+              <img
+                src="/assets/images/FoodSideImg.png"
+                alt="Delicious Food"
+                class="rounded-full w-full max-w-3xl mx-auto shadow-2xl"
+              />
+            </div>
+
+            <!-- Decorative Circle -->
+            <div
+              class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full bg-cream -z-10"
+            ></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Customer Reviews Section -->
+    <section id="reviews" class="py-16 lg:py-24">
+      <div class="container mx-auto px-6 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between mb-12">
+          <h2 class="font-display text-4xl lg:text-5xl">
+            What Our Customer Says?
+          </h2>
+          <div class="flex gap-2">
+            <button
+              class="swiper-button-prev-reviews w-12 h-12 rounded-full bg-white border-2 border-dark/10 flex items-center justify-center hover:bg-primary hover:border-primary hover:text-white transition-all"
+            >
+              ←
+            </button>
+            <button
+              class="swiper-button-next-reviews w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center hover:bg-primary-dark transition-all"
+            >
+              →
+            </button>
+          </div>
+        </div>
+
+        <div class="swiper reviewsSwiper">
+          <div class="swiper-wrapper pb-8">
+            <!-- Review 1 -->
+            <div class="swiper-slide">
+              <div class="bg-white rounded-3xl p-8 shadow-lg">
+                <p class="text-dark-gray text-lg mb-6 leading-relaxed">
+                  "This place is great! Atmosphere and staff are great. I had a
+                  great meal here. I recommend the chicken gyro with french
+                  fries and the greek salad. Seriously, what they're doing with
+                  food is really amazing and what's even more amazing is they're
+                  doing all of this with only plant-based ingredients."
+                </p>
+                <div class="flex items-center gap-4">
+                  <img
+                    src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop"
+                    alt="Customer"
+                    class="w-16 h-16 rounded-full object-cover"
+                  />
+                  <div>
+                    <h4 class="font-semibold text-lg">Shawoawn Nayaan</h4>
+                    <div class="flex gap-1 mt-1">
+                      <span class="text-primary text-sm">⭐</span>
+                      <span class="text-primary text-sm">⭐</span>
+                      <span class="text-primary text-sm">⭐</span>
+                      <span class="text-primary text-sm">⭐</span>
+                      <span class="text-primary text-sm">⭐</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Review 2 -->
+            <div class="swiper-slide">
+              <div class="bg-white rounded-3xl p-8 shadow-lg">
+                <p class="text-dark-gray text-lg mb-6 leading-relaxed">
+                  "This place is great! Atmosphere and staff are great. I had a
+                  great meal here. I recommend the chicken gyro with french
+                  fries and the greek salad. Seriously, what they're doing with
+                  food is really amazing and what's even more amazing is they're
+                  doing all of this with only plant-based ingredients."
+                </p>
+                <div class="flex items-center gap-4">
+                  <img
+                    src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop"
+                    alt="Customer"
+                    class="w-16 h-16 rounded-full object-cover"
+                  />
+                  <div>
+                    <h4 class="font-semibold text-lg">Shawoawn Nayaan</h4>
+                    <div class="flex gap-1 mt-1">
+                      <span class="text-primary text-sm">⭐</span>
+                      <span class="text-primary text-sm">⭐</span>
+                      <span class="text-primary text-sm">⭐</span>
+                      <span class="text-primary text-sm">⭐</span>
+                      <span class="text-primary text-sm">⭐</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Review 3 -->
+            <div class="swiper-slide">
+              <div class="bg-white rounded-3xl p-8 shadow-lg">
+                <p class="text-dark-gray text-lg mb-6 leading-relaxed">
+                  "This place is great! Atmosphere and staff are great. I had a
+                  great meal here. I recommend the chicken gyro with french
+                  fries and the greek salad. Seriously, what they're doing with
+                  food is really amazing and what's even more amazing is they're
+                  doing all of this with only plant-based ingredients."
+                </p>
+                <div class="flex items-center gap-4">
+                  <img
+                    src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop"
+                    alt="Customer"
+                    class="w-16 h-16 rounded-full object-cover"
+                  />
+                  <div>
+                    <h4 class="font-semibold text-lg">Shawoawn Nayaan</h4>
+                    <div class="flex gap-1 mt-1">
+                      <span class="text-primary text-sm">⭐</span>
+                      <span class="text-primary text-sm">⭐</span>
+                      <span class="text-primary text-sm">⭐</span>
+                      <span class="text-primary text-sm">⭐</span>
+                      <span class="text-primary text-sm">⭐</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Meet Our Chefs Section -->
+    <section class="py-16 lg:py-24 bg-white" id="cheffs">
+      <div class="container mx-auto px-6 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between mb-12">
+          <h2 class="font-display text-4xl lg:text-5xl">Meet Our Chefs</h2>
+          <div class="flex gap-2">
+            <button
+              class="swiper-button-prev-chefs w-12 h-12 rounded-full bg-cream border-2 border-dark/10 flex items-center justify-center hover:bg-primary hover:border-primary hover:text-white transition-all"
+            >
+              ←
+            </button>
+            <button
+              class="swiper-button-next-chefs w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center hover:bg-primary-dark transition-all"
+            >
+              →
+            </button>
+          </div>
+        </div>
+
+        <div class="swiper chefsSwiper">
+          <div class="swiper-wrapper pb-8">
+            <!-- Chef 1 -->
+            <div class="swiper-slide">
+              <div class="text-center group">
+                <div class="relative mb-6 overflow-hidden rounded-3xl">
+                  <img
+                    src="https://images.unsplash.com/photo-1583394293214-28ded15ee548?w=400&h=500&fit=crop"
+                    alt="Chef"
+                    class="w-full h-96 object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                </div>
+                <h3 class="font-display text-2xl mb-2">Savannah Nayaan</h3>
+              </div>
+            </div>
+
+            <!-- Chef 2 -->
+            <div class="swiper-slide">
+              <div class="text-center group">
+                <div class="relative mb-6 overflow-hidden rounded-3xl">
+                  <img
+                    src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=400&h=500&fit=crop"
+                    alt="Chef"
+                    class="w-full h-96 object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                </div>
+                <h3 class="font-display text-2xl mb-2">Esther Howard</h3>
+              </div>
+            </div>
+
+            <!-- Chef 3 -->
+            <div class="swiper-slide">
+              <div class="text-center group">
+                <div class="relative mb-6 overflow-hidden rounded-3xl">
+                  <img
+                    src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=400&h=500&fit=crop"
+                    alt="Chef"
+                    class="w-full h-96 object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                </div>
+                <h3 class="font-display text-2xl mb-2">Dancia Andrewsy</h3>
+              </div>
+            </div>
+
+            <!-- Chef 4 -->
+            <div class="swiper-slide">
+              <div class="text-center group">
+                <div class="relative mb-6 overflow-hidden rounded-3xl">
+                  <img
+                    src="https://images.unsplash.com/photo-1581299894007-aaa50297cf16?w=400&h=500&fit=crop"
+                    alt="Chef"
+                    class="w-full h-96 object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                </div>
+                <h3 class="font-display text-2xl mb-2">Albert Flores</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mobile App Section -->
+    <section class="py-16 lg:py-24 bg-cream">
+      <div class="container mx-auto px-6 sm:px-6 lg:px-8">
+        <div
+          class="flex flex-col-reverse lg:grid lg:grid-cols-2 gap-12 items-center"
+        >
+          <div>
+            <h2 class="font-display text-4xl lg:text-5xl mb-6">
+              Never Feel Hungry! Download Our Mobile App Enjoy Delicious Foods
+            </h2>
+            <p class="text-dark-gray text-lg mb-8">
+              Get your favourite food delivered right to your doorstep. Download
+              our app and explore thousands of delicious dishes from the best
+              restaurants.
+            </p>
+            <div class="flex flex-col lg:flex-row gap-5">
+              <div class="flex justify-center lg:justify-start">
+                <button
+                  class="bg-dark hover:bg-dark-gray text-white px-8 py-4 rounded-2xl font-medium transition-all flex items-center gap-3"
+                >
+                  <span class="text-2xl">📱</span>
+                  <div class="text-left">
+                    <div class="text-xs opacity-80">Download on the</div>
+                    <div class="text-lg font-semibold">App Store</div>
+                  </div>
+                </button>
+              </div>
+              <div class="flex justify-center lg:justify-start">
+                <button
+                  class="bg-dark hover:bg-dark-gray text-white px-8 py-4 rounded-2xl font-medium transition-all flex items-center gap-3"
+                >
+                  <span class="text-2xl">▶️</span>
+                  <div class="text-left">
+                    <div class="text-xs opacity-80">GET IT ON</div>
+                    <div class="text-lg font-semibold">Google Play</div>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="relative">
+            <div class="relative z-10 flex justify-center">
+              <div class="w-74 h-84 bg-white rounded-[3rem] p-3 shadow-2xl">
+                <div class="bg-cream rounded-[2.5rem] overflow-hidden">
+                  <div class="bg-primary text-white p-6 text-center">
+                    <h3 class="font-display text-2xl mb-2">
+                      We Serve The Test You Love
+                    </h3>
+                    <p class="text-sm opacity-90">
+                      Order your favorite food now!
+                    </p>
+                  </div>
+                  <div class="p-2">
+                    <img
+                      src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop"
+                      alt="Food"
+                      class="w-full h-full rounded-2xl mb-4"
+                    />
+                    <div class="flex gap-2 mb-4">
+                      <button
+                        class="flex-1 bg-primary text-white py-3 rounded-full text-sm font-medium"
+                      >
+                        Order Now
+                      </button>
+                      <button
+                        class="flex-1 bg-cream text-dark py-3 rounded-full text-sm font-medium"
+                      >
+                        View Menu
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="bg-white py-16 lg:py-20">
+      <div class="container mx-auto px-6 sm:px-6 lg:px-8">
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12"
+        >
+          <!-- Company Info -->
+          <div>
+            <div class="flex items-center gap-2 mb-6">
+              <div
+                class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-2xl"
+              >
+                🍽️
+              </div>
+              <span class="font-display text-2xl text-dark">Bites</span>
+            </div>
+            <p class="text-dark-gray mb-6">
+              Enjoy delicious food from the best restaurants. Order online and
+              get it delivered to your door.
+            </p>
+            <div class="flex gap-3">
+              <a
+                href="#"
+                class="w-10 h-10 bg-cream rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition-all"
+              >
+                📘
+              </a>
+              <a
+                href="#"
+                class="w-10 h-10 bg-cream rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition-all"
+              >
+                🐦
+              </a>
+              <a
+                href="#"
+                class="w-10 h-10 bg-cream rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition-all"
+              >
+                📷
+              </a>
+              <a
+                href="#"
+                class="w-10 h-10 bg-cream rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition-all"
+              >
+                💼
+              </a>
+            </div>
+          </div>
+
+          <!-- Quick Links -->
+          <div>
+            <h4 class="font-display text-xl mb-6">Quick Links</h4>
+            <ul class="space-y-3">
+              <li>
+                <a
+                  href="#home"
+                  class="text-dark-gray hover:text-primary transition-colors"
+                  >About Us</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#menu"
+                  class="text-dark-gray hover:text-primary transition-colors"
+                  >Menu</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#reviews"
+                  class="text-dark-gray hover:text-primary transition-colors"
+                  >Reviews</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#blog"
+                  class="text-dark-gray hover:text-primary transition-colors"
+                  >Blog</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#contact"
+                  class="text-dark-gray hover:text-primary transition-colors"
+                  >Contact</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <!-- Services -->
+          <div>
+            <h4 class="font-display text-xl mb-6">Our Services</h4>
+            <ul class="space-y-3">
+              <li>
+                <a
+                  href="#"
+                  class="text-dark-gray hover:text-primary transition-colors"
+                  >Online Order</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-dark-gray hover:text-primary transition-colors"
+                  >Pre-Reservation</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-dark-gray hover:text-primary transition-colors"
+                  >24/7 Service</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-dark-gray hover:text-primary transition-colors"
+                  >Catering</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-dark-gray hover:text-primary transition-colors"
+                  >Party Orders</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <!-- Contact Info -->
+          <div>
+            <h4 class="font-display text-xl mb-6">Contact Us</h4>
+            <ul class="space-y-4">
+              <li class="flex items-start gap-3">
+                <span class="text-primary text-xl">📍</span>
+                <span class="text-dark-gray"
+                  >123 Food Street, Flavor Town, FT 12345</span
+                >
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="text-primary text-xl">📧</span>
+                <span class="text-dark-gray">hello@bites.com</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="text-primary text-xl">📞</span>
+                <span class="text-dark-gray">+1 (555) 123-4567</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Bottom Footer -->
+        <div class="border-t border-dark/10 pt-8 text-center">
+          <p class="text-dark-gray">
+            © 2026 Bites Restaurant. All rights reserved. | Crafted with ❤️
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script src="index.js"></script>
+  </body>
+</html>
