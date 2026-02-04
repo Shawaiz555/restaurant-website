@@ -285,13 +285,15 @@
 
     <!-- Product Detail Section -->
     <section class="pt-28 lg:pt-30 lg:pb-20">
-      <div class="container mx-auto px-6 sm:px-6 lg:px-8">
+      <div class="container mx-auto px-3 sm:px-6 lg:px-5">
         <!-- Back Button -->
         <a
           href="../index.html"
-          class="inline-flex items-center gap-2 text-dark hover:text-primary transition-colors mb-8 font-medium"
+          class="inline-flex items-center gap-2 ml-4 text-dark hover:text-primary transition-colors mb-8 font-medium"
         >
-          <span class="text-xl">←</span>
+          <span class="text-xl w-6 h-6"
+            ><img src="../assets/icons/homeIcon.svg" alt="Home Icon"
+          /></span>
           <span>Back to Home</span>
         </a>
 
@@ -300,7 +302,7 @@
           <!-- Left Column - Image and Price -->
           <div class="space-y-6">
             <!-- Main Product Image -->
-            <div class="bg-white rounded-3xl p-4 sm:p-6 lg:p-8 shadow-lg">
+            <div class="rounded-3xl p-3 lg:p-5">
               <img
                 id="productImage"
                 src=""
@@ -310,7 +312,7 @@
             </div>
 
             <!-- Price and Add to Cart (Desktop) -->
-            <div class="hidden lg:block bg-white rounded-3xl p-8 shadow-lg">
+            <div class="hidden lg:block rounded-3xl p-5">
               <!-- Size Selection -->
               <div id="sizeSelection" class="mb-6">
                 <h3 class="font-display text-xl mb-4">Select Size</h3>
@@ -342,7 +344,7 @@
           </div>
 
           <!-- Right Column - Details -->
-          <div class="space-y-8">
+          <div class="space-y-8 px-3 lg:px-0">
             <!-- Product Name and Category -->
             <div>
               <p id="productCategory" class="text-primary font-medium mb-2">
@@ -450,7 +452,7 @@
         </div>
 
         <!-- Related Products Section -->
-        <div class="mt-20">
+        <div class="mt-20 px-4">
           <div class="flex items-center justify-between mb-12">
             <h2 class="font-display text-4xl lg:text-5xl">Related Products</h2>
             <div class="flex gap-2">
