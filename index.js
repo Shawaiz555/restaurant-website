@@ -409,7 +409,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
    // ===== Shopping Cart Functionality =====
    let cart = storage.get('cart') || [];
-   const TAX_RATE = 0.18; // 18% GST
 
    // Cart elements
    const cartBtn = document.getElementById('cartBtn');
@@ -422,7 +421,6 @@ document.addEventListener('DOMContentLoaded', function () {
    const emptyCartMessage = document.getElementById('emptyCartMessage');
    const cartFooter = document.getElementById('cartFooter');
    const cartSubtotal = document.getElementById('cartSubtotal');
-   const cartTax = document.getElementById('cartTax');
    const cartTotal = document.getElementById('cartTotal');
    const placeOrderBtn = document.getElementById('placeOrderBtn');
 
@@ -504,11 +502,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
    // Calculate cart totals
    function calculateTotals() {
-      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-      const tax = subtotal * TAX_RATE;
-      const total = subtotal + tax;
+      const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
-      return { subtotal, tax, total };
+      return { total };
    }
 
    // Update cart UI
@@ -566,9 +562,8 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       // Update totals
-      const { subtotal, tax, total } = calculateTotals();
-      cartSubtotal.textContent = `₹${subtotal.toFixed(2)}`;
-      cartTax.textContent = `₹${tax.toFixed(2)}`;
+      const { total } = calculateTotals();
+      cartSubtotal.textContent = `₹${total.toFixed(2)}`;
       cartTotal.textContent = `₹${total.toFixed(2)}`;
    }
 
