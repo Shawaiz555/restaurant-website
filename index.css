@@ -753,3 +753,148 @@ a:focus {
 #cartItemsContainer::-webkit-scrollbar-thumb:hover {
   background: #e89530;
 }
+
+/* Product Detail Page Styles */
+.size-option {
+  transition: all 0.3s ease;
+}
+
+.size-option:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.size-option input:checked ~ * {
+  color: #f4a340;
+}
+
+/* Product Image Zoom */
+#productImage {
+  transition: transform 0.5s ease;
+  object-fit: cover;
+  width: 100%;
+}
+
+#productImage:hover {
+  transform: scale(1.05);
+}
+
+/* Prevent image compression on small screens */
+@media (max-width: 640px) {
+  #productImage {
+    min-height: 250px;
+    max-height: 350px;
+    object-fit: cover;
+  }
+}
+
+/* Related Products Card Hover */
+.related-product-card {
+  transition: all 0.3s ease;
+}
+
+.related-product-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Mobile Bottom Bar Animation */
+@media (max-width: 1023px) {
+  .lg\:hidden.fixed.bottom-0 {
+    animation: slideUpBottom 0.3s ease-out;
+  }
+}
+
+@keyframes slideUpBottom {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* Ingredients Badge Animation */
+#productIngredients span {
+  animation: fadeInScale 0.4s ease-out forwards;
+  opacity: 0;
+}
+
+#productIngredients span:nth-child(1) { animation-delay: 0.1s; }
+#productIngredients span:nth-child(2) { animation-delay: 0.15s; }
+#productIngredients span:nth-child(3) { animation-delay: 0.2s; }
+#productIngredients span:nth-child(4) { animation-delay: 0.25s; }
+#productIngredients span:nth-child(5) { animation-delay: 0.3s; }
+#productIngredients span:nth-child(6) { animation-delay: 0.35s; }
+#productIngredients span:nth-child(7) { animation-delay: 0.4s; }
+#productIngredients span:nth-child(8) { animation-delay: 0.45s; }
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Product Card Click Effect */
+.product-card-clickable {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.product-card-clickable:active {
+  transform: scale(0.98);
+}
+
+/* Make product cards clickable */
+.swiper-slide,
+.menu-item {
+  cursor: pointer;
+}
+
+.swiper-slide button,
+.menu-item button {
+  cursor: pointer;
+}
+
+/* Back to Top Button Positioning */
+.back-to-top {
+  font-size: 20px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  /* Ensure consistent positioning */
+  margin: 0;
+  padding: 0;
+}
+
+@media (min-width: 640px) {
+  .back-to-top {
+    font-size: 24px;
+  }
+}
+
+/* Ensure button doesn't interfere with content on small screens */
+@media (max-width: 639px) {
+  .back-to-top {
+    width: 3rem !important;
+    height: 3rem !important;
+  }
+}
+
+/* Add some breathing room at the bottom of pages for the button */
+body {
+  position: relative;
+  min-height: 100vh;
+}
+
+/* Ensure footer has proper spacing */
+footer {
+  padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+}

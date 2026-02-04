@@ -47,6 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
       },
       watchSlidesProgress: true,
       watchSlidesVisibility: true,
+      allowTouchMove: true, // Allow touch/drag
       breakpoints: {
          640: {
             slidesPerView: 2,
@@ -64,6 +65,21 @@ document.addEventListener('DOMContentLoaded', function () {
       on: {
          init: function () {
             console.log('Popular Dishes Swiper initialized');
+         },
+         click: function (_swiper, event) {
+            // Handle click on swiper slide
+            const slide = event.target.closest('.swiper-slide');
+            if (slide && !event.target.closest('button')) {
+               const productName = slide.querySelector('h3')?.textContent.trim();
+               if (productName) {
+                  const productId = productName.toLowerCase().replace(/\s+/g, '-');
+                  console.log('Swiper click - Product:', productName, 'ID:', productId);
+                  if (typeof getProductById === 'function' && getProductById(productId)) {
+                     console.log('Navigating to product page...');
+                     window.location.href = `pages/product.html?id=${productId}`;
+                  }
+               }
+            }
          },
       },
    });
@@ -448,11 +464,24 @@ document.addEventListener('DOMContentLoaded', function () {
    window.updateQuantity = updateQuantity;
    window.removeFromCart = removeFromCart;
 
-   // Add to cart button click handler using event delegation
+   // Add to cart button and product card click handler
    document.addEventListener('click', function(e) {
+      // Only handle clicks on homepage, not on product page
+      if (window.location.pathname.includes('product.html')) {
+         return;
+      }
+
+      console.log('Click detected:', e.target);
+
       const addToCartBtn = e.target.closest('button');
 
+      // Handle Add to Cart button click
       if (addToCartBtn && addToCartBtn.textContent.trim() === 'Add to Cart') {
+         e.stopPropagation(); // Prevent card click
+         e.preventDefault();
+
+         console.log('Add to cart button clicked');
+
          // Find the product details from the parent card
          const productCard = addToCartBtn.closest('.swiper-slide, .menu-item');
 
@@ -483,11 +512,230 @@ document.addEventListener('DOMContentLoaded', function () {
                console.log('Missing product data:', { productName, price, imageUrl, priceText });
             }
          }
+         return;
+      }
+
+      // Handle product card click (navigate to product page)
+      const productCard = e.target.closest('.swiper-slide, .menu-item');
+
+      console.log('Product card found:', productCard);
+
+      if (productCard && !e.target.closest('button')) {
+         const productName = productCard.querySelector('h3')?.textContent.trim();
+
+         console.log('Product name:', productName);
+
+         if (productName) {
+            // Create product ID from name
+            const productId = productName.toLowerCase().replace(/\s+/g, '-');
+
+            console.log('Card clicked:', productName, 'ID:', productId);
+
+            // Check if product exists in database
+            if (typeof getProductById === 'function' && getProductById(productId)) {
+               console.log('Product found in database, navigating...');
+               window.location.href = `pages/product.html?id=${productId}`;
+            } else {
+               console.log('Product not found in database. Product ID:', productId);
+               if (typeof window.productsData !== 'undefined') {
+                  console.log('Available products:', Object.keys(window.productsData));
+               }
+            }
+         }
       }
    });
 
    // Initialize cart on page load
    updateCart();
+
+   // ===== PRODUCT DETAIL PAGE LOGIC =====
+   // Check if we're on the product page
+   if (window.location.pathname.includes('product.html')) {
+      // Get product ID from URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const productId = urlParams.get('id');
+
+      if (!productId || !getProductById(productId)) {
+         window.location.href = '../index.html';
+         return;
+      }
+
+      const product = getProductById(productId);
+      let selectedSize = product.sizes[0];
+
+      // ===== Populate Product Details =====
+      function populateProductDetails() {
+         document.getElementById('pageTitle').textContent = `${product.name} - Bites`;
+         document.getElementById('productImage').src = product.image;
+         document.getElementById('productImage').alt = product.name;
+         document.getElementById('productCategory').textContent = product.category;
+         document.getElementById('productName').textContent = product.name;
+         document.getElementById('productDescription').textContent = product.description;
+
+         // Update rating
+         const ratingContainer = document.getElementById('productRating');
+         ratingContainer.innerHTML = '';
+         for (let i = 0; i < 5; i++) {
+            const star = document.createElement('span');
+            star.textContent = '⭐';
+            star.className = i < product.rating ? 'text-primary' : 'text-gray-300';
+            ratingContainer.appendChild(star);
+         }
+
+         // Update ingredients
+         const ingredientsContainer = document.getElementById('productIngredients');
+         ingredientsContainer.innerHTML = product.ingredients.map(ingredient => `
+            <span class="bg-cream px-4 py-2 rounded-full text-dark-gray text-sm">${ingredient}</span>
+         `).join('');
+
+         // Update nutrition info
+         if (product.nutritionInfo) {
+            document.getElementById('nutritionCalories').textContent = product.nutritionInfo.calories;
+            document.getElementById('nutritionProtein').textContent = product.nutritionInfo.protein;
+            document.getElementById('nutritionCarbs').textContent = product.nutritionInfo.carbs;
+            document.getElementById('nutritionFat').textContent = product.nutritionInfo.fat;
+         }
+
+         // Update size options
+         const sizeOptionsContainer = document.getElementById('sizeOptions');
+         sizeOptionsContainer.innerHTML = product.sizes.map((size, index) => `
+            <label class="size-option flex items-center justify-between p-4 border-2 rounded-xl cursor-pointer transition-all ${index === 0 ? 'border-primary bg-cream' : 'border-gray-200 hover:border-primary'}">
+               <input type="radio" name="size" value="${index}" class="hidden size-radio" ${index === 0 ? 'checked' : ''}>
+               <div class="flex-1">
+                  <p class="font-display text-lg text-dark">${size.name}</p>
+                  <p class="text-dark-gray text-sm">${size.description}</p>
+               </div>
+               <p class="font-display text-xl text-primary">₹${size.price.toFixed(2)}</p>
+            </label>
+         `).join('');
+
+         updatePrice();
+
+         // Add size change listeners
+         document.querySelectorAll('.size-radio').forEach((radio, index) => {
+            radio.addEventListener('change', function() {
+               selectedSize = product.sizes[index];
+               updatePrice();
+               updateSizeSelection();
+            });
+         });
+      }
+
+      function updateSizeSelection() {
+         document.querySelectorAll('.size-option').forEach((option) => {
+            const radio = option.querySelector('.size-radio');
+            if (radio.checked) {
+               option.classList.add('border-primary', 'bg-cream');
+               option.classList.remove('border-gray-200');
+            } else {
+               option.classList.remove('border-primary', 'bg-cream');
+               option.classList.add('border-gray-200');
+            }
+         });
+      }
+
+      function updatePrice() {
+         const priceText = `₹${selectedSize.price.toFixed(2)}`;
+         document.getElementById('productPrice').textContent = priceText;
+         document.getElementById('mobilePriceDisplay').textContent = priceText;
+      }
+
+      // Add to cart functionality for product page
+      function handleAddToCartOnProductPage() {
+         const cartProduct = {
+            id: product.id,
+            name: product.name,
+            price: selectedSize.price,
+            image: product.image,
+            size: selectedSize.name
+         };
+         addToCart(cartProduct);
+      }
+
+      document.getElementById('addToCartBtn')?.addEventListener('click', handleAddToCartOnProductPage);
+      document.getElementById('mobileAddToCartBtn')?.addEventListener('click', handleAddToCartOnProductPage);
+
+      // ===== Related Products =====
+      function loadRelatedProducts() {
+         const relatedProducts = getProductsByCategory(product.category)
+            .filter(p => p.id !== product.id)
+            .slice(0, 6);
+
+         const container = document.getElementById('relatedProductsContainer');
+         container.innerHTML = relatedProducts.map(relatedProduct => `
+            <div class="swiper-slide">
+               <div class="bg-white rounded-3xl p-6 hover:shadow-xl transition-all duration-300 group cursor-pointer" onclick="window.location.href='product.html?id=${relatedProduct.id}'">
+                  <div class="mb-4 overflow-hidden rounded-2xl">
+                     <img
+                        src="${relatedProduct.image}"
+                        alt="${relatedProduct.name}"
+                        class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+                     />
+                  </div>
+                  <h3 class="font-display text-xl mb-2 text-center">${relatedProduct.name}</h3>
+                  <div class="flex justify-center gap-1 mb-2">
+                     ${Array(5).fill(0).map((_, i) => `
+                        <span class="${i < relatedProduct.rating ? 'text-primary' : 'text-gray-300'}">⭐</span>
+                     `).join('')}
+                  </div>
+                  <div class="text-center">
+                     <span class="font-display text-2xl text-dark">₹${relatedProduct.basePrice.toFixed(2)}</span>
+                  </div>
+               </div>
+            </div>
+         `).join('');
+
+         // Initialize Swiper for related products
+         const relatedSwiper = new Swiper('.relatedProductsSwiper', {
+            slidesPerView: 1,
+            spaceBetween: 20,
+            loop: relatedProducts.length >= 3,
+            loopedSlides: relatedProducts.length,
+            centeredSlides: false,
+            navigation: {
+               nextEl: '.swiper-button-next-related',
+               prevEl: '.swiper-button-prev-related',
+            },
+            breakpoints: {
+               640: {
+                  slidesPerView: 2,
+                  spaceBetween: 20,
+               },
+               1024: {
+                  slidesPerView: 3,
+                  spaceBetween: 30,
+               },
+            },
+         });
+
+         // Hide navigation buttons if not enough slides
+         const hideNavigationIfNeeded = () => {
+            const prevBtn = document.querySelector('.swiper-button-prev-related');
+            const nextBtn = document.querySelector('.swiper-button-next-related');
+
+            if (relatedProducts.length <= 1) {
+               prevBtn.style.display = 'none';
+               nextBtn.style.display = 'none';
+            } else if (relatedProducts.length <= 2 && window.innerWidth >= 640) {
+               prevBtn.style.display = 'none';
+               nextBtn.style.display = 'none';
+            } else if (relatedProducts.length <= 3 && window.innerWidth >= 1024) {
+               prevBtn.style.display = 'none';
+               nextBtn.style.display = 'none';
+            } else {
+               prevBtn.style.display = 'flex';
+               nextBtn.style.display = 'flex';
+            }
+         };
+
+         hideNavigationIfNeeded();
+         window.addEventListener('resize', hideNavigationIfNeeded);
+      }
+
+      // Initialize product page
+      populateProductDetails();
+      loadRelatedProducts();
+   }
 
    // ===== Form Validation (if you add forms later) =====
    function validateEmail(email) {
@@ -523,9 +771,20 @@ document.addEventListener('DOMContentLoaded', function () {
    // Create back to top button
    const backToTopBtn = document.createElement('button');
    backToTopBtn.innerHTML = '↑';
-   backToTopBtn.className = 'back-to-top fixed bottom-8 right-8 w-14 h-14 bg-primary text-white rounded-full shadow-lg opacity-0 pointer-events-none transition-all duration-300 hover:bg-primary-dark z-40';
+   backToTopBtn.className = 'back-to-top fixed w-12 h-12 sm:w-14 sm:h-14 bg-primary text-white rounded-full shadow-lg opacity-0 pointer-events-none transition-all duration-300 hover:bg-primary-dark hover:scale-110 z-50';
    backToTopBtn.setAttribute('aria-label', 'Back to top');
    document.body.appendChild(backToTopBtn);
+
+   // Adjust position based on page
+   if (window.location.pathname.includes('product.html')) {
+      // Product page - position above mobile bottom bar
+      backToTopBtn.style.bottom = '6.5rem';
+      backToTopBtn.style.right = '1rem';
+   } else {
+      // Homepage - position at bottom right corner
+      backToTopBtn.style.bottom = '1.5rem';
+      backToTopBtn.style.right = '1rem';
+   }
 
    // Show/hide back to top button
    window.addEventListener('scroll', () => {

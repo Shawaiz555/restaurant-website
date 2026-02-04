@@ -1,0 +1,644 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title id="pageTitle">Product Details - Bites</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Swiper CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Righteous&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../index.css" />
+
+    <!-- Tailwind Config -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#F4A340",
+              "primary-dark": "#E89530",
+              cream: "#FFF8F0",
+              "cream-light": "#FFFBF5",
+              dark: "#1E1E1E",
+              "dark-gray": "#4A4A4A",
+            },
+            fontFamily: {
+              display: ["Righteous", "cursive"],
+              body: ["Poppins", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="font-body bg-cream-light text-dark">
+    <!-- Navigation -->
+    <nav
+      class="fixed top-0 left-0 right-0 bg-cream-light/95 backdrop-blur-sm z-50 shadow-sm"
+    >
+      <div class="container mx-auto px-6 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-20">
+          <!-- Logo -->
+          <a href="../index.html" class="flex items-center gap-2">
+            <div
+              class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-2xl"
+            >
+              🍽️
+            </div>
+            <span class="font-display text-2xl text-dark">Bites</span>
+          </a>
+
+          <!-- Desktop Menu -->
+          <div class="hidden lg:flex items-center gap-8">
+            <a
+              href="../index.html#home"
+              class="text-dark hover:text-primary transition-colors font-medium"
+              >Home</a
+            >
+            <a
+              href="../index.html#services"
+              class="text-dark hover:text-primary transition-colors font-medium"
+              >Services</a
+            >
+            <a
+              href="../index.html#menu"
+              class="text-dark hover:text-primary transition-colors font-medium"
+              >Menu</a
+            >
+            <a
+              href="../index.html#reviews"
+              class="text-dark hover:text-primary transition-colors font-medium"
+              >Reviews</a
+            >
+            <a
+              href="../index.html#cheffs"
+              class="text-dark hover:text-primary transition-colors font-medium"
+              >Cheffs</a
+            >
+            <a
+              href="../index.html#login"
+              class="text-dark hover:text-primary transition-colors font-medium"
+              >Login</a
+            >
+            <a
+              href="../index.html#signup"
+              class="text-dark hover:text-primary transition-colors font-medium"
+              >Signup</a
+            >
+          </div>
+
+          <!-- Right Side -->
+          <div class="flex items-center gap-4">
+            <button
+              id="cartBtn"
+              class="relative w-10 h-10 rounded-full border-2 border-dark/10 flex items-center justify-center hover:bg-primary hover:border-primary transition-all"
+            >
+              🛒
+              <span
+                id="cartBadge"
+                class="absolute -top-1 -right-1 bg-primary text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center hidden"
+                >0</span
+              >
+            </button>
+            <button
+              class="hidden lg:block bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-full font-medium transition-all shadow-lg hover:shadow-xl"
+            >
+              Reserve Table
+            </button>
+
+            <!-- Mobile Menu Button -->
+            <button
+              id="menuBtn"
+              class="lg:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5"
+            >
+              <span class="menu-line w-6 h-0.5 bg-dark transition-all"></span>
+              <span class="menu-line w-6 h-0.5 bg-dark transition-all"></span>
+              <span class="menu-line w-6 h-0.5 bg-dark transition-all"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Mobile Drawer -->
+    <div
+      id="mobileDrawer"
+      class="fixed top-0 left-0 h-full w-80 bg-white shadow-2xl z-40 transform -translate-x-full transition-transform duration-300"
+    >
+      <div class="p-8">
+        <div class="flex items-center gap-2 mb-12">
+          <div
+            class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-2xl"
+          >
+            🍽️
+          </div>
+          <span class="font-display text-2xl text-dark">Bites</span>
+        </div>
+
+        <div class="flex flex-col gap-6">
+          <a
+            href="../index.html#home"
+            class="text-dark hover:text-primary transition-colors font-medium text-lg drawer-link"
+            >Home</a
+          >
+          <a
+            href="../index.html#services"
+            class="text-dark hover:text-primary transition-colors font-medium drawer-link"
+            >Services</a
+          >
+          <a
+            href="../index.html#menu"
+            class="text-dark hover:text-primary transition-colors font-medium text-lg drawer-link"
+            >Menu</a
+          >
+          <a
+            href="../index.html#reviews"
+            class="text-dark hover:text-primary transition-colors font-medium text-lg drawer-link"
+            >Reviews</a
+          >
+          <a
+            href="../index.html#cheffs"
+            class="text-dark hover:text-primary transition-colors font-medium text-lg drawer-link"
+            >Cheffs</a
+          >
+          <a
+            href="../index.html#login"
+            class="text-dark hover:text-primary transition-colors font-medium drawer-link"
+            >Login</a
+          >
+          <a
+            href="../index.html#signup"
+            class="text-dark hover:text-primary transition-colors font-medium drawer-link"
+            >Signup</a
+          >
+          <button
+            class="bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-full font-medium transition-all mt-4"
+          >
+            Reserve Table
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Overlay -->
+    <div
+      id="overlay"
+      class="fixed inset-0 bg-black/50 z-30 opacity-0 pointer-events-none transition-opacity duration-300"
+    ></div>
+
+    <!-- Cart Drawer -->
+    <div
+      id="cartDrawer"
+      class="fixed top-0 right-0 h-full w-full sm:w-96 bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-300 flex flex-col"
+    >
+      <!-- Cart Header -->
+      <div
+        class="p-6 border-b border-gray-200 flex items-center justify-between bg-cream-light"
+      >
+        <h2 class="font-display text-2xl text-dark flex items-center gap-2">
+          <span>🛒</span>
+          <span>Your Cart</span>
+          <span id="cartItemCount" class="text-lg text-primary">(0)</span>
+        </h2>
+        <button
+          id="closeCartBtn"
+          class="w-10 h-10 rounded-full hover:bg-cream transition-all flex items-center justify-center text-2xl"
+        >
+          ✕
+        </button>
+      </div>
+
+      <!-- Cart Items Container -->
+      <div id="cartItemsContainer" class="flex-1 overflow-y-auto p-6">
+        <!-- Empty Cart Message -->
+        <div
+          id="emptyCartMessage"
+          class="flex flex-col items-center justify-center h-full text-center"
+        >
+          <div class="text-6xl mb-4">🛒</div>
+          <h3 class="font-display text-xl text-dark mb-2">
+            Your cart is empty
+          </h3>
+          <p class="text-dark-gray text-sm">
+            Add some delicious items to get started!
+          </p>
+        </div>
+
+        <!-- Cart Items will be dynamically inserted here -->
+        <div id="cartItems" class="space-y-4 hidden"></div>
+      </div>
+
+      <!-- Cart Footer -->
+      <div
+        id="cartFooter"
+        class="border-t border-gray-200 bg-cream-light p-6 hidden"
+      >
+        <!-- Subtotal -->
+        <div class="flex justify-between items-center mb-3">
+          <span class="text-dark-gray font-medium">Subtotal</span>
+          <span id="cartSubtotal" class="font-display text-xl text-dark"
+            >₹0.00</span
+          >
+        </div>
+
+        <!-- Tax (18% GST) -->
+        <div class="flex justify-between items-center mb-3">
+          <span class="text-dark-gray text-sm">Tax (18% GST)</span>
+          <span id="cartTax" class="text-dark-gray text-sm">₹0.00</span>
+        </div>
+
+        <!-- Total -->
+        <div
+          class="flex justify-between items-center mb-6 pt-3 border-t border-gray-300"
+        >
+          <span class="font-display text-lg text-dark">Total</span>
+          <span id="cartTotal" class="font-display text-2xl text-primary"
+            >₹0.00</span
+          >
+        </div>
+
+        <!-- Order Button -->
+        <button
+          id="placeOrderBtn"
+          class="w-full bg-primary hover:bg-primary-dark text-white py-4 rounded-full font-display text-lg transition-all shadow-lg hover:shadow-xl"
+        >
+          Place Order
+        </button>
+      </div>
+    </div>
+
+    <!-- Product Detail Section -->
+    <section class="pt-28 lg:pt-30 lg:pb-20">
+      <div class="container mx-auto px-6 sm:px-6 lg:px-8">
+        <!-- Back Button -->
+        <a
+          href="../index.html"
+          class="inline-flex items-center gap-2 text-dark hover:text-primary transition-colors mb-8 font-medium"
+        >
+          <span class="text-xl">←</span>
+          <span>Back to Home</span>
+        </a>
+
+        <!-- Product Details -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-20">
+          <!-- Left Column - Image and Price -->
+          <div class="space-y-6">
+            <!-- Main Product Image -->
+            <div class="bg-white rounded-3xl p-4 sm:p-6 lg:p-8 shadow-lg">
+              <img
+                id="productImage"
+                src=""
+                alt="Product"
+                class="w-full h-64 sm:h-80 lg:h-96 object-cover rounded-2xl"
+              />
+            </div>
+
+            <!-- Price and Add to Cart (Desktop) -->
+            <div class="hidden lg:block bg-white rounded-3xl p-8 shadow-lg">
+              <!-- Size Selection -->
+              <div id="sizeSelection" class="mb-6">
+                <h3 class="font-display text-xl mb-4">Select Size</h3>
+                <div id="sizeOptions" class="space-y-3">
+                  <!-- Size options will be dynamically inserted -->
+                </div>
+              </div>
+
+              <!-- Price -->
+              <div
+                class="flex items-center justify-between mb-6 pb-6 border-b border-gray-200"
+              >
+                <span class="text-dark-gray text-lg">Price</span>
+                <span
+                  id="productPrice"
+                  class="font-display text-3xl text-primary"
+                  >₹0.00</span
+                >
+              </div>
+
+              <!-- Add to Cart Button -->
+              <button
+                id="addToCartBtn"
+                class="w-full bg-primary hover:bg-primary-dark text-white py-4 rounded-full font-display text-lg transition-all shadow-lg hover:shadow-xl"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <!-- Right Column - Details -->
+          <div class="space-y-8">
+            <!-- Product Name and Category -->
+            <div>
+              <p id="productCategory" class="text-primary font-medium mb-2">
+                Category
+              </p>
+              <h1
+                id="productName"
+                class="font-display text-4xl lg:text-5xl mb-4"
+              >
+                Product Name
+              </h1>
+
+              <!-- Rating -->
+              <div id="productRating" class="flex gap-1 mb-4">
+                <!-- Stars will be dynamically inserted -->
+              </div>
+            </div>
+
+            <!-- Description -->
+            <div>
+              <h3 class="font-display text-2xl mb-4">Description</h3>
+              <p id="productDescription" class="text-dark-gray leading-relaxed">
+                Product description will be loaded here...
+              </p>
+            </div>
+
+            <!-- Ingredients -->
+            <div>
+              <h3 class="font-display text-2xl mb-4">Ingredients</h3>
+              <div id="productIngredients" class="flex flex-wrap gap-2">
+                <!-- Ingredients will be dynamically inserted -->
+              </div>
+            </div>
+
+            <!-- Nutrition Info -->
+            <div id="nutritionSection">
+              <h3 class="font-display text-2xl mb-4">Nutrition Information</h3>
+              <div class="bg-cream rounded-2xl p-6 grid grid-cols-2 gap-4">
+                <div>
+                  <p class="text-dark-gray text-sm">Calories</p>
+                  <p
+                    id="nutritionCalories"
+                    class="font-display text-lg text-dark"
+                  >
+                    -
+                  </p>
+                </div>
+                <div>
+                  <p class="text-dark-gray text-sm">Protein</p>
+                  <p
+                    id="nutritionProtein"
+                    class="font-display text-lg text-dark"
+                  >
+                    -
+                  </p>
+                </div>
+                <div>
+                  <p class="text-dark-gray text-sm">Carbs</p>
+                  <p id="nutritionCarbs" class="font-display text-lg text-dark">
+                    -
+                  </p>
+                </div>
+                <div>
+                  <p class="text-dark-gray text-sm">Fat</p>
+                  <p id="nutritionFat" class="font-display text-lg text-dark">
+                    -
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mobile Price and Add to Cart -->
+        <div
+          class="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t-2 border-gray-100 p-4 z-50 shadow-2xl backdrop-blur-sm bg-white/95"
+          style="padding-bottom: max(1rem, env(safe-area-inset-bottom))"
+        >
+          <div
+            class="flex items-center justify-between gap-4 max-w-screen-xl mx-auto"
+          >
+            <div>
+              <p class="text-dark-gray text-xs font-medium">Total Price</p>
+              <p
+                id="mobilePriceDisplay"
+                class="font-display text-2xl text-primary"
+              >
+                ₹0.00
+              </p>
+            </div>
+            <button
+              id="mobileAddToCartBtn"
+              class="bg-primary hover:bg-primary-dark text-white px-6 sm:px-8 py-3 sm:py-3.5 rounded-full font-medium transition-all shadow-lg hover:shadow-xl active:scale-95 whitespace-nowrap"
+            >
+              Add to Cart
+            </button>
+          </div>
+        </div>
+
+        <!-- Related Products Section -->
+        <div class="mt-20">
+          <div class="flex items-center justify-between mb-12">
+            <h2 class="font-display text-4xl lg:text-5xl">Related Products</h2>
+            <div class="flex gap-2">
+              <button
+                class="swiper-button-prev-related w-12 h-12 rounded-full bg-white border-2 border-dark/10 flex items-center justify-center hover:bg-primary hover:border-primary hover:text-white transition-all"
+              >
+                ←
+              </button>
+              <button
+                class="swiper-button-next-related w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center hover:bg-primary-dark transition-all"
+              >
+                →
+              </button>
+            </div>
+          </div>
+
+          <div class="swiper relatedProductsSwiper">
+            <div id="relatedProductsContainer" class="swiper-wrapper pb-8">
+              <!-- Related products will be dynamically inserted -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="bg-white py-16 lg:py-20">
+      <div class="container mx-auto px-6 sm:px-6 lg:px-8">
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12"
+        >
+          <!-- Company Info -->
+          <div>
+            <div class="flex items-center gap-2 mb-6">
+              <div
+                class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-2xl"
+              >
+                🍽️
+              </div>
+              <span class="font-display text-2xl text-dark">Bites</span>
+            </div>
+            <p class="text-dark-gray mb-6">
+              Enjoy delicious food from the best restaurants. Order online and
+              get it delivered to your door.
+            </p>
+            <div class="flex gap-3">
+              <a
+                href="#"
+                class="w-10 h-10 bg-cream rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition-all"
+              >
+                📘
+              </a>
+              <a
+                href="#"
+                class="w-10 h-10 bg-cream rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition-all"
+              >
+                🐦
+              </a>
+              <a
+                href="#"
+                class="w-10 h-10 bg-cream rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition-all"
+              >
+                📷
+              </a>
+              <a
+                href="#"
+                class="w-10 h-10 bg-cream rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition-all"
+              >
+                💼
+              </a>
+            </div>
+          </div>
+
+          <!-- Quick Links -->
+          <div>
+            <h4 class="font-display text-xl mb-6">Quick Links</h4>
+            <ul class="space-y-3">
+              <li>
+                <a
+                  href="../index.html#home"
+                  class="text-dark-gray hover:text-primary transition-colors"
+                  >About Us</a
+                >
+              </li>
+              <li>
+                <a
+                  href="../index.html#menu"
+                  class="text-dark-gray hover:text-primary transition-colors"
+                  >Menu</a
+                >
+              </li>
+              <li>
+                <a
+                  href="../index.html#reviews"
+                  class="text-dark-gray hover:text-primary transition-colors"
+                  >Reviews</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#blog"
+                  class="text-dark-gray hover:text-primary transition-colors"
+                  >Blog</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#contact"
+                  class="text-dark-gray hover:text-primary transition-colors"
+                  >Contact</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <!-- Services -->
+          <div>
+            <h4 class="font-display text-xl mb-6">Our Services</h4>
+            <ul class="space-y-3">
+              <li>
+                <a
+                  href="#"
+                  class="text-dark-gray hover:text-primary transition-colors"
+                  >Online Order</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-dark-gray hover:text-primary transition-colors"
+                  >Pre-Reservation</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-dark-gray hover:text-primary transition-colors"
+                  >24/7 Service</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-dark-gray hover:text-primary transition-colors"
+                  >Catering</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-dark-gray hover:text-primary transition-colors"
+                  >Party Orders</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <!-- Contact Info -->
+          <div>
+            <h4 class="font-display text-xl mb-6">Contact Us</h4>
+            <ul class="space-y-4">
+              <li class="flex items-start gap-3">
+                <span class="text-primary text-xl">📍</span>
+                <span class="text-dark-gray"
+                  >123 Food Street, Flavor Town, FT 12345</span
+                >
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="text-primary text-xl">📧</span>
+                <span class="text-dark-gray">hello@bites.com</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="text-primary text-xl">📞</span>
+                <span class="text-dark-gray">+1 (555) 123-4567</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Bottom Footer -->
+        <div class="border-t border-dark/10 py-8 lg:py-5 text-center">
+          <p class="text-dark-gray">
+            © 2026 Bites Restaurant. All rights reserved. | Crafted with ❤️
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <!-- Product Data -->
+    <script src="../store/products-data.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script src="../index.js"></script>
+  </body>
+</html>
