@@ -38,6 +38,118 @@ document.addEventListener('DOMContentLoaded', function () {
       }
    });
 
+   // ===== Dynamic Product Loading =====
+   function renderProductCard(product) {
+      const stars = Array(5).fill(0).map((_, i) =>
+         `<span class="${i < product.rating ? 'text-primary' : 'text-gray-300'}">⭐</span>`
+      ).join('');
+
+      return `
+         <div class="swiper-slide">
+            <div class="bg-white rounded-3xl p-6 hover:shadow-xl transition-all duration-300 group">
+               <div class="mb-4 overflow-hidden rounded-2xl">
+                  <img
+                     src="${product.image}"
+                     alt="${product.name}"
+                     class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+               </div>
+               <h3 class="font-display text-xl mb-2 text-center">${product.name}</h3>
+               <div class="flex justify-center gap-1 mb-2">
+                  ${stars}
+               </div>
+               <p class="text-dark-gray text-sm text-center mb-4 line-clamp-2">
+                  ${product.description}
+               </p>
+               <div class="flex items-center justify-between">
+                  <span class="font-display text-2xl text-dark" data-price="${product.basePrice}">₹${product.basePrice.toFixed(2)}</span>
+                  <button
+                     class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full border-primary border-2 font-medium transition-all"
+                     data-product-id="${product.id}"
+                  >
+                     Add to Cart
+                  </button>
+               </div>
+            </div>
+         </div>
+      `;
+   }
+
+   // Render menu grid item (without swiper-slide wrapper)
+   function renderMenuGridItem(product) {
+      const stars = Array(5).fill(0).map((_, i) =>
+         `<span class="${i < product.rating ? 'text-primary' : 'text-gray-300'}">⭐</span>`
+      ).join('');
+
+      const categorySlug = product.category.toLowerCase().replace(/\s+/g, '-');
+
+      return `
+         <div class="bg-white rounded-3xl p-6 hover:shadow-xl transition-all duration-300 group menu-item" data-category="${categorySlug}">
+            <div class="mb-4 overflow-hidden rounded-2xl">
+               <img
+                  src="${product.image}"
+                  alt="${product.name}"
+                  class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+               />
+            </div>
+            <h3 class="font-display text-xl mb-2 text-center">${product.name}</h3>
+            <div class="flex justify-center gap-1 mb-2">
+               ${stars}
+            </div>
+            <p class="text-dark-gray text-sm text-center mb-4 line-clamp-2">
+               ${product.description}
+            </p>
+            <div class="flex items-center justify-between">
+               <span class="font-display text-2xl text-dark" data-price="${product.basePrice}">₹${product.basePrice.toFixed(2)}</span>
+               <button
+                  class="bg-cream hover:bg-primary hover:text-white px-6 py-2 rounded-full border-primary border-2 font-medium transition-all text-sm"
+                  data-product-id="${product.id}"
+               >
+                  Add to Cart
+               </button>
+            </div>
+         </div>
+      `;
+   }
+
+   // Load products dynamically
+   function loadProducts() {
+      if (typeof getAllProducts !== 'function' || typeof getProductsByCategory !== 'function') {
+         console.warn('Product functions not available yet');
+         return;
+      }
+
+      // Load Popular Dishes (swiper)
+      const popularDishes = getProductsByCategory('Popular Dishes');
+      const popularContainer = document.querySelector('.popularDishesSwiper .swiper-wrapper');
+      if (popularContainer && popularDishes.length > 0) {
+         popularContainer.innerHTML = popularDishes.map(product => renderProductCard(product)).join('');
+      }
+
+      // Load Menu Grid items (all categories)
+      const menuGridContainer = document.querySelector('#menu .grid');
+      if (menuGridContainer) {
+         const allMenuCategories = ['Breakfast', 'Noodles', 'Salads', 'Japanese', 'Drinks', 'Lunch'];
+         const allMenuItems = [];
+
+         allMenuCategories.forEach(category => {
+            const categoryItems = getProductsByCategory(category);
+            allMenuItems.push(...categoryItems);
+         });
+
+         if (allMenuItems.length > 0) {
+            menuGridContainer.innerHTML = allMenuItems.map(product => renderMenuGridItem(product)).join('');
+         }
+      }
+   }
+
+   // Call loadProducts after DOM is ready
+   if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', loadProducts);
+   } else {
+      loadProducts();
+   }
+
    // ===== Swiper Initialization =====
 
    // Popular Dishes Swiper
@@ -502,26 +614,49 @@ document.addEventListener('DOMContentLoaded', function () {
 
          console.log('Add to cart button clicked');
 
-         // Find the product details from the parent card
+         // Check if button has data-product-id (from dynamically loaded products)
+         const productId = addToCartBtn.getAttribute('data-product-id');
+
+         if (productId && typeof getProductById === 'function') {
+            // Use product data from products-data.js
+            const productData = getProductById(productId);
+            if (productData) {
+               const product = {
+                  id: productData.id,
+                  name: productData.name,
+                  price: productData.basePrice,
+                  image: productData.image
+               };
+               addToCart(product);
+               return;
+            }
+         }
+
+         // Fallback: Find the product details from the parent card (for statically loaded products)
          const productCard = addToCartBtn.closest('.swiper-slide, .menu-item');
 
          if (productCard) {
             const productName = productCard.querySelector('h3')?.textContent.trim();
             const imageUrl = productCard.querySelector('img')?.src;
 
-            // Find the price span - it's the sibling of the button in the same flex container
-            const priceElement = addToCartBtn.parentElement?.querySelector('.font-display');
-            const priceText = priceElement?.textContent.trim();
+            // Find the price span with data-price attribute or text content
+            const priceElement = addToCartBtn.parentElement?.querySelector('[data-price]');
+            let price;
 
-            // Extract price number from text like "₹35.00"
-            const price = parseFloat(priceText?.replace('₹', '').replace(',', '') || '0');
+            if (priceElement && priceElement.hasAttribute('data-price')) {
+               price = parseFloat(priceElement.getAttribute('data-price'));
+            } else {
+               const priceSpan = addToCartBtn.parentElement?.querySelector('.font-display');
+               const priceText = priceSpan?.textContent.trim();
+               price = parseFloat(priceText?.replace('₹', '').replace(',', '') || '0');
+            }
 
             // Create unique ID from name
-            const productId = productName?.toLowerCase().replace(/\s+/g, '-') || Math.random().toString(36);
+            const fallbackProductId = productName?.toLowerCase().replace(/\s+/g, '-') || Math.random().toString(36);
 
             if (productName && price && imageUrl) {
                const product = {
-                  id: productId,
+                  id: fallbackProductId,
                   name: productName,
                   price: price,
                   image: imageUrl
@@ -529,7 +664,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                addToCart(product);
             } else {
-               console.log('Missing product data:', { productName, price, imageUrl, priceText });
+               console.log('Missing product data:', { productName, price, imageUrl });
             }
          }
          return;
