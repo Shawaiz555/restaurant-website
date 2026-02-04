@@ -11,6 +11,16 @@ document.addEventListener('DOMContentLoaded', function () {
       mobileDrawer.classList.toggle('active');
       overlay.classList.toggle('active');
       document.body.style.overflow = mobileDrawer.classList.contains('active') ? 'hidden' : '';
+
+      // Hide back-to-top button when mobile menu is open
+      const backToTopBtn = document.querySelector('.back-to-top');
+      if (backToTopBtn) {
+         if (mobileDrawer.classList.contains('active')) {
+            backToTopBtn.style.display = 'none';
+         } else {
+            backToTopBtn.style.display = 'flex';
+         }
+      }
    }
 
    menuBtn.addEventListener('click', toggleMenu);
@@ -309,13 +319,23 @@ document.addEventListener('DOMContentLoaded', function () {
       cartDrawer.classList.toggle('active');
       overlay.classList.toggle('active');
       document.body.style.overflow = cartDrawer.classList.contains('active') ? 'hidden' : '';
+
+      // Hide back-to-top button when cart is open
+      const backToTopBtn = document.querySelector('.back-to-top');
+      if (backToTopBtn) {
+         if (cartDrawer.classList.contains('active')) {
+            backToTopBtn.style.display = 'none';
+         } else {
+            backToTopBtn.style.display = 'flex';
+         }
+      }
    }
 
    cartBtn.addEventListener('click', toggleCart);
    closeCartBtn.addEventListener('click', toggleCart);
 
    // Close cart when clicking overlay (only if mobile menu is not active)
-   overlay.addEventListener('click', function() {
+   overlay.addEventListener('click', function () {
       if (cartDrawer.classList.contains('active')) {
          toggleCart();
       }
@@ -441,7 +461,7 @@ document.addEventListener('DOMContentLoaded', function () {
    }
 
    // Place order
-   placeOrderBtn.addEventListener('click', function() {
+   placeOrderBtn.addEventListener('click', function () {
       if (cart.length === 0) return;
 
       const { total } = calculateTotals();
@@ -465,7 +485,7 @@ document.addEventListener('DOMContentLoaded', function () {
    window.removeFromCart = removeFromCart;
 
    // Add to cart button and product card click handler
-   document.addEventListener('click', function(e) {
+   document.addEventListener('click', function (e) {
       // Only handle clicks on homepage, not on product page
       if (window.location.pathname.includes('product.html')) {
          return;
@@ -585,7 +605,7 @@ document.addEventListener('DOMContentLoaded', function () {
          // Update ingredients
          const ingredientsContainer = document.getElementById('productIngredients');
          ingredientsContainer.innerHTML = product.ingredients.map(ingredient => `
-            <span class="bg-cream px-4 py-2 rounded-full text-dark-gray text-sm">${ingredient}</span>
+            <span class="bg-cream px-4 py-2 rounded-full text-dark-gray text-sm border-2 border-primary hover:bg-primary hover:text-white hover:font-bold hover:cursor-pointer transition-all">${ingredient}</span>
          `).join('');
 
          // Update nutrition info
@@ -613,7 +633,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
          // Add size change listeners
          document.querySelectorAll('.size-radio').forEach((radio, index) => {
-            radio.addEventListener('change', function() {
+            radio.addEventListener('change', function () {
                selectedSize = product.sizes[index];
                updatePrice();
                updateSizeSelection();
@@ -689,7 +709,7 @@ document.addEventListener('DOMContentLoaded', function () {
          const relatedSwiper = new Swiper('.relatedProductsSwiper', {
             slidesPerView: 1,
             spaceBetween: 20,
-            loop: relatedProducts.length >= 3,
+            loop: relatedProducts.length >= 4,
             loopedSlides: relatedProducts.length,
             centeredSlides: false,
             navigation: {
@@ -703,6 +723,10 @@ document.addEventListener('DOMContentLoaded', function () {
                },
                1024: {
                   slidesPerView: 3,
+                  spaceBetween: 30,
+               },
+               1280: {
+                  slidesPerView: 4,
                   spaceBetween: 30,
                },
             },
@@ -720,6 +744,9 @@ document.addEventListener('DOMContentLoaded', function () {
                prevBtn.style.display = 'none';
                nextBtn.style.display = 'none';
             } else if (relatedProducts.length <= 3 && window.innerWidth >= 1024) {
+               prevBtn.style.display = 'none';
+               nextBtn.style.display = 'none';
+            } else if (relatedProducts.length <= 4 && window.innerWidth >= 1280) {
                prevBtn.style.display = 'none';
                nextBtn.style.display = 'none';
             } else {
