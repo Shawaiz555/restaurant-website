@@ -21,17 +21,6 @@ document.addEventListener('DOMContentLoaded', function () {
             backToTopBtn.style.display = 'flex';
          }
       }
-
-
-      // Hide mobile sticky footer when menu is open
-      const stickyFooter = document.getElementById('mobileStickyFooter');
-      if (stickyFooter) {
-         if (mobileDrawer.classList.contains('active')) {
-            stickyFooter.classList.add('hidden');
-         } else {
-            stickyFooter.classList.remove('hidden');
-         }
-      }
    }
 
    menuBtn.addEventListener('click', toggleMenu);
@@ -450,16 +439,6 @@ document.addEventListener('DOMContentLoaded', function () {
             backToTopBtn.style.display = 'flex';
          }
       }
-
-      // Hide mobile sticky footer when cart is open
-      const stickyFooter = document.getElementById('mobileStickyFooter');
-      if (stickyFooter) {
-         if (cartDrawer.classList.contains('active')) {
-            stickyFooter.classList.add('hidden');
-         } else {
-            stickyFooter.classList.remove('hidden');
-         }
-      }
    }
 
    cartBtn.addEventListener('click', toggleCart);
@@ -808,7 +787,6 @@ document.addEventListener('DOMContentLoaded', function () {
       function updatePrice() {
          const priceText = `₹${selectedSize.price.toFixed(2)}`;
          document.getElementById('productPrice').textContent = priceText;
-         document.getElementById('mobilePriceDisplay').textContent = priceText;
       }
 
       // Add to cart functionality for product page
@@ -824,7 +802,6 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       document.getElementById('addToCartBtn')?.addEventListener('click', handleAddToCartOnProductPage);
-      document.getElementById('mobileAddToCartBtn')?.addEventListener('click', handleAddToCartOnProductPage);
 
       // ===== Related Products =====
       function loadRelatedProducts() {
@@ -953,16 +930,9 @@ document.addEventListener('DOMContentLoaded', function () {
    backToTopBtn.setAttribute('aria-label', 'Back to top');
    document.body.appendChild(backToTopBtn);
 
-   // Adjust position based on page
-   if (window.location.pathname.includes('product.html')) {
-      // Product page - position above mobile bottom bar
-      backToTopBtn.style.bottom = '6.5rem';
-      backToTopBtn.style.right = '1rem';
-   } else {
-      // Homepage - position at bottom right corner
-      backToTopBtn.style.bottom = '1.5rem';
-      backToTopBtn.style.right = '1rem';
-   }
+   // Position at bottom right corner for all pages
+   backToTopBtn.style.bottom = '1.5rem';
+   backToTopBtn.style.right = '1rem';
 
    // Show/hide back to top button
    window.addEventListener('scroll', () => {
