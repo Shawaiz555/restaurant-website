@@ -21,6 +21,17 @@ document.addEventListener('DOMContentLoaded', function () {
             backToTopBtn.style.display = 'flex';
          }
       }
+
+
+      // Hide mobile sticky footer when menu is open
+      const stickyFooter = document.getElementById('mobileStickyFooter');
+      if (stickyFooter) {
+         if (mobileDrawer.classList.contains('active')) {
+            stickyFooter.classList.add('hidden');
+         } else {
+            stickyFooter.classList.remove('hidden');
+         }
+      }
    }
 
    menuBtn.addEventListener('click', toggleMenu);
@@ -437,6 +448,16 @@ document.addEventListener('DOMContentLoaded', function () {
             backToTopBtn.style.display = 'none';
          } else {
             backToTopBtn.style.display = 'flex';
+         }
+      }
+
+      // Hide mobile sticky footer when cart is open
+      const stickyFooter = document.getElementById('mobileStickyFooter');
+      if (stickyFooter) {
+         if (cartDrawer.classList.contains('active')) {
+            stickyFooter.classList.add('hidden');
+         } else {
+            stickyFooter.classList.remove('hidden');
          }
       }
    }
