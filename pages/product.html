@@ -111,10 +111,13 @@
               >
                 <!-- User Info (shown when logged in) -->
                 <div id="userInfo" class="hidden p-4 border-b border-gray-100">
-                  <p class="font-display text-lg text-dark" id="userName">
+                  <p
+                    class="font-display text-lg text-dark text-center"
+                    id="userName"
+                  >
                     User Name
                   </p>
-                  <p class="text-sm text-dark-gray" id="userEmail">
+                  <p class="text-sm text-dark-gray text-center" id="userEmail">
                     user@example.com
                   </p>
                 </div>
@@ -124,20 +127,20 @@
                   <div id="loggedInMenu" class="hidden">
                     <a
                       href="#"
-                      class="block px-4 py-3 text-dark hover:bg-cream transition-colors"
+                      class="block px-4 py-3 text-dark text-center hover:bg-cream transition-colors"
                     >
                       My Orders
                     </a>
                     <a
                       href="#"
-                      class="block px-4 py-3 text-dark hover:bg-cream transition-colors"
+                      class="block px-4 py-3 text-dark text-center hover:bg-cream transition-colors"
                     >
                       Profile Settings
                     </a>
                     <hr class="my-2 border-gray-100" />
                     <button
                       id="logoutBtn"
-                      class="w-full text-left px-4 py-3 text-red-600 hover:bg-red-50 transition-colors"
+                      class="w-full text-left px-4 py-3 text-center text-red-600 hover:bg-red-50 transition-colors"
                     >
                       Logout
                     </button>
@@ -145,13 +148,13 @@
                   <!-- Show when logged out -->
                   <div id="loggedOutMenu">
                     <a
-                      href="login.html"
+                      href="pages/login.html"
                       class="block px-4 py-3 text-dark text-center hover:bg-cream transition-colors"
                     >
                       Login
                     </a>
                     <a
-                      href="signup.html"
+                      href="pages/signup.html"
                       class="block px-4 py-3 text-dark text-center hover:bg-cream transition-colors"
                     >
                       Sign Up
