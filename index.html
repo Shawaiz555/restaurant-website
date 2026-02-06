@@ -24,6 +24,7 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="index.css" />
+    <link rel="stylesheet" href="loader.css" />
 
     <!-- Tailwind Config -->
     <script>
@@ -91,20 +92,75 @@
               class="text-dark hover:text-primary transition-colors font-medium"
               >Cheffs</a
             >
-            <a
-              href="#login"
-              class="text-dark hover:text-primary transition-colors font-medium"
-              >Login</a
-            >
-            <a
-              href="#signup"
-              class="text-dark hover:text-primary transition-colors font-medium"
-              >Signup</a
-            >
           </div>
 
           <!-- Right Side -->
           <div class="flex items-center gap-4">
+            <!-- Profile Icon -->
+            <div class="relative profile-dropdown">
+              <button
+                id="profileBtn"
+                class="w-10 h-10 rounded-full border-2 border-dark/10 flex items-center justify-center hover:bg-primary hover:border-primary transition-all"
+              >
+                👤
+              </button>
+              <!-- Profile Dropdown Menu -->
+              <div
+                id="profileDropdown"
+                class="hidden absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-2xl border-2 border-gray-100 z-50"
+              >
+                <!-- User Info (shown when logged in) -->
+                <div id="userInfo" class="hidden p-4 border-b border-gray-100">
+                  <p class="font-display text-lg text-dark" id="userName">
+                    User Name
+                  </p>
+                  <p class="text-sm text-dark-gray" id="userEmail">
+                    user@example.com
+                  </p>
+                </div>
+                <!-- Menu Items -->
+                <div class="py-2">
+                  <!-- Show when logged in -->
+                  <div id="loggedInMenu" class="hidden">
+                    <a
+                      href="#"
+                      class="block px-4 py-3 text-dark hover:bg-cream transition-colors"
+                    >
+                      My Orders
+                    </a>
+                    <a
+                      href="#"
+                      class="block px-4 py-3 text-dark hover:bg-cream transition-colors"
+                    >
+                      Profile Settings
+                    </a>
+                    <hr class="my-2 border-gray-100" />
+                    <button
+                      id="logoutBtn"
+                      class="w-full text-left px-4 py-3 text-red-600 hover:bg-red-50 transition-colors"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                  <!-- Show when logged out -->
+                  <div id="loggedOutMenu">
+                    <a
+                      href="pages/login.html"
+                      class="block px-4 py-3 text-dark font-semibold text-center hover:bg-cream transition-colors"
+                    >
+                      Login
+                    </a>
+                    <a
+                      href="pages/signup.html"
+                      class="block px-4 py-3 text-dark font-semibold text-center hover:bg-cream transition-colors"
+                    >
+                      Sign Up
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <button
               id="cartBtn"
               class="relative w-10 h-10 rounded-full border-2 border-dark/10 flex items-center justify-center hover:bg-primary hover:border-primary transition-all"
@@ -176,16 +232,6 @@
             href="#cheffs"
             class="text-dark hover:text-primary transition-colors font-medium text-lg drawer-link"
             >Cheffs</a
-          >
-          <a
-            href="#login"
-            class="text-dark hover:text-primary transition-colors font-medium"
-            >Login</a
-          >
-          <a
-            href="#signup"
-            class="text-dark hover:text-primary transition-colors font-medium"
-            >Signup</a
           >
           <button
             class="bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-full font-medium transition-all mt-4"
@@ -1140,6 +1186,12 @@
 
     <!-- Product Data -->
     <script src="store/products-data.js"></script>
+
+    <!-- Loader System -->
+    <script src="loader.js"></script>
+
+    <!-- Auth Service -->
+    <script src="auth/auth.js"></script>
 
     <!-- Custom JavaScript -->
     <script src="index.js"></script>

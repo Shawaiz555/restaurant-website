@@ -1,5 +1,83 @@
 document.addEventListener('DOMContentLoaded', function () {
 
+   // ===== Profile Dropdown Management =====
+   const profileBtn = document.getElementById('profileBtn');
+   const profileDropdown = document.getElementById('profileDropdown');
+   const logoutBtn = document.getElementById('logoutBtn');
+   const userInfo = document.getElementById('userInfo');
+   const userName = document.getElementById('userName');
+   const userEmail = document.getElementById('userEmail');
+   const loggedInMenu = document.getElementById('loggedInMenu');
+   const loggedOutMenu = document.getElementById('loggedOutMenu');
+
+   // Update profile UI based on auth status
+   function updateProfileUI() {
+      const currentUser = authService.getCurrentUser();
+
+      if (currentUser) {
+         // User is logged in
+         userInfo.classList.remove('hidden');
+         loggedInMenu.classList.remove('hidden');
+         loggedOutMenu.classList.add('hidden');
+         userName.textContent = currentUser.name;
+         userEmail.textContent = currentUser.email;
+      } else {
+         // User is logged out
+         userInfo.classList.add('hidden');
+         loggedInMenu.classList.add('hidden');
+         loggedOutMenu.classList.remove('hidden');
+      }
+   }
+
+   // Toggle profile dropdown
+   if (profileBtn) {
+      profileBtn.addEventListener('click', function(e) {
+         e.stopPropagation();
+         profileDropdown.classList.toggle('hidden');
+         updateProfileUI();
+      });
+   }
+
+   // Close dropdown when clicking outside
+   document.addEventListener('click', function(e) {
+      if (profileDropdown && !profileDropdown.classList.contains('hidden')) {
+         if (!e.target.closest('.profile-dropdown')) {
+            profileDropdown.classList.add('hidden');
+         }
+      }
+   });
+
+   // Logout functionality
+   if (logoutBtn) {
+      logoutBtn.addEventListener('click', function() {
+         // Show overlay loader
+         LoaderManager.showOverlayLoader('Logging out...');
+
+         // Close profile dropdown
+         profileDropdown.classList.add('hidden');
+
+         // Simulate logout delay for better UX
+         setTimeout(() => {
+            // Perform logout
+            authService.logout();
+            updateProfileUI();
+
+            // Clear cart display
+            cart = [];
+            updateCart();
+
+            // Hide loader
+            LoaderManager.hideOverlayLoader(300);
+
+            // Show notification
+            showNotification('Logged out successfully', 'info');
+         }, 800);
+      });
+   }
+
+   // Initialize profile UI
+   updateProfileUI();
+
    // ===== Mobile Menu Toggle =====
    const menuBtn = document.getElementById('menuBtn');
    const mobileDrawer = document.getElementById('mobileDrawer');
@@ -23,8 +101,30 @@ document.addEventListener('DOMContentLoaded', function () {
       }
    }
 
-   menuBtn.addEventListener('click', toggleMenu);
-   overlay.addEventListener('click', toggleMenu);
+   menuBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      toggleMenu();
+   });
+
+   // Handle overlay clicks - close whichever is open
+   overlay.addEventListener('click', function(e) {
+      e.stopPropagation();
+
+      if (cartDrawer.classList.contains('active')) {
+         // Close cart
+         cartDrawer.classList.remove('active');
+         overlay.classList.remove('active');
+         document.body.style.overflow = '';
+
+         const backToTopBtn = document.querySelector('.back-to-top');
+         if (backToTopBtn) {
+            backToTopBtn.style.display = 'flex';
+         }
+      } else if (mobileDrawer.classList.contains('active')) {
+         // Close menu
+         toggleMenu();
+      }
+   });
 
    // Close menu when clicking on drawer links
    drawerLinks.forEach(link => {
@@ -408,7 +508,31 @@ document.addEventListener('DOMContentLoaded', function () {
    }
 
    // ===== Shopping Cart Functionality =====
-   let cart = storage.get('cart') || [];
+   // Load cart based on user authentication
+   function loadUserCart() {
+      const currentUser = authService.getCurrentUser();
+      if (currentUser) {
+         // Load user-specific cart
+         return authService.getUserCart(currentUser.id) || [];
+      } else {
+         // Load guest cart from localStorage
+         return storage.get('guestCart') || [];
+      }
+   }
+
+   // Save cart based on user authentication
+   function saveUserCart(cartData) {
+      const currentUser = authService.getCurrentUser();
+      if (currentUser) {
+         // Save to user's cart
+         authService.saveUserCart(currentUser.id, cartData);
+      } else {
+         // Save to guest cart
+         storage.set('guestCart', cartData);
+      }
+   }
+
+   let cart = loadUserCart();
 
    // Cart elements
    const cartBtn = document.getElementById('cartBtn');
@@ -441,14 +565,14 @@ document.addEventListener('DOMContentLoaded', function () {
       }
    }
 
-   cartBtn.addEventListener('click', toggleCart);
-   closeCartBtn.addEventListener('click', toggleCart);
+   cartBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      toggleCart();
+   });
 
-   // Close cart when clicking overlay (only if mobile menu is not active)
-   overlay.addEventListener('click', function () {
-      if (cartDrawer.classList.contains('active')) {
-         toggleCart();
-      }
+   closeCartBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      toggleCart();
    });
 
    // Close cart on escape key
@@ -471,7 +595,7 @@ document.addEventListener('DOMContentLoaded', function () {
          });
       }
 
-      storage.set('cart', cart);
+      saveUserCart(cart);
       updateCart();
       showNotification(`Added ${product.name} to cart!`);
    }
@@ -479,7 +603,7 @@ document.addEventListener('DOMContentLoaded', function () {
    // Remove item from cart
    function removeFromCart(productId) {
       cart = cart.filter(item => item.id !== productId);
-      storage.set('cart', cart);
+      saveUserCart(cart);
       updateCart();
       showNotification('Item removed from cart', 'info');
    }
@@ -494,7 +618,7 @@ document.addEventListener('DOMContentLoaded', function () {
          if (item.quantity <= 0) {
             removeFromCart(productId);
          } else {
-            storage.set('cart', cart);
+            saveUserCart(cart);
             updateCart();
          }
       }
@@ -571,19 +695,48 @@ document.addEventListener('DOMContentLoaded', function () {
    placeOrderBtn.addEventListener('click', function () {
       if (cart.length === 0) return;
 
-      const { total } = calculateTotals();
-      showNotification(`Order placed successfully! Total: ₹${total.toFixed(2)}`, 'success');
+      // Check if user is logged in
+      const currentUser = authService.getCurrentUser();
+      if (!currentUser) {
+         showNotification('Please login to place an order', 'info');
 
-      // Clear cart
-      cart = [];
-      storage.set('cart', cart);
-      updateCart();
-
-      // Close drawer after a short delay
-      setTimeout(() => {
+         // Close cart drawer
          if (cartDrawer.classList.contains('active')) {
             toggleCart();
          }
+
+         // Navigate to login with loader
+         setTimeout(() => {
+            const loginUrl = window.location.pathname.includes('pages/') ? 'login.html' : 'pages/login.html';
+            LoaderManager.navigateWithLoader(loginUrl, 500);
+         }, 1500);
+         return;
+      }
+
+      // Show processing overlay
+      LoaderManager.showOverlayLoader('Processing your order...');
+
+      // Simulate order processing
+      setTimeout(() => {
+         const { total } = calculateTotals();
+
+         // Hide loader
+         LoaderManager.hideOverlayLoader(300);
+
+         // Show success notification
+         showNotification(`Order placed successfully! Total: ₹${total.toFixed(2)}`, 'success');
+
+         // Clear cart
+         cart = [];
+         saveUserCart(cart);
+         updateCart();
+
+         // Close drawer after a short delay
+         setTimeout(() => {
+            if (cartDrawer.classList.contains('active')) {
+               toggleCart();
+            }
+         }, 1000);
       }, 1500);
    });
 
@@ -695,8 +848,23 @@ document.addEventListener('DOMContentLoaded', function () {
       }
    });
 
+   // Reload cart from storage (in case it was updated during login)
+   function reloadCart() {
+      cart = loadUserCart();
+      updateCart();
+   }
+
    // Initialize cart on page load
-   updateCart();
+   reloadCart();
+
+   // Listen for storage changes (for multi-tab sync)
+   window.addEventListener('storage', function(e) {
+      if (e.key === 'currentUser' || e.key === 'users') {
+         // User logged in or cart updated in another tab
+         reloadCart();
+         updateProfileUI();
+      }
+   });
 
    // ===== PRODUCT DETAIL PAGE LOGIC =====
    // Check if we're on the product page

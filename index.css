@@ -898,3 +898,53 @@ body {
 footer {
   padding-bottom: calc(1rem + env(safe-area-inset-bottom));
 }
+
+/* Profile Dropdown Styles */
+.profile-dropdown {
+  position: relative;
+}
+
+#profileDropdown {
+  animation: fadeInDown 0.3s ease-out;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#profileDropdown a,
+#profileDropdown button {
+  font-size: 14px;
+}
+
+#profileDropdown a:hover,
+#profileDropdown button:hover {
+  transform: translateX(4px);
+}
+
+/* Profile button hover effect */
+#profileBtn {
+  position: relative;
+  overflow: hidden;
+}
+
+#profileBtn:hover {
+  transform: scale(1.05);
+}
+
+/* User info section styling */
+#userInfo {
+  background: linear-gradient(135deg, #fffbf5 0%, #fff8f0 100%);
+}
+
+/* Logout button styling */
+#logoutBtn {
+  font-weight: 500;
+}

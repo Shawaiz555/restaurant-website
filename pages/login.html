@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Bites</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Righteous&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../index.css" />
+    <link rel="stylesheet" href="../loader.css" />
+
+    <!-- Tailwind Config -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#F4A340",
+              "primary-dark": "#E89530",
+              cream: "#FFF8F0",
+              "cream-light": "#FFFBF5",
+              dark: "#1E1E1E",
+              "dark-gray": "#4A4A4A",
+            },
+            fontFamily: {
+              display: ["Righteous", "cursive"],
+              body: ["Poppins", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="font-body bg-cream-light text-dark">
+    <!-- Navigation -->
+    <nav
+      class="fixed top-0 left-0 right-0 bg-cream-light/95 backdrop-blur-sm z-50 shadow-sm"
+    >
+      <div class="container mx-auto px-6 sm:px-6 lg:px-16">
+        <div class="flex items-center justify-between h-20">
+          <!-- Logo -->
+          <a href="../index.html" class="flex items-center gap-2">
+            <div
+              class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-2xl"
+            >
+              🍽️
+            </div>
+            <span class="font-display text-2xl text-dark">Bites</span>
+          </a>
+
+          <!-- Back to Home Link -->
+          <a
+            href="../index.html"
+            class="text-dark hover:text-primary transition-colors font-medium"
+          >
+            Back to Home
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Login Section -->
+    <section
+      class="min-h-screen pt-20 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8"
+    >
+      <div class="w-full max-w-6xl">
+        <div
+          class="grid grid-cols-1 lg:grid-cols-2 gap-0 bg-white rounded-3xl shadow-2xl overflow-hidden"
+        >
+          <!-- Left Side - Image (Hidden on mobile) -->
+          <div
+            class="hidden lg:block relative bg-gradient-to-br from-primary to-primary-dark p-12"
+          >
+            <div
+              class="h-full flex flex-col justify-center items-center text-white"
+            >
+              <div class="text-center mb-8">
+                <h2 class="font-display text-4xl xl:text-5xl mb-4">
+                  Welcome Back!
+                </h2>
+                <p class="text-lg opacity-90">
+                  Login to continue your delicious journey
+                </p>
+              </div>
+
+              <!-- Decorative Food Image -->
+              <div class="relative w-full max-w-md">
+                <div
+                  class="absolute inset-0 bg-white/10 rounded-full blur-3xl"
+                ></div>
+                <img
+                  src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&h=600&fit=crop"
+                  alt="Delicious Food"
+                  class="relative rounded-3xl shadow-2xl floating"
+                />
+              </div>
+
+              <!-- Features -->
+              <div class="mt-12 space-y-4 text-center">
+                <div class="flex items-center gap-3 text-white/90">
+                  <span class="text-2xl">✓</span>
+                  <span>Order your favorite dishes</span>
+                </div>
+                <div class="flex items-center gap-3 text-white/90">
+                  <span class="text-2xl">✓</span>
+                  <span>Save your preferences</span>
+                </div>
+                <div class="flex items-center gap-3 text-white/90">
+                  <span class="text-2xl">✓</span>
+                  <span>Track your orders</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Side - Login Form -->
+          <div class="p-8 sm:p-12 lg:p-16">
+            <div class="max-w-md mx-auto">
+              <!-- Header -->
+              <div class="text-center mb-8">
+                <h1 class="font-display text-4xl text-dark mb-2">Login</h1>
+                <p class="text-dark-gray">
+                  Enter your credentials to access your account
+                </p>
+              </div>
+
+              <!-- Error Message -->
+              <div
+                id="errorMessage"
+                class="hidden mb-6 p-4 bg-red-50 border-2 border-red-200 rounded-xl"
+              >
+                <p class="text-red-600 text-sm text-center font-medium"></p>
+              </div>
+
+              <!-- Login Form -->
+              <form id="loginForm" class="space-y-6">
+                <!-- Email -->
+                <div>
+                  <label
+                    for="email"
+                    class="block text-sm font-medium text-dark mb-2"
+                  >
+                    Email Address
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    required
+                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary focus:outline-none transition-all"
+                    placeholder="Enter your email"
+                  />
+                </div>
+
+                <!-- Password -->
+                <div>
+                  <label
+                    for="password"
+                    class="block text-sm font-medium text-dark mb-2"
+                  >
+                    Password
+                  </label>
+                  <div class="relative">
+                    <input
+                      type="password"
+                      id="password"
+                      name="password"
+                      required
+                      class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary focus:outline-none transition-all"
+                      placeholder="Enter your password"
+                    />
+                    <button
+                      type="button"
+                      id="togglePassword"
+                      class="absolute right-3 top-1/2 -translate-y-1/2 text-dark-gray hover:text-primary transition-colors"
+                    >
+                      <span id="eyeIcon">👁️</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Remember Me & Forgot Password -->
+                <div class="flex items-center justify-between">
+                  <label class="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      id="rememberMe"
+                      class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
+                    />
+                    <span class="text-sm text-dark-gray">Remember me</span>
+                  </label>
+                  <a
+                    href="#"
+                    class="text-sm text-primary hover:text-primary-dark transition-colors"
+                  >
+                    Forgot Password?
+                  </a>
+                </div>
+
+                <!-- Submit Button -->
+                <button
+                  type="submit"
+                  id="loginBtn"
+                  class="w-full bg-primary hover:bg-primary-dark text-white py-4 rounded-full font-display text-lg transition-all shadow-lg hover:shadow-xl"
+                >
+                  Login
+                </button>
+              </form>
+
+              <!-- Sign Up Link -->
+              <div class="mt-8 text-center">
+                <p class="text-dark-gray">
+                  Don't have an account?
+                  <a
+                    href="signup.html"
+                    class="text-primary hover:text-primary-dark font-medium transition-colors"
+                  >
+                    Sign up
+                  </a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Loader System -->
+    <script src="../loader.js"></script>
+
+    <!-- Auth Service -->
+    <script src="../auth/auth.js"></script>
+
+    <!-- Login Script -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const loginForm = document.getElementById("loginForm");
+        const errorMessage = document.getElementById("errorMessage");
+        const togglePassword = document.getElementById("togglePassword");
+        const passwordInput = document.getElementById("password");
+        const eyeIcon = document.getElementById("eyeIcon");
+
+        // Check if user is already logged in
+        if (authService.isLoggedIn()) {
+          window.location.href = "../index.html";
+          return;
+        }
+
+        // Toggle password visibility
+        togglePassword.addEventListener("click", function () {
+          const type = passwordInput.type === "password" ? "text" : "password";
+          passwordInput.type = type;
+          eyeIcon.textContent = type === "password" ? "👁️" : "🙈";
+        });
+
+        // Show error message
+        function showError(message) {
+          errorMessage.classList.remove("hidden");
+          errorMessage.querySelector("p").textContent = message;
+
+          setTimeout(() => {
+            errorMessage.classList.add("hidden");
+          }, 5000);
+        }
+
+        // Handle form submission
+        loginForm.addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const loginBtn = document.getElementById("loginBtn");
+          const email = document.getElementById("email").value;
+          const password = document.getElementById("password").value;
+
+          // Add loader to button
+          LoaderManager.addButtonLoader(loginBtn, "Login");
+
+          // Simulate async operation
+          setTimeout(() => {
+            // Login user
+            const result = authService.login(email, password);
+
+            if (result.success) {
+              // Show success notification
+              const notification = document.createElement("div");
+              notification.className =
+                "fixed top-24 right-4 bg-primary text-white px-6 py-4 rounded-full shadow-lg z-50";
+              notification.textContent = "Login successful! Redirecting...";
+              document.body.appendChild(notification);
+
+              // Show page loader and redirect
+              setTimeout(() => {
+                LoaderManager.navigateWithLoader("../index.html", 500);
+              }, 800);
+            } else {
+              LoaderManager.removeButtonLoader(loginBtn);
+              showError(result.message);
+            }
+          }, 800);
+        });
+      });
+    </script>
+  </body>
+</html>
