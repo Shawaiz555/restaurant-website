@@ -29,7 +29,7 @@ const CartDrawer = () => {
       message: `Order placed successfully! Total: ₹${total.toFixed(2)} 🎉`,
       type: 'success'
     }));
-    clearCart();
+    clearCart(true); // Pass true to suppress the "cart cleared" notification
     closeCart();
   };
 

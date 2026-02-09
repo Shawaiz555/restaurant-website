@@ -34,12 +34,14 @@ export const useCart = () => {
     dispatch(updateQuantity({ productId, quantity, userId }));
   };
 
-  const handleClearCart = () => {
+  const handleClearCart = (silent = false) => {
     dispatch(clearCart(userId));
-    dispatch(showNotification({
-      message: 'Cart cleared successfully',
-      type: 'success'
-    }));
+    if (!silent) {
+      dispatch(showNotification({
+        message: 'Cart cleared successfully',
+        type: 'success'
+      }));
+    }
   };
 
   const handleToggleCart = () => {
