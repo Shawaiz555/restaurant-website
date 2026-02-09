@@ -583,18 +583,27 @@ const productsData = {
 };
 
 // Function to get product by ID
-function getProductById(productId) {
+export function getProductById(productId) {
    return productsData[productId] || null;
 }
 
 // Function to get products by category
-function getProductsByCategory(category) {
+export function getProductsByCategory(category) {
    return Object.values(productsData).filter(product => product.category === category);
 }
 
 // Function to get all products
-function getAllProducts() {
+export function getAllProducts() {
    return Object.values(productsData);
+}
+
+// Function to get all categories
+export function getCategories() {
+   const categories = new Set();
+   Object.values(productsData).forEach(product => {
+      categories.add(product.category);
+   });
+   return Array.from(categories);
 }
 
 // Export for use in other files
@@ -604,3 +613,5 @@ if (typeof window !== 'undefined') {
    window.getProductsByCategory = getProductsByCategory;
    window.getAllProducts = getAllProducts;
 }
+
+export default productsData;
