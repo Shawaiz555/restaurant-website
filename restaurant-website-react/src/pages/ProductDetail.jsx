@@ -19,6 +19,7 @@ const ProductDetail = () => {
   const [selectedSizeIndex, setSelectedSizeIndex] = useState(0);
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [navigating, setNavigating] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -40,7 +41,14 @@ const ProductDetail = () => {
     }, 800);
   }, [id, navigate]);
 
-  if (loading || !product) {
+  const handleBackToHome = () => {
+    setNavigating(true);
+    setTimeout(() => {
+      navigate('/');
+    }, 500);
+  };
+
+  if (loading || navigating || !product) {
     return <Loader />;
   }
 
@@ -66,13 +74,13 @@ const ProductDetail = () => {
         <section className="pt-28 lg:pt-30 lg:pb-20">
           <div className="container mx-auto px-3 sm:px-6 lg:px-12">
             {/* Back Button */}
-            <Link
-              to="/"
+            <button
+              onClick={handleBackToHome}
               className="inline-flex items-center gap-2 ml-6 text-dark hover:text-primary transition-colors mb-8 font-medium"
             >
               <span className="text-xl">←</span>
               <span>Back to Home</span>
-            </Link>
+            </button>
 
             {/* Product Details */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-20">
