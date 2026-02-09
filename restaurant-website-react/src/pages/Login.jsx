@@ -33,20 +33,24 @@ const Login = () => {
     if (result.success) {
       dispatch(loginSuccess(result.user));
       dispatch(loadCart(result.user.id));
-      dispatch(showNotification({
-        message: `Welcome back, ${result.user.name}! 🎉`,
-        type: 'success'
-      }));
+      dispatch(
+        showNotification({
+          message: `Welcome back, ${result.user.name}! 🎉`,
+          type: "success",
+        }),
+      );
       setNavigating(true);
       setTimeout(() => {
         navigate("/");
       }, 800);
     } else {
       setError(result.message);
-      dispatch(showNotification({
-        message: result.message,
-        type: 'error'
-      }));
+      dispatch(
+        showNotification({
+          message: result.message,
+          type: "error",
+        }),
+      );
       setLoading(false);
     }
   };

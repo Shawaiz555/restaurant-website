@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
-import { getProductById, getProductsByCategory } from '../store/productsData';
-import { useCart } from '../hooks/useCart';
-import Navbar from '../components/layout/Navbar';
-import CartDrawer from '../components/layout/CartDrawer';
-import Footer from '../components/layout/Footer';
-import Loader from '../components/common/Loader';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/navigation';
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { getProductById, getProductsByCategory } from "../store/productsData";
+import { useCart } from "../hooks/useCart";
+import Navbar from "../components/layout/Navbar";
+import CartDrawer from "../components/layout/CartDrawer";
+import Footer from "../components/layout/Footer";
+import Loader from "../components/common/Loader";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -27,14 +27,14 @@ const ProductDetail = () => {
     setTimeout(() => {
       const productData = getProductById(id);
       if (!productData) {
-        navigate('/');
+        navigate("/");
         return;
       }
       setProduct(productData);
 
       // Get related products
       const related = getProductsByCategory(productData.category)
-        .filter(p => p.id !== id)
+        .filter((p) => p.id !== id)
         .slice(0, 6);
       setRelatedProducts(related);
       setLoading(false);
@@ -44,7 +44,7 @@ const ProductDetail = () => {
   const handleBackToHome = () => {
     setNavigating(true);
     setTimeout(() => {
-      navigate('/');
+      navigate("/");
     }, 500);
   };
 
@@ -106,8 +106,8 @@ const ProductDetail = () => {
                           key={index}
                           className={`flex items-center justify-between p-4 border-2 rounded-xl cursor-pointer transition-all ${
                             selectedSizeIndex === index
-                              ? 'border-primary bg-cream'
-                              : 'border-gray-200 hover:border-primary'
+                              ? "border-primary bg-cream"
+                              : "border-gray-200 hover:border-primary"
                           }`}
                         >
                           <input
@@ -118,10 +118,16 @@ const ProductDetail = () => {
                             className="hidden"
                           />
                           <div className="flex-1">
-                            <p className="font-display text-lg text-dark">{size.name}</p>
-                            <p className="text-dark-gray text-sm">{size.description}</p>
+                            <p className="font-display text-lg text-dark">
+                              {size.name}
+                            </p>
+                            <p className="text-dark-gray text-sm">
+                              {size.description}
+                            </p>
                           </div>
-                          <p className="font-display text-xl text-primary">₹{size.price.toFixed(2)}</p>
+                          <p className="font-display text-xl text-primary">
+                            ₹{size.price.toFixed(2)}
+                          </p>
                         </label>
                       ))}
                     </div>
@@ -149,7 +155,9 @@ const ProductDetail = () => {
               <div className="space-y-8 px-3 lg:px-0">
                 {/* Product Name and Category */}
                 <div>
-                  <p className="text-primary font-medium mb-2">{product.category}</p>
+                  <p className="text-primary font-medium mb-2">
+                    {product.category}
+                  </p>
                   <h1 className="font-display text-4xl lg:text-5xl mb-4">
                     {product.name}
                   </h1>
@@ -157,7 +165,14 @@ const ProductDetail = () => {
                   {/* Rating */}
                   <div className="flex gap-1 mb-4">
                     {Array.from({ length: 5 }).map((_, i) => (
-                      <span key={i} className={i < product.rating ? 'text-primary text-xl' : 'text-gray-300 text-xl'}>
+                      <span
+                        key={i}
+                        className={
+                          i < product.rating
+                            ? "text-primary text-xl"
+                            : "text-gray-300 text-xl"
+                        }
+                      >
                         ⭐
                       </span>
                     ))}
@@ -190,22 +205,30 @@ const ProductDetail = () => {
                 {/* Nutrition Info */}
                 {product.nutritionInfo && (
                   <div>
-                    <h3 className="font-display text-2xl mb-4">Nutrition Information</h3>
+                    <h3 className="font-display text-2xl mb-4">
+                      Nutrition Information
+                    </h3>
                     <div className="bg-cream rounded-2xl p-1 lg:p-6 grid grid-cols-2 gap-4">
                       <div className="border-2 border-primary rounded-2xl p-4 text-center">
-                        <p className="text-dark-gray font-bold text-md">Calories</p>
+                        <p className="text-dark-gray font-bold text-md">
+                          Calories
+                        </p>
                         <p className="font-light text-lg text-dark">
                           {product.nutritionInfo.calories}
                         </p>
                       </div>
                       <div className="border-2 border-primary rounded-2xl p-4 text-center">
-                        <p className="text-dark-gray font-bold text-md">Protein</p>
+                        <p className="text-dark-gray font-bold text-md">
+                          Protein
+                        </p>
                         <p className="font-light text-lg text-dark">
                           {product.nutritionInfo.protein}
                         </p>
                       </div>
                       <div className="border-2 border-primary rounded-2xl p-4 text-center">
-                        <p className="text-dark-gray font-bold text-md">Carbs</p>
+                        <p className="text-dark-gray font-bold text-md">
+                          Carbs
+                        </p>
                         <p className="font-light text-lg text-dark">
                           {product.nutritionInfo.carbs}
                         </p>
@@ -226,7 +249,9 @@ const ProductDetail = () => {
             {relatedProducts.length > 0 && (
               <div className="mt-20 px-4 lg:px-6">
                 <div className="flex items-center justify-between mb-12">
-                  <h2 className="font-display text-4xl lg:text-5xl">Related Products</h2>
+                  <h2 className="font-display text-4xl lg:text-5xl">
+                    Related Products
+                  </h2>
                   <div className="flex gap-2">
                     <button className="swiper-button-prev-related w-12 h-12 rounded-full bg-white border-2 border-dark/10 flex items-center justify-center hover:bg-primary hover:border-primary hover:text-white transition-all">
                       ←
@@ -242,8 +267,8 @@ const ProductDetail = () => {
                   spaceBetween={20}
                   slidesPerView={1}
                   navigation={{
-                    nextEl: '.swiper-button-next-related',
-                    prevEl: '.swiper-button-prev-related',
+                    nextEl: ".swiper-button-next-related",
+                    prevEl: ".swiper-button-prev-related",
                   }}
                   breakpoints={{
                     640: {
@@ -264,7 +289,9 @@ const ProductDetail = () => {
                   {relatedProducts.map((relatedProduct) => (
                     <SwiperSlide key={relatedProduct.id}>
                       <div
-                        onClick={() => navigate(`/product/${relatedProduct.id}`)}
+                        onClick={() =>
+                          navigate(`/product/${relatedProduct.id}`)
+                        }
                         className="bg-white rounded-3xl p-6 hover:shadow-xl transition-all duration-300 cursor-pointer group"
                       >
                         <div className="mb-4 overflow-hidden rounded-2xl">
@@ -274,10 +301,19 @@ const ProductDetail = () => {
                             className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
                           />
                         </div>
-                        <h3 className="font-display text-xl mb-2 text-center">{relatedProduct.name}</h3>
+                        <h3 className="font-display text-xl mb-2 text-center">
+                          {relatedProduct.name}
+                        </h3>
                         <div className="flex justify-center gap-1 mb-2">
                           {Array.from({ length: 5 }).map((_, i) => (
-                            <span key={i} className={i < relatedProduct.rating ? 'text-primary' : 'text-gray-300'}>
+                            <span
+                              key={i}
+                              className={
+                                i < relatedProduct.rating
+                                  ? "text-primary"
+                                  : "text-gray-300"
+                              }
+                            >
                               ⭐
                             </span>
                           ))}

@@ -42,10 +42,12 @@ const Signup = () => {
 
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
-      dispatch(showNotification({
-        message: "Passwords do not match",
-        type: 'error'
-      }));
+      dispatch(
+        showNotification({
+          message: "Passwords do not match",
+          type: "error",
+        }),
+      );
       setLoading(false);
       return;
     }
@@ -58,19 +60,23 @@ const Signup = () => {
 
     if (result.success) {
       setSuccess(result.message);
-      dispatch(showNotification({
-        message: "Account created successfully! Redirecting to login... ✅",
-        type: 'success'
-      }));
+      dispatch(
+        showNotification({
+          message: "Account created successfully! Redirecting to login... ✅",
+          type: "success",
+        }),
+      );
       setTimeout(() => {
         navigate("/login");
       }, 1500);
     } else {
       setError(result.message);
-      dispatch(showNotification({
-        message: result.message,
-        type: 'error'
-      }));
+      dispatch(
+        showNotification({
+          message: result.message,
+          type: "error",
+        }),
+      );
     }
 
     setLoading(false);
