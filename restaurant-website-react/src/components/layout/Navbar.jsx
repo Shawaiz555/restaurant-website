@@ -87,7 +87,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 bg-cream-light/95 backdrop-blur-sm z-50 shadow-sm">
+      <nav className="fixed top-0 left-0 right-0 bg-cream-light/85 backdrop-blur-sm z-50 shadow-sm">
         <div className="container mx-auto px-6 sm:px-6 lg:px-16">
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
@@ -124,12 +124,6 @@ const Navbar = () => {
               >
                 Services
               </Link>
-              <button
-                onClick={() => scrollToSection("faq")}
-                className="text-dark hover:text-primary transition-colors font-medium"
-              >
-                FAQ
-              </button>
             </div>
 
             {/* Right Side */}
@@ -358,12 +352,6 @@ const Navbar = () => {
             >
               Services
             </Link>
-            <button
-              onClick={() => scrollToSection("faq")}
-              className="text-dark hover:text-primary transition-colors font-medium text-lg text-left"
-            >
-              FAQ
-            </button>
           </div>
         </div>
       </div>

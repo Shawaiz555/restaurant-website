@@ -1,13 +1,14 @@
-import React from 'react';
+import React from "react";
+import { Link } from "react-router-dom";
 
 const ServicesSection = () => {
   const services = [
-    { emoji: '📦', title: 'Online Order' },
-    { emoji: '📅', title: 'Pre-Reservation' },
-    { emoji: '⏰', title: '24/7 Service' },
-    { emoji: '🏢', title: 'Organized Foodie Place' },
-    { emoji: '🧹', title: 'Clean Kitchen' },
-    { emoji: '👨‍🍳', title: 'Super Chefs' },
+    { emoji: "📦", title: "Online Order" },
+    { emoji: "📅", title: "Pre-Reservation" },
+    { emoji: "⏰", title: "24/7 Service" },
+    { emoji: "🏢", title: "Organized Foodie Place" },
+    { emoji: "🧹", title: "Clean Kitchen" },
+    { emoji: "👨‍🍳", title: "Super Chefs" },
   ];
 
   return (
@@ -39,17 +40,23 @@ const ServicesSection = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
               {services.map((service, idx) => (
                 <div key={idx} className="flex items-start gap-3">
-                  <span className="text-primary text-2xl mt-1">{service.emoji}</span>
+                  <span className="text-primary text-2xl mt-1">
+                    {service.emoji}
+                  </span>
                   <div>
-                    <h4 className="font-semibold text-lg mb-1">{service.title}</h4>
+                    <h4 className="font-semibold text-lg mb-1">
+                      {service.title}
+                    </h4>
                   </div>
                 </div>
               ))}
             </div>
 
-            <button className="bg-primary hover:bg-primary-dark text-white px-8 py-4 rounded-full font-medium transition-all shadow-lg hover:shadow-xl">
-              About Us
-            </button>
+            <Link to="/about">
+              <button className="bg-primary hover:bg-primary-dark text-white px-8 py-4 rounded-full font-medium transition-all shadow-lg hover:shadow-xl">
+                About Us
+              </button>
+            </Link>
           </div>
         </div>
       </div>

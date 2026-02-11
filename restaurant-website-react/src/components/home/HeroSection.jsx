@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const HeroSection = () => {
   const scrollToMenu = () => {
@@ -48,19 +49,17 @@ const HeroSection = () => {
             </p>
 
             <div className="flex flex-wrap gap-4">
-              <button
-                onClick={scrollToMenu}
-                className="bg-white text-primary hover:bg-cream px-8 py-4 lg:px-12 rounded-2xl font-bold transition-all shadow-2xl hover:shadow-3xl hover:scale-105 flex items-center gap-2"
-              >
-                <span>Explore Menu</span>
-                <span className="text-xl">→</span>
-              </button>
-              <button
-                onClick={scrollToMenu}
-                className="bg-primary-dark/50 backdrop-blur-sm text-white border-2 border-white/30 hover:bg-white hover:text-primary px-8 py-4 rounded-2xl font-bold transition-all hover:scale-105"
-              >
-                Order Now
-              </button>
+              <Link to="/menu">
+                <button className="bg-white text-primary hover:bg-cream px-8 py-4 lg:px-12 rounded-2xl font-bold transition-all shadow-2xl hover:shadow-3xl hover:scale-105 flex items-center gap-2">
+                  <span>Explore Menu</span>
+                  <span className="text-xl">→</span>
+                </button>
+              </Link>
+              <Link to="/menu">
+                <button className="bg-primary-dark/50 backdrop-blur-sm text-white border-2 border-white/30 hover:bg-white hover:text-primary px-8 py-4 rounded-2xl font-bold transition-all hover:scale-105">
+                  Order Now
+                </button>
+              </Link>
             </div>
 
             {/* Stats */}
