@@ -2,17 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const HeroSection = () => {
-  const scrollToMenu = () => {
-    const element = document.getElementById("menu");
-    if (element) {
-      const offsetTop = element.offsetTop - 80;
-      window.scrollTo({
-        top: offsetTop,
-        behavior: "smooth",
-      });
-    }
-  };
-
   return (
     <section
       id="home"

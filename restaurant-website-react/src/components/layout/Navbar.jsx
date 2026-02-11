@@ -49,38 +49,6 @@ const Navbar = () => {
     }, 800);
   };
 
-  const scrollToSection = (id) => {
-    // If not on home page, navigate to home first
-    if (window.location.pathname !== "/") {
-      navigate("/");
-      setTimeout(() => {
-        const element = document.getElementById(id);
-        if (element) {
-          const offsetTop = element.offsetTop - 80;
-          window.scrollTo({
-            top: offsetTop,
-            behavior: "smooth",
-          });
-        }
-      }, 100);
-    } else {
-      const element = document.getElementById(id);
-      if (element) {
-        const offsetTop = element.offsetTop - 80;
-        window.scrollTo({
-          top: offsetTop,
-          behavior: "smooth",
-        });
-      }
-    }
-    setShowMobileMenu(false);
-  };
-
-  const handleMenuClick = () => {
-    navigate("/menu");
-    setShowMobileMenu(false);
-  };
-
   if (isLoggingOut) {
     return <Loader />;
   }
@@ -152,7 +120,7 @@ const Navbar = () => {
 
                 {/* Profile Dropdown */}
                 {showProfileDropdown && (
-                  <div className="absolute right-0 mt-3 w-72 bg-white rounded-2xl shadow-2xl border-2 border-gray-100 z-50 overflow-hidden animate-dropdown">
+                  <div className="absolute -right-4 sm:right-0 left-auto mt-3 w-64 sm:w-72 max-w-[90vw] bg-white rounded-2xl shadow-2xl border-2 border-gray-100 z-50 overflow-hidden sm:animate-dropdown">
                     {isAuthenticated ? (
                       <>
                         {/* User Info Header */}
@@ -179,30 +147,30 @@ const Navbar = () => {
                         </div>
 
                         {/* Menu Items */}
-                        <div className="py-2">
-                          <button className="w-full text-left px-5 py-3 text-dark hover:bg-gradient-to-r hover:from-cream-light hover:to-cream transition-all flex items-center gap-3 group">
-                            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-xl group-hover:bg-primary group-hover:text-white transition-all">
+                        <div className="py-2 max-h-[50vh] sm:max-h-none overflow-y-auto">
+                          <button className="w-full text-left px-5 py-3 sm:py-3 text-dark hover:bg-gradient-to-r hover:from-cream-light hover:to-cream transition-all flex items-center gap-3 group active:bg-cream">
+                            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-xl group-hover:bg-primary group-hover:text-white transition-all flex-shrink-0">
                               📦
                             </div>
-                            <div>
+                            <div className="flex-1 min-w-0">
                               <div className="font-semibold text-sm">
                                 My Orders
                               </div>
-                              <div className="text-xs text-dark-gray">
+                              <div className="text-xs text-dark-gray truncate">
                                 Track your orders
                               </div>
                             </div>
                           </button>
 
-                          <button className="w-full text-left px-5 py-3 text-dark hover:bg-gradient-to-r hover:from-cream-light hover:to-cream transition-all flex items-center gap-3 group">
-                            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-xl group-hover:bg-primary group-hover:text-white transition-all">
+                          <button className="w-full text-left px-5 py-3 sm:py-3 text-dark hover:bg-gradient-to-r hover:from-cream-light hover:to-cream transition-all flex items-center gap-3 group active:bg-cream">
+                            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-xl group-hover:bg-primary group-hover:text-white transition-all flex-shrink-0">
                               ⚙️
                             </div>
-                            <div>
+                            <div className="flex-1 min-w-0">
                               <div className="font-semibold text-sm">
                                 Settings
                               </div>
-                              <div className="text-xs text-dark-gray">
+                              <div className="text-xs text-dark-gray truncate">
                                 Manage your account
                               </div>
                             </div>
@@ -212,16 +180,16 @@ const Navbar = () => {
 
                           <button
                             onClick={handleLogout}
-                            className="w-full text-left px-5 py-3 text-red-600 hover:bg-red-50 transition-all flex items-center gap-3 group rounded-b-2xl"
+                            className="w-full text-left px-5 py-3 sm:py-3 mb-2 sm:mb-0 text-red-600 hover:bg-red-50 transition-all flex items-center gap-3 group rounded-b-3xl sm:rounded-b-2xl active:bg-red-100"
                           >
-                            <div className="w-10 h-10 rounded-lg bg-red-50 flex items-center justify-center text-xl group-hover:bg-red-100 transition-all">
+                            <div className="w-10 h-10 rounded-lg bg-red-50 flex items-center justify-center text-xl group-hover:bg-red-100 transition-all flex-shrink-0">
                               🚪
                             </div>
-                            <div>
+                            <div className="flex-1 min-w-0">
                               <div className="font-semibold text-sm">
                                 Logout
                               </div>
-                              <div className="text-xs text-red-400">
+                              <div className="text-xs text-red-400 truncate">
                                 Sign out of your account
                               </div>
                             </div>
@@ -229,7 +197,7 @@ const Navbar = () => {
                         </div>
                       </>
                     ) : (
-                      <div className="p-4">
+                      <div className="p-4 pb-6 sm:pb-4">
                         {/* Guest Header */}
                         <div className="text-center mb-4 py-6 bg-cream rounded-xl">
                           <div className="w-16 h-16 mx-auto mb-3 rounded-full flex items-center justify-center text-3xl shadow-lg">
@@ -238,30 +206,30 @@ const Navbar = () => {
                           <h3 className="font-display text-xl text-dark mb-1">
                             Welcome!
                           </h3>
-                          <p className="text-sm text-dark-gray">
+                          <p className="text-sm text-dark-gray px-4">
                             Sign in to access your account
                           </p>
                         </div>
 
                         {/* Auth Buttons */}
-                        <div className="space-y-2">
+                        <div className="space-y-3 sm:space-y-2">
                           <Link
                             to="/login"
-                            className="block w-full bg-gradient-to-r from-primary to-primary-dark text-white text-center px-4 py-3 rounded-xl font-semibold hover:shadow-lg transition-all hover:scale-105"
+                            className="block w-full bg-gradient-to-r from-primary to-primary-dark text-white text-center px-4 py-4 sm:py-3 rounded-xl font-semibold hover:shadow-lg transition-all active:scale-95 sm:hover:scale-105"
                             onClick={() => setShowProfileDropdown(false)}
                           >
                             Login
                           </Link>
                           <Link
                             to="/signup"
-                            className="block w-full bg-white text-primary border-2 border-primary text-center px-4 py-3 rounded-xl font-semibold hover:bg-primary hover:text-white transition-all hover:scale-105"
+                            className="block w-full bg-white text-primary border-2 border-primary text-center px-4 py-4 sm:py-3 rounded-xl font-semibold hover:bg-primary hover:text-white transition-all active:scale-95 sm:hover:scale-105"
                             onClick={() => setShowProfileDropdown(false)}
                           >
                             Create Account
                           </Link>
                         </div>
 
-                        <p className="text-xs text-center text-dark-gray mt-4">
+                        <p className="text-xs text-center text-dark-gray mt-4 px-4">
                           New to Bites? Sign up and get exclusive offers!
                         </p>
                       </div>
@@ -355,6 +323,24 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+
+      {/* Custom Animations */}
+      <style>{`
+        @keyframes dropdown {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .animate-dropdown {
+          animation: dropdown 0.2s ease-out forwards;
+        }
+      `}</style>
     </>
   );
 };
