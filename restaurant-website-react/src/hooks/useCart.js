@@ -17,6 +17,8 @@ export const useCart = () => {
       message: `${product.name} added to cart! 🛒`,
       type: 'success'
     }));
+    // Auto-open cart when item is added
+    dispatch(openCart());
   };
 
   const handleRemoveFromCart = (productId) => {

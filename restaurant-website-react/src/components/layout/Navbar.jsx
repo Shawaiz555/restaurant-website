@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { logout } from '../../store/slices/authSlice';
-import { toggleCart } from '../../store/slices/cartSlice';
-import { showNotification } from '../../store/slices/notificationSlice';
-import Loader from '../common/Loader';
+import React, { useState, useEffect, useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../../store/slices/authSlice";
+import { toggleCart } from "../../store/slices/cartSlice";
+import { showNotification } from "../../store/slices/notificationSlice";
+import Loader from "../common/Loader";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -21,38 +21,63 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target)) {
+      if (
+        profileDropdownRef.current &&
+        !profileDropdownRef.current.contains(event.target)
+      ) {
         setShowProfileDropdown(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const handleLogout = () => {
     setIsLoggingOut(true);
     setTimeout(() => {
       dispatch(logout());
-      dispatch(showNotification({
-        message: 'Logged out successfully. See you soon! 👋',
-        type: 'success'
-      }));
+      dispatch(
+        showNotification({
+          message: "Logged out successfully. See you soon! 👋",
+          type: "success",
+        }),
+      );
       setShowProfileDropdown(false);
-      navigate('/');
+      navigate("/");
       setIsLoggingOut(false);
     }, 800);
   };
 
   const scrollToSection = (id) => {
-    const element = document.getElementById(id);
-    if (element) {
-      const offsetTop = element.offsetTop - 80;
-      window.scrollTo({
-        top: offsetTop,
-        behavior: 'smooth'
-      });
+    // If not on home page, navigate to home first
+    if (window.location.pathname !== "/") {
+      navigate("/");
+      setTimeout(() => {
+        const element = document.getElementById(id);
+        if (element) {
+          const offsetTop = element.offsetTop - 80;
+          window.scrollTo({
+            top: offsetTop,
+            behavior: "smooth",
+          });
+        }
+      }, 100);
+    } else {
+      const element = document.getElementById(id);
+      if (element) {
+        const offsetTop = element.offsetTop - 80;
+        window.scrollTo({
+          top: offsetTop,
+          behavior: "smooth",
+        });
+      }
     }
+    setShowMobileMenu(false);
+  };
+
+  const handleMenuClick = () => {
+    navigate("/menu");
     setShowMobileMenu(false);
   };
 
@@ -75,35 +100,35 @@ const Navbar = () => {
 
             {/* Desktop Menu */}
             <div className="hidden lg:flex items-center gap-8">
-              <button
-                onClick={() => scrollToSection('home')}
+              <Link
+                to="/"
                 className="text-dark hover:text-primary transition-colors font-medium"
               >
                 Home
-              </button>
-              <button
-                onClick={() => scrollToSection('services')}
-                className="text-dark hover:text-primary transition-colors font-medium"
-              >
-                Services
-              </button>
-              <button
-                onClick={() => scrollToSection('menu')}
+              </Link>
+              <Link
+                to="/menu"
                 className="text-dark hover:text-primary transition-colors font-medium"
               >
                 Menu
-              </button>
-              <button
-                onClick={() => scrollToSection('reviews')}
+              </Link>
+              <Link
+                to="/about"
                 className="text-dark hover:text-primary transition-colors font-medium"
               >
-                Reviews
-              </button>
-              <button
-                onClick={() => scrollToSection('chefs')}
+                About
+              </Link>
+              <Link
+                to="/services"
                 className="text-dark hover:text-primary transition-colors font-medium"
               >
-                Chefs
+                Services
+              </Link>
+              <button
+                onClick={() => scrollToSection("faq")}
+                className="text-dark hover:text-primary transition-colors font-medium"
+              >
+                FAQ
               </button>
             </div>
 
@@ -182,18 +207,20 @@ const Navbar = () => {
                 )}
               </button>
 
-              <button className="hidden lg:block bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-full font-medium transition-all shadow-lg hover:shadow-xl">
-                Reserve Table
-              </button>
-
               {/* Mobile Menu Button */}
               <button
                 onClick={() => setShowMobileMenu(!showMobileMenu)}
                 className="lg:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5"
               >
-                <span className={`w-6 h-0.5 bg-dark transition-all ${showMobileMenu ? 'rotate-45 translate-y-2' : ''}`}></span>
-                <span className={`w-6 h-0.5 bg-dark transition-all ${showMobileMenu ? 'opacity-0' : ''}`}></span>
-                <span className={`w-6 h-0.5 bg-dark transition-all ${showMobileMenu ? '-rotate-45 -translate-y-2' : ''}`}></span>
+                <span
+                  className={`w-6 h-0.5 bg-dark transition-all ${showMobileMenu ? "rotate-45 translate-y-2" : ""}`}
+                ></span>
+                <span
+                  className={`w-6 h-0.5 bg-dark transition-all ${showMobileMenu ? "opacity-0" : ""}`}
+                ></span>
+                <span
+                  className={`w-6 h-0.5 bg-dark transition-all ${showMobileMenu ? "-rotate-45 -translate-y-2" : ""}`}
+                ></span>
               </button>
             </div>
           </div>
@@ -203,59 +230,60 @@ const Navbar = () => {
       {/* Mobile Drawer */}
       <div
         className={`fixed inset-0 bg-black/50 z-40 lg:hidden transition-opacity duration-300 ${
-          showMobileMenu ? 'opacity-100' : 'opacity-0 pointer-events-none'
+          showMobileMenu ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
         onClick={() => setShowMobileMenu(false)}
       >
         <div
           className={`fixed top-0 left-0 h-full w-80 bg-white shadow-2xl p-8 transition-transform duration-300 ease-out ${
-            showMobileMenu ? 'translate-x-0' : '-translate-x-full'
+            showMobileMenu ? "translate-x-0" : "-translate-x-full"
           }`}
           onClick={(e) => e.stopPropagation()}
         >
-            <div className="flex items-center gap-2 mb-12">
-              <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-2xl">
-                🍽️
-              </div>
-              <span className="font-display text-2xl text-dark">Bites</span>
+          <div className="flex items-center gap-2 mb-12">
+            <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-2xl">
+              🍽️
             </div>
-
-            <div className="flex flex-col gap-6">
-              <button
-                onClick={() => scrollToSection('home')}
-                className="text-dark hover:text-primary transition-colors font-medium text-lg text-left"
-              >
-                Home
-              </button>
-              <button
-                onClick={() => scrollToSection('services')}
-                className="text-dark hover:text-primary transition-colors font-medium text-lg text-left"
-              >
-                Services
-              </button>
-              <button
-                onClick={() => scrollToSection('menu')}
-                className="text-dark hover:text-primary transition-colors font-medium text-lg text-left"
-              >
-                Menu
-              </button>
-              <button
-                onClick={() => scrollToSection('reviews')}
-                className="text-dark hover:text-primary transition-colors font-medium text-lg text-left"
-              >
-                Reviews
-              </button>
-              <button
-                onClick={() => scrollToSection('chefs')}
-                className="text-dark hover:text-primary transition-colors font-medium text-lg text-left"
-              >
-                Chefs
-              </button>
-              <button className="bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-full font-medium transition-all mt-4">
-                Reserve Table
-              </button>
-            </div>
+            <span className="font-display text-2xl text-dark">Bites</span>
           </div>
+
+          <div className="flex flex-col gap-6">
+            <Link
+              to="/"
+              onClick={() => setShowMobileMenu(false)}
+              className="text-dark hover:text-primary transition-colors font-medium text-lg text-left"
+            >
+              Home
+            </Link>
+            <Link
+              to="/menu"
+              onClick={() => setShowMobileMenu(false)}
+              className="text-dark hover:text-primary transition-colors font-medium text-lg text-left"
+            >
+              Menu
+            </Link>
+            <Link
+              to="/about"
+              onClick={() => setShowMobileMenu(false)}
+              className="text-dark hover:text-primary transition-colors font-medium text-lg text-left"
+            >
+              About
+            </Link>
+            <Link
+              to="/services"
+              onClick={() => setShowMobileMenu(false)}
+              className="text-dark hover:text-primary transition-colors font-medium text-lg text-left"
+            >
+              Services
+            </Link>
+            <button
+              onClick={() => scrollToSection("faq")}
+              className="text-dark hover:text-primary transition-colors font-medium text-lg text-left"
+            >
+              FAQ
+            </button>
+          </div>
+        </div>
       </div>
     </>
   );

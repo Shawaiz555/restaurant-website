@@ -1,36 +1,50 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { showNotification } from '../../store/slices/notificationSlice';
-import { useCart } from '../../hooks/useCart';
-import { useAuth } from '../../hooks/useAuth';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { showNotification } from "../../store/slices/notificationSlice";
+import { useCart } from "../../hooks/useCart";
+import { useAuth } from "../../hooks/useAuth";
 
 const CartDrawer = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { items, isOpen, total, itemCount, removeFromCart, updateQuantity, clearCart, closeCart } = useCart();
+  const {
+    items,
+    isOpen,
+    total,
+    itemCount,
+    removeFromCart,
+    updateQuantity,
+    clearCart,
+    closeCart,
+  } = useCart();
   const { isAuthenticated } = useAuth();
 
-  const handlePlaceOrder = () => {
+  const handleCheckout = () => {
     if (!isAuthenticated) {
-      dispatch(showNotification({
-        message: 'Please login to place an order',
-        type: 'error'
-      }));
+      dispatch(
+        showNotification({
+          message: "Please login to checkout",
+          type: "error",
+        }),
+      );
       closeCart();
       setTimeout(() => {
-        navigate('/login');
+        navigate("/login");
       }, 300);
       return;
     }
 
-    // Place order logic
-    dispatch(showNotification({
-      message: `Order placed successfully! Total: ₹${total.toFixed(2)} 🎉`,
-      type: 'success'
-    }));
-    clearCart(true); // Pass true to suppress the "cart cleared" notification
+    // Checkout logic - navigate to checkout page
     closeCart();
+    dispatch(
+      showNotification({
+        message: "Proceeding to checkout... 🛒",
+        type: "success",
+      }),
+    );
+    // You can add navigation to checkout page here
+    // navigate("/checkout");
   };
 
   return (
@@ -38,15 +52,17 @@ const CartDrawer = () => {
       {/* Overlay */}
       <div
         className={`fixed inset-0 bg-black/50 z-40 transition-opacity duration-300 ${
-          isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+          isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
         onClick={closeCart}
       />
 
       {/* Drawer */}
-      <div className={`fixed top-0 right-0 h-full w-full sm:w-96 bg-white shadow-2xl z-50 flex flex-col transition-transform duration-300 ease-out ${
-        isOpen ? 'translate-x-0' : 'translate-x-full'
-      }`}>
+      <div
+        className={`fixed top-0 right-0 h-full w-full sm:w-96 bg-white shadow-2xl z-50 flex flex-col transition-transform duration-300 ease-out ${
+          isOpen ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
         {/* Header */}
         <div className="p-6 border-b border-gray-200 flex items-center justify-between bg-cream-light">
           <h2 className="font-display text-2xl text-dark flex items-center gap-2">
@@ -77,49 +93,66 @@ const CartDrawer = () => {
           ) : (
             <div className="space-y-4">
               {items.map((item) => (
-                <div key={`${item.id}-${item.size}`} className="bg-cream-light rounded-2xl p-4 flex gap-4">
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="w-20 h-20 object-cover rounded-xl"
-                  />
-                  <div className="flex-1">
-                    <h4 className="font-display text-lg text-dark mb-1">{item.name}</h4>
-                    {item.size && (
-                      <p className="text-xs text-dark-gray mb-1">Size: {item.size}</p>
-                    )}
-                    <p className="text-primary font-medium mb-3">₹{item.price.toFixed(2)}</p>
+                <div
+                  key={`${item.id}-${item.size}`}
+                  className="bg-cream-light rounded-2xl p-4"
+                >
+                  <div className="flex gap-3 mb-3">
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="w-20 h-20 object-cover rounded-xl flex-shrink-0"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-display text-base text-dark mb-1 truncate">
+                        {item.name}
+                      </h4>
+                      {item.size && (
+                        <p className="text-xs text-dark-gray mb-1">
+                          Size: {item.size}
+                        </p>
+                      )}
+                      <p className="text-primary font-semibold">
+                        Rs.{item.price.toFixed(2)}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => removeFromCart(item.id)}
+                      className="text-xl opacity-60 hover:opacity-100 hover:text-red-600 transition-all flex-shrink-0"
+                      title="Remove item"
+                    >
+                      🗑️
+                    </button>
+                  </div>
 
-                    {/* Quantity Controls */}
-                    <div className="flex items-center gap-3">
+                  {/* Quantity Controls and Total */}
+                  <div className="flex items-center justify-between pt-3 border-t border-cream">
+                    <div className="flex items-center gap-2">
                       <button
-                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                        className="w-8 h-8 flex items-center justify-center bg-cream rounded-lg hover:bg-primary hover:text-white transition-all"
+                        onClick={() =>
+                          updateQuantity(item.id, item.quantity - 1)
+                        }
+                        className="w-8 h-8 flex items-center justify-center bg-white rounded-lg hover:bg-primary hover:text-white transition-all shadow-sm"
                       >
-                        <span className="text-lg font-bold">−</span>
+                        <span className="text-lg font-semibold">−</span>
                       </button>
-                      <span className="font-medium text-dark w-8 text-center">
+                      <span className="font-semibold text-dark w-10 text-center">
                         {item.quantity}
                       </span>
                       <button
-                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        className="w-8 h-8 flex items-center justify-center bg-cream rounded-lg hover:bg-primary hover:text-white transition-all"
+                        onClick={() =>
+                          updateQuantity(item.id, item.quantity + 1)
+                        }
+                        className="w-8 h-8 flex items-center justify-center bg-white rounded-lg hover:bg-primary hover:text-white transition-all shadow-sm"
                       >
-                        <span className="text-lg font-bold">+</span>
-                      </button>
-                      <button
-                        onClick={() => removeFromCart(item.id)}
-                        className="ml-auto text-xl opacity-60 hover:opacity-100 hover:text-red-600 transition-all"
-                        title="Remove item"
-                      >
-                        🗑️
+                        <span className="text-lg font-semibold">+</span>
                       </button>
                     </div>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-display text-lg text-dark">
-                      ₹{(item.price * item.quantity).toFixed(2)}
-                    </p>
+                    <div className="text-right">
+                      <p className="font-display text-lg text-dark">
+                        Rs.{(item.price * item.quantity).toFixed(2)}
+                      </p>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -132,19 +165,22 @@ const CartDrawer = () => {
           <div className="border-t border-gray-200 bg-cream-light p-6">
             <div className="flex justify-between items-center mb-3">
               <span className="text-dark-gray font-medium">Subtotal</span>
-              <span className="font-display text-xl text-dark">₹{total.toFixed(2)}</span>
+              <span className="font-display text-xl text-dark">
+                Rs.{total.toFixed(2)}
+              </span>
             </div>
             <div className="flex justify-between items-center mb-6 pt-3 border-t border-gray-300">
               <span className="font-display text-lg text-dark">Total</span>
               <span className="font-display text-2xl text-primary">
-                ₹{total.toFixed(2)}
+                Rs.{total.toFixed(2)}
               </span>
             </div>
             <button
-              onClick={handlePlaceOrder}
-              className="w-full bg-primary hover:bg-primary-dark text-white py-4 rounded-full font-display text-lg transition-all shadow-lg hover:shadow-xl"
+              onClick={handleCheckout}
+              className="w-full bg-gradient-to-r from-primary to-primary-dark hover:from-primary-dark hover:to-primary text-white py-4 rounded-2xl font-display text-lg transition-all shadow-xl hover:shadow-2xl hover:scale-105 flex items-center justify-center gap-2"
             >
-              Place Order
+              <span>Proceed to Checkout</span>
+              <span className="text-xl">→</span>
             </button>
           </div>
         )}

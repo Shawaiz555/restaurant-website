@@ -6,6 +6,9 @@ import Loader from './components/common/Loader';
 import NotificationManager from './components/common/NotificationManager';
 
 import Home from './pages/Home';
+import Menu from './pages/Menu';
+import About from './pages/About';
+import Services from './pages/Services';
 import ProductDetail from './pages/ProductDetail';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
@@ -33,6 +36,9 @@ function App() {
           <NotificationManager />
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/menu" element={<Menu />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/services" element={<Services />} />
             <Route path="/product/:id" element={<ProductDetail />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />

@@ -1,6 +1,6 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useCart } from '../../hooks/useCart';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { useCart } from "../../hooks/useCart";
 
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
@@ -20,7 +20,7 @@ const ProductCard = ({ product }) => {
   return (
     <div
       onClick={() => navigate(`/product/${product.id}`)}
-      className="bg-white rounded-3xl p-6 hover:shadow-xl transition-all duration-300 cursor-pointer group"
+      className="bg-white rounded-3xl p-6 mb-10 hover:shadow-xl transition-all duration-300 cursor-pointer group"
     >
       <div className="mb-4 overflow-hidden rounded-2xl">
         <img
@@ -32,7 +32,10 @@ const ProductCard = ({ product }) => {
       <h3 className="font-display text-xl mb-2 text-center">{product.name}</h3>
       <div className="flex justify-center gap-1 mb-2">
         {Array.from({ length: 5 }).map((_, i) => (
-          <span key={i} className={i < product.rating ? 'text-primary' : 'text-gray-300'}>
+          <span
+            key={i}
+            className={i < product.rating ? "text-primary" : "text-gray-300"}
+          >
             ⭐
           </span>
         ))}
@@ -42,7 +45,7 @@ const ProductCard = ({ product }) => {
       </p>
       <div className="flex items-center justify-between">
         <span className="font-display text-2xl text-dark">
-          ₹{product.basePrice.toFixed(2)}
+          Rs.{product.basePrice.toFixed(2)}
         </span>
         <button
           onClick={handleAddToCart}

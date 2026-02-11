@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ProductCard from '../common/ProductCard';
 import { getProductsByCategory } from '../../store/productsData';
 
 const MenuSection = () => {
+  const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState('breakfast');
 
   const categories = [
@@ -60,6 +62,17 @@ const MenuSection = () => {
               <ProductCard product={product} />
             </div>
           ))}
+        </div>
+
+        {/* View Full Menu Button */}
+        <div className="text-center">
+          <button
+            onClick={() => navigate('/menu')}
+            className="bg-primary hover:bg-primary-dark text-white px-10 py-4 rounded-full font-medium text-lg transition-all shadow-lg hover:shadow-xl inline-flex items-center gap-3"
+          >
+            View Complete Menu
+            <span className="text-2xl">🍽️</span>
+          </button>
         </div>
       </div>
 

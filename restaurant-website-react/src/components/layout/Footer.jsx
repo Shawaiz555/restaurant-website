@@ -89,7 +89,7 @@ const Footer = () => {
               </li>
               <li>
                 <a href="#" className="text-dark-gray hover:text-primary transition-colors">
-                  Pre-Reservation
+                  Fast Delivery
                 </a>
               </li>
               <li>

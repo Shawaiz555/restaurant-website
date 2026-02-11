@@ -126,7 +126,7 @@ const ProductDetail = () => {
                             </p>
                           </div>
                           <p className="font-display text-xl text-primary">
-                            ₹{size.price.toFixed(2)}
+                            Rs.{size.price.toFixed(2)}
                           </p>
                         </label>
                       ))}
@@ -137,7 +137,7 @@ const ProductDetail = () => {
                   <div className="flex items-center justify-between mb-6 pb-6 border-b border-gray-200">
                     <span className="text-dark-gray text-lg">Price</span>
                     <span className="font-display text-3xl text-primary">
-                      ₹{selectedSize.price.toFixed(2)}
+                      Rs.{selectedSize.price.toFixed(2)}
                     </span>
                   </div>
 
@@ -320,7 +320,7 @@ const ProductDetail = () => {
                         </div>
                         <div className="text-center">
                           <span className="font-display text-2xl text-dark">
-                            ₹{relatedProduct.basePrice.toFixed(2)}
+                            Rs.{relatedProduct.basePrice.toFixed(2)}
                           </span>
                         </div>
                       </div>
