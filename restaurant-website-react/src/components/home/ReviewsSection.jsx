@@ -1,30 +1,34 @@
-import React from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Autoplay } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/navigation';
+import React from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Autoplay } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
 
 const ReviewsSection = () => {
   const reviews = [
     {
       text: "This place is great! Atmosphere and staff are great. I had a great meal here. I recommend the chicken gyro with french fries and the greek salad. Seriously, what they're doing with food is really amazing and what's even more amazing is they're doing all of this with only plant-based ingredients.",
-      name: 'Shawoawn Nayaan',
-      image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop',
+      name: "Shawoawn Nayaan",
+      image:
+        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop",
     },
     {
       text: "This place is great! Atmosphere and staff are great. I had a great meal here. I recommend the chicken gyro with french fries and the greek salad. Seriously, what they're doing with food is really amazing and what's even more amazing is they're doing all of this with only plant-based ingredients.",
-      name: 'Shawoawn Nayaan',
-      image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop',
+      name: "Shawoawn Nayaan",
+      image:
+        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop",
     },
     {
       text: "This place is great! Atmosphere and staff are great. I had a great meal here. I recommend the chicken gyro with french fries and the greek salad. Seriously, what they're doing with food is really amazing and what's even more amazing is they're doing all of this with only plant-based ingredients.",
-      name: 'Shawoawn Nayaan',
-      image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop',
+      name: "Shawoawn Nayaan",
+      image:
+        "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop",
     },
     {
       text: "This place is great! Atmosphere and staff are great. I had a great meal here. I recommend the chicken gyro with french fries and the greek salad. Seriously, what they're doing with food is really amazing and what's even more amazing is they're doing all of this with only plant-based ingredients.",
-      name: 'Shawoawn Nayaan',
-      image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop',
+      name: "Shawoawn Nayaan",
+      image:
+        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop",
     },
   ];
 
@@ -55,8 +59,8 @@ const ReviewsSection = () => {
             disableOnInteraction: false,
           }}
           navigation={{
-            nextEl: '.swiper-button-next-reviews',
-            prevEl: '.swiper-button-prev-reviews',
+            nextEl: ".swiper-button-next-reviews",
+            prevEl: ".swiper-button-prev-reviews",
           }}
           breakpoints={{
             768: {
@@ -72,8 +76,8 @@ const ReviewsSection = () => {
         >
           {reviews.map((review, idx) => (
             <SwiperSlide key={idx}>
-              <div className="bg-white rounded-3xl p-8 shadow-lg">
-                <p className="text-dark-gray text-lg mb-6 leading-relaxed">
+              <div className="bg-white rounded-3xl p-8 shadow-lg my-10">
+                <p className="text-dark-gray text-md mb-6 leading-relaxed">
                   "{review.text}"
                 </p>
                 <div className="flex items-center gap-4">
@@ -86,7 +90,9 @@ const ReviewsSection = () => {
                     <h4 className="font-semibold text-lg">{review.name}</h4>
                     <div className="flex gap-1 mt-1">
                       {Array.from({ length: 5 }).map((_, i) => (
-                        <span key={i} className="text-primary text-sm">⭐</span>
+                        <span key={i} className="text-primary text-sm">
+                          ⭐
+                        </span>
                       ))}
                     </div>
                   </div>

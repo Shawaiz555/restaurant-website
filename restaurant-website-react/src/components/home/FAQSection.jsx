@@ -133,7 +133,7 @@ const FAQSection = () => {
                     </div>
                     <div className="flex-1">
                       <h3
-                        className={`font-semibold text-lg lg:text-xl transition-colors ${
+                        className={`text-lg transition-colors ${
                           openIndex === index
                             ? "text-primary"
                             : "text-dark group-hover:text-primary"
@@ -176,7 +176,7 @@ const FAQSection = () => {
                   <div className="px-6 lg:px-8 pb-6 lg:pb-8">
                     <div className="lg:pl-16 lg:pr-4">
                       <div className="bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl p-6">
-                        <p className="text-dark-gray text-base lg:text-lg leading-relaxed">
+                        <p className="text-dark-gray text-base lg:text-md leading-relaxed">
                           {faq.answer}
                         </p>
                       </div>

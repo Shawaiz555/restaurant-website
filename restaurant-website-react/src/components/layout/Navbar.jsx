@@ -138,56 +138,138 @@ const Navbar = () => {
               <div className="relative" ref={profileDropdownRef}>
                 <button
                   onClick={() => setShowProfileDropdown(!showProfileDropdown)}
-                  className="w-10 h-10 rounded-full border-2 border-dark/10 flex items-center justify-center hover:bg-primary hover:border-primary transition-all"
+                  className={`${
+                    isAuthenticated
+                      ? "bg-gradient-to-br from-primary to-primary-dark"
+                      : "bg-white border-2 border-gray-200"
+                  } w-10 h-10 rounded-full flex items-center justify-center hover:scale-110 transition-all shadow-md hover:shadow-xl relative`}
                 >
-                  👤
+                  {isAuthenticated ? (
+                    <div className="w-full h-full rounded-full bg-white/20 flex items-center justify-center text-white text-lg font-bold">
+                      {currentUser?.name?.charAt(0).toUpperCase() || "👤"}
+                    </div>
+                  ) : (
+                    <span className="text-xl text-dark">👤</span>
+                  )}
+                  {isAuthenticated && (
+                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+                  )}
                 </button>
 
                 {/* Profile Dropdown */}
                 {showProfileDropdown && (
-                  <div className="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-2xl border-2 border-gray-100 z-50">
+                  <div className="absolute right-0 mt-3 w-72 bg-white rounded-2xl shadow-2xl border-2 border-gray-100 z-50 overflow-hidden animate-dropdown">
                     {isAuthenticated ? (
                       <>
-                        <div className="p-4 border-b border-gray-100 bg-gradient-to-br from-cream-light to-cream">
-                          <p className="font-display text-lg text-dark text-center">
-                            {currentUser?.name}
-                          </p>
-                          <p className="text-sm text-dark-gray text-center">
-                            {currentUser?.email}
-                          </p>
+                        {/* User Info Header */}
+                        <div className="p-5 bg-cream relative overflow-hidden">
+                          <div className="absolute inset-0 opacity-10">
+                            <div className="absolute top-0 right-0 w-20 h-20 bg-white rounded-full blur-2xl"></div>
+                            <div className="absolute bottom-0 left-0 w-16 h-16 bg-white rounded-full blur-xl"></div>
+                          </div>
+
+                          <div className="relative flex items-center gap-3">
+                            <div className="w-14 h-14 rounded-full bg-white/20 text-primary-dark backdrop-blur-sm border-2 border-white/50 flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+                              {currentUser?.name?.charAt(0).toUpperCase() ||
+                                "👤"}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="font-display text-lg text-primary-dark tracking-wide truncate">
+                                {currentUser?.name}
+                              </p>
+                              <p className="text-sm text-primary-dark truncate">
+                                {currentUser?.email}
+                              </p>
+                            </div>
+                          </div>
                         </div>
+
+                        {/* Menu Items */}
                         <div className="py-2">
-                          <button className="w-full text-center px-4 py-3 text-dark hover:bg-cream transition-colors">
-                            My Orders
+                          <button className="w-full text-left px-5 py-3 text-dark hover:bg-gradient-to-r hover:from-cream-light hover:to-cream transition-all flex items-center gap-3 group">
+                            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-xl group-hover:bg-primary group-hover:text-white transition-all">
+                              📦
+                            </div>
+                            <div>
+                              <div className="font-semibold text-sm">
+                                My Orders
+                              </div>
+                              <div className="text-xs text-dark-gray">
+                                Track your orders
+                              </div>
+                            </div>
                           </button>
-                          <button className="w-full text-center px-4 py-3 text-dark hover:bg-cream transition-colors">
-                            Profile Settings
+
+                          <button className="w-full text-left px-5 py-3 text-dark hover:bg-gradient-to-r hover:from-cream-light hover:to-cream transition-all flex items-center gap-3 group">
+                            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-xl group-hover:bg-primary group-hover:text-white transition-all">
+                              ⚙️
+                            </div>
+                            <div>
+                              <div className="font-semibold text-sm">
+                                Settings
+                              </div>
+                              <div className="text-xs text-dark-gray">
+                                Manage your account
+                              </div>
+                            </div>
                           </button>
-                          <hr className="my-2 border-gray-100" />
+
+                          <hr className="my-2 border-gray-200" />
+
                           <button
                             onClick={handleLogout}
-                            className="w-full text-center px-4 py-3 text-red-600 hover:bg-red-50 transition-colors"
+                            className="w-full text-left px-5 py-3 text-red-600 hover:bg-red-50 transition-all flex items-center gap-3 group rounded-b-2xl"
                           >
-                            Logout
+                            <div className="w-10 h-10 rounded-lg bg-red-50 flex items-center justify-center text-xl group-hover:bg-red-100 transition-all">
+                              🚪
+                            </div>
+                            <div>
+                              <div className="font-semibold text-sm">
+                                Logout
+                              </div>
+                              <div className="text-xs text-red-400">
+                                Sign out of your account
+                              </div>
+                            </div>
                           </button>
                         </div>
                       </>
                     ) : (
-                      <div className="py-2">
-                        <Link
-                          to="/login"
-                          className="block px-4 py-3 text-dark text-center hover:bg-cream transition-colors"
-                          onClick={() => setShowProfileDropdown(false)}
-                        >
-                          Login
-                        </Link>
-                        <Link
-                          to="/signup"
-                          className="block px-4 py-3 text-dark text-center hover:bg-cream transition-colors"
-                          onClick={() => setShowProfileDropdown(false)}
-                        >
-                          Sign Up
-                        </Link>
+                      <div className="p-4">
+                        {/* Guest Header */}
+                        <div className="text-center mb-4 py-6 bg-cream rounded-xl">
+                          <div className="w-16 h-16 mx-auto mb-3 rounded-full flex items-center justify-center text-3xl shadow-lg">
+                            👤
+                          </div>
+                          <h3 className="font-display text-xl text-dark mb-1">
+                            Welcome!
+                          </h3>
+                          <p className="text-sm text-dark-gray">
+                            Sign in to access your account
+                          </p>
+                        </div>
+
+                        {/* Auth Buttons */}
+                        <div className="space-y-2">
+                          <Link
+                            to="/login"
+                            className="block w-full bg-gradient-to-r from-primary to-primary-dark text-white text-center px-4 py-3 rounded-xl font-semibold hover:shadow-lg transition-all hover:scale-105"
+                            onClick={() => setShowProfileDropdown(false)}
+                          >
+                            Login
+                          </Link>
+                          <Link
+                            to="/signup"
+                            className="block w-full bg-white text-primary border-2 border-primary text-center px-4 py-3 rounded-xl font-semibold hover:bg-primary hover:text-white transition-all hover:scale-105"
+                            onClick={() => setShowProfileDropdown(false)}
+                          >
+                            Create Account
+                          </Link>
+                        </div>
+
+                        <p className="text-xs text-center text-dark-gray mt-4">
+                          New to Bites? Sign up and get exclusive offers!
+                        </p>
                       </div>
                     )}
                   </div>
