@@ -43,8 +43,9 @@ const CartDrawer = () => {
         type: "success",
       }),
     );
-    // You can add navigation to checkout page here
-    // navigate("/checkout");
+    setTimeout(() => {
+      navigate("/checkout");
+    }, 300);
   };
 
   return (

@@ -4,6 +4,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Leaflet Map Styles */
+@import 'leaflet/dist/leaflet.css';
+
 * {
   margin: 0;
   padding: 0;
