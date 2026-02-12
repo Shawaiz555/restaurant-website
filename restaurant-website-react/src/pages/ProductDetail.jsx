@@ -173,10 +173,10 @@ const ProductDetail = () => {
                 {/* Nutrition Info - Professional Design */}
                 {product.nutritionInfo && (
                   <div className="rounded-3xl p-3 lg:p-5">
-                    <h3 className="font-display text-2xl mb-4">
+                    <h3 className="font-display text-2xl lg:text-3xl mb-4">
                       Nutrition Information
                     </h3>
-                    <div className="bg-cream border-2 border-gray-200 rounded-2xl p-6 shadow-sm">
+                    <div className="bg-cream border-2 border-gray-200 rounded-2xl p-6 py-3 shadow-sm">
                       <div className="space-y-4">
                         <div className="flex items-center justify-between py-1 border-b border-gray-200">
                           <div className="flex items-center gap-3">
@@ -195,7 +195,7 @@ const ProductDetail = () => {
                                 />
                               </svg>
                             </div>
-                            <span className="font-display text-md text-dark">
+                            <span className="font-display text-md lg:text-lg text-dark">
                               Calories
                             </span>
                           </div>
@@ -221,7 +221,7 @@ const ProductDetail = () => {
                                 />
                               </svg>
                             </div>
-                            <span className="font-display text-md text-dark">
+                            <span className="font-display text-md lg:text-lg text-dark">
                               Protein
                             </span>
                           </div>
@@ -247,7 +247,7 @@ const ProductDetail = () => {
                                 />
                               </svg>
                             </div>
-                            <span className="font-display text-md text-dark">
+                            <span className="font-display text-md lg:text-lg text-dark">
                               Carbs
                             </span>
                           </div>
@@ -273,7 +273,7 @@ const ProductDetail = () => {
                                 />
                               </svg>
                             </div>
-                            <span className="font-display text-md text-dark">
+                            <span className="font-display text-md lg:text-lg text-dark">
                               Fat
                             </span>
                           </div>
@@ -467,7 +467,7 @@ const ProductDetail = () => {
                             <option
                               key={spice.id}
                               value={spice.id}
-                              className="py-3 sm:py-4 px-2 sm:px-4 bg-cream text-dark text-xs sm:text-xs"
+                              className="py-3 sm:py-4 px-2 sm:px-4 bg-cream text-dark text-xs sm:text-base"
                               style={{
                                 padding: "10px 12px",
                                 backgroundColor: "#FFF8F0",
@@ -546,7 +546,7 @@ const ProductDetail = () => {
                           </svg>
                         </div>
                         <div className="min-w-0">
-                          <p className="text-sm sm:text-lg text-dark-gray font-medium mb-0.5">
+                          <p className="text-sm sm:text-lg text-dark-gray font-semibold mb-0.5">
                             Total Price
                           </p>
                           <p className="text-xs text-dark-gray/70 truncate">
