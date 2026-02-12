@@ -1,4 +1,24 @@
 // Complete Product Database with detailed information for all menu items
+//
+// ADD-ONS CONFIGURATION SYSTEM:
+// Each product can have an optional 'addOnsConfig' object that controls which add-on sections
+// are displayed on the product detail page. This makes the system scalable and flexible.
+//
+// addOnsConfig properties:
+// - showSpiceLevel: boolean - Show spice level selector (for spicy dishes, curries, noodles)
+// - showDrinks: boolean - Show drinks add-ons (typically shown for most main dishes)
+// - showDesserts: boolean - Show dessert add-ons (typically shown for most main dishes)
+// - showExtras: boolean - Show extras like cheese, sauce, garlic bread (for burgers, pasta, pizzas)
+//
+// Default configuration (if not specified):
+// { showSpiceLevel: false, showDrinks: true, showDesserts: true, showExtras: false }
+//
+// Guidelines for adding new products:
+// - Spicy dishes (curries, Asian noodles, Mexican): showSpiceLevel: true
+// - Main meals (burgers, pasta, rice dishes): showDrinks: true, showDesserts: true
+// - Customizable items (burgers, sandwiches, pasta): showExtras: true
+// - Breakfast items, desserts, drinks: Only show relevant add-ons or none
+//
 const productsData = {
    // ===== POPULAR DISHES =====
    'pasta': {
@@ -19,6 +39,12 @@ const productsData = {
          protein: '15g',
          carbs: '65g',
          fat: '12g'
+      },
+      addOnsConfig: {
+         showSpiceLevel: true,
+         showDrinks: true,
+         showDesserts: true,
+         showExtras: true
       }
    },
    'french-fries': {
@@ -61,6 +87,12 @@ const productsData = {
          protein: '32g',
          carbs: '45g',
          fat: '22g'
+      },
+      addOnsConfig: {
+         showSpiceLevel: true,
+         showDrinks: true,
+         showDesserts: true,
+         showExtras: true
       }
    },
    'fish-curry': {
@@ -81,6 +113,12 @@ const productsData = {
          protein: '35g',
          carbs: '28g',
          fat: '18g'
+      },
+      addOnsConfig: {
+         showSpiceLevel: true,
+         showDrinks: true,
+         showDesserts: true,
+         showExtras: true
       }
    },
 
@@ -205,6 +243,12 @@ const productsData = {
          protein: '28g',
          carbs: '68g',
          fat: '22g'
+      },
+      addOnsConfig: {
+         showSpiceLevel: true,
+         showDrinks: true,
+         showDesserts: true,
+         showExtras: true
       }
    },
    'shrimp-pad-thai': {
@@ -225,6 +269,12 @@ const productsData = {
          protein: '24g',
          carbs: '72g',
          fat: '16g'
+      },
+      addOnsConfig: {
+         showSpiceLevel: true,
+         showDrinks: true,
+         showDesserts: true,
+         showExtras: true
       }
    },
    'beef-chow-mein': {
@@ -245,6 +295,12 @@ const productsData = {
          protein: '26g',
          carbs: '64g',
          fat: '20g'
+      },
+      addOnsConfig: {
+         showSpiceLevel: true,
+         showDrinks: true,
+         showDesserts: true,
+         showExtras: false
       }
    },
    'udon-noodle-soup': {
@@ -517,6 +573,12 @@ const productsData = {
          protein: '28g',
          carbs: '48g',
          fat: '28g'
+      },
+      addOnsConfig: {
+         showSpiceLevel: false,
+         showDrinks: true,
+         showDesserts: true,
+         showExtras: true
       }
    },
    'club-sandwich': {
@@ -537,6 +599,12 @@ const productsData = {
          protein: '32g',
          carbs: '52g',
          fat: '32g'
+      },
+      addOnsConfig: {
+         showSpiceLevel: false,
+         showDrinks: true,
+         showDesserts: true,
+         showExtras: true
       }
    },
    'grilled-steak': {
@@ -558,6 +626,12 @@ const productsData = {
          protein: '52g',
          carbs: '32g',
          fat: '32g'
+      },
+      addOnsConfig: {
+         showSpiceLevel: false,
+         showDrinks: true,
+         showDesserts: true,
+         showExtras: true
       }
    },
    'creamy-pasta': {
@@ -578,13 +652,34 @@ const productsData = {
          protein: '32g',
          carbs: '68g',
          fat: '36g'
+      },
+      addOnsConfig: {
+         showSpiceLevel: false,
+         showDrinks: true,
+         showDesserts: true,
+         showExtras: true
       }
    }
 };
 
-// Function to get product by ID
+// Default add-ons configuration for products that don't specify one
+const defaultAddOnsConfig = {
+   showSpiceLevel: false,
+   showDrinks: true,
+   showDesserts: true,
+   showExtras: false
+};
+
+// Function to get product by ID with default addOnsConfig
 export function getProductById(productId) {
-   return productsData[productId] || null;
+   const product = productsData[productId];
+   if (!product) return null;
+
+   // Add default addOnsConfig if not specified
+   return {
+      ...product,
+      addOnsConfig: product.addOnsConfig || defaultAddOnsConfig
+   };
 }
 
 // Function to get products by category

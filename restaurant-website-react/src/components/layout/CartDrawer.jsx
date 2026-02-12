@@ -113,7 +113,31 @@ const CartDrawer = () => {
                           Size: {item.size}
                         </p>
                       )}
-                      <p className="text-primary font-semibold">
+                      {item.spiceLevel && (
+                        <p className="text-xs text-dark-gray mb-1">
+                          Spice: {item.spiceLevel.name}
+                        </p>
+                      )}
+                      {item.addOns && (
+                        <div className="mt-1 space-y-0.5">
+                          {item.addOns.drinks?.length > 0 && (
+                            <p className="text-xs text-dark-gray">
+                              + {item.addOns.drinks.map(d => `${d.name}${d.quantity > 1 ? ` x${d.quantity}` : ''}`).join(', ')}
+                            </p>
+                          )}
+                          {item.addOns.desserts?.length > 0 && (
+                            <p className="text-xs text-dark-gray">
+                              + {item.addOns.desserts.map(d => `${d.name}${d.quantity > 1 ? ` x${d.quantity}` : ''}`).join(', ')}
+                            </p>
+                          )}
+                          {item.addOns.extras?.length > 0 && (
+                            <p className="text-xs text-dark-gray">
+                              + {item.addOns.extras.map(e => `${e.name}${e.quantity > 1 ? ` x${e.quantity}` : ''}`).join(', ')}
+                            </p>
+                          )}
+                        </div>
+                      )}
+                      <p className="text-primary font-semibold mt-1">
                         Rs.{item.price.toFixed(2)}
                       </p>
                     </div>
