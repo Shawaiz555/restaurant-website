@@ -625,231 +625,175 @@ const ProductDetail = () => {
               addOnsConfig.showDesserts ||
               addOnsConfig.showExtras) && (
               <div className="mb-20 px-4 lg:px-6">
-                <h2 className="font-display text-3xl lg:text-4xl mb-2">
-                  Customize Your Order
-                </h2>
-                <p className="text-dark-gray mb-6">
-                  Add drinks, desserts, or extras to complete your meal
-                </p>
+                <div className="bg-gradient-to-br from-cream via-cream-light to-white rounded-3xl p-6 lg:p-8 shadow-xl border border-gray-200">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                      <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                      </svg>
+                    </div>
+                    <h2 className="font-display text-3xl lg:text-4xl text-dark">
+                      Customize Your Order
+                    </h2>
+                  </div>
+                  <p className="text-dark-gray mb-6 pl-13">
+                    Add drinks, desserts, or extras to complete your meal
+                  </p>
 
-                {/* Tab Navigation */}
-                <div className="flex gap-2 mb-6 border-b-2 border-gray-200">
-                  {addOnsConfig.showDrinks && (
-                    <button
-                      onClick={() => setActiveAddOnTab("drinks")}
-                      className={`py-3 px-6 font-display text-lg transition-all relative ${
-                        activeAddOnTab === "drinks"
-                          ? "text-primary font-semibold"
-                          : "text-dark-gray hover:text-dark"
-                      }`}
-                    >
-                      Drinks
-                      {selectedAddOns.drinks.length > 0 && (
-                        <span className="ml-2 inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-primary rounded-full">
-                          {selectedAddOns.drinks.length}
+                  {/* Tab Navigation */}
+                  <div className="flex gap-2 mb-6 border-b-2 border-gray-200 bg-white rounded-t-2xl px-2 pt-2">
+                    {addOnsConfig.showDrinks && (
+                      <button
+                        onClick={() => setActiveAddOnTab("drinks")}
+                        className={`py-3 px-6 font-display text-base lg:text-lg transition-all relative rounded-t-xl ${
+                          activeAddOnTab === "drinks"
+                            ? "text-primary font-semibold bg-cream"
+                            : "text-dark-gray hover:text-dark hover:bg-cream-light/50"
+                        }`}
+                      >
+                        <span className="flex items-center gap-2">
+                          🥤 Drinks
+                          {selectedAddOns.drinks.length > 0 && (
+                            <span className="inline-flex items-center justify-center min-w-[24px] h-6 px-2 text-xs font-bold text-white bg-gradient-to-r from-primary to-primary-dark rounded-full shadow-md">
+                              {selectedAddOns.drinks.length}
+                            </span>
+                          )}
                         </span>
-                      )}
-                      {activeAddOnTab === "drinks" && (
-                        <span className="absolute bottom-0 left-0 right-0 h-1 bg-primary"></span>
-                      )}
-                    </button>
-                  )}
-                  {addOnsConfig.showDesserts && (
-                    <button
-                      onClick={() => setActiveAddOnTab("desserts")}
-                      className={`py-3 px-6 font-display text-lg transition-all relative ${
-                        activeAddOnTab === "desserts"
-                          ? "text-primary font-semibold"
-                          : "text-dark-gray hover:text-dark"
-                      }`}
-                    >
-                      Desserts
-                      {selectedAddOns.desserts.length > 0 && (
-                        <span className="ml-2 inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-primary rounded-full">
-                          {selectedAddOns.desserts.length}
+                        {activeAddOnTab === "drinks" && (
+                          <span className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-primary-dark rounded-t"></span>
+                        )}
+                      </button>
+                    )}
+                    {addOnsConfig.showDesserts && (
+                      <button
+                        onClick={() => setActiveAddOnTab("desserts")}
+                        className={`py-3 px-6 font-display text-base lg:text-lg transition-all relative rounded-t-xl ${
+                          activeAddOnTab === "desserts"
+                            ? "text-primary font-semibold bg-cream"
+                            : "text-dark-gray hover:text-dark hover:bg-cream-light/50"
+                        }`}
+                      >
+                        <span className="flex items-center gap-2">
+                          🍰 Desserts
+                          {selectedAddOns.desserts.length > 0 && (
+                            <span className="inline-flex items-center justify-center min-w-[24px] h-6 px-2 text-xs font-bold text-white bg-gradient-to-r from-primary to-primary-dark rounded-full shadow-md">
+                              {selectedAddOns.desserts.length}
+                            </span>
+                          )}
                         </span>
-                      )}
-                      {activeAddOnTab === "desserts" && (
-                        <span className="absolute bottom-0 left-0 right-0 h-1 bg-primary"></span>
-                      )}
-                    </button>
-                  )}
-                  {addOnsConfig.showExtras && (
-                    <button
-                      onClick={() => setActiveAddOnTab("extras")}
-                      className={`py-3 px-6 font-display text-lg transition-all relative ${
-                        activeAddOnTab === "extras"
-                          ? "text-primary font-semibold"
-                          : "text-dark-gray hover:text-dark"
-                      }`}
-                    >
-                      Extras
-                      {selectedAddOns.extras.length > 0 && (
-                        <span className="ml-2 inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-primary rounded-full">
-                          {selectedAddOns.extras.length}
+                        {activeAddOnTab === "desserts" && (
+                          <span className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-primary-dark rounded-t"></span>
+                        )}
+                      </button>
+                    )}
+                    {addOnsConfig.showExtras && (
+                      <button
+                        onClick={() => setActiveAddOnTab("extras")}
+                        className={`py-3 px-6 font-display text-base lg:text-lg transition-all relative rounded-t-xl ${
+                          activeAddOnTab === "extras"
+                            ? "text-primary font-semibold bg-cream"
+                            : "text-dark-gray hover:text-dark hover:bg-cream-light/50"
+                        }`}
+                      >
+                        <span className="flex items-center gap-2">
+                          ✨ Extras
+                          {selectedAddOns.extras.length > 0 && (
+                            <span className="inline-flex items-center justify-center min-w-[24px] h-6 px-2 text-xs font-bold text-white bg-gradient-to-r from-primary to-primary-dark rounded-full shadow-md">
+                              {selectedAddOns.extras.length}
+                            </span>
+                          )}
                         </span>
-                      )}
-                      {activeAddOnTab === "extras" && (
-                        <span className="absolute bottom-0 left-0 right-0 h-1 bg-primary"></span>
-                      )}
-                    </button>
-                  )}
-                </div>
+                        {activeAddOnTab === "extras" && (
+                          <span className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-primary-dark rounded-t"></span>
+                        )}
+                      </button>
+                    )}
+                  </div>
 
-                {/* Tab Content - 2 Column Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {/* Drinks Tab */}
-                  {activeAddOnTab === "drinks" && addOnsConfig.showDrinks && (
-                    <>
-                      {addOnsData.drinks.map((drink) => {
-                        const selectedItem = selectedAddOns.drinks.find(
-                          (d) => d.id === drink.id,
-                        );
-                        const isSelected = !!selectedItem;
-                        const quantity = selectedItem?.quantity || 1;
-
-                        return (
-                          <div
-                            key={drink.id}
-                            className={`flex items-center justify-between p-4 border-2 rounded-xl transition-all ${
-                              isSelected
-                                ? "border-primary bg-cream shadow-md"
-                                : "border-gray-200 hover:border-primary hover:bg-cream-light"
-                            }`}
-                          >
-                            <div className="flex items-center gap-3 flex-1 min-w-0">
-                              <input
-                                type="checkbox"
-                                checked={isSelected}
-                                onChange={() => toggleAddOn("drinks", drink)}
-                                className="w-5 h-5 text-primary rounded border-gray-300 focus:ring-2 focus:ring-primary cursor-pointer flex-shrink-0"
-                              />
-                              <span className="font-display text-base text-dark truncate">
-                                {drink.name}
-                              </span>
-                            </div>
-
-                            <div className="flex items-center gap-3 flex-shrink-0">
-                              {isSelected && (
-                                <div className="flex items-center gap-2 bg-white rounded-lg border border-gray-300 px-2">
-                                  <button
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      updateAddOnQuantity(
-                                        "drinks",
-                                        drink.id,
-                                        quantity - 1,
-                                      );
-                                    }}
-                                    className="text-dark hover:text-primary font-bold text-lg w-7 h-7 flex items-center justify-center"
-                                  >
-                                    −
-                                  </button>
-                                  <span className="font-semibold text-dark min-w-[20px] text-center">
-                                    {quantity}
-                                  </span>
-                                  <button
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      updateAddOnQuantity(
-                                        "drinks",
-                                        drink.id,
-                                        quantity + 1,
-                                      );
-                                    }}
-                                    className="text-dark hover:text-primary font-bold text-lg w-7 h-7 flex items-center justify-center"
-                                  >
-                                    +
-                                  </button>
-                                </div>
-                              )}
-                              <span className="text-primary font-semibold text-base whitespace-nowrap">
-                                +Rs.
-                                {(
-                                  drink.price * (isSelected ? quantity : 1)
-                                ).toFixed(2)}
-                              </span>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </>
-                  )}
-
-                  {/* Desserts Tab */}
-                  {activeAddOnTab === "desserts" &&
-                    addOnsConfig.showDesserts && (
+                  {/* Tab Content - 2 Column Grid */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white p-4 rounded-b-2xl">
+                    {/* Drinks Tab */}
+                    {activeAddOnTab === "drinks" && addOnsConfig.showDrinks && (
                       <>
-                        {addOnsData.desserts.map((dessert) => {
-                          const selectedItem = selectedAddOns.desserts.find(
-                            (d) => d.id === dessert.id,
+                        {addOnsData.drinks.map((drink) => {
+                          const selectedItem = selectedAddOns.drinks.find(
+                            (d) => d.id === drink.id,
                           );
                           const isSelected = !!selectedItem;
                           const quantity = selectedItem?.quantity || 1;
 
                           return (
                             <div
-                              key={dessert.id}
-                              className={`flex items-center justify-between p-4 border-2 rounded-xl transition-all ${
+                              key={drink.id}
+                              className={`group relative flex items-center justify-between p-5 border-2 rounded-2xl transition-all duration-200 ${
                                 isSelected
-                                  ? "border-primary bg-cream shadow-md"
-                                  : "border-gray-200 hover:border-primary hover:bg-cream-light"
+                                  ? "border-primary bg-gradient-to-br from-cream to-cream-light shadow-lg scale-[1.02]"
+                                  : "border-gray-200 hover:border-primary/60 hover:bg-cream-light/50 hover:shadow-md"
                               }`}
                             >
-                              <div className="flex items-center gap-3 flex-1 min-w-0">
-                                <input
-                                  type="checkbox"
-                                  checked={isSelected}
-                                  onChange={() =>
-                                    toggleAddOn("desserts", dessert)
-                                  }
-                                  className="w-5 h-5 text-primary rounded border-gray-300 focus:ring-2 focus:ring-primary cursor-pointer flex-shrink-0"
-                                />
-                                <span className="font-display text-base text-dark truncate">
-                                  {dessert.name}
+                              <div className="flex items-center gap-4 flex-1 min-w-0">
+                                <div className="relative">
+                                  <input
+                                    type="checkbox"
+                                    checked={isSelected}
+                                    onChange={() => toggleAddOn("drinks", drink)}
+                                    className="w-6 h-6 text-primary rounded-lg border-2 border-gray-300 focus:ring-2 focus:ring-primary cursor-pointer transition-all flex-shrink-0 appearance-none checked:bg-primary checked:border-primary"
+                                    style={{
+                                      backgroundImage: isSelected
+                                        ? `url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e")`
+                                        : "none",
+                                    }}
+                                  />
+                                </div>
+                                <span className="font-display text-base lg:text-lg text-dark truncate font-medium">
+                                  {drink.name}
                                 </span>
                               </div>
 
                               <div className="flex items-center gap-3 flex-shrink-0">
                                 {isSelected && (
-                                  <div className="flex items-center gap-2 bg-white rounded-lg border border-gray-300 px-2">
+                                  <div className="flex items-center gap-1 bg-gradient-to-r from-white to-cream rounded-xl border-2 border-primary/30 shadow-sm">
                                     <button
                                       onClick={(e) => {
                                         e.stopPropagation();
                                         updateAddOnQuantity(
-                                          "desserts",
-                                          dessert.id,
+                                          "drinks",
+                                          drink.id,
                                           quantity - 1,
                                         );
                                       }}
-                                      className="text-dark hover:text-primary font-bold text-lg w-7 h-7 flex items-center justify-center"
+                                      className="text-dark hover:text-white hover:bg-primary font-bold text-xl w-9 h-9 flex items-center justify-center rounded-l-lg transition-all active:scale-95"
                                     >
                                       −
                                     </button>
-                                    <span className="font-semibold text-dark min-w-[20px] text-center">
+                                    <span className="font-display font-bold text-dark min-w-[32px] text-center text-lg bg-white px-2">
                                       {quantity}
                                     </span>
                                     <button
                                       onClick={(e) => {
                                         e.stopPropagation();
                                         updateAddOnQuantity(
-                                          "desserts",
-                                          dessert.id,
+                                          "drinks",
+                                          drink.id,
                                           quantity + 1,
                                         );
                                       }}
-                                      className="text-dark hover:text-primary font-bold text-lg w-7 h-7 flex items-center justify-center"
+                                      className="text-dark hover:text-white hover:bg-primary font-bold text-xl w-9 h-9 flex items-center justify-center rounded-r-lg transition-all active:scale-95"
                                     >
                                       +
                                     </button>
                                   </div>
                                 )}
-                                <span className="text-primary font-semibold text-base whitespace-nowrap">
-                                  +Rs.
-                                  {(
-                                    dessert.price * (isSelected ? quantity : 1)
-                                  ).toFixed(2)}
-                                </span>
+                                <div className="flex flex-col items-end">
+                                  <span className="text-primary font-display font-bold text-base lg:text-lg whitespace-nowrap">
+                                    +Rs.{(drink.price * (isSelected ? quantity : 1)).toFixed(2)}
+                                  </span>
+                                  {isSelected && quantity > 1 && (
+                                    <span className="text-xs text-dark-gray">
+                                      Rs.{drink.price.toFixed(2)} each
+                                    </span>
+                                  )}
+                                </div>
                               </div>
                             </div>
                           );
@@ -857,83 +801,187 @@ const ProductDetail = () => {
                       </>
                     )}
 
-                  {/* Extras Tab */}
-                  {activeAddOnTab === "extras" && addOnsConfig.showExtras && (
-                    <>
-                      {addOnsData.extras.map((extra) => {
-                        const selectedItem = selectedAddOns.extras.find(
-                          (e) => e.id === extra.id,
-                        );
-                        const isSelected = !!selectedItem;
-                        const quantity = selectedItem?.quantity || 1;
+                    {/* Desserts Tab */}
+                    {activeAddOnTab === "desserts" &&
+                      addOnsConfig.showDesserts && (
+                        <>
+                          {addOnsData.desserts.map((dessert) => {
+                            const selectedItem = selectedAddOns.desserts.find(
+                              (d) => d.id === dessert.id,
+                            );
+                            const isSelected = !!selectedItem;
+                            const quantity = selectedItem?.quantity || 1;
 
-                        return (
-                          <div
-                            key={extra.id}
-                            className={`flex items-center justify-between p-4 border-2 rounded-xl transition-all ${
-                              isSelected
-                                ? "border-primary bg-cream shadow-md"
-                                : "border-gray-200 hover:border-primary hover:bg-cream-light"
-                            }`}
-                          >
-                            <div className="flex items-center gap-3 flex-1 min-w-0">
-                              <input
-                                type="checkbox"
-                                checked={isSelected}
-                                onChange={() => toggleAddOn("extras", extra)}
-                                className="w-5 h-5 text-primary rounded border-gray-300 focus:ring-2 focus:ring-primary cursor-pointer flex-shrink-0"
-                              />
-                              <span className="font-display text-base text-dark truncate">
-                                {extra.name}
-                              </span>
-                            </div>
-
-                            <div className="flex items-center gap-3 flex-shrink-0">
-                              {isSelected && (
-                                <div className="flex items-center gap-2 bg-white rounded-lg border border-gray-300 px-2">
-                                  <button
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      updateAddOnQuantity(
-                                        "extras",
-                                        extra.id,
-                                        quantity - 1,
-                                      );
-                                    }}
-                                    className="text-dark hover:text-primary font-bold text-lg w-7 h-7 flex items-center justify-center"
-                                  >
-                                    −
-                                  </button>
-                                  <span className="font-semibold text-dark min-w-[20px] text-center">
-                                    {quantity}
+                            return (
+                              <div
+                                key={dessert.id}
+                                className={`group relative flex items-center justify-between p-5 border-2 rounded-2xl transition-all duration-200 ${
+                                  isSelected
+                                    ? "border-primary bg-gradient-to-br from-cream to-cream-light shadow-lg scale-[1.02]"
+                                    : "border-gray-200 hover:border-primary/60 hover:bg-cream-light/50 hover:shadow-md"
+                                }`}
+                              >
+                                <div className="flex items-center gap-4 flex-1 min-w-0">
+                                  <div className="relative">
+                                    <input
+                                      type="checkbox"
+                                      checked={isSelected}
+                                      onChange={() =>
+                                        toggleAddOn("desserts", dessert)
+                                      }
+                                      className="w-6 h-6 text-primary rounded-lg border-2 border-gray-300 focus:ring-2 focus:ring-primary cursor-pointer transition-all flex-shrink-0 appearance-none checked:bg-primary checked:border-primary"
+                                      style={{
+                                        backgroundImage: isSelected
+                                          ? `url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e")`
+                                          : "none",
+                                      }}
+                                    />
+                                  </div>
+                                  <span className="font-display text-base lg:text-lg text-dark truncate font-medium">
+                                    {dessert.name}
                                   </span>
-                                  <button
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      updateAddOnQuantity(
-                                        "extras",
-                                        extra.id,
-                                        quantity + 1,
-                                      );
-                                    }}
-                                    className="text-dark hover:text-primary font-bold text-lg w-7 h-7 flex items-center justify-center"
-                                  >
-                                    +
-                                  </button>
                                 </div>
-                              )}
-                              <span className="text-primary font-semibold text-base whitespace-nowrap">
-                                +Rs.
-                                {(
-                                  extra.price * (isSelected ? quantity : 1)
-                                ).toFixed(2)}
-                              </span>
+
+                                <div className="flex items-center gap-3 flex-shrink-0">
+                                  {isSelected && (
+                                    <div className="flex items-center gap-1 bg-gradient-to-r from-white to-cream rounded-xl border-2 border-primary/30 shadow-sm">
+                                      <button
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          updateAddOnQuantity(
+                                            "desserts",
+                                            dessert.id,
+                                            quantity - 1,
+                                          );
+                                        }}
+                                        className="text-dark hover:text-white hover:bg-primary font-bold text-xl w-9 h-9 flex items-center justify-center rounded-l-lg transition-all active:scale-95"
+                                      >
+                                        −
+                                      </button>
+                                      <span className="font-display font-bold text-dark min-w-[32px] text-center text-lg bg-white px-2">
+                                        {quantity}
+                                      </span>
+                                      <button
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          updateAddOnQuantity(
+                                            "desserts",
+                                            dessert.id,
+                                            quantity + 1,
+                                          );
+                                        }}
+                                        className="text-dark hover:text-white hover:bg-primary font-bold text-xl w-9 h-9 flex items-center justify-center rounded-r-lg transition-all active:scale-95"
+                                      >
+                                        +
+                                      </button>
+                                    </div>
+                                  )}
+                                  <div className="flex flex-col items-end">
+                                    <span className="text-primary font-display font-bold text-base lg:text-lg whitespace-nowrap">
+                                      +Rs.{(dessert.price * (isSelected ? quantity : 1)).toFixed(2)}
+                                    </span>
+                                    {isSelected && quantity > 1 && (
+                                      <span className="text-xs text-dark-gray">
+                                        Rs.{dessert.price.toFixed(2)} each
+                                      </span>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </>
+                      )}
+
+                    {/* Extras Tab */}
+                    {activeAddOnTab === "extras" && addOnsConfig.showExtras && (
+                      <>
+                        {addOnsData.extras.map((extra) => {
+                          const selectedItem = selectedAddOns.extras.find(
+                            (e) => e.id === extra.id,
+                          );
+                          const isSelected = !!selectedItem;
+                          const quantity = selectedItem?.quantity || 1;
+
+                          return (
+                            <div
+                              key={extra.id}
+                              className={`group relative flex items-center justify-between p-5 border-2 rounded-2xl transition-all duration-200 ${
+                                isSelected
+                                  ? "border-primary bg-gradient-to-br from-cream to-cream-light shadow-lg scale-[1.02]"
+                                  : "border-gray-200 hover:border-primary/60 hover:bg-cream-light/50 hover:shadow-md"
+                              }`}
+                            >
+                              <div className="flex items-center gap-4 flex-1 min-w-0">
+                                <div className="relative">
+                                  <input
+                                    type="checkbox"
+                                    checked={isSelected}
+                                    onChange={() => toggleAddOn("extras", extra)}
+                                    className="w-6 h-6 text-primary rounded-lg border-2 border-gray-300 focus:ring-2 focus:ring-primary cursor-pointer transition-all flex-shrink-0 appearance-none checked:bg-primary checked:border-primary"
+                                    style={{
+                                      backgroundImage: isSelected
+                                        ? `url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e")`
+                                        : "none",
+                                    }}
+                                  />
+                                </div>
+                                <span className="font-display text-base lg:text-lg text-dark truncate font-medium">
+                                  {extra.name}
+                                </span>
+                              </div>
+
+                              <div className="flex items-center gap-3 flex-shrink-0">
+                                {isSelected && (
+                                  <div className="flex items-center gap-1 bg-gradient-to-r from-white to-cream rounded-xl border-2 border-primary/30 shadow-sm">
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        updateAddOnQuantity(
+                                          "extras",
+                                          extra.id,
+                                          quantity - 1,
+                                        );
+                                      }}
+                                      className="text-dark hover:text-white hover:bg-primary font-bold text-xl w-9 h-9 flex items-center justify-center rounded-l-lg transition-all active:scale-95"
+                                    >
+                                      −
+                                    </button>
+                                    <span className="font-display font-bold text-dark min-w-[32px] text-center text-lg bg-white px-2">
+                                      {quantity}
+                                    </span>
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        updateAddOnQuantity(
+                                          "extras",
+                                          extra.id,
+                                          quantity + 1,
+                                        );
+                                      }}
+                                      className="text-dark hover:text-white hover:bg-primary font-bold text-xl w-9 h-9 flex items-center justify-center rounded-r-lg transition-all active:scale-95"
+                                    >
+                                      +
+                                    </button>
+                                  </div>
+                                )}
+                                <div className="flex flex-col items-end">
+                                  <span className="text-primary font-display font-bold text-base lg:text-lg whitespace-nowrap">
+                                    +Rs.{(extra.price * (isSelected ? quantity : 1)).toFixed(2)}
+                                  </span>
+                                  {isSelected && quantity > 1 && (
+                                    <span className="text-xs text-dark-gray">
+                                      Rs.{extra.price.toFixed(2)} each
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
                             </div>
-                          </div>
-                        );
-                      })}
-                    </>
-                  )}
+                          );
+                        })}
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
             )}
