@@ -2,10 +2,30 @@ import React from "react";
 
 const HowItWorksSection = () => {
   const process = [
-    { step: "1", title: "Browse Menu", description: "Explore our extensive menu and select your favorites", icon: "📋" },
-    { step: "2", title: "Place Order", description: "Add items to cart and proceed to checkout", icon: "🛒" },
-    { step: "3", title: "We Prepare", description: "Our chefs prepare your order with care", icon: "👨‍🍳" },
-    { step: "4", title: "Delivery/Pickup", description: "Get it delivered or pick it up fresh", icon: "🚗" }
+    {
+      step: "1",
+      title: "Browse Menu",
+      description: "Explore our extensive menu and select your favorites",
+      icon: "📋",
+    },
+    {
+      step: "2",
+      title: "Place Order",
+      description: "Add items to cart and proceed to checkout",
+      icon: "🛒",
+    },
+    {
+      step: "3",
+      title: "We Prepare",
+      description: "Our chefs prepare your order with care",
+      icon: "👨‍🍳",
+    },
+    {
+      step: "4",
+      title: "Delivery/Pickup",
+      description: "Get it delivered or pick it up fresh",
+      icon: "🚗",
+    },
   ];
 
   return (
@@ -13,10 +33,12 @@ const HowItWorksSection = () => {
       <div className="container mx-auto px-6 sm:px-6 lg:px-16">
         <div className="text-center mb-16">
           <h2 className="font-display text-5xl text-dark mb-4">How It Works</h2>
-          <p className="text-dark-gray text-xl">Simple steps to enjoy our delicious food</p>
+          <p className="text-dark-gray text-xl">
+            Simple steps to enjoy our delicious food
+          </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-8xl mx-auto">
           {process.map((item, index) => (
             <div key={index} className="relative">
               <div className="bg-white rounded-3xl p-8 shadow-xl text-center h-full border-2 border-primary/10 hover:border-primary/30 transition-all">
@@ -24,7 +46,9 @@ const HowItWorksSection = () => {
                   {item.step}
                 </div>
                 <div className="text-5xl mb-4">{item.icon}</div>
-                <h3 className="font-display text-2xl text-dark mb-3">{item.title}</h3>
+                <h3 className="font-display text-2xl text-dark mb-3">
+                  {item.title}
+                </h3>
                 <p className="text-dark-gray">{item.description}</p>
               </div>
 

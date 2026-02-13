@@ -5,14 +5,14 @@ const HeroSection = () => {
   return (
     <section
       id="home"
-      className="relative pt-20 pb-24 lg:pt-28 lg:pb-32 overflow-hidden bg-gradient-to-r from-primary via-primary to-primary-dark"
+      className="relative pt-20 pb-24 lg:pt-28 lg:pb-32 overflow-hidden bg-gradient-to-br from-cream-dark via-cream-hero to-cream-darker"
     >
       {/* Decorative Background Elements */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-20 left-10 w-40 h-40 bg-white rounded-full blur-3xl"></div>
-        <div className="absolute top-40 right-20 w-60 h-60 bg-white rounded-full blur-3xl"></div>
-        <div className="absolute bottom-20 left-1/4 w-32 h-32 bg-white rounded-full blur-2xl"></div>
-        <div className="absolute bottom-40 right-1/3 w-48 h-48 bg-white rounded-full blur-3xl"></div>
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute top-20 left-10 w-40 h-40 bg-primary-dark rounded-full blur-3xl"></div>
+        <div className="absolute top-40 right-20 w-60 h-60 bg-primary-dark rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 left-1/4 w-32 h-32 bg-primary-dark rounded-full blur-2xl"></div>
+        <div className="absolute bottom-40 right-1/3 w-48 h-48 bg-primary-dark rounded-full blur-3xl"></div>
       </div>
 
       <div className="container mx-auto px-6 sm:px-6 lg:px-16 relative z-10">
@@ -20,18 +20,18 @@ const HeroSection = () => {
           {/* Left Content */}
           <div className="relative">
             {/* Decorative Badge */}
-            <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-5 py-2 rounded-full mb-6 border border-white/30">
+            <div className="inline-flex items-center gap-2 bg-primary-dark/20 backdrop-blur-sm px-5 py-2 rounded-full mb-6 border border-primary-dark/30">
               <span className="text-2xl">🍽️</span>
-              <span className="text-white font-medium text-sm">
+              <span className="text-black font-medium text-sm">
                 Welcome to Bites
               </span>
             </div>
 
-            <h1 className="font-display text-5xl lg:text-6xl xl:text-7xl leading-tight mb-6 text-white">
+            <h1 className="font-display text-5xl lg:text-6xl xl:text-7xl leading-tight mb-6 text-primary">
               We Serve The Taste You Love
             </h1>
 
-            <p className="text-white/90 text-lg lg:text-xl mb-8 max-w-lg leading-relaxed">
+            <p className="text-primary-dark text-lg lg:text-xl mb-8 max-w-lg leading-relaxed">
               Experience authentic flavors crafted with passion. From
               traditional favorites to innovative dishes, every bite tells a
               story of culinary excellence.
@@ -39,13 +39,13 @@ const HeroSection = () => {
 
             <div className="flex flex-wrap gap-4">
               <Link to="/menu">
-                <button className="bg-white text-primary hover:bg-cream px-8 py-4 lg:px-12 rounded-2xl font-bold transition-all shadow-2xl hover:shadow-3xl hover:scale-105 flex items-center gap-2">
+                <button className="bg-primary text-white hover:bg-primary-dark px-8 py-4 lg:px-12 rounded-2xl font-bold transition-all shadow-xl hover:shadow-2xl hover:scale-105 flex items-center gap-2">
                   <span>Explore Menu</span>
                   <span className="text-xl">→</span>
                 </button>
               </Link>
               <Link to="/menu">
-                <button className="bg-primary-dark/50 backdrop-blur-sm text-white border-2 border-white/30 hover:bg-white hover:text-primary px-8 py-4 rounded-2xl font-bold transition-all hover:scale-105">
+                <button className="bg-white text-primary border-2 border-primary hover:bg-primary hover:text-white px-8 py-4 rounded-2xl font-bold transition-all hover:scale-105 shadow-md">
                   Order Now
                 </button>
               </Link>
@@ -54,22 +54,22 @@ const HeroSection = () => {
             {/* Stats */}
             <div className="mt-12 grid grid-cols-3 gap-6 max-w-lg">
               <div className="text-center">
-                <div className="text-white text-3xl lg:text-4xl font-display mb-1">
+                <div className="text-primary text-3xl lg:text-4xl font-display mb-1">
                   50K+
                 </div>
-                <div className="text-white/80 text-sm">Happy Customers</div>
+                <div className="text-primary-dark text-sm">Happy Customers</div>
               </div>
               <div className="text-center">
-                <div className="text-white text-3xl lg:text-4xl font-display mb-1">
+                <div className="text-primary text-3xl lg:text-4xl font-display mb-1">
                   4.9
                 </div>
-                <div className="text-white/80 text-sm">Average Rating</div>
+                <div className="text-primary-dark text-sm">Average Rating</div>
               </div>
               <div className="text-center">
-                <div className="text-white text-3xl lg:text-4xl font-display mb-1">
+                <div className="text-primary text-3xl lg:text-4xl font-display mb-1">
                   200+
                 </div>
-                <div className="text-white/80 text-sm">Menu Items</div>
+                <div className="text-primary-dark text-sm">Menu Items</div>
               </div>
             </div>
           </div>
@@ -101,10 +101,12 @@ const HeroSection = () => {
                     key={idx}
                     className={`${
                       item.active
-                        ? "bg-white text-primary shadow-2xl scale-105"
-                        : "bg-white/90 backdrop-blur-sm text-dark"
+                        ? "bg-primary text-white shadow-2xl scale-105"
+                        : "bg-white/90 backdrop-blur-sm text-primary"
                     } rounded-full px-5 py-2.5 shadow-xl flex items-center gap-2.5 hover:scale-105 transition-all cursor-pointer whitespace-nowrap border-2 ${
-                      item.active ? "border-white" : "border-white/50"
+                      item.active
+                        ? "border-primary-dark"
+                        : "border-primary-dark/30"
                     }`}
                   >
                     <span className="text-xl">{item.emoji}</span>
@@ -126,9 +128,9 @@ const HeroSection = () => {
                     key={idx}
                     className={`${
                       item.active
-                        ? "bg-white text-primary"
-                        : "bg-white/90 backdrop-blur-sm text-dark"
-                    } rounded-full px-4 py-2 shadow-xl flex items-center gap-2 hover:scale-105 transition-all cursor-pointer border-2 border-white/50`}
+                        ? "bg-primary text-white"
+                        : "bg-white/90 backdrop-blur-sm text-primary"
+                    } rounded-full px-4 py-2 shadow-xl flex items-center gap-2 hover:scale-105 transition-all cursor-pointer border-2 border-primary-dark/30`}
                   >
                     <span className="text-lg">{item.emoji}</span>
                     <span className="font-bold text-sm">{item.label}</span>
@@ -143,7 +145,7 @@ const HeroSection = () => {
       {/* Wave Divider */}
       <div className="absolute bottom-0 left-0 right-0">
         <svg
-          className="w-full h-16 lg:h-24 fill-current text-white"
+          className="w-full h-16 lg:h-24 fill-current text-cream-light"
           viewBox="0 0 1200 120"
           preserveAspectRatio="none"
         >

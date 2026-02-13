@@ -23,11 +23,11 @@ const ServicesCTASection = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button
                 onClick={() => navigate('/menu')}
-                className="bg-white text-primary px-10 py-5 rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all hover:scale-105"
+                className="bg-primary text-white hover:bg-primary-dark px-10 py-5 rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all hover:scale-105"
               >
                 Order Now
               </button>
-              <button className="bg-primary-dark text-white border-2 border-white px-10 py-5 rounded-2xl font-bold text-lg hover:bg-white hover:text-primary transition-all hover:scale-105">
+              <button className="bg-white text-primary border-2 border-primary hover:bg-primary hover:text-white px-10 py-5 rounded-2xl font-bold text-lg transition-all hover:scale-105">
                 Contact Us
               </button>
             </div>

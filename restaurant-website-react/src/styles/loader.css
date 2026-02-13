@@ -6,7 +6,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #fffbf5 0%, #fff8f0 100%);
+  background: linear-gradient(135deg, #FDF6E3 0%, #FFFBF5 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -29,13 +29,13 @@
 .loader-logo-icon {
   width: 80px;
   height: 80px;
-  background: #f4a340;
+  background: #E67E22;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 40px;
-  box-shadow: 0 10px 30px rgba(244, 163, 64, 0.3);
+  box-shadow: 0 10px 30px rgba(230, 126, 34, 0.3);
 }
 
 @keyframes logoFloat {
@@ -59,13 +59,13 @@
   width: 100%;
   height: 100%;
   border: 4px solid transparent;
-  border-top-color: #f4a340;
+  border-top-color: #E67E22;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
 
 .spinner-ring:nth-child(2) {
-  border-top-color: #e89530;
+  border-top-color: #D35400;
   animation-duration: 1.5s;
   animation-direction: reverse;
 }

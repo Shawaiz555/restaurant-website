@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import store from './store/store';
 import { loadCart } from './store/slices/cartSlice';
@@ -19,15 +19,28 @@ import Checkout from './pages/Checkout';
 function AppContent() {
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.auth.currentUser);
+  const location = useLocation();
+  const [loading, setLoading] = useState(false);
 
   // Load cart when app mounts or user changes
   useEffect(() => {
     dispatch(loadCart(currentUser?.id));
   }, [dispatch, currentUser?.id]);
 
+  // Show loader on route change
+  useEffect(() => {
+    setLoading(true);
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 500); // Short loader for route transitions
+
+    return () => clearTimeout(timer);
+  }, [location.pathname]);
+
   return (
     <div className="bg-cream-light min-h-screen">
       <NotificationManager />
+      {loading && <Loader />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/menu" element={<Menu />} />

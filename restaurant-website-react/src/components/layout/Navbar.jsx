@@ -56,14 +56,15 @@ const Navbar = () => {
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 bg-cream-light/85 backdrop-blur-sm z-50 shadow-sm">
-        <div className="container mx-auto px-6 sm:px-6 lg:px-16">
+        <div className="container mx-auto px-2 sm:px-4 lg:px-5">
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
-            <Link to="/" className="flex items-center gap-2">
-              <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-2xl">
-                🍽️
-              </div>
-              <span className="font-display text-2xl text-dark">Bites</span>
+            <Link to="/" className="flex items-center">
+              <img
+                src="/assets/images/BitesLogo.png"
+                alt="Bites Restaurant Logo"
+                className="h-28 w-48 lg:w-56 object-contain transition-all"
+              />
             </Link>
 
             {/* Desktop Menu */}
@@ -131,7 +132,7 @@ const Navbar = () => {
                           </div>
 
                           <div className="relative flex items-center gap-3">
-                            <div className="w-14 h-14 rounded-full text-orange-300 backdrop-blur-sm border-2 border-white/50 flex items-center justify-center text-2xl font-bold shadow-lg">
+                            <div className="w-14 h-14 rounded-full text-primary-dark backdrop-blur-sm border-2 border-white/50 flex items-center justify-center text-2xl font-bold shadow-lg">
                               {currentUser?.name?.charAt(0).toUpperCase() ||
                                 "👤"}
                             </div>
@@ -284,11 +285,12 @@ const Navbar = () => {
           }`}
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="flex items-center gap-2 mb-12">
-            <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-2xl">
-              🍽️
-            </div>
-            <span className="font-display text-2xl text-dark">Bites</span>
+          <div className="flex items-center mb-12">
+            <img
+              src="/assets/images/BitesLogo.png"
+              alt="Bites Restaurant Logo"
+              className="h-16 w-auto object-contain"
+            />
           </div>
 
           <div className="flex flex-col gap-6">

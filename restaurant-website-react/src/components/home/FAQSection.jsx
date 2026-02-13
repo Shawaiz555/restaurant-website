@@ -207,7 +207,7 @@ const FAQSection = () => {
               <button className="bg-white text-primary px-8 py-4 rounded-2xl font-bold hover:shadow-2xl transition-all hover:scale-105">
                 📞 Call Us Now
               </button>
-              <button className="bg-primary-dark text-white border-2 border-white px-8 py-4 rounded-2xl font-bold hover:bg-white hover:text-primary transition-all hover:scale-105">
+              <button className="bg-primary text-white border-2 border-white px-8 py-4 rounded-2xl font-bold hover:bg-white hover:text-primary transition-all hover:scale-105">
                 ✉️ Email Support
               </button>
             </div>

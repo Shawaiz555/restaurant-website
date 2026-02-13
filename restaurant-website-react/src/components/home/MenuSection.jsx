@@ -43,8 +43,8 @@ const MenuSection = () => {
               className={`${
                 activeCategory === category.id
                   ? 'bg-primary text-white'
-                  : 'bg-cream hover:bg-primary hover:text-white'
-              } px-6 py-3 rounded-full border-primary border-2 font-medium transition-all`}
+                  : 'bg-white hover:bg-primary hover:text-white'
+              } px-6 py-3 rounded-full border-primary border-2 font-medium transition-all shadow-sm hover:shadow-md`}
             >
               {category.label}
             </button>
@@ -68,7 +68,7 @@ const MenuSection = () => {
         <div className="text-center">
           <button
             onClick={() => navigate('/menu')}
-            className="bg-primary hover:bg-primary-dark text-white px-10 py-4 rounded-full font-medium text-lg transition-all shadow-lg hover:shadow-xl inline-flex items-center gap-3"
+            className="bg-primary text-white hover:bg-primary-dark px-10 py-4 rounded-2xl font-medium text-lg transition-all shadow-lg hover:shadow-xl hover:scale-105 inline-flex items-center gap-3"
           >
             View Complete Menu
             <span className="text-2xl">🍽️</span>

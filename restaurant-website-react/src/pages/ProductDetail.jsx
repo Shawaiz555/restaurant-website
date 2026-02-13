@@ -628,8 +628,18 @@ const ProductDetail = () => {
                 <div className="bg-gradient-to-br from-cream via-cream-light to-white rounded-3xl p-6 lg:p-8 shadow-xl border border-gray-200">
                   <div className="flex items-center gap-3 mb-2">
                     <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                      <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                      <svg
+                        className="w-5 h-5 text-primary"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
+                        />
                       </svg>
                     </div>
                     <h2 className="font-display text-3xl lg:text-4xl text-dark">
@@ -641,7 +651,7 @@ const ProductDetail = () => {
                   </p>
 
                   {/* Tab Navigation */}
-                  <div className="flex gap-2 mb-6 border-b-2 border-gray-200 bg-white rounded-t-2xl px-2 pt-2">
+                  <div className="flex gap-2 mb-6 border-b-2 border-gray-200 bg-cream rounded-t-2xl px-2 pt-2">
                     {addOnsConfig.showDrinks && (
                       <button
                         onClick={() => setActiveAddOnTab("drinks")}
@@ -711,7 +721,7 @@ const ProductDetail = () => {
                   </div>
 
                   {/* Tab Content - 2 Column Grid */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white p-4 rounded-b-2xl">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-cream p-4 rounded-b-2xl">
                     {/* Drinks Tab */}
                     {activeAddOnTab === "drinks" && addOnsConfig.showDrinks && (
                       <>
@@ -736,7 +746,9 @@ const ProductDetail = () => {
                                   <input
                                     type="checkbox"
                                     checked={isSelected}
-                                    onChange={() => toggleAddOn("drinks", drink)}
+                                    onChange={() =>
+                                      toggleAddOn("drinks", drink)
+                                    }
                                     className="w-6 h-6 text-primary rounded-lg border-2 border-gray-300 focus:ring-2 focus:ring-primary cursor-pointer transition-all flex-shrink-0 appearance-none checked:bg-primary checked:border-primary"
                                     style={{
                                       backgroundImage: isSelected
@@ -762,11 +774,11 @@ const ProductDetail = () => {
                                           quantity - 1,
                                         );
                                       }}
-                                      className="text-dark hover:text-white hover:bg-primary font-bold text-xl w-9 h-9 flex items-center justify-center rounded-l-lg transition-all active:scale-95"
+                                      className="text-dark hover:text-white hover:bg-primary font-semibold text-xl w-9 h-9 flex items-center justify-center rounded-l-lg transition-all active:scale-95"
                                     >
                                       −
                                     </button>
-                                    <span className="font-display font-bold text-dark min-w-[32px] text-center text-lg bg-white px-2">
+                                    <span className="font-display font-semibold text-dark min-w-[32px] text-center text-lg bg-white px-2">
                                       {quantity}
                                     </span>
                                     <button
@@ -778,7 +790,7 @@ const ProductDetail = () => {
                                           quantity + 1,
                                         );
                                       }}
-                                      className="text-dark hover:text-white hover:bg-primary font-bold text-xl w-9 h-9 flex items-center justify-center rounded-r-lg transition-all active:scale-95"
+                                      className="text-dark hover:text-white hover:bg-primary font-semibold text-xl w-9 h-9 flex items-center justify-center rounded-r-lg transition-all active:scale-95"
                                     >
                                       +
                                     </button>
@@ -786,7 +798,10 @@ const ProductDetail = () => {
                                 )}
                                 <div className="flex flex-col items-end">
                                   <span className="text-primary font-display font-bold text-base lg:text-lg whitespace-nowrap">
-                                    +Rs.{(drink.price * (isSelected ? quantity : 1)).toFixed(2)}
+                                    +Rs.
+                                    {(
+                                      drink.price * (isSelected ? quantity : 1)
+                                    ).toFixed(2)}
                                   </span>
                                   {isSelected && quantity > 1 && (
                                     <span className="text-xs text-dark-gray">
@@ -878,7 +893,11 @@ const ProductDetail = () => {
                                   )}
                                   <div className="flex flex-col items-end">
                                     <span className="text-primary font-display font-bold text-base lg:text-lg whitespace-nowrap">
-                                      +Rs.{(dessert.price * (isSelected ? quantity : 1)).toFixed(2)}
+                                      +Rs.
+                                      {(
+                                        dessert.price *
+                                        (isSelected ? quantity : 1)
+                                      ).toFixed(2)}
                                     </span>
                                     {isSelected && quantity > 1 && (
                                       <span className="text-xs text-dark-gray">
@@ -917,7 +936,9 @@ const ProductDetail = () => {
                                   <input
                                     type="checkbox"
                                     checked={isSelected}
-                                    onChange={() => toggleAddOn("extras", extra)}
+                                    onChange={() =>
+                                      toggleAddOn("extras", extra)
+                                    }
                                     className="w-6 h-6 text-primary rounded-lg border-2 border-gray-300 focus:ring-2 focus:ring-primary cursor-pointer transition-all flex-shrink-0 appearance-none checked:bg-primary checked:border-primary"
                                     style={{
                                       backgroundImage: isSelected
@@ -967,7 +988,10 @@ const ProductDetail = () => {
                                 )}
                                 <div className="flex flex-col items-end">
                                   <span className="text-primary font-display font-bold text-base lg:text-lg whitespace-nowrap">
-                                    +Rs.{(extra.price * (isSelected ? quantity : 1)).toFixed(2)}
+                                    +Rs.
+                                    {(
+                                      extra.price * (isSelected ? quantity : 1)
+                                    ).toFixed(2)}
                                   </span>
                                   {isSelected && quantity > 1 && (
                                     <span className="text-xs text-dark-gray">

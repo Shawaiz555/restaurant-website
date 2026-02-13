@@ -127,12 +127,10 @@ const Checkout = () => {
     return () => clearTimeout(timer);
   }, [formData.address, formData.city]);
 
-  // Calculate delivery fee and taxes
+  // Calculate delivery fee
   const deliveryFee = 50.0;
-  const taxRate = 0.05; // 5% tax
   const subtotal = total;
-  const tax = subtotal * taxRate;
-  const grandTotal = subtotal + deliveryFee + tax;
+  const grandTotal = subtotal + deliveryFee;
 
   // Handle form submission
   const handlePlaceOrder = async (e) => {
@@ -178,7 +176,6 @@ const Checkout = () => {
         items: items,
         subtotal: subtotal,
         deliveryFee: deliveryFee,
-        tax: tax,
         total: grandTotal,
         paymentMethod: "Cash on Delivery",
         status: "Pending",
@@ -242,7 +239,6 @@ const Checkout = () => {
         items: items,
         subtotal: subtotal,
         deliveryFee: deliveryFee,
-        tax: tax,
         total: grandTotal,
         paymentMethod: "Cash on Delivery",
         status: "Pending",
@@ -691,10 +687,6 @@ const Checkout = () => {
                   <div className="flex justify-between text-dark-gray">
                     <span>Delivery Fee</span>
                     <span>Rs.{deliveryFee.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between text-dark-gray">
-                    <span>Tax (5%)</span>
-                    <span>Rs.{tax.toFixed(2)}</span>
                   </div>
                   <div className="border-t-2 border-gray-200 pt-3 flex justify-between items-center">
                     <span className="font-display text-xl text-dark">

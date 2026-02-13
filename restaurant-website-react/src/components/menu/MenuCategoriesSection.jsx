@@ -27,8 +27,10 @@ const MenuCategoriesSection = ({
               {/* Attention-grabbing header */}
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center animate-bounce">
-                    <span className="text-white text-lg">📋</span>
+                  <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
                   </div>
                   <h3 className="font-display text-lg text-dark">
                     Browse Categories
@@ -72,23 +74,26 @@ const MenuCategoriesSection = ({
                       ?.count || 0}{" "}
                     items
                   </span>
-                  <div
-                    className={`w-8 h-8 bg-white/20 rounded-full flex items-center justify-center transition-transform duration-300 ${
+                  <svg
+                    className={`w-6 h-6 text-white transition-transform duration-300 ${
                       showMobileCategories ? "rotate-180" : ""
                     }`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
                   >
-                    <span className="text-white text-xl">▼</span>
-                  </div>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                  </svg>
                 </div>
               </button>
 
               {/* Quick Category Pills - Always visible on mobile */}
               {!showMobileCategories && (
                 <div className="mt-4">
-                  <p className="text-xs text-dark-gray mb-2 px-1">
+                  <p className="text-xs text-dark-gray mb-3 px-1 font-medium">
                     Quick Access:
                   </p>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-3">
                     {categories.slice(0, 5).map((category) => (
                       <button
                         key={category.id}
@@ -97,11 +102,11 @@ const MenuCategoriesSection = ({
                         }}
                         className={`${
                           activeCategory === category.id
-                            ? "bg-primary text-white shadow-lg scale-105"
-                            : "bg-white text-dark hover:bg-cream border border-gray-200"
-                        } px-4 py-2 rounded-xl font-medium text-sm transition-all flex items-center gap-2 shadow-md hover:shadow-lg hover:scale-105`}
+                            ? "bg-primary text-white shadow-lg"
+                            : "bg-white text-dark hover:bg-cream-light border border-gray-200"
+                        } px-5 py-2.5 rounded-xl font-medium text-sm transition-all flex items-center gap-2.5 shadow-sm hover:shadow-md`}
                       >
-                        <span className="text-lg">
+                        <span className="text-base">
                           {categoryIcons[category.id] || "🍽️"}
                         </span>
                         <span>{category.label}</span>
@@ -114,59 +119,56 @@ const MenuCategoriesSection = ({
 
             {/* Enhanced Categories Sidebar */}
             <div
-              className={`${showMobileCategories ? "block" : "hidden"} lg:block bg-white rounded-3xl shadow-2xl overflow-hidden lg:sticky lg:top-24 border-2 border-primary/10`}
+              className={`${showMobileCategories ? "block" : "hidden"} lg:block bg-white rounded-2xl shadow-lg overflow-hidden lg:sticky lg:top-24 border border-gray-200`}
             >
-              <div className="p-6 bg-gradient-to-br from-primary/5 via-cream-light to-primary/5 border-b-2 border-primary/10">
+              <div className="p-5 lg:p-6 bg-gradient-to-br from-cream-light to-white border-b border-gray-200">
                 <div className="flex items-center gap-3 mb-2">
-                  <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-xl shadow-lg">
-                    📋
+                  <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
                   </div>
-                  <h2 className="font-display text-2xl text-dark">
+                  <h2 className="font-display text-xl lg:text-2xl text-dark">
                     Categories
                   </h2>
                 </div>
-                <p className="text-dark-gray text-sm ml-13">
+                <p className="text-dark-gray text-sm">
                   Browse {categories.length} delicious categories
                 </p>
               </div>
 
-              <div className="p-4 max-h-[calc(100vh-300px)] overflow-y-auto custom-scrollbar">
+              <div className="p-3 lg:p-4 max-h-[calc(100vh-300px)] overflow-y-auto custom-scrollbar">
                 {categories.map((category, index) => (
                   <button
                     key={category.id}
                     onClick={() => handleCategoryChange(category.id)}
                     className={`${
                       activeCategory === category.id
-                        ? "bg-gradient-to-r from-primary to-primary-dark text-white shadow-lg scale-[1.02] border-2 border-primary"
-                        : "bg-gradient-to-br from-cream-light to-white text-dark hover:bg-gradient-to-br hover:from-cream hover:to-cream-light hover:scale-[1.01] border-2 border-transparent"
-                    } w-full px-5 py-4 rounded-2xl mb-3 transition-all duration-300 flex items-center justify-between group relative overflow-hidden`}
+                        ? "bg-primary text-white shadow-md border border-primary"
+                        : "bg-white text-dark hover:bg-cream-light border border-gray-200 hover:border-primary/30"
+                    } w-full px-4 py-3.5 rounded-xl mb-2.5 transition-all duration-200 flex items-center justify-between group`}
                     style={{ animationDelay: `${index * 0.05}s` }}
                   >
-                    {/* Shine effect on active */}
-                    {activeCategory === category.id && (
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shine"></div>
-                    )}
-
-                    <div className="flex items-center gap-4 relative z-10">
+                    <div className="flex items-center gap-3 relative z-10">
                       <div
-                        className={`w-12 h-12 ${
+                        className={`w-11 h-11 ${
                           activeCategory === category.id
                             ? "bg-white/20"
                             : "bg-primary/10"
-                        } rounded-xl flex items-center justify-center text-2xl transition-all group-hover:scale-110`}
+                        } rounded-lg flex items-center justify-center text-xl transition-all`}
                       >
                         {categoryIcons[category.id] || "🍽️"}
                       </div>
-                      <span className="font-semibold text-base text-left">
+                      <span className="font-medium text-[15px] text-left">
                         {category.label}
                       </span>
                     </div>
                     <div
                       className={`${
                         activeCategory === category.id
-                          ? "bg-white text-primary shadow-md"
-                          : "bg-primary/15 text-primary group-hover:bg-primary group-hover:text-white"
-                      } px-4 py-2 rounded-xl text-sm font-bold transition-all min-w-[3rem] text-center`}
+                          ? "bg-white text-primary"
+                          : "bg-primary/10 text-primary"
+                      } px-3 py-1.5 rounded-lg text-sm font-semibold transition-all min-w-[2.5rem] text-center`}
                     >
                       {category.count}
                     </div>
@@ -175,29 +177,23 @@ const MenuCategoriesSection = ({
               </div>
 
               {/* Enhanced Quick Stats */}
-              <div className="p-6 bg-gradient-to-br from-primary/5 via-cream to-primary/5 border-t-2 border-primary/10">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-white rounded-2xl p-4 text-center shadow-md hover:shadow-lg transition-all">
-                    <div className="text-4xl font-display bg-gradient-to-br from-primary to-primary-dark bg-clip-text text-transparent mb-1">
+              <div className="p-4 lg:p-5 bg-gradient-to-br from-cream-light to-white border-t border-gray-200">
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-white rounded-xl p-4 text-center border border-gray-100 hover:border-primary/20 transition-all">
+                    <div className="text-3xl lg:text-4xl font-display bg-gradient-to-br from-primary to-primary-dark bg-clip-text text-transparent mb-1">
                       {getAllProducts().length}
                     </div>
                     <div className="text-xs text-dark-gray font-medium">
                       Total Dishes
                     </div>
                   </div>
-                  <div className="bg-white rounded-2xl p-4 text-center shadow-md hover:shadow-lg transition-all">
-                    <div className="text-4xl font-display bg-gradient-to-br from-primary to-primary-dark bg-clip-text text-transparent mb-1">
+                  <div className="bg-white rounded-xl p-4 text-center border border-gray-100 hover:border-primary/20 transition-all">
+                    <div className="text-3xl lg:text-4xl font-display bg-gradient-to-br from-primary to-primary-dark bg-clip-text text-transparent mb-1">
                       {allCategories.length}
                     </div>
                     <div className="text-xs text-dark-gray font-medium">
                       Categories
                     </div>
-                  </div>
-                </div>
-                <div className="mt-4 text-center">
-                  <div className="inline-flex items-center gap-2 bg-white/50 px-4 py-2 rounded-full text-xs text-dark-gray">
-                    <span className="text-lg">⭐</span>
-                    <span>Fresh & Delicious</span>
                   </div>
                 </div>
               </div>
@@ -223,16 +219,14 @@ const MenuCategoriesSection = ({
                     </h3>
                     <p className="text-dark-gray text-base">
                       {searchTerm ? (
-                        <span className="flex items-center gap-2">
-                          <span className="text-xl">🎯</span>
+                        <span>
                           Search results for{" "}
                           <span className="font-semibold text-primary">
                             "{searchTerm}"
                           </span>
                         </span>
                       ) : (
-                        <span className="flex items-center gap-2">
-                          <span className="text-xl">✨</span>
+                        <span>
                           Handpicked delicious dishes just for you
                         </span>
                       )}
@@ -246,11 +240,16 @@ const MenuCategoriesSection = ({
                       onClick={() => setSearchTerm("")}
                       className="flex items-center gap-2 bg-red-50 hover:bg-red-100 text-red-600 px-5 py-3 rounded-xl font-medium transition-all hover:shadow-md"
                     >
-                      <span>✕</span> Clear
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                      Clear
                     </button>
                   )}
-                  <div className="flex items-center gap-2 bg-gradient-to-br from-cream to-cream-light px-5 py-3 rounded-xl border border-primary/20">
-                    <span className="text-2xl">📊</span>
+                  <div className="flex items-center gap-3 bg-gradient-to-br from-cream to-cream-light px-5 py-3 rounded-xl border border-primary/20">
+                    <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
                     <div className="text-left">
                       <div className="text-xs text-dark-gray">Showing</div>
                       <div className="text-sm font-bold text-primary">
@@ -283,10 +282,9 @@ const MenuCategoriesSection = ({
             ) : (
               <div className="bg-gradient-to-br from-white via-cream-light to-white rounded-3xl shadow-2xl p-16 text-center border-2 border-primary/10">
                 <div className="relative inline-block mb-6">
-                  <div className="text-8xl animate-bounce-slow">🔍</div>
-                  <div className="absolute -top-2 -right-2 w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white text-xl animate-pulse">
-                    ?
-                  </div>
+                  <svg className="w-24 h-24 text-primary/30 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
                 </div>
                 <h3 className="font-display text-4xl text-dark mb-4">
                   No items found
@@ -300,16 +298,22 @@ const MenuCategoriesSection = ({
                   {searchTerm && (
                     <button
                       onClick={() => setSearchTerm("")}
-                      className="bg-gradient-to-r from-primary to-primary-dark text-white px-8 py-4 rounded-2xl hover:shadow-2xl transition-all font-semibold flex items-center gap-3 hover:scale-105"
+                      className="bg-gradient-to-r from-primary to-primary-dark text-white px-8 py-4 rounded-2xl hover:shadow-2xl transition-all font-semibold flex items-center gap-2 hover:scale-105"
                     >
-                      <span>✕</span> Clear Search
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                      Clear Search
                     </button>
                   )}
                   <button
                     onClick={() => handleCategoryChange("all")}
-                    className="bg-white text-primary border-2 border-primary px-8 py-4 rounded-2xl hover:bg-primary hover:text-white transition-all font-semibold flex items-center gap-3 hover:scale-105"
+                    className="bg-white text-primary border-2 border-primary px-8 py-4 rounded-2xl hover:bg-primary hover:text-white transition-all font-semibold flex items-center gap-2 hover:scale-105"
                   >
-                    <span>🍽️</span> View All Items
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                    View All Items
                   </button>
                 </div>
               </div>

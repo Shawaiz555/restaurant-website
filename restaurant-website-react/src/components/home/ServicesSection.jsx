@@ -53,7 +53,7 @@ const ServicesSection = () => {
             </div>
 
             <Link to="/about">
-              <button className="bg-primary hover:bg-primary-dark text-white px-8 py-4 rounded-full font-medium transition-all shadow-lg hover:shadow-xl">
+              <button className="bg-primary text-white hover:bg-primary-dark px-8 py-4 rounded-2xl font-medium transition-all shadow-lg hover:shadow-xl hover:scale-105">
                 About Us
               </button>
             </Link>

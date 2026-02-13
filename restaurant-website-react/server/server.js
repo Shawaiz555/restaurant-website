@@ -41,7 +41,7 @@ const formatOrderItems = (items) => {
                 <h4 style="margin: 0 0 8px 0; color: #1f2937; font-size: 16px; font-weight: 600;">${item.name}</h4>
                 ${item.size ? `<p style="margin: 0 0 6px 0; color: #6b7280; font-size: 14px;">Size: ${item.size}</p>` : ''}
                 <p style="margin: 0 0 8px 0; color: #6b7280; font-size: 14px;">Quantity: ${item.quantity}</p>
-                <p style="margin: 0; color: #c19b66; font-weight: bold; font-size: 16px;">Rs.${(item.price * item.quantity).toFixed(2)}</p>
+                <p style="margin: 0; color: #E67E22; font-weight: bold; font-size: 16px;">Rs.${(item.price * item.quantity).toFixed(2)}</p>
               </div>
             </div>
       `;
@@ -124,7 +124,7 @@ const getCustomerEmailTemplate = (order) => {
 
                 <!-- Header -->
                 <tr>
-                  <td style="background: linear-gradient(135deg, #c19b66 0%, #a17e4f 100%); padding: 40px 30px; text-align: center;">
+                  <td style="background: linear-gradient(135deg, #E67E22 0%, #D35400 100%); padding: 40px 30px; text-align: center;">
                     <h1 style="margin: 0; color: #ffffff; font-size: 32px; font-weight: bold;">Order Confirmed!</h1>
                     <p style="margin: 10px 0 0 0; color: #ffffff; font-size: 16px;">Thank you for your order</p>
                   </td>
@@ -132,9 +132,9 @@ const getCustomerEmailTemplate = (order) => {
 
                 <!-- Order ID and Status -->
                 <tr>
-                  <td style="padding: 30px 30px 20px 30px; text-align: center; background-color: #fef9f3;">
+                  <td style="padding: 30px 30px 20px 30px; text-align: center; background-color: #FFFBF5;">
                     <p style="margin: 0; color: #6b7280; font-size: 14px;">Order ID</p>
-                    <h2 style="margin: 5px 0 15px 0; color: #c19b66; font-size: 24px; font-weight: bold;">${order.orderId}</h2>
+                    <h2 style="margin: 5px 0 15px 0; color: #E67E22; font-size: 24px; font-weight: bold;">${order.orderId}</h2>
                     <div style="display: inline-block; background-color: #d1fae5; color: #065f46; padding: 8px 20px; border-radius: 20px; font-weight: bold; font-size: 14px;">
                       ${order.status}
                     </div>
@@ -144,7 +144,7 @@ const getCustomerEmailTemplate = (order) => {
                 <!-- Customer Details -->
                 <tr>
                   <td style="padding: 20px 30px;">
-                    <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 20px; border-bottom: 2px solid #c19b66; padding-bottom: 10px;">Customer Details</h3>
+                    <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 20px; border-bottom: 2px solid #E67E22; padding-bottom: 10px;">Customer Details</h3>
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td style="padding: 8px 0;">
@@ -171,7 +171,7 @@ const getCustomerEmailTemplate = (order) => {
                 <!-- Delivery Address -->
                 <tr>
                   <td style="padding: 20px 30px;">
-                    <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 20px; border-bottom: 2px solid #c19b66; padding-bottom: 10px;">Delivery Address</h3>
+                    <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 20px; border-bottom: 2px solid #E67E22; padding-bottom: 10px;">Delivery Address</h3>
                     <p style="margin: 0; color: #1f2937; font-size: 16px; line-height: 1.6;">
                       ${order.customerInfo.address}<br/>
                       ${order.customerInfo.city}${order.customerInfo.postalCode ? `, ${order.customerInfo.postalCode}` : ''}
@@ -183,7 +183,7 @@ const getCustomerEmailTemplate = (order) => {
                 <!-- Order Items -->
                 <tr>
                   <td style="padding: 20px 30px;">
-                    <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 20px; border-bottom: 2px solid #c19b66; padding-bottom: 10px;">Order Items</h3>
+                    <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 20px; border-bottom: 2px solid #E67E22; padding-bottom: 10px;">Order Items</h3>
                     <table width="100%" cellpadding="0" cellspacing="0" style="border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;">
                       ${formatOrderItems(order.items)}
                     </table>
@@ -193,7 +193,7 @@ const getCustomerEmailTemplate = (order) => {
                 <!-- Price Summary -->
                 <tr>
                   <td style="padding: 20px 30px;">
-                    <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 20px; border-bottom: 2px solid #c19b66; padding-bottom: 10px;">Order Summary</h3>
+                    <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 20px; border-bottom: 2px solid #E67E22; padding-bottom: 10px;">Order Summary</h3>
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td style="padding: 8px 0; color: #6b7280; font-size: 15px;">Subtotal</td>
@@ -203,13 +203,9 @@ const getCustomerEmailTemplate = (order) => {
                         <td style="padding: 8px 0; color: #6b7280; font-size: 15px;">Delivery Fee</td>
                         <td align="right" style="padding: 8px 0; color: #1f2937; font-size: 15px; font-weight: 600;">Rs.${order.deliveryFee.toFixed(2)}</td>
                       </tr>
-                      <tr>
-                        <td style="padding: 8px 0; color: #6b7280; font-size: 15px;">Tax (5%)</td>
-                        <td align="right" style="padding: 8px 0; color: #1f2937; font-size: 15px; font-weight: 600;">Rs.${order.tax.toFixed(2)}</td>
-                      </tr>
-                      <tr style="border-top: 2px solid #c19b66;">
+                      <tr style="border-top: 2px solid #E67E22;">
                         <td style="padding: 12px 0; color: #1f2937; font-size: 18px; font-weight: bold;">Total</td>
-                        <td align="right" style="padding: 12px 0; color: #c19b66; font-size: 22px; font-weight: bold;">Rs.${order.total.toFixed(2)}</td>
+                        <td align="right" style="padding: 12px 0; color: #E67E22; font-size: 22px; font-weight: bold;">Rs.${order.total.toFixed(2)}</td>
                       </tr>
                     </table>
                   </td>
@@ -218,7 +214,7 @@ const getCustomerEmailTemplate = (order) => {
                 <!-- Payment Method -->
                 <tr>
                   <td style="padding: 20px 30px;">
-                    <div style="background-color: #fef9f3; border-left: 4px solid #c19b66; padding: 15px; border-radius: 8px;">
+                    <div style="background-color: #FFFBF5; border-left: 4px solid #E67E22; padding: 15px; border-radius: 8px;">
                       <p style="margin: 0; color: #6b7280; font-size: 14px;">Payment Method</p>
                       <p style="margin: 5px 0 0 0; color: #1f2937; font-size: 16px; font-weight: bold;">${order.paymentMethod}</p>
                     </div>
@@ -263,7 +259,7 @@ const getAdminEmailTemplate = (order) => {
 
                 <!-- Header -->
                 <tr>
-                  <td style="background: linear-gradient(135deg, #c19b66 0%, #a17e4f 100%); padding: 40px 30px; text-align: center;">
+                  <td style="background: linear-gradient(135deg, #E67E22 0%, #D35400 100%); padding: 40px 30px; text-align: center;">
                     <h1 style="margin: 0; color: #ffffff; font-size: 32px; font-weight: bold;">New Order Received!</h1>
                     <p style="margin: 10px 0 0 0; color: #ffffff; font-size: 16px;">Action Required - Process Order</p>
                   </td>
@@ -271,16 +267,16 @@ const getAdminEmailTemplate = (order) => {
 
                 <!-- Order Alert -->
                 <tr>
-                  <td style="padding: 20px 30px; background-color: #fef9f3; border-left: 4px solid #c19b66;">
-                    <p style="margin: 0; color: #8b6f47; font-size: 16px; font-weight: bold;">⚠️ New order needs to be processed immediately!</p>
+                  <td style="padding: 20px 30px; background-color: #FFFBF5; border-left: 4px solid #E67E22;">
+                    <p style="margin: 0; color: #D35400; font-size: 16px; font-weight: bold;">⚠️ New order needs to be processed immediately!</p>
                   </td>
                 </tr>
 
                 <!-- Order ID and Status -->
                 <tr>
-                  <td style="padding: 30px 30px 20px 30px; text-align: center; background-color: #fef9f3;">
+                  <td style="padding: 30px 30px 20px 30px; text-align: center; background-color: #FFFBF5;">
                     <p style="margin: 0; color: #6b7280; font-size: 14px;">Order ID</p>
-                    <h2 style="margin: 5px 0 15px 0; color: #c19b66; font-size: 24px; font-weight: bold;">${order.orderId}</h2>
+                    <h2 style="margin: 5px 0 15px 0; color: #E67E22; font-size: 24px; font-weight: bold;">${order.orderId}</h2>
                     <p style="margin: 0; color: #6b7280; font-size: 14px;">Order Date & Time</p>
                     <p style="margin: 5px 0 0 0; color: #1f2937; font-size: 16px; font-weight: 600;">${new Date(order.orderDate).toLocaleString()}</p>
                   </td>
@@ -289,7 +285,7 @@ const getAdminEmailTemplate = (order) => {
                 <!-- Customer Details -->
                 <tr>
                   <td style="padding: 20px 30px;">
-                    <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 20px; border-bottom: 2px solid #c19b66; padding-bottom: 10px;">Customer Information</h3>
+                    <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 20px; border-bottom: 2px solid #E67E22; padding-bottom: 10px;">Customer Information</h3>
                     <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f9fafb; border-radius: 8px; padding: 15px;">
                       <tr>
                         <td style="padding: 8px 0;">
@@ -306,7 +302,7 @@ const getAdminEmailTemplate = (order) => {
                       <tr>
                         <td style="padding: 8px 0;">
                           <p style="margin: 0; color: #6b7280; font-size: 14px;">Phone (Contact for confirmation)</p>
-                          <p style="margin: 3px 0 0 0; color: #c19b66; font-size: 18px; font-weight: bold;">${order.customerInfo.phone}</p>
+                          <p style="margin: 3px 0 0 0; color: #E67E22; font-size: 18px; font-weight: bold;">${order.customerInfo.phone}</p>
                         </td>
                       </tr>
                       ${order.userId ? `<tr><td style="padding: 8px 0;"><p style="margin: 0; color: #6b7280; font-size: 14px;">User ID</p><p style="margin: 3px 0 0 0; color: #1f2937; font-size: 16px; font-weight: 600;">${order.userId}</p></td></tr>` : ''}
@@ -317,13 +313,13 @@ const getAdminEmailTemplate = (order) => {
                 <!-- Delivery Address -->
                 <tr>
                   <td style="padding: 20px 30px;">
-                    <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 20px; border-bottom: 2px solid #c19b66; padding-bottom: 10px;">Delivery Location</h3>
-                    <div style="background-color: #fef9f3; border-radius: 8px; padding: 15px;">
+                    <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 20px; border-bottom: 2px solid #E67E22; padding-bottom: 10px;">Delivery Location</h3>
+                    <div style="background-color: #FFFBF5; border-radius: 8px; padding: 15px;">
                       <p style="margin: 0; color: #1f2937; font-size: 16px; line-height: 1.6; font-weight: 600;">
                         ${order.customerInfo.address}<br/>
                         ${order.customerInfo.city}${order.customerInfo.postalCode ? `, ${order.customerInfo.postalCode}` : ''}
                       </p>
-                      ${order.customerInfo.additionalNotes ? `<div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e5e7eb;"><p style="margin: 0; color: #6b7280; font-size: 14px; font-weight: 600;">Delivery Instructions:</p><p style="margin: 5px 0 0 0; color: #c19b66; font-size: 14px; font-style: italic;">${order.customerInfo.additionalNotes}</p></div>` : ''}
+                      ${order.customerInfo.additionalNotes ? `<div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e5e7eb;"><p style="margin: 0; color: #6b7280; font-size: 14px; font-weight: 600;">Delivery Instructions:</p><p style="margin: 5px 0 0 0; color: #E67E22; font-size: 14px; font-style: italic;">${order.customerInfo.additionalNotes}</p></div>` : ''}
                     </div>
                   </td>
                 </tr>
@@ -331,7 +327,7 @@ const getAdminEmailTemplate = (order) => {
                 <!-- Order Items -->
                 <tr>
                   <td style="padding: 20px 30px;">
-                    <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 20px; border-bottom: 2px solid #c19b66; padding-bottom: 10px;">Order Details</h3>
+                    <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 20px; border-bottom: 2px solid #E67E22; padding-bottom: 10px;">Order Details</h3>
                     <table width="100%" cellpadding="0" cellspacing="0" style="border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;">
                       ${formatOrderItems(order.items)}
                     </table>
@@ -341,7 +337,7 @@ const getAdminEmailTemplate = (order) => {
                 <!-- Financial Summary -->
                 <tr>
                   <td style="padding: 20px 30px;">
-                    <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 20px; border-bottom: 2px solid #c19b66; padding-bottom: 10px;">Financial Summary</h3>
+                    <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 20px; border-bottom: 2px solid #E67E22; padding-bottom: 10px;">Financial Summary</h3>
                     <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f9fafb; border-radius: 8px; padding: 15px;">
                       <tr>
                         <td style="padding: 8px 0; color: #6b7280; font-size: 15px;">Subtotal</td>
@@ -351,13 +347,9 @@ const getAdminEmailTemplate = (order) => {
                         <td style="padding: 8px 0; color: #6b7280; font-size: 15px;">Delivery Fee</td>
                         <td align="right" style="padding: 8px 0; color: #1f2937; font-size: 15px; font-weight: 600;">Rs.${order.deliveryFee.toFixed(2)}</td>
                       </tr>
-                      <tr>
-                        <td style="padding: 8px 0; color: #6b7280; font-size: 15px;">Tax (5%)</td>
-                        <td align="right" style="padding: 8px 0; color: #1f2937; font-size: 15px; font-weight: 600;">Rs.${order.tax.toFixed(2)}</td>
-                      </tr>
-                      <tr style="border-top: 2px solid #c19b66;">
+                      <tr style="border-top: 2px solid #E67E22;">
                         <td style="padding: 12px 0; color: #1f2937; font-size: 18px; font-weight: bold;">Total Amount to Collect</td>
-                        <td align="right" style="padding: 12px 0; color: #c19b66; font-size: 24px; font-weight: bold;">Rs.${order.total.toFixed(2)}</td>
+                        <td align="right" style="padding: 12px 0; color: #E67E22; font-size: 24px; font-weight: bold;">Rs.${order.total.toFixed(2)}</td>
                       </tr>
                     </table>
                   </td>
@@ -366,7 +358,7 @@ const getAdminEmailTemplate = (order) => {
                 <!-- Payment Information -->
                 <tr>
                   <td style="padding: 20px 30px;">
-                    <div style="background-color: #fef9f3; border-left: 4px solid #c19b66; padding: 15px; border-radius: 8px;">
+                    <div style="background-color: #FFFBF5; border-left: 4px solid #E67E22; padding: 15px; border-radius: 8px;">
                       <p style="margin: 0; color: #6b7280; font-size: 14px;">Payment Method</p>
                       <p style="margin: 5px 0 0 0; color: #1f2937; font-size: 16px; font-weight: bold;">${order.paymentMethod}</p>
                     </div>
