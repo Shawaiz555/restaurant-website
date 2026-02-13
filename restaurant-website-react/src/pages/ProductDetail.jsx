@@ -31,6 +31,17 @@ const ProductDetail = () => {
 
   useEffect(() => {
     setLoading(true);
+
+    // Reset customizations when product changes
+    setSelectedAddOns({
+      drinks: [],
+      desserts: [],
+      extras: [],
+    });
+    setSelectedSpiceLevel(null);
+    setSelectedSizeIndex(0);
+    setActiveAddOnTab("drinks");
+
     // Simulate loading time
     setTimeout(() => {
       const productData = getProductById(id);
@@ -137,6 +148,16 @@ const ProductDetail = () => {
       addOns: selectedAddOns,
       spiceLevel: selectedSpiceLevel,
     });
+
+    // Reset customizations after adding to cart
+    setSelectedAddOns({
+      drinks: [],
+      desserts: [],
+      extras: [],
+    });
+    setSelectedSpiceLevel(null);
+    setSelectedSizeIndex(0);
+    setActiveAddOnTab("drinks");
   };
 
   return (

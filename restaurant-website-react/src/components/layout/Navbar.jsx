@@ -131,7 +131,7 @@ const Navbar = () => {
                           </div>
 
                           <div className="relative flex items-center gap-3">
-                            <div className="w-14 h-14 rounded-full bg-white/20 text-orange-300 backdrop-blur-sm border-2 border-white/50 flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+                            <div className="w-14 h-14 rounded-full text-orange-300 backdrop-blur-sm border-2 border-white/50 flex items-center justify-center text-2xl font-bold shadow-lg">
                               {currentUser?.name?.charAt(0).toUpperCase() ||
                                 "👤"}
                             </div>
