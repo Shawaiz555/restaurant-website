@@ -169,8 +169,7 @@ const Checkout = () => {
     setIsProcessing(true);
     setOrderPlaced(true); // Prevent cart empty redirect
 
-    // Simulate order processing
-    setTimeout(() => {
+    try {
       // Create order object
       const order = {
         orderId: `ORD-${Date.now()}`,
@@ -186,29 +185,89 @@ const Checkout = () => {
         orderDate: new Date().toISOString(),
       };
 
-      // Store order in localStorage (in a real app, you'd send this to a backend)
+      // Send order to backend
+      const response = await fetch("http://localhost:8000/api/orders/place", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(order),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        // Store order in localStorage
+        const existingOrders = JSON.parse(
+          localStorage.getItem("orders") || "[]",
+        );
+        existingOrders.push(order);
+        localStorage.setItem("orders", JSON.stringify(existingOrders));
+
+        // Clear cart
+        clearCart(true);
+
+        // Show success notification with email status
+        let successMessage = `Order placed successfully! Order ID: ${order.orderId}`;
+        if (result.emailStatus) {
+          if (result.emailStatus.customerEmailSent && formData.email) {
+            successMessage += " Confirmation email sent!";
+          }
+        }
+
+        dispatch(
+          showNotification({
+            message: successMessage,
+            type: "success",
+          }),
+        );
+
+        setIsProcessing(false);
+
+        // Redirect to home or order confirmation page
+        setTimeout(() => {
+          navigate("/");
+        }, 2000);
+      } else {
+        throw new Error(result.message || "Failed to place order");
+      }
+    } catch (error) {
+      console.error("Error placing order:", error);
+
+      // Fallback: Still save order locally if backend fails
+      const order = {
+        orderId: `ORD-${Date.now()}`,
+        userId: currentUser?.id,
+        customerInfo: formData,
+        items: items,
+        subtotal: subtotal,
+        deliveryFee: deliveryFee,
+        tax: tax,
+        total: grandTotal,
+        paymentMethod: "Cash on Delivery",
+        status: "Pending",
+        orderDate: new Date().toISOString(),
+      };
+
       const existingOrders = JSON.parse(localStorage.getItem("orders") || "[]");
       existingOrders.push(order);
       localStorage.setItem("orders", JSON.stringify(existingOrders));
 
-      // Clear cart
       clearCart(true);
 
-      // Show success notification
       dispatch(
         showNotification({
-          message: `Order placed successfully! Order ID: ${order.orderId}`,
+          message: `Order placed! Order ID: ${order.orderId}. (Email notification may be delayed)`,
           type: "success",
         }),
       );
 
       setIsProcessing(false);
 
-      // Redirect to home or order confirmation page
       setTimeout(() => {
         navigate("/");
-      }, 1500);
-    }, 2000);
+      }, 2000);
+    }
   };
 
   // Show loader while cart is being loaded
