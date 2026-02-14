@@ -364,21 +364,7 @@ const ProductDetail = () => {
                   {/* Size Selection - Dropdown */}
                   <div className="mb-6">
                     <label className="flex items-center gap-2 font-display text-lg mb-3 text-dark">
-                      <svg
-                        className="w-5 h-5 text-primary"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"
-                        />
-                      </svg>
                       Select Size{" "}
-                      <span className="text-red-500 text-xl">*</span>
                     </label>
                     <div className="relative group">
                       <select
@@ -442,25 +428,6 @@ const ProductDetail = () => {
                   {addOnsConfig.showSpiceLevel && (
                     <div className="mb-6">
                       <label className="flex items-center gap-2 font-display text-lg mb-3 text-dark">
-                        <svg
-                          className="w-5 h-5 text-primary"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"
-                          />
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z"
-                          />
-                        </svg>
                         Spice Level{" "}
                         <span className="text-xs text-dark-gray font-normal bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
                           Optional
@@ -553,7 +520,7 @@ const ProductDetail = () => {
                       <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
                         <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
                           <svg
-                            className="w-5 h-5 sm:w-6 sm:h-6 text-primary"
+                            className="w-5 h-5 sm:w-10 sm:h-10 text-primary"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
