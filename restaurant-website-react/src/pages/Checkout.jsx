@@ -306,7 +306,7 @@ const Checkout = () => {
             <div className="lg:col-span-2">
               <form onSubmit={handlePlaceOrder} className="space-y-6">
                 {/* Customer Information */}
-                <div className="bg-white rounded-3xl p-6 md:p-8 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
+                <div className="bg-cream-light rounded-3xl p-6 md:p-8 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
                   <div className="mb-6 pb-4 border-b-2 border-cream">
                     <h2 className="font-display text-2xl text-dark mb-1">
                       Customer Information
@@ -327,7 +327,7 @@ const Checkout = () => {
                         value={formData.fullName}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-white hover:bg-cream-light/50"
+                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-cream-light hover:bg-cream-light/50"
                         placeholder="John Doe"
                       />
                     </div>
@@ -341,7 +341,7 @@ const Checkout = () => {
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-white hover:bg-cream-light/50"
+                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-cream-light hover:bg-cream-light/50"
                         placeholder="john@example.com"
                       />
                     </div>
@@ -356,7 +356,7 @@ const Checkout = () => {
                         value={formData.phone}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-white hover:bg-cream-light/50"
+                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-cream-light hover:bg-cream-light/50"
                         placeholder="+92 300 1234567"
                       />
                       <p className="text-xs text-dark-gray mt-2">
@@ -367,7 +367,7 @@ const Checkout = () => {
                 </div>
 
                 {/* Delivery Address */}
-                <div className="bg-white rounded-3xl p-6 md:p-8 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
+                <div className="bg-cream-light rounded-3xl p-6 md:p-8 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
                   <div className="mb-6 pb-4 border-b-2 border-cream">
                     <h2 className="font-display text-2xl text-dark mb-1">
                       Delivery Address
@@ -388,7 +388,7 @@ const Checkout = () => {
                         value={formData.address}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-white hover:bg-cream-light/50"
+                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-cream-light hover:bg-cream-light/50"
                         placeholder="House #, Street name, Area"
                       />
                     </div>
@@ -404,7 +404,7 @@ const Checkout = () => {
                           value={formData.city}
                           onChange={handleInputChange}
                           required
-                          className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-white hover:bg-cream-light/50"
+                          className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-cream-light hover:bg-cream-light/50"
                           placeholder="Lahore"
                         />
                       </div>
@@ -418,7 +418,7 @@ const Checkout = () => {
                           name="postalCode"
                           value={formData.postalCode}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-white hover:bg-cream-light/50"
+                          className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-cream-light hover:bg-cream-light/50"
                           placeholder="54000"
                         />
                       </div>
@@ -436,7 +436,7 @@ const Checkout = () => {
                         value={formData.additionalNotes}
                         onChange={handleInputChange}
                         rows="3"
-                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all resize-none bg-white hover:bg-cream-light/50"
+                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all resize-none bg-cream-light hover:bg-cream-light/50"
                         placeholder="e.g., Ring the doorbell, leave at the gate, etc."
                       />
                       <p className="text-xs text-dark-gray mt-2">
@@ -487,7 +487,7 @@ const Checkout = () => {
                 </div>
 
                 {/* Payment Method */}
-                <div className="bg-white rounded-3xl p-6 md:p-8 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
+                <div className="bg-cream-light rounded-3xl p-6 md:p-8 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
                   <div className="mb-6 pb-4 border-b-2 border-cream">
                     <h2 className="font-display text-2xl text-dark mb-1">
                       Payment Method
@@ -566,7 +566,7 @@ const Checkout = () => {
 
             {/* Right Side - Order Summary */}
             <div className="lg:col-span-1">
-              <div className="bg-white rounded-3xl p-6 md:p-8 shadow-lg sticky top-24">
+              <div className="bg-cream-light rounded-3xl p-6 md:p-8 shadow-lg sticky top-24">
                 <h2 className="font-display text-2xl text-dark mb-6 flex items-center gap-2">
                   <span>🛒</span>
                   <span>Order Summary</span>
@@ -606,74 +606,118 @@ const Checkout = () => {
                       </div>
 
                       {/* Add-ons Details */}
-                      {item.addOns && (item.addOns.drinks?.length > 0 || item.addOns.desserts?.length > 0 || item.addOns.extras?.length > 0 || item.spiceLevel) && (
-                        <div className="mt-3 pt-3 border-t border-gray-300 space-y-2">
-                          <p className="text-xs font-semibold text-dark-gray mb-2">Customizations:</p>
+                      {item.addOns &&
+                        (item.addOns.drinks?.length > 0 ||
+                          item.addOns.desserts?.length > 0 ||
+                          item.addOns.extras?.length > 0 ||
+                          item.spiceLevel) && (
+                          <div className="mt-3 pt-3 border-t border-gray-300 space-y-2">
+                            <p className="text-xs font-semibold text-dark-gray mb-2">
+                              Customizations:
+                            </p>
 
-                          {/* Spice Level */}
-                          {item.spiceLevel && (
-                            <div className="flex items-center gap-2">
-                              <span className="text-xs text-dark-gray">• Spice Level:</span>
-                              <span className="text-xs font-medium text-dark">
-                                {item.spiceLevel.replace('spice-', '').split('-').map(word =>
-                                  word.charAt(0).toUpperCase() + word.slice(1)
-                                ).join(' ')}
-                              </span>
-                            </div>
-                          )}
+                            {/* Spice Level */}
+                            {item.spiceLevel && (
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs text-dark-gray">
+                                  • Spice Level:
+                                </span>
+                                <span className="text-xs font-medium text-dark">
+                                  {item.spiceLevel
+                                    .replace("spice-", "")
+                                    .split("-")
+                                    .map(
+                                      (word) =>
+                                        word.charAt(0).toUpperCase() +
+                                        word.slice(1),
+                                    )
+                                    .join(" ")}
+                                </span>
+                              </div>
+                            )}
 
-                          {/* Drinks */}
-                          {item.addOns.drinks?.length > 0 && (
-                            <div className="space-y-1">
-                              <span className="text-xs font-medium text-dark-gray">Drinks:</span>
-                              {item.addOns.drinks.map((drink, idx) => (
-                                <div key={idx} className="flex items-center justify-between pl-2">
-                                  <span className="text-xs text-dark">
-                                    • {drink.name} {drink.quantity > 1 && `x${drink.quantity}`}
-                                  </span>
-                                  <span className="text-xs text-primary font-medium">
-                                    +Rs.{(drink.price * drink.quantity).toFixed(2)}
-                                  </span>
-                                </div>
-                              ))}
-                            </div>
-                          )}
+                            {/* Drinks */}
+                            {item.addOns.drinks?.length > 0 && (
+                              <div className="space-y-1">
+                                <span className="text-xs font-medium text-dark-gray">
+                                  Drinks:
+                                </span>
+                                {item.addOns.drinks.map((drink, idx) => (
+                                  <div
+                                    key={idx}
+                                    className="flex items-center justify-between pl-2"
+                                  >
+                                    <span className="text-xs text-dark">
+                                      • {drink.name}{" "}
+                                      {drink.quantity > 1 &&
+                                        `x${drink.quantity}`}
+                                    </span>
+                                    <span className="text-xs text-primary font-medium">
+                                      +Rs.
+                                      {(drink.price * drink.quantity).toFixed(
+                                        2,
+                                      )}
+                                    </span>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
 
-                          {/* Desserts */}
-                          {item.addOns.desserts?.length > 0 && (
-                            <div className="space-y-1">
-                              <span className="text-xs font-medium text-dark-gray">Desserts:</span>
-                              {item.addOns.desserts.map((dessert, idx) => (
-                                <div key={idx} className="flex items-center justify-between pl-2">
-                                  <span className="text-xs text-dark">
-                                    • {dessert.name} {dessert.quantity > 1 && `x${dessert.quantity}`}
-                                  </span>
-                                  <span className="text-xs text-primary font-medium">
-                                    +Rs.{(dessert.price * dessert.quantity).toFixed(2)}
-                                  </span>
-                                </div>
-                              ))}
-                            </div>
-                          )}
+                            {/* Desserts */}
+                            {item.addOns.desserts?.length > 0 && (
+                              <div className="space-y-1">
+                                <span className="text-xs font-medium text-dark-gray">
+                                  Desserts:
+                                </span>
+                                {item.addOns.desserts.map((dessert, idx) => (
+                                  <div
+                                    key={idx}
+                                    className="flex items-center justify-between pl-2"
+                                  >
+                                    <span className="text-xs text-dark">
+                                      • {dessert.name}{" "}
+                                      {dessert.quantity > 1 &&
+                                        `x${dessert.quantity}`}
+                                    </span>
+                                    <span className="text-xs text-primary font-medium">
+                                      +Rs.
+                                      {(
+                                        dessert.price * dessert.quantity
+                                      ).toFixed(2)}
+                                    </span>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
 
-                          {/* Extras */}
-                          {item.addOns.extras?.length > 0 && (
-                            <div className="space-y-1">
-                              <span className="text-xs font-medium text-dark-gray">Extras:</span>
-                              {item.addOns.extras.map((extra, idx) => (
-                                <div key={idx} className="flex items-center justify-between pl-2">
-                                  <span className="text-xs text-dark">
-                                    • {extra.name} {extra.quantity > 1 && `x${extra.quantity}`}
-                                  </span>
-                                  <span className="text-xs text-primary font-medium">
-                                    +Rs.{(extra.price * extra.quantity).toFixed(2)}
-                                  </span>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      )}
+                            {/* Extras */}
+                            {item.addOns.extras?.length > 0 && (
+                              <div className="space-y-1">
+                                <span className="text-xs font-medium text-dark-gray">
+                                  Extras:
+                                </span>
+                                {item.addOns.extras.map((extra, idx) => (
+                                  <div
+                                    key={idx}
+                                    className="flex items-center justify-between pl-2"
+                                  >
+                                    <span className="text-xs text-dark">
+                                      • {extra.name}{" "}
+                                      {extra.quantity > 1 &&
+                                        `x${extra.quantity}`}
+                                    </span>
+                                    <span className="text-xs text-primary font-medium">
+                                      +Rs.
+                                      {(extra.price * extra.quantity).toFixed(
+                                        2,
+                                      )}
+                                    </span>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        )}
                     </div>
                   ))}
                 </div>
