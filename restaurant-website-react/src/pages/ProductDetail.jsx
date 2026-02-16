@@ -197,7 +197,7 @@ const ProductDetail = () => {
                     <h3 className="font-display text-2xl lg:text-3xl mb-4">
                       Nutrition Information
                     </h3>
-                    <div className="bg-cream border-2 border-gray-200 rounded-2xl p-6 py-3 shadow-sm">
+                    <div className="bg-cream-light border-2 border-gray-200 rounded-2xl p-6 py-3 shadow-sm">
                       <div className="space-y-4">
                         <div className="flex items-center justify-between py-1 border-b border-gray-200">
                           <div className="flex items-center gap-3">
@@ -351,7 +351,7 @@ const ProductDetail = () => {
                     {product.ingredients.map((ingredient, idx) => (
                       <span
                         key={idx}
-                        className="bg-cream px-4 py-2 rounded-full text-dark-gray text-sm border-2 border-primary hover:bg-primary hover:text-white transition-all cursor-pointer"
+                        className="bg-cream-light px-4 py-2 rounded-full text-dark-gray text-sm border-2 border-primary hover:bg-primary hover:text-white transition-all cursor-pointer"
                       >
                         {ingredient}
                       </span>
@@ -360,7 +360,7 @@ const ProductDetail = () => {
                 </div>
 
                 {/* Size Selection and Add to Cart */}
-                <div className="rounded-3xl p-6 lg:p-8 bg-cream border border-gray-200 shadow-xl">
+                <div className="rounded-3xl p-6 lg:p-8 bg-cream-light border border-gray-200 shadow-xl">
                   {/* Size Selection - Dropdown */}
                   <div className="mb-6">
                     <label className="flex items-center gap-2 font-display text-lg mb-3 text-dark">
@@ -372,7 +372,7 @@ const ProductDetail = () => {
                         onChange={(e) =>
                           setSelectedSizeIndex(Number(e.target.value))
                         }
-                        className="w-full px-3 sm:px-5 py-3 sm:py-4 pr-10 sm:pr-12 border-2 border-primary/30 rounded-xl focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all bg-cream hover:border-primary/60 hover:bg-cream-light font-display text-sm sm:text-base appearance-none cursor-pointer shadow-sm hover:shadow-md text-dark leading-tight"
+                        className="w-full px-3 sm:px-5 py-3 sm:py-4 pr-10 sm:pr-12 border-2 border-primary/30 rounded-xl focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all bg-cream-light hover:border-primary/60 hover:bg-cream-light font-display text-sm sm:text-base appearance-none cursor-pointer shadow-sm hover:shadow-md text-dark leading-tight"
                       >
                         {product.sizes.map((size, index) => (
                           <option
@@ -439,11 +439,11 @@ const ProductDetail = () => {
                           onChange={(e) =>
                             setSelectedSpiceLevel(e.target.value || null)
                           }
-                          className="w-full px-3 sm:px-5 py-3 sm:py-4 pr-10 sm:pr-12 border-2 border-primary/30 rounded-xl focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all bg-cream hover:border-primary/60 hover:bg-cream-light font-display text-sm sm:text-base appearance-none cursor-pointer shadow-sm hover:shadow-md text-dark leading-tight"
+                          className="w-full px-3 sm:px-5 py-3 sm:py-4 pr-10 sm:pr-12 border-2 border-primary/30 rounded-xl focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all bg-cream-light hover:border-primary/60 hover:bg-cream-light font-display text-sm sm:text-base appearance-none cursor-pointer shadow-sm hover:shadow-md text-dark leading-tight"
                         >
                           <option
                             value=""
-                            className="py-3 sm:py-4 px-2 sm:px-4 bg-cream text-dark text-xs sm:text-xs"
+                            className="py-3 sm:py-4 px-2 sm:px-4 bg-cream-light text-dark text-xs sm:text-xs"
                             style={{
                               padding: "10px 12px",
                               backgroundColor: "#FFF8F0",
@@ -455,7 +455,7 @@ const ProductDetail = () => {
                             <option
                               key={spice.id}
                               value={spice.id}
-                              className="py-3 sm:py-4 px-2 sm:px-4 bg-cream text-dark text-xs sm:text-base"
+                              className="py-3 sm:py-4 px-2 sm:px-4 bg-cream-light text-dark text-xs sm:text-base"
                               style={{
                                 padding: "10px 12px",
                                 backgroundColor: "#FFF8F0",
@@ -515,7 +515,7 @@ const ProductDetail = () => {
                   )}
 
                   {/* Price Display */}
-                  <div className="bg-gradient-to-br from-cream via-cream-light to-cream rounded-2xl p-4 sm:p-6 mb-6 border-2 border-primary/20">
+                  <div className="bg-cream-light rounded-2xl p-4 sm:p-6 mb-6 border-2 border-primary/20">
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
                         <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
@@ -592,7 +592,7 @@ const ProductDetail = () => {
               addOnsConfig.showDesserts ||
               addOnsConfig.showExtras) && (
               <div className="mb-20 px-4 lg:px-6">
-                <div className="bg-gradient-to-br from-cream via-cream-light to-white rounded-3xl p-6 lg:p-8 shadow-xl border border-gray-200">
+                <div className="bg-cream-light rounded-3xl p-6 lg:p-8 shadow-xl border border-gray-200">
                   <div className="flex items-center gap-3 mb-2">
                     <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
                       <svg
@@ -618,13 +618,13 @@ const ProductDetail = () => {
                   </p>
 
                   {/* Tab Navigation */}
-                  <div className="flex gap-2 mb-6 border-b-2 border-gray-200 bg-cream rounded-t-2xl px-2 pt-2">
+                  <div className="flex gap-2 mb-6 border-b-2 border-gray-200 bg-cream-light rounded-t-2xl px-2 pt-2">
                     {addOnsConfig.showDrinks && (
                       <button
                         onClick={() => setActiveAddOnTab("drinks")}
                         className={`py-3 px-6 font-display text-base lg:text-lg transition-all relative rounded-t-xl ${
                           activeAddOnTab === "drinks"
-                            ? "text-primary font-semibold bg-cream"
+                            ? "text-primary font-semibold bg-cream-light"
                             : "text-dark-gray hover:text-dark hover:bg-cream-light/50"
                         }`}
                       >
@@ -646,7 +646,7 @@ const ProductDetail = () => {
                         onClick={() => setActiveAddOnTab("desserts")}
                         className={`py-3 px-6 font-display text-base lg:text-lg transition-all relative rounded-t-xl ${
                           activeAddOnTab === "desserts"
-                            ? "text-primary font-semibold bg-cream"
+                            ? "text-primary font-semibold bg-cream-light"
                             : "text-dark-gray hover:text-dark hover:bg-cream-light/50"
                         }`}
                       >
@@ -668,7 +668,7 @@ const ProductDetail = () => {
                         onClick={() => setActiveAddOnTab("extras")}
                         className={`py-3 px-6 font-display text-base lg:text-lg transition-all relative rounded-t-xl ${
                           activeAddOnTab === "extras"
-                            ? "text-primary font-semibold bg-cream"
+                            ? "text-primary font-semibold bg-cream-light"
                             : "text-dark-gray hover:text-dark hover:bg-cream-light/50"
                         }`}
                       >
@@ -688,7 +688,7 @@ const ProductDetail = () => {
                   </div>
 
                   {/* Tab Content - 2 Column Grid */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-cream p-4 rounded-b-2xl">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-cream-light p-4 rounded-b-2xl">
                     {/* Drinks Tab */}
                     {activeAddOnTab === "drinks" && addOnsConfig.showDrinks && (
                       <>
