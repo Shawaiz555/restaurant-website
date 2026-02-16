@@ -68,7 +68,7 @@ const Footer = () => {
               <img
                 src="/assets/images/BitesLogo.png"
                 alt="Bites Restaurant Logo"
-                className="h-28 w-48 lg:w-56 object-contain"
+                className="h-28 w-32 lg:w-52 lg:h-20 object-contain transition-all"
               />
             </Link>
             <p className="text-dark-gray mb-6 leading-relaxed">

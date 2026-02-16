@@ -63,7 +63,7 @@ const Navbar = () => {
               <img
                 src="/assets/images/BitesLogo.png"
                 alt="Bites Restaurant Logo"
-                className="h-28 w-48 lg:w-56 object-contain transition-all"
+                className="h-28 w-32 lg:w-52 lg:h-20 object-contain transition-all"
               />
             </Link>
 

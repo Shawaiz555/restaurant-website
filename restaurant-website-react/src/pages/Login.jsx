@@ -99,22 +99,27 @@ const Login = () => {
           <div className="p-8 sm:p-12">
             <button
               onClick={handleBackToHome}
-              className="block w-full text-center my-8 text-dark-gray hover:text-dark transition-colors"
+              className="block w-full text-center my-5 text-dark-gray hover:text-dark transition-colors"
             >
               ← Back to Home
             </button>
 
             <button
               onClick={handleBackToHome}
-              className="flex items-center justify-center gap-2 mb-8 w-full"
+              className="flex items-center justify-center gap-2 w-full"
             >
-              <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-2xl">
-                🍽️
+              <div>
+                <img
+                  src="/assets/images/BitesLogo.png"
+                  alt="Bites Logo"
+                  className="h-28 w-48 lg:w-40 lg:h-32 object-contain transition-all"
+                />
               </div>
-              <span className="font-display text-3xl text-dark">Bites</span>
             </button>
 
-            <h2 className="font-display text-3xl text-center mb-2">Login</h2>
+            <h2 className="font-display text-3xl lg:text-4xl text-center mb-2">
+              Login
+            </h2>
             <p className="text-center text-dark-gray mb-8">
               Enter your credentials to access your account
             </p>
