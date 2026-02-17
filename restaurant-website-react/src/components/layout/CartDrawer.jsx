@@ -15,7 +15,6 @@ const CartDrawer = () => {
     itemCount,
     removeFromCart,
     updateQuantity,
-    clearCart,
     closeCart,
   } = useCart();
   const { isAuthenticated } = useAuth();
