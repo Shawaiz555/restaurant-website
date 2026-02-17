@@ -260,19 +260,19 @@ const Footer = () => {
             </p>
             <div className="flex gap-6 text-sm">
               <a
-                href="#"
+                href="/"
                 className="text-dark-gray hover:text-primary transition-colors"
               >
                 Privacy Policy
               </a>
               <a
-                href="#"
+                href="/"
                 className="text-dark-gray hover:text-primary transition-colors"
               >
                 Terms of Service
               </a>
               <a
-                href="#"
+                href="/"
                 className="text-dark-gray hover:text-primary transition-colors"
               >
                 Refund Policy
