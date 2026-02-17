@@ -51,7 +51,7 @@ const CartDrawer = () => {
     <>
       {/* Overlay */}
       <div
-        className={`fixed inset-0 bg-black/50 z-40 transition-opacity duration-300 ${
+        className={`fixed inset-0 bg-black/50 z-[60] transition-opacity duration-300 ${
           isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
         onClick={closeCart}
@@ -59,12 +59,12 @@ const CartDrawer = () => {
 
       {/* Drawer */}
       <div
-        className={`fixed top-0 right-0 h-full w-full sm:w-96 bg-white shadow-2xl z-50 flex flex-col transition-transform duration-300 ease-out ${
+        className={`fixed top-0 right-0 h-full w-full sm:w-96 bg-white shadow-2xl z-[80] flex flex-col transition-transform duration-300 ease-out ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
         {/* Header */}
-        <div className="p-6 border-b border-gray-200 flex items-center justify-between bg-cream-light">
+        <div className="p-5 border-b border-gray-200 flex items-center justify-between bg-cream-light">
           <h2 className="font-display text-2xl text-dark flex items-center gap-2">
             <span>🛒</span>
             <span>Your Cart</span>
@@ -121,17 +121,35 @@ const CartDrawer = () => {
                         <div className="mt-1 space-y-0.5">
                           {item.addOns.drinks?.length > 0 && (
                             <p className="text-xs text-dark-gray">
-                              + {item.addOns.drinks.map(d => `${d.name}${d.quantity > 1 ? ` x${d.quantity}` : ''}`).join(', ')}
+                              +{" "}
+                              {item.addOns.drinks
+                                .map(
+                                  (d) =>
+                                    `${d.name}${d.quantity > 1 ? ` x${d.quantity}` : ""}`,
+                                )
+                                .join(", ")}
                             </p>
                           )}
                           {item.addOns.desserts?.length > 0 && (
                             <p className="text-xs text-dark-gray">
-                              + {item.addOns.desserts.map(d => `${d.name}${d.quantity > 1 ? ` x${d.quantity}` : ''}`).join(', ')}
+                              +{" "}
+                              {item.addOns.desserts
+                                .map(
+                                  (d) =>
+                                    `${d.name}${d.quantity > 1 ? ` x${d.quantity}` : ""}`,
+                                )
+                                .join(", ")}
                             </p>
                           )}
                           {item.addOns.extras?.length > 0 && (
                             <p className="text-xs text-dark-gray">
-                              + {item.addOns.extras.map(e => `${e.name}${e.quantity > 1 ? ` x${e.quantity}` : ''}`).join(', ')}
+                              +{" "}
+                              {item.addOns.extras
+                                .map(
+                                  (e) =>
+                                    `${e.name}${e.quantity > 1 ? ` x${e.quantity}` : ""}`,
+                                )
+                                .join(", ")}
                             </p>
                           )}
                         </div>

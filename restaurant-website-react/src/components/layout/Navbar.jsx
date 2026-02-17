@@ -55,7 +55,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 bg-cream-light/85 backdrop-blur-sm z-50 shadow-sm">
+      <nav className="fixed top-0 left-0 right-0 bg-cream-light/85 backdrop-blur-sm z-[70] shadow-sm">
         <div className="container mx-auto px-2 sm:px-4 lg:px-5">
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
@@ -272,57 +272,63 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Drawer Overlay */}
       <div
-        className={`fixed inset-0 bg-black/50 z-40 lg:hidden transition-opacity duration-300 ${
+        className={`fixed inset-0 bg-black/50 z-[60] lg:hidden transition-opacity duration-300 ${
           showMobileMenu ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
         onClick={() => setShowMobileMenu(false)}
-      >
-        <div
-          className={`fixed top-0 left-0 h-full w-80 bg-white shadow-2xl p-8 transition-transform duration-300 ease-out ${
-            showMobileMenu ? "translate-x-0" : "-translate-x-full"
-          }`}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div className="flex items-center mb-12">
-            <img
-              src="/assets/images/BitesLogo.png"
-              alt="Bites Restaurant Logo"
-              className="h-16 w-auto object-contain"
-            />
-          </div>
+      />
 
-          <div className="flex flex-col gap-6">
-            <Link
-              to="/"
-              onClick={() => setShowMobileMenu(false)}
-              className="text-dark hover:text-primary transition-colors font-medium text-lg text-left"
-            >
-              Home
-            </Link>
-            <Link
-              to="/menu"
-              onClick={() => setShowMobileMenu(false)}
-              className="text-dark hover:text-primary transition-colors font-medium text-lg text-left"
-            >
-              Menu
-            </Link>
-            <Link
-              to="/about"
-              onClick={() => setShowMobileMenu(false)}
-              className="text-dark hover:text-primary transition-colors font-medium text-lg text-left"
-            >
-              About
-            </Link>
-            <Link
-              to="/services"
-              onClick={() => setShowMobileMenu(false)}
-              className="text-dark hover:text-primary transition-colors font-medium text-lg text-left"
-            >
-              Services
-            </Link>
-          </div>
+      {/* Mobile Drawer Panel */}
+      <div
+        className={`fixed top-0 left-0 h-full w-80 bg-cream-light shadow-2xl p-8 z-[80] lg:hidden transition-transform duration-300 ease-out ${
+          showMobileMenu ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <div className="flex items-center justify-between mb-12">
+          <img
+            src="/assets/images/BitesLogo.png"
+            alt="Bites Restaurant Logo"
+            className="h-20 w-auto object-contain"
+          />
+          <button
+            onClick={() => setShowMobileMenu(false)}
+            className="w-8 h-8 flex items-center justify-center text-dark text-xl"
+          >
+            ✕
+          </button>
+        </div>
+
+        <div className="flex flex-col gap-6">
+          <Link
+            to="/"
+            onClick={() => setShowMobileMenu(false)}
+            className="text-dark hover:text-primary transition-colors font-medium text-lg text-left"
+          >
+            Home
+          </Link>
+          <Link
+            to="/menu"
+            onClick={() => setShowMobileMenu(false)}
+            className="text-dark hover:text-primary transition-colors font-medium text-lg text-left"
+          >
+            Menu
+          </Link>
+          <Link
+            to="/about"
+            onClick={() => setShowMobileMenu(false)}
+            className="text-dark hover:text-primary transition-colors font-medium text-lg text-left"
+          >
+            About
+          </Link>
+          <Link
+            to="/services"
+            onClick={() => setShowMobileMenu(false)}
+            className="text-dark hover:text-primary transition-colors font-medium text-lg text-left"
+          >
+            Services
+          </Link>
         </div>
       </div>
 
