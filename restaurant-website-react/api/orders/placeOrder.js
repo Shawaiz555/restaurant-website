@@ -1,16 +1,10 @@
-const express = require('express');
-const cors = require('cors');
-require('dotenv').config();
+const { sendOrderEmails } = require('../_lib/emailService');
 
-const { sendOrderEmails } = require('../api/_lib/emailService');
+module.exports = async function handler(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ success: false, message: 'Method not allowed' });
+  }
 
-const app = express();
-const PORT = 8000;
-
-app.use(cors());
-app.use(express.json());
-
-app.post('/api/orders/placeOrder', async (req, res) => {
   try {
     const order = req.body;
 
@@ -34,12 +28,4 @@ app.post('/api/orders/placeOrder', async (req, res) => {
       error: error.message,
     });
   }
-});
-
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', message: 'Server is running' });
-});
-
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+};

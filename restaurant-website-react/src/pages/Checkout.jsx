@@ -183,7 +183,7 @@ const Checkout = () => {
       };
 
       // Send order to backend
-      const response = await fetch("http://localhost:8000/api/orders/place", {
+      const response = await fetch("/api/orders/placeOrder", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

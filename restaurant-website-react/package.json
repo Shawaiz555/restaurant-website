@@ -20,6 +20,7 @@
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.13.0",
     "react-scripts": "5.0.1",
+    "resend": "^6.9.2",
     "swiper": "^12.1.0",
     "web-vitals": "^2.1.4"
   },
@@ -28,8 +29,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "server": "node server/server.js",
-    "dev": "concurrently \"npm run server\" \"npm start\""
+    "server": "node server/server.js"
   },
   "eslintConfig": {
     "extends": [
@@ -49,6 +49,7 @@
       "last 1 safari version"
     ]
   },
+  "proxy": "http://localhost:8000",
   "devDependencies": {
     "autoprefixer": "^10.4.24",
     "concurrently": "^9.1.2",
