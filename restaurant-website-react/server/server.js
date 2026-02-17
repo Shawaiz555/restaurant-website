@@ -61,11 +61,7 @@ const formatOrderItems = (items) => {
 
         // Spice Level
         if (item.spiceLevel) {
-          const formattedSpiceLevel = item.spiceLevel
-            .replace('spice-', '')
-            .split('-')
-            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(' ');
+          const formattedSpiceLevel = item.spiceLevel?.name || item.spiceLevel;
           itemText += `<p style="margin: 0 0 5px 0; color: #4b5563; font-size: 13px;">• Spice Level: ${formattedSpiceLevel}</p>`;
         }
 

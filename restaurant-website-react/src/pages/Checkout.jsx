@@ -623,15 +623,7 @@ const Checkout = () => {
                                   • Spice Level:
                                 </span>
                                 <span className="text-xs font-medium text-dark">
-                                  {item.spiceLevel
-                                    .replace("spice-", "")
-                                    .split("-")
-                                    .map(
-                                      (word) =>
-                                        word.charAt(0).toUpperCase() +
-                                        word.slice(1),
-                                    )
-                                    .join(" ")}
+                                  {item.spiceLevel?.name || item.spiceLevel}
                                 </span>
                               </div>
                             )}

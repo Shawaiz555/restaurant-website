@@ -95,7 +95,7 @@ const CartDrawer = () => {
             <div className="space-y-4">
               {items.map((item) => (
                 <div
-                  key={`${item.id}-${item.size}`}
+                  key={item.cartItemId || `${item.id}-${item.size}`}
                   className="bg-cream-light rounded-2xl p-4"
                 >
                   <div className="flex gap-3 mb-3">
@@ -142,7 +142,7 @@ const CartDrawer = () => {
                       </p>
                     </div>
                     <button
-                      onClick={() => removeFromCart(item.id)}
+                      onClick={() => removeFromCart(item.cartItemId)}
                       className="text-xl opacity-60 hover:opacity-100 hover:text-red-600 transition-all flex-shrink-0"
                       title="Remove item"
                     >
@@ -155,7 +155,7 @@ const CartDrawer = () => {
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() =>
-                          updateQuantity(item.id, item.quantity - 1)
+                          updateQuantity(item.cartItemId, item.quantity - 1)
                         }
                         className="w-8 h-8 flex items-center justify-center bg-white rounded-lg hover:bg-primary hover:text-white transition-all shadow-sm"
                       >
@@ -166,7 +166,7 @@ const CartDrawer = () => {
                       </span>
                       <button
                         onClick={() =>
-                          updateQuantity(item.id, item.quantity + 1)
+                          updateQuantity(item.cartItemId, item.quantity + 1)
                         }
                         className="w-8 h-8 flex items-center justify-center bg-white rounded-lg hover:bg-primary hover:text-white transition-all shadow-sm"
                       >

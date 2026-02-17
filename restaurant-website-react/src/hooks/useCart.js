@@ -21,9 +21,9 @@ export const useCart = () => {
     dispatch(openCart());
   };
 
-  const handleRemoveFromCart = (productId) => {
-    const item = items.find(i => i.id === productId);
-    dispatch(removeFromCart({ productId, userId }));
+  const handleRemoveFromCart = (cartItemId) => {
+    const item = items.find(i => i.cartItemId === cartItemId);
+    dispatch(removeFromCart({ cartItemId, userId }));
     if (item) {
       dispatch(showNotification({
         message: `${item.name} removed from cart`,
@@ -32,8 +32,8 @@ export const useCart = () => {
     }
   };
 
-  const handleUpdateQuantity = (productId, quantity) => {
-    dispatch(updateQuantity({ productId, quantity, userId }));
+  const handleUpdateQuantity = (cartItemId, quantity) => {
+    dispatch(updateQuantity({ cartItemId, quantity, userId }));
   };
 
   const handleClearCart = (silent = false) => {

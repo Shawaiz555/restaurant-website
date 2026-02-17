@@ -435,10 +435,11 @@ const ProductDetail = () => {
                       </label>
                       <div className="relative group">
                         <select
-                          value={selectedSpiceLevel || ""}
-                          onChange={(e) =>
-                            setSelectedSpiceLevel(e.target.value || null)
-                          }
+                          value={selectedSpiceLevel?.id || ""}
+                          onChange={(e) => {
+                            const spice = addOnsData.spiceLevel.find(s => s.id === e.target.value);
+                            setSelectedSpiceLevel(spice || null);
+                          }}
                           className="w-full px-3 sm:px-5 py-3 sm:py-4 pr-10 sm:pr-12 border-2 border-primary/30 rounded-xl focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all bg-cream-light hover:border-primary/60 hover:bg-cream-light font-display text-sm sm:text-base appearance-none cursor-pointer shadow-sm hover:shadow-md text-dark leading-tight"
                         >
                           <option
@@ -502,12 +503,7 @@ const ProductDetail = () => {
                             />
                           </svg>
                           <span className="truncate">
-                            Selected:{" "}
-                            {
-                              addOnsData.spiceLevel.find(
-                                (s) => s.id === selectedSpiceLevel,
-                              )?.name
-                            }
+                            Selected: {selectedSpiceLevel?.name}
                           </span>
                         </p>
                       )}
