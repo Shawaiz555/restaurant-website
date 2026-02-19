@@ -5,7 +5,6 @@ import Navbar from "../components/layout/Navbar";
 import CartDrawer from "../components/layout/CartDrawer";
 import Footer from "../components/layout/Footer";
 import AboutHeroSection from "../components/about/AboutHeroSection";
-import StatsSection from "../components/about/StatsSection";
 import OurStorySection from "../components/about/OurStorySection";
 import ValuesSection from "../components/about/ValuesSection";
 import TimelineSection from "../components/about/TimelineSection";
@@ -28,7 +27,6 @@ const About = () => {
 
       <main className="min-h-screen bg-gradient-to-br from-cream-light via-white to-cream-light pt-20">
         <AboutHeroSection />
-        <StatsSection />
         <OurStorySection />
         <ValuesSection />
         <TimelineSection />
