@@ -437,7 +437,9 @@ const ProductDetail = () => {
                         <select
                           value={selectedSpiceLevel?.id || ""}
                           onChange={(e) => {
-                            const spice = addOnsData.spiceLevel.find(s => s.id === e.target.value);
+                            const spice = addOnsData.spiceLevel.find(
+                              (s) => s.id === e.target.value,
+                            );
                             setSelectedSpiceLevel(spice || null);
                           }}
                           className="w-full px-3 sm:px-5 py-3 sm:py-4 pr-10 sm:pr-12 border-2 border-primary/30 rounded-xl focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all bg-cream-light hover:border-primary/60 hover:bg-cream-light font-display text-sm sm:text-base appearance-none cursor-pointer shadow-sm hover:shadow-md text-dark leading-tight"
@@ -587,12 +589,12 @@ const ProductDetail = () => {
             {(addOnsConfig.showDrinks ||
               addOnsConfig.showDesserts ||
               addOnsConfig.showExtras) && (
-              <div className="mb-20 px-4 lg:px-6">
-                <div className="bg-cream-light rounded-3xl p-6 lg:p-8 shadow-xl border border-gray-200">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+              <div className="mb-20 px-4 lg:px-8">
+                <div className="bg-cream-light rounded-3xl p-6 shadow-xl border border-gray-200 max-w-8xl mx-auto">
+                  <div className="flex items-center gap-3 lg:gap-4 mb-3 lg:mb-4">
+                    <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-full bg-primary/10 flex items-center justify-center">
                       <svg
-                        className="w-5 h-5 text-primary"
+                        className="w-5 h-5 lg:w-6 lg:h-6 text-primary"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -605,86 +607,96 @@ const ProductDetail = () => {
                         />
                       </svg>
                     </div>
-                    <h2 className="font-display text-3xl lg:text-4xl text-dark">
+                    <h2 className="font-display text-3xl lg:text-5xl text-dark">
                       Customize Your Order
                     </h2>
                   </div>
-                  <p className="text-dark-gray mb-6 pl-13">
+                  <p className="text-dark-gray text-base lg:text-lg mb-6 lg:mb-8 pl-13 lg:pl-16">
                     Add drinks, desserts, or extras to complete your meal
                   </p>
 
                   {/* Tab Navigation */}
-                  <div className="flex gap-2 mb-6 border-b-2 border-gray-200 bg-cream-light rounded-t-2xl px-2 pt-2">
+                  <div className="flex gap-1 sm:gap-2 lg:gap-3 mb-6 lg:mb-8 border-b-2 border-gray-200 bg-cream-light rounded-t-2xl px-1 sm:px-2 lg:px-3 pt-2 lg:pt-3 overflow-x-auto">
                     {addOnsConfig.showDrinks && (
                       <button
                         onClick={() => setActiveAddOnTab("drinks")}
-                        className={`py-3 px-6 font-display text-base lg:text-lg transition-all relative rounded-t-xl ${
+                        className={`py-2 sm:py-3 lg:py-4 px-3 sm:px-4 md:px-6 lg:px-8 font-display text-sm sm:text-base md:text-lg lg:text-xl transition-all relative rounded-t-xl whitespace-nowrap flex-shrink-0 ${
                           activeAddOnTab === "drinks"
                             ? "text-primary font-semibold bg-cream-light"
                             : "text-dark-gray hover:text-dark hover:bg-cream-light/50"
                         }`}
                       >
-                        <span className="flex items-center gap-2">
-                          🥤 Drinks
+                        <span className="flex items-center gap-1 sm:gap-2 lg:gap-3">
+                          <span className="text-base sm:text-lg lg:text-xl">
+                            🥤
+                          </span>
+                          <span className="hidden xs:inline">Drinks</span>
+                          <span className="xs:hidden">Drinks</span>
                           {selectedAddOns.drinks.length > 0 && (
-                            <span className="inline-flex items-center justify-center min-w-[24px] h-6 px-2 text-xs font-bold text-white bg-gradient-to-r from-primary to-primary-dark rounded-full shadow-md">
+                            <span className="inline-flex items-center justify-center min-w-[20px] sm:min-w-[24px] lg:min-w-[28px] h-5 sm:h-6 lg:h-7 px-1.5 sm:px-2 lg:px-2.5 text-[10px] sm:text-xs lg:text-sm font-bold text-white bg-gradient-to-r from-primary to-primary-dark rounded-full shadow-md">
                               {selectedAddOns.drinks.length}
                             </span>
                           )}
                         </span>
                         {activeAddOnTab === "drinks" && (
-                          <span className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-primary-dark rounded-t"></span>
+                          <span className="absolute bottom-0 left-0 right-0 h-0.5 sm:h-1 bg-gradient-to-r from-primary to-primary-dark rounded-t"></span>
                         )}
                       </button>
                     )}
                     {addOnsConfig.showDesserts && (
                       <button
                         onClick={() => setActiveAddOnTab("desserts")}
-                        className={`py-3 px-6 font-display text-base lg:text-lg transition-all relative rounded-t-xl ${
+                        className={`py-2 sm:py-3 lg:py-4 px-3 sm:px-4 md:px-6 lg:px-8 font-display text-sm sm:text-base md:text-lg lg:text-xl transition-all relative rounded-t-xl whitespace-nowrap flex-shrink-0 ${
                           activeAddOnTab === "desserts"
                             ? "text-primary font-semibold bg-cream-light"
                             : "text-dark-gray hover:text-dark hover:bg-cream-light/50"
                         }`}
                       >
-                        <span className="flex items-center gap-2">
-                          🍰 Desserts
+                        <span className="flex items-center gap-1 sm:gap-2 lg:gap-3">
+                          <span className="text-base sm:text-lg lg:text-xl">
+                            🍰
+                          </span>
+                          <span>Desserts</span>
                           {selectedAddOns.desserts.length > 0 && (
-                            <span className="inline-flex items-center justify-center min-w-[24px] h-6 px-2 text-xs font-bold text-white bg-gradient-to-r from-primary to-primary-dark rounded-full shadow-md">
+                            <span className="inline-flex items-center justify-center min-w-[20px] sm:min-w-[24px] lg:min-w-[28px] h-5 sm:h-6 lg:h-7 px-1.5 sm:px-2 lg:px-2.5 text-[10px] sm:text-xs lg:text-sm font-bold text-white bg-gradient-to-r from-primary to-primary-dark rounded-full shadow-md">
                               {selectedAddOns.desserts.length}
                             </span>
                           )}
                         </span>
                         {activeAddOnTab === "desserts" && (
-                          <span className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-primary-dark rounded-t"></span>
+                          <span className="absolute bottom-0 left-0 right-0 h-0.5 sm:h-1 bg-gradient-to-r from-primary to-primary-dark rounded-t"></span>
                         )}
                       </button>
                     )}
                     {addOnsConfig.showExtras && (
                       <button
                         onClick={() => setActiveAddOnTab("extras")}
-                        className={`py-3 px-6 font-display text-base lg:text-lg transition-all relative rounded-t-xl ${
+                        className={`py-2 sm:py-3 lg:py-4 px-3 sm:px-4 md:px-6 lg:px-8 font-display text-sm sm:text-base md:text-lg lg:text-xl transition-all relative rounded-t-xl whitespace-nowrap flex-shrink-0 ${
                           activeAddOnTab === "extras"
                             ? "text-primary font-semibold bg-cream-light"
                             : "text-dark-gray hover:text-dark hover:bg-cream-light/50"
                         }`}
                       >
-                        <span className="flex items-center gap-2">
-                          ✨ Extras
+                        <span className="flex items-center gap-1 sm:gap-2 lg:gap-3">
+                          <span className="text-base sm:text-lg lg:text-xl">
+                            ✨
+                          </span>
+                          <span>Extras</span>
                           {selectedAddOns.extras.length > 0 && (
-                            <span className="inline-flex items-center justify-center min-w-[24px] h-6 px-2 text-xs font-bold text-white bg-gradient-to-r from-primary to-primary-dark rounded-full shadow-md">
+                            <span className="inline-flex items-center justify-center min-w-[20px] sm:min-w-[24px] lg:min-w-[28px] h-5 sm:h-6 lg:h-7 px-1.5 sm:px-2 lg:px-2.5 text-[10px] sm:text-xs lg:text-sm font-bold text-white bg-gradient-to-r from-primary to-primary-dark rounded-full shadow-md">
                               {selectedAddOns.extras.length}
                             </span>
                           )}
                         </span>
                         {activeAddOnTab === "extras" && (
-                          <span className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-primary-dark rounded-t"></span>
+                          <span className="absolute bottom-0 left-0 right-0 h-0.5 sm:h-1 bg-gradient-to-r from-primary to-primary-dark rounded-t"></span>
                         )}
                       </button>
                     )}
                   </div>
 
                   {/* Tab Content - 2 Column Grid */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-cream-light p-4 rounded-b-2xl">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 lg:gap-5 bg-cream-light p-3 sm:p-4 lg:p-6 rounded-b-2xl">
                     {/* Drinks Tab */}
                     {activeAddOnTab === "drinks" && addOnsConfig.showDrinks && (
                       <>
@@ -698,50 +710,78 @@ const ProductDetail = () => {
                           return (
                             <div
                               key={drink.id}
-                              className={`group relative flex items-center justify-between p-5 border-2 rounded-2xl transition-all duration-200 ${
+                              onClick={() => {
+                                if (!isSelected) {
+                                  toggleAddOn("drinks", drink);
+                                }
+                              }}
+                              className={`group relative flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 lg:p-5 border-2 rounded-xl transition-all duration-200 cursor-pointer ${
                                 isSelected
-                                  ? "border-primary bg-gradient-to-br from-cream to-cream-light shadow-lg scale-[1.02]"
-                                  : "border-gray-200 hover:border-primary/60 hover:bg-cream-light/50 hover:shadow-md"
+                                  ? "border-primary bg-gradient-to-br from-primary/5 to-primary/10 shadow-lg ring-2 ring-primary/20"
+                                  : "border-gray-200 hover:border-primary/60 hover:bg-cream-light/50 hover:shadow-md hover:scale-[1.01]"
                               }`}
                             >
-                              <div className="flex items-center gap-4 flex-1 min-w-0">
-                                <div className="relative">
-                                  <input
-                                    type="checkbox"
-                                    checked={isSelected}
-                                    onChange={() =>
-                                      toggleAddOn("drinks", drink)
-                                    }
-                                    className="w-6 h-6 text-primary rounded-lg border-2 border-gray-300 focus:ring-2 focus:ring-primary cursor-pointer transition-all flex-shrink-0 appearance-none checked:bg-primary checked:border-primary"
-                                    style={{
-                                      backgroundImage: isSelected
-                                        ? `url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e")`
-                                        : "none",
-                                    }}
-                                  />
+                              {/* Top row on mobile, left side on desktop */}
+                              <div className="flex items-center gap-3 sm:gap-4 lg:gap-6 flex-1 min-w-0 mb-2 sm:mb-0">
+                                <div
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    toggleAddOn("drinks", drink);
+                                  }}
+                                  className={`w-5 h-5 sm:w-6 sm:h-6 rounded-lg border-2 flex items-center justify-center transition-all cursor-pointer flex-shrink-0 ${
+                                    isSelected
+                                      ? "bg-primary border-primary scale-110"
+                                      : "border-gray-300 hover:border-primary/60 hover:bg-primary/5"
+                                  }`}
+                                >
+                                  {isSelected && (
+                                    <svg
+                                      viewBox="0 0 16 16"
+                                      fill="white"
+                                      className="w-3 h-3 sm:w-4 sm:h-4"
+                                    >
+                                      <path d="M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z" />
+                                    </svg>
+                                  )}
                                 </div>
-                                <span className="font-display text-base lg:text-lg text-dark truncate font-medium">
-                                  {drink.name}
-                                </span>
+                                <div className="flex-1 min-w-0">
+                                  <div className="font-display text-sm sm:text-base lg:text-lg text-dark truncate">
+                                    {drink.name}
+                                  </div>
+                                  <div className="text-[11px] sm:text-xs lg:text-sm text-dark-gray">
+                                    {drink.description || "350ml"}
+                                  </div>
+                                </div>
+                                <div className="text-primary font-display font-bold text-sm sm:text-base lg:text-lg whitespace-nowrap flex-shrink-0 mr-2 sm:mr-3 lg:mr-4">
+                                  +Rs.
+                                  {(
+                                    drink.price * (isSelected ? quantity : 1)
+                                  ).toFixed(2)}
+                                </div>
                               </div>
 
-                              <div className="flex items-center gap-3 flex-shrink-0">
-                                {isSelected && (
-                                  <div className="flex items-center gap-1 bg-gradient-to-r from-white to-cream rounded-xl border-2 border-primary/30 shadow-sm">
+                              {/* Quantity controls and "Add" button */}
+                              <div className="flex items-center justify-end gap-0 flex-shrink-0">
+                                {isSelected ? (
+                                  <div className="flex items-center gap-0.5 sm:gap-1 bg-white rounded-lg sm:rounded-xl border-2 border-primary shadow-md">
                                     <button
                                       onClick={(e) => {
                                         e.stopPropagation();
-                                        updateAddOnQuantity(
-                                          "drinks",
-                                          drink.id,
-                                          quantity - 1,
-                                        );
+                                        if (quantity === 1) {
+                                          toggleAddOn("drinks", drink);
+                                        } else {
+                                          updateAddOnQuantity(
+                                            "drinks",
+                                            drink.id,
+                                            quantity - 1,
+                                          );
+                                        }
                                       }}
-                                      className="text-dark hover:text-white hover:bg-primary font-semibold text-xl w-9 h-9 flex items-center justify-center rounded-l-lg transition-all active:scale-95"
+                                      className="text-primary hover:text-white hover:bg-primary font-bold text-lg sm:text-xl w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 flex items-center justify-center rounded-l-lg transition-all active:scale-95"
                                     >
-                                      −
+                                      {quantity === 1 ? "✕" : "−"}
                                     </button>
-                                    <span className="font-display font-semibold text-dark min-w-[32px] text-center text-lg bg-white px-2">
+                                    <span className="font-display font-bold text-dark min-w-[32px] sm:min-w-[40px] lg:min-w-[48px] text-center text-base sm:text-lg px-1 sm:px-2 lg:px-3">
                                       {quantity}
                                     </span>
                                     <button
@@ -753,25 +793,22 @@ const ProductDetail = () => {
                                           quantity + 1,
                                         );
                                       }}
-                                      className="text-dark hover:text-white hover:bg-primary font-semibold text-xl w-9 h-9 flex items-center justify-center rounded-r-lg transition-all active:scale-95"
+                                      className="text-primary hover:text-white hover:bg-primary font-bold text-lg sm:text-xl w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 flex items-center justify-center rounded-r-lg transition-all active:scale-95"
                                     >
                                       +
                                     </button>
                                   </div>
+                                ) : (
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      toggleAddOn("drinks", drink);
+                                    }}
+                                    className="px-3 py-1.5 sm:px-4 sm:py-2 lg:px-6 lg:py-2.5 bg-primary/10 hover:bg-primary text-primary hover:text-white rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm lg:text-base transition-all transform hover:scale-105 active:scale-95 border-2 border-primary/20 hover:border-primary"
+                                  >
+                                    Add
+                                  </button>
                                 )}
-                                <div className="flex flex-col items-end">
-                                  <span className="text-primary font-display font-bold text-base lg:text-lg whitespace-nowrap">
-                                    +Rs.
-                                    {(
-                                      drink.price * (isSelected ? quantity : 1)
-                                    ).toFixed(2)}
-                                  </span>
-                                  {isSelected && quantity > 1 && (
-                                    <span className="text-xs text-dark-gray">
-                                      Rs.{drink.price.toFixed(2)} each
-                                    </span>
-                                  )}
-                                </div>
                               </div>
                             </div>
                           );
@@ -793,50 +830,74 @@ const ProductDetail = () => {
                             return (
                               <div
                                 key={dessert.id}
-                                className={`group relative flex items-center justify-between p-5 border-2 rounded-2xl transition-all duration-200 ${
+                                onClick={() => {
+                                  if (!isSelected) {
+                                    toggleAddOn("desserts", dessert);
+                                  }
+                                }}
+                                className={`group relative flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 border-2 rounded-xl transition-all duration-200 cursor-pointer ${
                                   isSelected
-                                    ? "border-primary bg-gradient-to-br from-cream to-cream-light shadow-lg scale-[1.02]"
-                                    : "border-gray-200 hover:border-primary/60 hover:bg-cream-light/50 hover:shadow-md"
+                                    ? "border-primary bg-gradient-to-br from-primary/5 to-primary/10 shadow-lg ring-2 ring-primary/20"
+                                    : "border-gray-200 hover:border-primary/60 hover:bg-cream-light/50 hover:shadow-md hover:scale-[1.01]"
                                 }`}
                               >
-                                <div className="flex items-center gap-4 flex-1 min-w-0">
-                                  <div className="relative">
-                                    <input
-                                      type="checkbox"
-                                      checked={isSelected}
-                                      onChange={() =>
-                                        toggleAddOn("desserts", dessert)
-                                      }
-                                      className="w-6 h-6 text-primary rounded-lg border-2 border-gray-300 focus:ring-2 focus:ring-primary cursor-pointer transition-all flex-shrink-0 appearance-none checked:bg-primary checked:border-primary"
-                                      style={{
-                                        backgroundImage: isSelected
-                                          ? `url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e")`
-                                          : "none",
-                                      }}
-                                    />
+                                {/* Checkbox, name, and price in one row */}
+                                <div className="flex items-center gap-3 sm:gap-4 lg:gap-6 flex-1 min-w-0 mb-2 sm:mb-0">
+                                  <div
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      toggleAddOn("desserts", dessert);
+                                    }}
+                                    className={`w-5 h-5 sm:w-6 sm:h-6 rounded-lg border-2 flex items-center justify-center transition-all cursor-pointer flex-shrink-0 ${
+                                      isSelected
+                                        ? "bg-primary border-primary"
+                                        : "border-gray-300 hover:border-primary/60"
+                                    }`}
+                                  >
+                                    {isSelected && (
+                                      <svg
+                                        viewBox="0 0 16 16"
+                                        fill="white"
+                                        className="w-3 h-3 sm:w-4 sm:h-4"
+                                      >
+                                        <path d="M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z" />
+                                      </svg>
+                                    )}
                                   </div>
-                                  <span className="font-display text-base lg:text-lg text-dark truncate font-medium">
+                                  <span className="font-display text-sm sm:text-base lg:text-lg text-dark font-medium flex-1 truncate">
                                     {dessert.name}
                                   </span>
+                                  <div className="text-primary font-display font-bold text-sm sm:text-base lg:text-lg whitespace-nowrap flex-shrink-0 mr-2 sm:mr-3 lg:mr-4">
+                                    +Rs.
+                                    {(
+                                      dessert.price *
+                                      (isSelected ? quantity : 1)
+                                    ).toFixed(2)}
+                                  </div>
                                 </div>
 
-                                <div className="flex items-center gap-3 flex-shrink-0">
-                                  {isSelected && (
-                                    <div className="flex items-center gap-1 bg-gradient-to-r from-white to-cream rounded-xl border-2 border-primary/30 shadow-sm">
+                                {/* Quantity controls and "Add" button */}
+                                <div className="flex items-center justify-end gap-0 flex-shrink-0">
+                                  {isSelected ? (
+                                    <div className="flex items-center gap-0.5 sm:gap-1 bg-gradient-to-r from-white to-cream rounded-lg sm:rounded-xl border-2 border-primary/30 shadow-sm">
                                       <button
                                         onClick={(e) => {
                                           e.stopPropagation();
-                                          updateAddOnQuantity(
-                                            "desserts",
-                                            dessert.id,
-                                            quantity - 1,
-                                          );
+                                          if (quantity === 1) {
+                                            toggleAddOn("desserts", dessert);
+                                          } else {
+                                            updateAddOnQuantity(
+                                              "desserts",
+                                              dessert.id,
+                                              quantity - 1,
+                                            );
+                                          }
                                         }}
-                                        className="text-dark hover:text-white hover:bg-primary font-bold text-xl w-9 h-9 flex items-center justify-center rounded-l-lg transition-all active:scale-95"
+                                        className="text-primary hover:text-white hover:bg-primary font-bold text-lg sm:text-xl w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 flex items-center justify-center rounded-l-lg transition-all active:scale-95"
                                       >
-                                        −
+                                        {quantity === 1 ? "✕" : "−"}
                                       </button>
-                                      <span className="font-display font-bold text-dark min-w-[32px] text-center text-lg bg-white px-2">
+                                      <span className="font-display font-bold text-dark min-w-[28px] sm:min-w-[32px] lg:min-w-[40px] text-center text-base sm:text-lg bg-white px-1 sm:px-2 lg:px-3">
                                         {quantity}
                                       </span>
                                       <button
@@ -848,26 +909,22 @@ const ProductDetail = () => {
                                             quantity + 1,
                                           );
                                         }}
-                                        className="text-dark hover:text-white hover:bg-primary font-bold text-xl w-9 h-9 flex items-center justify-center rounded-r-lg transition-all active:scale-95"
+                                        className="text-primary hover:text-white hover:bg-primary font-bold text-lg sm:text-xl w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 flex items-center justify-center rounded-r-lg transition-all active:scale-95"
                                       >
                                         +
                                       </button>
                                     </div>
+                                  ) : (
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        toggleAddOn("desserts", dessert);
+                                      }}
+                                      className="px-3 py-1.5 sm:px-4 sm:py-2 lg:px-6 lg:py-2.5 bg-primary/10 hover:bg-primary text-primary hover:text-white rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm lg:text-base transition-all transform hover:scale-105 active:scale-95 border-2 border-primary/20 hover:border-primary"
+                                    >
+                                      Add
+                                    </button>
                                   )}
-                                  <div className="flex flex-col items-end">
-                                    <span className="text-primary font-display font-bold text-base lg:text-lg whitespace-nowrap">
-                                      +Rs.
-                                      {(
-                                        dessert.price *
-                                        (isSelected ? quantity : 1)
-                                      ).toFixed(2)}
-                                    </span>
-                                    {isSelected && quantity > 1 && (
-                                      <span className="text-xs text-dark-gray">
-                                        Rs.{dessert.price.toFixed(2)} each
-                                      </span>
-                                    )}
-                                  </div>
                                 </div>
                               </div>
                             );
@@ -888,50 +945,73 @@ const ProductDetail = () => {
                           return (
                             <div
                               key={extra.id}
-                              className={`group relative flex items-center justify-between p-5 border-2 rounded-2xl transition-all duration-200 ${
+                              onClick={() => {
+                                if (!isSelected) {
+                                  toggleAddOn("extras", extra);
+                                }
+                              }}
+                              className={`group relative flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 lg:p-5 border-2 rounded-xl transition-all duration-200 cursor-pointer ${
                                 isSelected
-                                  ? "border-primary bg-gradient-to-br from-cream to-cream-light shadow-lg scale-[1.02]"
-                                  : "border-gray-200 hover:border-primary/60 hover:bg-cream-light/50 hover:shadow-md"
+                                  ? "border-primary bg-gradient-to-br from-primary/5 to-primary/10 shadow-lg ring-2 ring-primary/20"
+                                  : "border-gray-200 hover:border-primary/60 hover:bg-cream-light/50 hover:shadow-md hover:scale-[1.01]"
                               }`}
                             >
-                              <div className="flex items-center gap-4 flex-1 min-w-0">
-                                <div className="relative">
-                                  <input
-                                    type="checkbox"
-                                    checked={isSelected}
-                                    onChange={() =>
-                                      toggleAddOn("extras", extra)
-                                    }
-                                    className="w-6 h-6 text-primary rounded-lg border-2 border-gray-300 focus:ring-2 focus:ring-primary cursor-pointer transition-all flex-shrink-0 appearance-none checked:bg-primary checked:border-primary"
-                                    style={{
-                                      backgroundImage: isSelected
-                                        ? `url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e")`
-                                        : "none",
-                                    }}
-                                  />
+                              {/* Checkbox, name, and price in one row */}
+                              <div className="flex items-center gap-3 sm:gap-4 lg:gap-6 flex-1 min-w-0 mb-2 sm:mb-0">
+                                <div
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    toggleAddOn("extras", extra);
+                                  }}
+                                  className={`w-5 h-5 sm:w-6 sm:h-6 rounded-lg border-2 flex items-center justify-center transition-all cursor-pointer flex-shrink-0 ${
+                                    isSelected
+                                      ? "bg-primary border-primary"
+                                      : "border-gray-300 hover:border-primary/60"
+                                  }`}
+                                >
+                                  {isSelected && (
+                                    <svg
+                                      viewBox="0 0 16 16"
+                                      fill="white"
+                                      className="w-3 h-3 sm:w-4 sm:h-4"
+                                    >
+                                      <path d="M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z" />
+                                    </svg>
+                                  )}
                                 </div>
-                                <span className="font-display text-base lg:text-lg text-dark truncate font-medium">
+                                <span className="font-display text-sm sm:text-base lg:text-lg text-dark font-medium flex-1 truncate">
                                   {extra.name}
                                 </span>
+                                <div className="text-primary font-display font-bold text-sm sm:text-base lg:text-lg whitespace-nowrap flex-shrink-0 mr-2 sm:mr-3 lg:mr-4">
+                                  +Rs.
+                                  {(
+                                    extra.price * (isSelected ? quantity : 1)
+                                  ).toFixed(2)}
+                                </div>
                               </div>
 
-                              <div className="flex items-center gap-3 flex-shrink-0">
-                                {isSelected && (
-                                  <div className="flex items-center gap-1 bg-gradient-to-r from-white to-cream rounded-xl border-2 border-primary/30 shadow-sm">
+                              {/* Quantity controls and "Add" button */}
+                              <div className="flex items-center justify-end gap-0 flex-shrink-0">
+                                {isSelected ? (
+                                  <div className="flex items-center gap-0.5 sm:gap-1 bg-gradient-to-r from-white to-cream rounded-lg sm:rounded-xl border-2 border-primary/30 shadow-sm">
                                     <button
                                       onClick={(e) => {
                                         e.stopPropagation();
-                                        updateAddOnQuantity(
-                                          "extras",
-                                          extra.id,
-                                          quantity - 1,
-                                        );
+                                        if (quantity === 1) {
+                                          toggleAddOn("extras", extra);
+                                        } else {
+                                          updateAddOnQuantity(
+                                            "extras",
+                                            extra.id,
+                                            quantity - 1,
+                                          );
+                                        }
                                       }}
-                                      className="text-dark hover:text-white hover:bg-primary font-bold text-xl w-9 h-9 flex items-center justify-center rounded-l-lg transition-all active:scale-95"
+                                      className="text-primary hover:text-white hover:bg-primary font-bold text-lg sm:text-xl w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 flex items-center justify-center rounded-l-lg transition-all active:scale-95"
                                     >
-                                      −
+                                      {quantity === 1 ? "✕" : "−"}
                                     </button>
-                                    <span className="font-display font-bold text-dark min-w-[32px] text-center text-lg bg-white px-2">
+                                    <span className="font-display font-bold text-dark min-w-[28px] sm:min-w-[32px] text-center text-base sm:text-lg bg-white px-1 sm:px-2">
                                       {quantity}
                                     </span>
                                     <button
@@ -943,25 +1023,22 @@ const ProductDetail = () => {
                                           quantity + 1,
                                         );
                                       }}
-                                      className="text-dark hover:text-white hover:bg-primary font-bold text-xl w-9 h-9 flex items-center justify-center rounded-r-lg transition-all active:scale-95"
+                                      className="text-primary hover:text-white hover:bg-primary font-bold text-lg sm:text-xl w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 flex items-center justify-center rounded-r-lg transition-all active:scale-95"
                                     >
                                       +
                                     </button>
                                   </div>
+                                ) : (
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      toggleAddOn("extras", extra);
+                                    }}
+                                    className="px-3 py-1.5 sm:px-4 sm:py-2 lg:px-6 lg:py-2.5 bg-primary/10 hover:bg-primary text-primary hover:text-white rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm lg:text-base transition-all transform hover:scale-105 active:scale-95 border-2 border-primary/20 hover:border-primary"
+                                  >
+                                    Add
+                                  </button>
                                 )}
-                                <div className="flex flex-col items-end">
-                                  <span className="text-primary font-display font-bold text-base lg:text-lg whitespace-nowrap">
-                                    +Rs.
-                                    {(
-                                      extra.price * (isSelected ? quantity : 1)
-                                    ).toFixed(2)}
-                                  </span>
-                                  {isSelected && quantity > 1 && (
-                                    <span className="text-xs text-dark-gray">
-                                      Rs.{extra.price.toFixed(2)} each
-                                    </span>
-                                  )}
-                                </div>
                               </div>
                             </div>
                           );
