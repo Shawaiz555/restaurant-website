@@ -37,7 +37,7 @@ export const useCart = () => {
   };
 
   const handleClearCart = (silent = false) => {
-    dispatch(clearCart(userId));
+    dispatch(clearCart(userId)); // userId will be undefined for guest users
     if (!silent) {
       dispatch(showNotification({
         message: 'Cart cleared successfully',

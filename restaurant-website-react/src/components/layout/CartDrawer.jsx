@@ -20,21 +20,7 @@ const CartDrawer = () => {
   const { isAuthenticated } = useAuth();
 
   const handleCheckout = () => {
-    if (!isAuthenticated) {
-      dispatch(
-        showNotification({
-          message: "Please login to checkout",
-          type: "error",
-        }),
-      );
-      closeCart();
-      setTimeout(() => {
-        navigate("/login");
-      }, 300);
-      return;
-    }
-
-    // Checkout logic - navigate to checkout page
+    // Both authenticated and guest users can proceed to checkout
     closeCart();
     dispatch(
       showNotification({
@@ -114,7 +100,7 @@ const CartDrawer = () => {
                       )}
                       {item.spiceLevel && (
                         <p className="text-xs text-dark-gray mb-1">
-                          Spice: {item.spiceLevel.name}
+                          Spice: {item.spiceLevel.name || item.spiceLevel}
                         </p>
                       )}
                       {item.addOns && (

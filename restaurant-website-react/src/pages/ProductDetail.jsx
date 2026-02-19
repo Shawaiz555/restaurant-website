@@ -3,9 +3,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import { getProductById, getProductsByCategory } from "../store/productsData";
 import { addOnsData } from "../store/addOnsData";
 import { useCart } from "../hooks/useCart";
-import Navbar from "../components/layout/Navbar";
-import CartDrawer from "../components/layout/CartDrawer";
-import Footer from "../components/layout/Footer";
 import Loader from "../components/common/Loader";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
@@ -162,9 +159,6 @@ const ProductDetail = () => {
 
   return (
     <>
-      <Navbar />
-      <CartDrawer />
-
       <main>
         {/* Product Detail Section */}
         <section className="pt-28 lg:pt-30 lg:pb-20">
@@ -1137,8 +1131,6 @@ const ProductDetail = () => {
           </div>
         </section>
       </main>
-
-      <Footer />
     </>
   );
 };

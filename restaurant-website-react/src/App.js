@@ -14,6 +14,9 @@ import ProductDetail from './pages/ProductDetail';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Checkout from './pages/Checkout';
+import Navbar from './components/layout/Navbar';
+import CartDrawer from './components/layout/CartDrawer';
+import Footer from './components/layout/Footer';
 
 // Component to handle cart initialization
 function AppContent() {
@@ -27,9 +30,10 @@ function AppContent() {
     dispatch(loadCart(currentUser?.id));
   }, [dispatch, currentUser?.id]);
 
-  // Show loader on route change
+  // Show loader on route change and scroll to top
   useEffect(() => {
     setLoading(true);
+    window.scrollTo(0, 0);
     const timer = setTimeout(() => {
       setLoading(false);
     }, 500); // Short loader for route transitions
@@ -41,6 +45,8 @@ function AppContent() {
     <div className="bg-cream-light min-h-screen">
       <NotificationManager />
       {loading && <Loader />}
+      <Navbar />
+      <CartDrawer />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/menu" element={<Menu />} />
@@ -51,6 +57,7 @@ function AppContent() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/checkout" element={<Checkout />} />
       </Routes>
+      <Footer />
     </div>
   );
 }

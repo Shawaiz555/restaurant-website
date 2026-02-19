@@ -1,10 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
-import { loadCart } from "../store/slices/cartSlice";
-import Navbar from "../components/layout/Navbar";
-import CartDrawer from "../components/layout/CartDrawer";
-import Footer from "../components/layout/Footer";
 import MenuHeroSection from "../components/menu/MenuHeroSection";
 import MenuCategoriesSection from "../components/menu/MenuCategoriesSection";
 import {
@@ -14,8 +9,6 @@ import {
 } from "../store/productsData";
 
 const Menu = () => {
-  const dispatch = useDispatch();
-  const currentUser = useSelector((state) => state.auth.currentUser);
   const [searchParams, setSearchParams] = useSearchParams();
 
   // Get category from URL or default to 'all'
@@ -23,11 +16,6 @@ const Menu = () => {
   const [activeCategory, setActiveCategory] = useState(categoryFromUrl);
   const [searchTerm, setSearchTerm] = useState("");
   const [showMobileCategories, setShowMobileCategories] = useState(false);
-
-  useEffect(() => {
-    // Load cart when component mounts
-    dispatch(loadCart(currentUser?.id));
-  }, [dispatch, currentUser]);
 
   // Update URL when category changes
   useEffect(() => {
@@ -120,9 +108,6 @@ const Menu = () => {
 
   return (
     <>
-      <Navbar />
-      <CartDrawer />
-
       <main className="min-h-screen bg-gradient-to-br from-cream-light via-white to-cream-light pt-20">
         <MenuHeroSection
           searchTerm={searchTerm}
@@ -142,8 +127,6 @@ const Menu = () => {
           activeCategoryName={activeCategoryName}
         />
       </main>
-
-      <Footer />
     </>
   );
 };
