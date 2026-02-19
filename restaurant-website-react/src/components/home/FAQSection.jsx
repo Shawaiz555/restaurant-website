@@ -23,52 +23,16 @@ const FAQSection = () => {
       icon: "✨",
     },
     {
-      question: "Do you cater to dietary restrictions?",
-      answer:
-        "Yes, we offer extensive options for various dietary needs including vegetarian, vegan, gluten-free, and dairy-free options. Each menu item is clearly labeled with dietary information. Feel free to contact us for specific ingredient information.",
-      icon: "🥗",
-    },
-    {
-      question: "What payment methods do you accept?",
-      answer:
-        "We accept all major payment methods including credit/debit cards (Visa, Mastercard, American Express), digital wallets (PayPal, Apple Pay, Google Pay), cash on delivery, and UPI payments. All online transactions are secure and encrypted.",
-      icon: "💳",
-    },
-    {
-      question: "Do you offer catering for events?",
-      answer:
-        "Yes! We provide professional catering services for all types of events including corporate meetings, weddings, birthdays, and private parties. Our catering packages include customizable menus, professional staff, and event setup. Contact us at least 48 hours in advance to discuss your requirements.",
-      icon: "🎉",
-    },
-    {
-      question: "What is your cancellation policy?",
-      answer:
-        "For delivery orders, you can cancel free of charge within 5 minutes of placing it. After that, a cancellation fee may apply depending on the order status. For catering orders, we require 24 hours notice for cancellations to avoid charges. Contact our support team for assistance with any cancellation.",
-      icon: "❌",
-    },
-    {
       question: "Do you offer group ordering and bulk discounts?",
       answer:
         "Yes! We offer special pricing for bulk orders and group events. Whether you're ordering for an office party, family gathering, or large group, contact us to discuss your requirements and we'll provide a customized quote with attractive discounts.",
       icon: "👥",
     },
     {
-      question: "Do you have a loyalty program?",
-      answer:
-        "Yes! Join our Bites Rewards program and earn points with every purchase. Points can be redeemed for discounts, free items, and exclusive offers. Members also get early access to new menu items, birthday treats, and special promotions. Sign up is free and instant!",
-      icon: "🎁",
-    },
-    {
       question: "Are your ingredients fresh and locally sourced?",
       answer:
         "We take pride in using only the freshest ingredients. We partner with local farmers and suppliers to source seasonal produce, ensuring quality and supporting our community. All our meats are premium quality, and seafood is delivered fresh daily.",
       icon: "🌱",
-    },
-    {
-      question: "What are your delivery zones?",
-      answer:
-        "We currently deliver within a 10km radius from our location. Delivery is free for orders above Rs. 500. You can check if we deliver to your area by entering your address during checkout. We're constantly expanding our delivery zones!",
-      icon: "📍",
     },
     {
       question: "What if I have a complaint or feedback?",

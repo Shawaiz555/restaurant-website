@@ -34,8 +34,8 @@ const Home = () => {
         <MenuSection />
         <ReviewsSection />
         <ChefsSection />
-        <FAQSection />
         <MobileAppSection />
+        <FAQSection />
       </main>
 
       <Footer />
