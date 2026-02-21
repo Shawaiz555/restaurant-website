@@ -7,6 +7,8 @@ export const useAuth = () => {
     currentUser,
     isAuthenticated,
     userId: currentUser?.id,
+    isAdmin: currentUser?.role === 'admin',
+    userRole: currentUser?.role || 'user',
   };
 };
 

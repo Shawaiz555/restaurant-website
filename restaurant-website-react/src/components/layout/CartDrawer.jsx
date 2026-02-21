@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { showNotification } from "../../store/slices/notificationSlice";
 import { useCart } from "../../hooks/useCart";
-import { useAuth } from "../../hooks/useAuth";
 
 const CartDrawer = () => {
   const navigate = useNavigate();
@@ -17,7 +16,6 @@ const CartDrawer = () => {
     updateQuantity,
     closeCart,
   } = useCart();
-  const { isAuthenticated } = useAuth();
 
   const handleCheckout = () => {
     // Both authenticated and guest users can proceed to checkout

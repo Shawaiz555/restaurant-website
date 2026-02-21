@@ -40,8 +40,14 @@ const Login = () => {
         }),
       );
       setNavigating(true);
+
+      // Redirect admin users to admin panel, regular users to home
       setTimeout(() => {
-        navigate("/");
+        if (result.user.role === 'admin') {
+          navigate("/admin/dashboard");
+        } else {
+          navigate("/");
+        }
       }, 800);
     } else {
       setError(result.message);

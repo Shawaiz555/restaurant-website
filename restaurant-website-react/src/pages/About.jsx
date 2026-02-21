@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import AboutHeroSection from "../components/about/AboutHeroSection";
 import OurStorySection from "../components/about/OurStorySection";
 import ValuesSection from "../components/about/ValuesSection";

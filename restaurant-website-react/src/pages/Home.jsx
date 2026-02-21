@@ -1,3 +1,6 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 import HeroSection from "../components/home/HeroSection";
 import PopularDishes from "../components/home/PopularDishes";
 import ServicesSection from "../components/home/ServicesSection";
@@ -8,6 +11,16 @@ import MobileAppSection from "../components/home/MobileAppSection";
 import FAQSection from "../components/home/FAQSection";
 
 const Home = () => {
+  const navigate = useNavigate();
+  const { isAdmin } = useAuth();
+
+  // Redirect admin users to admin panel
+  useEffect(() => {
+    if (isAdmin) {
+      navigate("/admin/dashboard", { replace: true });
+    }
+  }, [isAdmin, navigate]);
+
   return (
     <>
       <main className="pt-10">

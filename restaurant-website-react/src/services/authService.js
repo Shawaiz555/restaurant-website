@@ -1,4 +1,15 @@
 class AuthService {
+  // Admin user credentials - seeded on app initialization
+  ADMIN_USER = {
+    id: 'admin_shawaiz',
+    name: 'Muhammad Shawaiz',
+    email: 'shawaizbutt555@gmail.com',
+    password: 'Admin123',
+    role: 'admin',
+    createdAt: '2024-01-01T00:00:00.000Z',
+    cart: []
+  };
+
   validateEmail(email) {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
@@ -37,6 +48,18 @@ class AuthService {
     return 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
   }
 
+  // Initialize admin user on app startup
+  initializeAdminUser() {
+    const users = this.getAllUsers();
+    const adminExists = users.find(u => u.email === this.ADMIN_USER.email);
+
+    if (!adminExists) {
+      users.push(this.ADMIN_USER);
+      this.saveUsers(users);
+      console.log('Admin user initialized successfully');
+    }
+  }
+
   register(userData) {
     const { name, email, password } = userData;
 
@@ -61,6 +84,7 @@ class AuthService {
       name: name.trim(),
       email: email.toLowerCase().trim(),
       password: password,
+      role: 'user', // Default role for new users
       createdAt: new Date().toISOString(),
       cart: []
     };
@@ -123,6 +147,7 @@ class AuthService {
       id: user.id,
       name: user.name,
       email: user.email,
+      role: user.role || 'user', // Include role in session
       createdAt: user.createdAt
     };
 
