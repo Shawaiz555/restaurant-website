@@ -178,7 +178,7 @@ const AdminExpenses = () => {
     .sort((a, b) => new Date(b.date) - new Date(a.date));
 
   const formatCurrency = (amount) => {
-    return `$${parseFloat(amount || 0).toFixed(2)}`;
+    return `Rs ${parseFloat(amount || 0).toFixed(2)}`;
   };
 
   const formatDate = (dateString) => {
@@ -278,7 +278,7 @@ const AdminExpenses = () => {
                   name="category"
                   value={formData.category}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-white text-sm sm:text-base"
                   required
                 >
                   {categories.map((cat) => (
@@ -306,7 +306,7 @@ const AdminExpenses = () => {
 
               <div>
                 <label className="block text-sm font-semibold text-dark mb-2">
-                  Amount ($) *
+                  Amount (Rs) *
                 </label>
                 <input
                   type="number"
@@ -329,7 +329,7 @@ const AdminExpenses = () => {
                   name="paymentMethod"
                   value={formData.paymentMethod}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-white text-sm sm:text-base"
                   required
                 >
                   <option value="Cash">Cash</option>
@@ -382,15 +382,15 @@ const AdminExpenses = () => {
       )}
 
       {/* Filter */}
-      <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-        <div className="flex items-center gap-4">
-          <label className="text-sm font-semibold text-dark">
+      <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-lg border border-gray-100">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
+          <label className="text-sm font-semibold text-dark whitespace-nowrap">
             Filter by Category:
           </label>
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="px-4 py-2 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+            className="w-full sm:w-auto px-4 py-2.5 sm:py-2 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-white text-sm sm:text-base min-w-[180px]"
           >
             <option value="All">All Categories</option>
             {categories.map((cat) => (

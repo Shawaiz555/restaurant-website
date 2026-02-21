@@ -2,11 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import MenuHeroSection from "../components/menu/MenuHeroSection";
 import MenuCategoriesSection from "../components/menu/MenuCategoriesSection";
-import {
-  getAllProducts,
-  getProductsByCategory,
-  getCategories,
-} from "../store/productsData";
+import productsService from "../services/productsService";
 
 const Menu = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -27,11 +23,14 @@ const Menu = () => {
     setSearchParams(searchParams, { replace: true });
   }, [activeCategory, searchParams, setSearchParams]);
 
-  // Get all available categories from products
-  const allCategories = getCategories();
+  // Get all products dynamically
+  const allProducts = productsService.getProducts();
 
-  // Category icons mapping
-  const categoryIcons = {
+  // Get unique categories from products
+  const allCategories = [...new Set(allProducts.map(p => p.category))].sort();
+
+  // Default category icons (will auto-assign for new categories)
+  const defaultCategoryIcons = {
     all: "🍽️",
     "popular-dishes": "⭐",
     breakfast: "🥞",
@@ -40,16 +39,53 @@ const Menu = () => {
     japanese: "🍱",
     drinks: "🥤",
     lunch: "🍔",
+    burgers: "🍔",
+    pizza: "🍕",
+    pasta: "🍝",
+    desserts: "🍰",
+    appetizers: "🥟",
+    seafood: "🦞",
+    chicken: "🍗",
+    beef: "🥩",
+    vegetarian: "🥬",
+    vegan: "🌱",
   };
 
-  // Create category buttons data
+  // Function to get icon for category (auto-assign emojis to new categories)
+  const getCategoryIcon = (category) => {
+    const categoryKey = category.toLowerCase().replace(/\s+/g, "-");
+    if (defaultCategoryIcons[categoryKey]) {
+      return defaultCategoryIcons[categoryKey];
+    }
+    // Auto-assign emoji based on category name
+    const emojiMap = {
+      soup: "🍲", rice: "🍚", sandwich: "🥪", steak: "🥩",
+      fish: "🐟", meat: "🍖", snacks: "🍿", coffee: "☕",
+      tea: "🍵", juice: "🧃", smoothie: "🥤", ice: "🍧",
+      cake: "🎂", cookie: "🍪", bread: "🍞", wrap: "🌯",
+    };
+    for (const [key, emoji] of Object.entries(emojiMap)) {
+      if (category.toLowerCase().includes(key)) {
+        return emoji;
+      }
+    }
+    return "🍴"; // Default icon for unknown categories
+  };
+
+  // Create category buttons data dynamically
   const categories = [
-    { id: "all", label: "All Items", count: getAllProducts().length },
+    {
+      id: "all",
+      label: "All Items",
+      count: allProducts.length,
+      icon: "🍽️"
+    },
     ...allCategories.map((cat) => ({
       id: cat.toLowerCase().replace(/\s+/g, "-"),
       label: cat,
       originalName: cat,
-      count: getProductsByCategory(cat).length,
+      count: allProducts.filter(p => p.category === cat).length,
+      icon: getCategoryIcon(cat)
     })),
   ];
 
@@ -58,11 +94,11 @@ const Menu = () => {
     let products;
 
     if (activeCategory === "all") {
-      products = getAllProducts();
+      products = allProducts;
     } else {
       const category = categories.find((cat) => cat.id === activeCategory);
       products = category
-        ? getProductsByCategory(category.originalName || category.label)
+        ? allProducts.filter(p => p.category === (category.originalName || category.label))
         : [];
     }
 
@@ -116,7 +152,6 @@ const Menu = () => {
         />
         <MenuCategoriesSection
           categories={categories}
-          categoryIcons={categoryIcons}
           activeCategory={activeCategory}
           handleCategoryChange={handleCategoryChange}
           showMobileCategories={showMobileCategories}

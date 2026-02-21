@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import productsService from "../../services/productsService";
+import imageService from "../../services/imageService";
 import { showNotification } from "../../store/slices/notificationSlice";
 
 const AdminProductForm = () => {
@@ -35,6 +36,18 @@ const AdminProductForm = () => {
 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState("");
+  const [showNewCategoryInput, setShowNewCategoryInput] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState("");
+  const [existingCategories, setExistingCategories] = useState([]);
+
+  // Load existing categories on mount
+  useEffect(() => {
+    const allProducts = productsService.getProducts();
+    const categories = [...new Set(allProducts.map((p) => p.category))].sort();
+    setExistingCategories(categories);
+  }, []);
 
   useEffect(() => {
     if (isEditMode) {
@@ -145,6 +158,47 @@ const AdminProductForm = () => {
     }
   };
 
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setImageFile(file);
+
+    // Create preview
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result);
+      setFormData((prev) => ({ ...prev, image: reader.result }));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleCategoryChange = (e) => {
+    const value = e.target.value;
+    if (value === "add_new") {
+      setShowNewCategoryInput(true);
+      setFormData((prev) => ({ ...prev, category: "" }));
+    } else {
+      setShowNewCategoryInput(false);
+      setFormData((prev) => ({ ...prev, category: value }));
+    }
+  };
+
+  const handleNewCategorySubmit = () => {
+    if (newCategoryName.trim()) {
+      const trimmedCategory = newCategoryName.trim();
+
+      // Add to categories list if not already present
+      if (!existingCategories.includes(trimmedCategory)) {
+        setExistingCategories((prev) => [...prev, trimmedCategory].sort());
+      }
+
+      setFormData((prev) => ({ ...prev, category: trimmedCategory }));
+      setShowNewCategoryInput(false);
+      setNewCategoryName("");
+    }
+  };
+
   const validateForm = () => {
     const newErrors = {};
 
@@ -152,7 +206,7 @@ const AdminProductForm = () => {
     if (!formData.category.trim()) newErrors.category = "Category is required";
     if (!formData.description.trim())
       newErrors.description = "Description is required";
-    if (!formData.image.trim()) newErrors.image = "Image URL is required";
+    if (!formData.image.trim()) newErrors.image = "Product image is required";
     if (!formData.basePrice || parseFloat(formData.basePrice) <= 0) {
       newErrors.basePrice = "Base price must be a positive number";
     }
@@ -313,18 +367,64 @@ const AdminProductForm = () => {
               <label className="block text-sm font-semibold text-dark mb-2">
                 Category *
               </label>
-              <input
-                type="text"
-                name="category"
-                value={formData.category}
-                onChange={handleChange}
-                className={`w-full px-4 py-3 rounded-xl border-2 ${
-                  errors.category ? "border-red-500" : "border-gray-200"
-                } focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all`}
-                placeholder="e.g., Burgers"
-              />
+              {showNewCategoryInput ? (
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={newCategoryName}
+                    onChange={(e) => setNewCategoryName(e.target.value)}
+                    className="flex-1 px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                    placeholder="Enter new category name"
+                    autoFocus
+                  />
+                  <button
+                    type="button"
+                    onClick={handleNewCategorySubmit}
+                    className="px-4 py-3 rounded-xl bg-primary text-white hover:bg-primary-dark transition-colors font-semibold"
+                  >
+                    ✓
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowNewCategoryInput(false);
+                      setNewCategoryName("");
+                    }}
+                    className="px-4 py-3 rounded-xl bg-gray-200 text-dark hover:bg-gray-300 transition-colors font-semibold"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ) : (
+                <select
+                  name="category"
+                  value={formData.category || ""}
+                  onChange={handleCategoryChange}
+                  className={`w-full px-4 py-3 rounded-xl border-2 ${
+                    errors.category ? "border-red-500" : "border-gray-200"
+                  } focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-white text-sm sm:text-base`}
+                >
+                  <option value="">Select a category...</option>
+                  {existingCategories.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat}
+                    </option>
+                  ))}
+                  <option
+                    value="add_new"
+                    className="font-semibold text-primary"
+                  >
+                    ➕ Add New Category
+                  </option>
+                </select>
+              )}
               {errors.category && (
                 <p className="text-red-500 text-sm mt-1">{errors.category}</p>
+              )}
+              {!showNewCategoryInput && (
+                <p className="text-xs text-dark-gray mt-2">
+                  Select from existing categories or add a new one
+                </p>
               )}
             </div>
 
@@ -349,28 +449,41 @@ const AdminProductForm = () => {
               )}
             </div>
 
-            <div>
+            <div className="max-w-lg md:col-span-2">
               <label className="block text-sm font-semibold text-dark mb-2">
-                Image URL *
+                Product Image *
               </label>
-              <input
-                type="url"
-                name="image"
-                value={formData.image}
-                onChange={handleChange}
-                className={`w-full px-4 py-3 rounded-xl border-2 ${
-                  errors.image ? "border-red-500" : "border-gray-200"
-                } focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all`}
-                placeholder="https://example.com/image.jpg"
-              />
+              <div className="flex items-center gap-4">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="hidden"
+                  id="image-upload"
+                />
+                <label
+                  htmlFor="image-upload"
+                  className={`flex-1 px-4 py-3 rounded-xl border-2 ${
+                    errors.image ? "border-red-500" : "border-gray-200"
+                  } cursor-pointer hover:border-primary transition-all bg-white flex items-center justify-center gap-2 text-dark-gray hover:text-primary`}
+                >
+                  <span className="text-xl">📁</span>
+                  <span className="text-sm font-medium">
+                    {formData.image ? "Change Image" : "Choose Image File"}
+                  </span>
+                </label>
+              </div>
               {errors.image && (
                 <p className="text-red-500 text-sm mt-1">{errors.image}</p>
               )}
+              <p className="text-xs text-dark-gray mt-2">
+                Supported formats: JPG, PNG, WEBP, GIF (Max 5MB)
+              </p>
             </div>
 
             <div>
               <label className="block text-sm font-semibold text-dark mb-2">
-                Base Price * ($)
+                Base Price * (Rs)
               </label>
               <input
                 type="number"
@@ -408,19 +521,33 @@ const AdminProductForm = () => {
 
           {/* Image Preview */}
           {formData.image && (
-            <div className="mt-4">
-              <label className="block text-sm font-semibold text-dark mb-2">
+            <div className="mt-6">
+              <label className="block text-sm font-semibold text-dark mb-3">
                 Image Preview
               </label>
-              <img
-                src={formData.image}
-                alt="Preview"
-                className="w-64 h-48 object-cover rounded-xl border-2 border-gray-200"
-                onError={(e) => {
-                  e.target.src =
-                    "https://via.placeholder.com/400x300?text=Invalid+Image+URL";
-                }}
-              />
+              <div className="relative w-full max-w-md">
+                <img
+                  src={formData.image}
+                  alt="Product Preview"
+                  className="w-full h-64 object-cover rounded-xl border-2 border-gray-200 shadow-md"
+                  onError={(e) => {
+                    e.target.src =
+                      "https://via.placeholder.com/400x300?text=Image+Preview";
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFormData((prev) => ({ ...prev, image: "" }));
+                    setImagePreview("");
+                    setImageFile(null);
+                  }}
+                  className="absolute top-2 right-2 bg-red-500 text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors shadow-lg"
+                  title="Remove image"
+                >
+                  ✕
+                </button>
+              </div>
             </div>
           )}
         </div>
@@ -468,7 +595,7 @@ const AdminProductForm = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-dark mb-2">
-                    Price ($)
+                    Price (Rs)
                   </label>
                   <input
                     type="number"

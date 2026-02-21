@@ -1,10 +1,8 @@
 import React from "react";
 import ProductCard from "../common/ProductCard";
-import { getAllProducts, getCategories } from "../../store/productsData";
 
 const MenuCategoriesSection = ({
   categories,
-  categoryIcons,
   activeCategory,
   handleCategoryChange,
   showMobileCategories,
@@ -14,7 +12,11 @@ const MenuCategoriesSection = ({
   setSearchTerm,
   activeCategoryName,
 }) => {
-  const allCategories = getCategories();
+  // Helper function to get category icon
+  const getCategoryIcon = (categoryId) => {
+    const category = categories.find(cat => cat.id === categoryId);
+    return category?.icon || "🍽️";
+  };
 
   return (
     <section className="py-8 lg:py-12">
@@ -53,7 +55,7 @@ const MenuCategoriesSection = ({
 
                 <div className="flex items-center gap-3 relative z-10">
                   <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center text-3xl backdrop-blur-sm border border-white/30 shadow-lg">
-                    {categoryIcons[activeCategory] || "🍽️"}
+                    {getCategoryIcon(activeCategory)}
                   </div>
                   <div className="text-left">
                     <div className="text-white/80 text-xs font-medium mb-1">
@@ -107,7 +109,7 @@ const MenuCategoriesSection = ({
                         } px-5 py-2.5 rounded-xl font-medium text-sm transition-all flex items-center gap-2.5 shadow-sm hover:shadow-md`}
                       >
                         <span className="text-base">
-                          {categoryIcons[category.id] || "🍽️"}
+                          {category.icon}
                         </span>
                         <span>{category.label}</span>
                       </button>
@@ -157,7 +159,7 @@ const MenuCategoriesSection = ({
                             : "bg-primary/10"
                         } rounded-lg flex items-center justify-center text-xl transition-all`}
                       >
-                        {categoryIcons[category.id] || "🍽️"}
+                        {category.icon}
                       </div>
                       <span className="font-medium text-[15px] text-left">
                         {category.label}
@@ -181,7 +183,7 @@ const MenuCategoriesSection = ({
                 <div className="grid grid-cols-2 gap-3">
                   <div className="bg-white rounded-xl p-4 text-center border border-gray-100 hover:border-primary/20 transition-all">
                     <div className="text-3xl lg:text-4xl font-display bg-gradient-to-br from-primary to-primary-dark bg-clip-text text-transparent mb-1">
-                      {getAllProducts().length}
+                      {categories.find(cat => cat.id === "all")?.count || 0}
                     </div>
                     <div className="text-xs text-dark-gray font-medium">
                       Total Dishes
@@ -189,7 +191,7 @@ const MenuCategoriesSection = ({
                   </div>
                   <div className="bg-white rounded-xl p-4 text-center border border-gray-100 hover:border-primary/20 transition-all">
                     <div className="text-3xl lg:text-4xl font-display bg-gradient-to-br from-primary to-primary-dark bg-clip-text text-transparent mb-1">
-                      {allCategories.length}
+                      {categories.length - 1}
                     </div>
                     <div className="text-xs text-dark-gray font-medium">
                       Categories
@@ -207,7 +209,7 @@ const MenuCategoriesSection = ({
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="flex items-start gap-4">
                   <div className="w-14 h-14 bg-gradient-to-br from-primary to-primary-dark rounded-2xl flex items-center justify-center text-3xl shadow-lg transform rotate-3 hover:rotate-0 transition-transform">
-                    {categoryIcons[activeCategory] || "🍽️"}
+                    {getCategoryIcon(activeCategory)}
                   </div>
                   <div>
                     <h3 className="font-display text-3xl text-dark mb-2 flex items-center gap-3">
@@ -254,11 +256,9 @@ const MenuCategoriesSection = ({
                       <div className="text-xs text-dark-gray">Showing</div>
                       <div className="text-sm font-bold text-primary">
                         {filteredProducts.length}/
-                        {activeCategory === "all"
-                          ? getAllProducts().length
-                          : categories.find(
-                              (cat) => cat.id === activeCategory,
-                            )?.count || 0}
+                        {categories.find(
+                          (cat) => cat.id === activeCategory,
+                        )?.count || 0}
                       </div>
                     </div>
                   </div>

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Outlet } from 'react-router-dom';
-import AdminSidebar from './AdminSidebar';
-import AdminHeader from './AdminHeader';
+import React, { useState } from "react";
+import { Outlet } from "react-router-dom";
+import AdminSidebar from "./AdminSidebar";
+import AdminHeader from "./AdminHeader";
 
 const AdminLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -20,7 +20,7 @@ const AdminLayout = () => {
       <AdminSidebar isOpen={isSidebarOpen} onClose={closeSidebar} />
 
       {/* Main Content Area */}
-      <div className="lg:ml-72 min-h-screen flex flex-col">
+      <div className="lg:ml-64 min-h-screen flex flex-col">
         {/* Header */}
         <AdminHeader onMenuToggle={toggleSidebar} />
 
@@ -33,7 +33,8 @@ const AdminLayout = () => {
         <footer className="bg-white border-t border-gray-200 py-4 px-6">
           <div className="text-center text-sm text-dark-gray">
             <p>
-              © {new Date().getFullYear()} Restaurant Admin Panel. All rights reserved.
+              © {new Date().getFullYear()} Restaurant Admin Panel. All rights
+              reserved.
             </p>
           </div>
         </footer>

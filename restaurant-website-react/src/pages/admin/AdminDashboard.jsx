@@ -68,7 +68,7 @@ const AdminDashboard = () => {
   };
 
   const formatCurrency = (amount) => {
-    return `$${parseFloat(amount || 0).toFixed(2)}`;
+    return `Rs ${parseFloat(amount || 0).toFixed(2)}`;
   };
 
   const formatDate = (dateString) => {

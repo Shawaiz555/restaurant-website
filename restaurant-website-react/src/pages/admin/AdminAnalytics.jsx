@@ -49,22 +49,22 @@ const AdminAnalytics = () => {
   };
 
   const formatCurrency = (value) => {
-    return `$${parseFloat(value || 0).toFixed(2)}`;
+    return `Rs ${parseFloat(value || 0).toFixed(2)}`;
   };
 
   return (
     <div className="space-y-6">
       {/* Page Header */}
-      <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-        <div className="flex items-center justify-between">
+      <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-lg border border-gray-100">
+        <div className="flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-3xl font-display text-primary mb-2">Analytics</h1>
-            <p className="text-dark-gray">View detailed insights and reports</p>
+            <h1 className="text-2xl sm:text-3xl font-display text-primary mb-2">Analytics</h1>
+            <p className="text-sm sm:text-base text-dark-gray">View detailed insights and reports</p>
           </div>
           <select
             value={dateRange}
             onChange={(e) => setDateRange(e.target.value)}
-            className="px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+            className="w-full sm:w-auto px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-white text-sm sm:text-base min-w-[160px]"
           >
             <option value="week">Last 7 Days</option>
             <option value="month">Last 30 Days</option>

@@ -75,7 +75,7 @@ const AdminOrders = () => {
   };
 
   const formatCurrency = (amount) => {
-    return `$${parseFloat(amount || 0).toFixed(2)}`;
+    return `Rs ${parseFloat(amount || 0).toFixed(2)}`;
   };
 
   const formatDate = (dateString) => {
@@ -121,8 +121,8 @@ const AdminOrders = () => {
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-lg border border-gray-100">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
           {/* Search */}
           <SearchBar
             placeholder="Search by Order ID, Name, or Email..."
@@ -133,7 +133,7 @@ const AdminOrders = () => {
           <select
             value={filters.status}
             onChange={(e) => handleFilterChange('status', e.target.value)}
-            className="px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-white"
+            className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-white text-sm sm:text-base"
           >
             <option value="All">All Status</option>
             <option value="Pending">Pending</option>
@@ -146,7 +146,7 @@ const AdminOrders = () => {
           <select
             value={filters.userType}
             onChange={(e) => handleFilterChange('userType', e.target.value)}
-            className="px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-white"
+            className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-white text-sm sm:text-base"
           >
             <option value="All">All Customers</option>
             <option value="Guest">Guest Orders</option>
@@ -207,14 +207,14 @@ const AdminOrders = () => {
                     <td className="px-6 py-4 text-sm font-bold text-primary">
                       {formatCurrency(order.total)}
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-4 sm:px-6 py-4">
                       <select
                         value={order.status}
                         onChange={(e) => {
                           e.stopPropagation();
                           handleStatusChange(order.orderId, e.target.value);
                         }}
-                        className="text-sm px-3 py-1 rounded-lg border-2 border-gray-200 focus:border-primary focus:outline-none"
+                        className="w-full sm:w-auto text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg border-2 border-gray-200 focus:border-primary focus:outline-none bg-white"
                         onClick={(e) => e.stopPropagation()}
                       >
                         <option value="Pending">Pending</option>

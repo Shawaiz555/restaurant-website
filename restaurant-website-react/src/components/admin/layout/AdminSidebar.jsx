@@ -49,7 +49,7 @@ const AdminSidebar = ({ isOpen, onClose }) => {
       <aside
         className={`
           fixed top-0 left-0 h-full bg-white z-[70] transition-transform duration-300 ease-in-out
-          w-72 border-r-2 border-gray-200 flex flex-col
+          w-66 border-r-2 border-gray-200 flex flex-col
           lg:translate-x-0
           ${isOpen ? "translate-x-0" : "-translate-x-full"}
         `}
@@ -63,7 +63,7 @@ const AdminSidebar = ({ isOpen, onClose }) => {
                 <img
                   src="/assets/images/BitesLogo.png"
                   alt="logo"
-                  className="w-full h-full lg:w-44 lg:h-28"
+                  className="w-32 h-20 lg:w-44 lg:h-28"
                 />
               </div>
               <div>

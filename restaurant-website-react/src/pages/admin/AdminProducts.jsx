@@ -70,25 +70,6 @@ const AdminProducts = () => {
     setProductToDelete(null);
   };
 
-  const handleDuplicate = (product) => {
-    const result = productsService.duplicateProduct(product.id);
-    if (result.success) {
-      loadProducts();
-      dispatch(
-        showNotification({
-          type: "success",
-          message: "Product duplicated successfully",
-        }),
-      );
-    } else {
-      dispatch(
-        showNotification({
-          type: "error",
-          message: result.message,
-        }),
-      );
-    }
-  };
 
   const filteredProducts = products.filter((product) => {
     const matchesSearch =
@@ -100,7 +81,7 @@ const AdminProducts = () => {
   });
 
   const formatCurrency = (amount) => {
-    return `$${parseFloat(amount || 0).toFixed(2)}`;
+    return `Rs ${parseFloat(amount || 0).toFixed(2)}`;
   };
 
   return (
@@ -149,8 +130,8 @@ const AdminProducts = () => {
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-lg border border-gray-100">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
           <SearchBar
             placeholder="Search products by name or description..."
             onSearch={setSearchTerm}
@@ -158,7 +139,7 @@ const AdminProducts = () => {
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-white"
+            className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-white text-sm sm:text-base"
           >
             <option value="All">All Categories</option>
             {categories.map((category) => (
@@ -191,11 +172,11 @@ const AdminProducts = () => {
               className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 group"
             >
               {/* Product Image */}
-              <div className="relative h-48 overflow-hidden bg-cream-light">
+              <div className="relative h-72 overflow-hidden bg-cream-light">
                 <img
                   src={product.image}
                   alt={product.name}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300"
                   onError={(e) => {
                     e.target.src =
                       "https://via.placeholder.com/400x300?text=No+Image";
@@ -252,7 +233,7 @@ const AdminProducts = () => {
                 </div>
 
                 {/* Actions */}
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-2 gap-2">
                   <button
                     onClick={() =>
                       navigate(`/admin/products/${product.id}/edit`)
@@ -260,12 +241,6 @@ const AdminProducts = () => {
                     className="px-3 py-2 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primary-dark transition-colors"
                   >
                     Edit
-                  </button>
-                  <button
-                    onClick={() => handleDuplicate(product)}
-                    className="px-3 py-2 rounded-lg bg-blue-500 text-white text-sm font-semibold hover:bg-blue-600 transition-colors"
-                  >
-                    Duplicate
                   </button>
                   <button
                     onClick={() => handleDeleteClick(product)}
