@@ -20,12 +20,12 @@ const AdminProductForm = () => {
     rating: 4,
     sizes: [{ name: "Regular", price: "", description: "" }],
     ingredients: [""],
-    nutritionInfo: {
-      calories: "",
-      protein: "",
-      carbs: "",
-      fat: "",
-    },
+    nutritionInfo: [
+      { label: "Calories", value: "", unit: "kcal" },
+      { label: "Protein", value: "", unit: "g" },
+      { label: "Carbs", value: "", unit: "g" },
+      { label: "Fat", value: "", unit: "g" },
+    ],
     addOnsConfig: {
       showSpiceLevel: false,
       showDrinks: false,
@@ -58,18 +58,35 @@ const AdminProductForm = () => {
   const loadProduct = () => {
     const product = productsService.getProductById(id);
     if (product) {
+      // Convert old nutrition format to new array format
+      let nutritionInfo = product.nutritionInfo;
+      if (nutritionInfo && !Array.isArray(nutritionInfo)) {
+        nutritionInfo = [
+          {
+            label: "Calories",
+            value: nutritionInfo.calories || "",
+            unit: "kcal",
+          },
+          { label: "Protein", value: nutritionInfo.protein || "", unit: "g" },
+          { label: "Carbs", value: nutritionInfo.carbs || "", unit: "g" },
+          { label: "Fat", value: nutritionInfo.fat || "", unit: "g" },
+        ];
+      } else if (!nutritionInfo) {
+        nutritionInfo = [
+          { label: "Calories", value: "", unit: "kcal" },
+          { label: "Protein", value: "", unit: "g" },
+          { label: "Carbs", value: "", unit: "g" },
+          { label: "Fat", value: "", unit: "g" },
+        ];
+      }
+
       setFormData({
         ...product,
         ingredients: product.ingredients || [""],
         sizes: product.sizes || [
           { name: "Regular", price: "", description: "" },
         ],
-        nutritionInfo: product.nutritionInfo || {
-          calories: "",
-          protein: "",
-          carbs: "",
-          fat: "",
-        },
+        nutritionInfo,
         addOnsConfig: product.addOnsConfig || {
           showSpiceLevel: false,
           showDrinks: false,
@@ -96,15 +113,27 @@ const AdminProductForm = () => {
     }));
   };
 
-  const handleNutritionChange = (e) => {
-    const { name, value } = e.target;
+  const handleNutritionChange = (index, field, value) => {
+    const newNutrition = [...formData.nutritionInfo];
+    newNutrition[index][field] = value;
+    setFormData((prev) => ({ ...prev, nutritionInfo: newNutrition }));
+  };
+
+  const addNutrition = () => {
     setFormData((prev) => ({
       ...prev,
-      nutritionInfo: {
+      nutritionInfo: [
         ...prev.nutritionInfo,
-        [name]: value,
-      },
+        { label: "", value: "", unit: "" },
+      ],
     }));
+  };
+
+  const removeNutrition = (index) => {
+    if (formData.nutritionInfo.length > 1) {
+      const newNutrition = formData.nutritionInfo.filter((_, i) => i !== index);
+      setFormData((prev) => ({ ...prev, nutritionInfo: newNutrition }));
+    }
   };
 
   const handleAddOnsConfigChange = (e) => {
@@ -368,32 +397,41 @@ const AdminProductForm = () => {
                 Category *
               </label>
               {showNewCategoryInput ? (
-                <div className="flex gap-2">
+                <div className="space-y-2">
+                  {/* Input Field */}
                   <input
                     type="text"
                     value={newCategoryName}
                     onChange={(e) => setNewCategoryName(e.target.value)}
-                    className="flex-1 px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                    className="w-full px-4 py-3 rounded-xl border-2 border-primary focus:border-primary-dark focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all text-sm sm:text-base"
                     placeholder="Enter new category name"
                     autoFocus
                   />
-                  <button
-                    type="button"
-                    onClick={handleNewCategorySubmit}
-                    className="px-4 py-3 rounded-xl bg-primary text-white hover:bg-primary-dark transition-colors font-semibold"
-                  >
-                    ✓
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowNewCategoryInput(false);
-                      setNewCategoryName("");
-                    }}
-                    className="px-4 py-3 rounded-xl bg-gray-200 text-dark hover:bg-gray-300 transition-colors font-semibold"
-                  >
-                    ✕
-                  </button>
+                  {/* Action Buttons */}
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={handleNewCategorySubmit}
+                      className="flex-1 sm:flex-none sm:px-6 py-3 rounded-xl bg-primary text-white hover:bg-primary-dark transition-all font-semibold text-sm sm:text-base shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+                    >
+                      <span className="text-lg">✓</span>
+                      <span className="hidden sm:inline">Add Category</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowNewCategoryInput(false);
+                        setNewCategoryName("");
+                      }}
+                      className="flex-1 sm:flex-none sm:px-6 py-2 sm:py-3 rounded-xl bg-gray-200 text-dark hover:bg-gray-300 transition-all font-semibold text-sm sm:text-base flex items-center justify-center gap-2"
+                    >
+                      <span className="text-lg">✕</span>
+                      <span className="hidden sm:inline">Cancel</span>
+                    </button>
+                  </div>
+                  <p className="text-xs text-dark-gray">
+                    Enter a unique category name and click Add Category
+                  </p>
                 </div>
               ) : (
                 <select
@@ -683,62 +721,86 @@ const AdminProductForm = () => {
 
         {/* Nutrition Info */}
         <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-          <h2 className="text-xl font-bold text-dark mb-4">
-            Nutrition Information (Optional)
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="flex items-center justify-between mb-4">
             <div>
-              <label className="block text-sm font-semibold text-dark mb-2">
-                Calories
-              </label>
-              <input
-                type="text"
-                name="calories"
-                value={formData.nutritionInfo.calories}
-                onChange={handleNutritionChange}
-                className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 focus:border-primary focus:outline-none"
-                placeholder="450 kcal"
-              />
+              <h2 className="text-xl font-bold text-dark">
+                Nutrition Information (Optional)
+              </h2>
+              <p className="text-sm text-dark-gray mt-1">
+                Add nutritional facts for this product
+              </p>
             </div>
-            <div>
-              <label className="block text-sm font-semibold text-dark mb-2">
-                Protein
-              </label>
-              <input
-                type="text"
-                name="protein"
-                value={formData.nutritionInfo.protein}
-                onChange={handleNutritionChange}
-                className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 focus:border-primary focus:outline-none"
-                placeholder="15g"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-dark mb-2">
-                Carbs
-              </label>
-              <input
-                type="text"
-                name="carbs"
-                value={formData.nutritionInfo.carbs}
-                onChange={handleNutritionChange}
-                className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 focus:border-primary focus:outline-none"
-                placeholder="65g"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-dark mb-2">
-                Fat
-              </label>
-              <input
-                type="text"
-                name="fat"
-                value={formData.nutritionInfo.fat}
-                onChange={handleNutritionChange}
-                className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 focus:border-primary focus:outline-none"
-                placeholder="12g"
-              />
-            </div>
+            <button
+              type="button"
+              onClick={addNutrition}
+              className="px-4 py-2 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primary-dark transition-colors"
+            >
+              + Add Nutrition
+            </button>
+          </div>
+          <div className="space-y-4">
+            {formData.nutritionInfo.map((nutrition, index) => (
+              <div
+                key={index}
+                className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-cream-light rounded-xl"
+              >
+                <div>
+                  <label className="block text-sm font-semibold text-dark mb-2">
+                    Label
+                  </label>
+                  <input
+                    type="text"
+                    value={nutrition.label}
+                    onChange={(e) =>
+                      handleNutritionChange(index, "label", e.target.value)
+                    }
+                    className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 focus:border-primary focus:outline-none"
+                    placeholder="e.g., Calories, Fiber, Sodium"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-dark mb-2">
+                    Value
+                  </label>
+                  <input
+                    type="text"
+                    value={nutrition.value}
+                    onChange={(e) =>
+                      handleNutritionChange(index, "value", e.target.value)
+                    }
+                    className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 focus:border-primary focus:outline-none"
+                    placeholder="e.g., 450, 15, 20"
+                  />
+                </div>
+                <div className="flex gap-2">
+                  <div className="flex-1">
+                    <label className="block text-sm font-semibold text-dark mb-2">
+                      Unit
+                    </label>
+                    <input
+                      type="text"
+                      value={nutrition.unit}
+                      onChange={(e) =>
+                        handleNutritionChange(index, "unit", e.target.value)
+                      }
+                      className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 focus:border-primary focus:outline-none"
+                      placeholder="e.g., kcal, g, mg"
+                    />
+                  </div>
+                  {formData.nutritionInfo.length > 1 && (
+                    <div className="flex items-end">
+                      <button
+                        type="button"
+                        onClick={() => removeNutrition(index)}
+                        className="px-4 py-2 rounded-lg bg-red-500 text-white text-sm font-semibold hover:bg-red-600 transition-colors whitespace-nowrap"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
