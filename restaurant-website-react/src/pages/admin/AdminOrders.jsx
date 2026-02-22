@@ -98,25 +98,40 @@ const AdminOrders = () => {
 
       {/* Stats Row */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        <div className="bg-white rounded-xl p-4 shadow-md border border-gray-100">
-          <p className="text-xs text-dark-gray mb-1">Total Orders</p>
-          <p className="text-2xl font-bold text-dark">{stats.total}</p>
+        <div className="bg-white rounded-2xl p-5 shadow-lg border-2 border-gray-100 hover:shadow-xl hover:border-primary/30 transition-all duration-300 text-center">
+          <div className="w-12 h-12 mx-auto bg-gradient-to-br from-primary/20 to-primary-light/20 rounded-xl flex items-center justify-center text-2xl mb-3">
+            📦
+          </div>
+          <p className="text-xs sm:text-sm text-dark-gray mb-2 font-semibold uppercase tracking-wide">Total Orders</p>
+          <p className="text-2xl sm:text-3xl font-bold text-primary">{stats.total}</p>
         </div>
-        <div className="bg-yellow-50 rounded-xl p-4 shadow-md border border-yellow-200">
-          <p className="text-xs text-yellow-800 mb-1">Pending</p>
-          <p className="text-2xl font-bold text-yellow-800">{stats.pending}</p>
+        <div className="bg-gradient-to-br from-yellow-50 to-yellow-100/50 rounded-2xl p-5 shadow-lg border-2 border-yellow-200 hover:shadow-xl hover:border-yellow-300 transition-all duration-300 text-center">
+          <div className="w-12 h-12 mx-auto bg-white/60 rounded-xl flex items-center justify-center text-2xl mb-3 shadow-sm">
+            ⏳
+          </div>
+          <p className="text-xs sm:text-sm text-yellow-900 mb-2 font-semibold uppercase tracking-wide">Pending</p>
+          <p className="text-2xl sm:text-3xl font-bold text-yellow-800">{stats.pending}</p>
         </div>
-        <div className="bg-blue-50 rounded-xl p-4 shadow-md border border-blue-200">
-          <p className="text-xs text-blue-800 mb-1">Processing</p>
-          <p className="text-2xl font-bold text-blue-800">{stats.processing}</p>
+        <div className="bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-2xl p-5 shadow-lg border-2 border-blue-200 hover:shadow-xl hover:border-blue-300 transition-all duration-300 text-center">
+          <div className="w-12 h-12 mx-auto bg-white/60 rounded-xl flex items-center justify-center text-2xl mb-3 shadow-sm">
+            🔄
+          </div>
+          <p className="text-xs sm:text-sm text-blue-900 mb-2 font-semibold uppercase tracking-wide">Processing</p>
+          <p className="text-2xl sm:text-3xl font-bold text-blue-800">{stats.processing}</p>
         </div>
-        <div className="bg-green-50 rounded-xl p-4 shadow-md border border-green-200">
-          <p className="text-xs text-green-800 mb-1">Completed</p>
-          <p className="text-2xl font-bold text-green-800">{stats.completed}</p>
+        <div className="bg-gradient-to-br from-green-50 to-green-100/50 rounded-2xl p-5 shadow-lg border-2 border-green-200 hover:shadow-xl hover:border-green-300 transition-all duration-300 text-center">
+          <div className="w-12 h-12 mx-auto bg-white/60 rounded-xl flex items-center justify-center text-2xl mb-3 shadow-sm">
+            ✅
+          </div>
+          <p className="text-xs sm:text-sm text-green-900 mb-2 font-semibold uppercase tracking-wide">Completed</p>
+          <p className="text-2xl sm:text-3xl font-bold text-green-800">{stats.completed}</p>
         </div>
-        <div className="bg-red-50 rounded-xl p-4 shadow-md border border-red-200">
-          <p className="text-xs text-red-800 mb-1">Cancelled</p>
-          <p className="text-2xl font-bold text-red-800">{stats.cancelled}</p>
+        <div className="bg-gradient-to-br from-red-50 to-red-100/50 rounded-2xl p-5 shadow-lg border-2 border-red-200 hover:shadow-xl hover:border-red-300 transition-all duration-300 text-center">
+          <div className="w-12 h-12 mx-auto bg-white/60 rounded-xl flex items-center justify-center text-2xl mb-3 shadow-sm">
+            ❌
+          </div>
+          <p className="text-xs sm:text-sm text-red-900 mb-2 font-semibold uppercase tracking-wide">Cancelled</p>
+          <p className="text-2xl sm:text-3xl font-bold text-red-800">{stats.cancelled}</p>
         </div>
       </div>
 

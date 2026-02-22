@@ -49,7 +49,7 @@ const AdminSidebar = ({ isOpen, onClose }) => {
       <aside
         className={`
           fixed top-0 left-0 h-full bg-white z-[70] transition-transform duration-300 ease-in-out
-          w-66 border-r-2 border-gray-200 flex flex-col
+          w-72 border-r-2 border-gray-200 flex flex-col
           lg:translate-x-0
           ${isOpen ? "translate-x-0" : "-translate-x-full"}
         `}
@@ -85,23 +85,6 @@ const AdminSidebar = ({ isOpen, onClose }) => {
           </div>
         </div>
 
-        {/* Admin Info */}
-        <div className="p-4 bg-cream-light border-b border-gray-200">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-dark rounded-full flex items-center justify-center text-white font-bold">
-              {currentUser?.name?.charAt(0) || "A"}
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-dark truncate">
-                {currentUser?.name}
-              </p>
-              <p className="text-xs text-dark-gray truncate">
-                {currentUser?.email}
-              </p>
-            </div>
-          </div>
-        </div>
-
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto p-4">
           <div className="space-y-2">
@@ -125,6 +108,23 @@ const AdminSidebar = ({ isOpen, onClose }) => {
             ))}
           </div>
         </nav>
+
+        {/* Admin Info */}
+        <div className="p-4 bg-cream-light border-b border-gray-200">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-dark rounded-full flex items-center justify-center text-white font-bold">
+              {currentUser?.name?.charAt(0) || "A"}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-dark truncate">
+                {currentUser?.name}
+              </p>
+              <p className="text-xs text-dark-gray truncate">
+                {currentUser?.email}
+              </p>
+            </div>
+          </div>
+        </div>
 
         {/* Logout Button */}
         <div className="p-4 border-t-2 border-gray-200 bg-cream-light">

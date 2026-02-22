@@ -26,6 +26,8 @@ const AdminDashboard = () => {
   });
   const [recentOrders, setRecentOrders] = useState([]);
   const [topProducts, setTopProducts] = useState([]);
+  const [revenueTrend, setRevenueTrend] = useState([]);
+  const [orderStatusDistribution, setOrderStatusDistribution] = useState([]);
 
   useEffect(() => {
     loadDashboardData();
@@ -65,6 +67,73 @@ const AdminDashboard = () => {
     // Get top products
     const top = analyticsService.getTopProducts(5);
     setTopProducts(top);
+
+    // Calculate revenue trend for last 7 days
+    const trend = calculateRevenueTrend(orders);
+    setRevenueTrend(trend);
+
+    // Calculate order status distribution
+    const distribution = calculateOrderStatusDistribution(orderStats);
+    setOrderStatusDistribution(distribution);
+  };
+
+  const calculateRevenueTrend = (orders) => {
+    const last7Days = [];
+    const today = new Date();
+
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(date.getDate() - i);
+      const dateStr = date.toISOString().split("T")[0];
+
+      const dayRevenue = orders
+        .filter((order) => {
+          const orderDate = new Date(order.orderDate)
+            .toISOString()
+            .split("T")[0];
+          return orderDate === dateStr && order.status === "Completed";
+        })
+        .reduce((sum, order) => sum + (parseFloat(order.total) || 0), 0);
+
+      last7Days.push({
+        date: date.toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+        }),
+        revenue: dayRevenue,
+      });
+    }
+
+    return last7Days;
+  };
+
+  const calculateOrderStatusDistribution = (orderStats) => {
+    return [
+      {
+        status: "Pending",
+        count: orderStats.pending,
+        color: "#FCD34D",
+        icon: "⏳",
+      },
+      {
+        status: "Processing",
+        count: orderStats.processing,
+        color: "#60A5FA",
+        icon: "🔄",
+      },
+      {
+        status: "Completed",
+        count: orderStats.completed,
+        color: "#34D399",
+        icon: "✅",
+      },
+      {
+        status: "Cancelled",
+        count: orderStats.cancelled,
+        color: "#F87171",
+        icon: "❌",
+      },
+    ];
   };
 
   const formatCurrency = (amount) => {
@@ -90,7 +159,7 @@ const AdminDashboard = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         <StatsCard
           icon="💰"
           label="Total Revenue"
@@ -146,6 +215,201 @@ const AdminDashboard = () => {
             <span className="text-2xl">💰</span>
             <span className="font-semibold">Record Expense</span>
           </button>
+        </div>
+      </div>
+
+      {/* Analytics Graphs */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Revenue Trend Graph */}
+        <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-display text-dark">
+              Revenue Trend (Last 7 Days)
+            </h2>
+            <span className="text-sm text-dark-gray">📈</span>
+          </div>
+
+          {revenueTrend.length === 0 ||
+          revenueTrend.every((d) => d.revenue === 0) ? (
+            <div className="text-center py-12 text-dark-gray">
+              <div className="text-4xl mb-2">📊</div>
+              <p>No revenue data yet</p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {/* Bar Chart */}
+              <div className="relative h-64 flex items-end justify-between gap-2 px-2">
+                {revenueTrend.map((day, index) => {
+                  const maxRevenue = Math.max(
+                    ...revenueTrend.map((d) => d.revenue),
+                    1,
+                  );
+                  const heightPercent = (day.revenue / maxRevenue) * 100;
+
+                  return (
+                    <div
+                      key={index}
+                      className="flex-1 flex flex-col items-center gap-2"
+                    >
+                      {/* Bar */}
+                      <div className="w-full flex flex-col items-center">
+                        <span className="text-xs font-bold text-primary mb-1">
+                          {day.revenue > 0
+                            ? `Rs ${day.revenue.toFixed(0)}`
+                            : ""}
+                        </span>
+                        <div
+                          className="w-full bg-gradient-to-t from-primary to-primary-light rounded-t-lg transition-all duration-500 hover:from-primary-dark hover:to-primary shadow-md relative group"
+                          style={{ height: `${Math.max(heightPercent, 5)}%` }}
+                        >
+                          {/* Tooltip on hover */}
+                          <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-dark text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-lg">
+                            {formatCurrency(day.revenue)}
+                          </div>
+                        </div>
+                      </div>
+                      {/* Date Label */}
+                      <span className="text-xs text-dark-gray font-medium mt-1 text-center">
+                        {day.date}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Summary */}
+              <div className="flex items-center justify-between pt-4 border-t border-gray-200">
+                <div className="text-sm text-dark-gray">
+                  <span className="font-semibold">Total:</span>
+                </div>
+                <span className="text-lg font-bold text-primary">
+                  {formatCurrency(
+                    revenueTrend.reduce((sum, d) => sum + d.revenue, 0),
+                  )}
+                </span>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Order Status Distribution */}
+        <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-display text-dark">
+              Order Status Distribution
+            </h2>
+            <span className="text-sm text-dark-gray">📊</span>
+          </div>
+
+          {orderStatusDistribution.every((s) => s.count === 0) ? (
+            <div className="text-center py-12 text-dark-gray">
+              <div className="text-4xl mb-2">📦</div>
+              <p>No orders yet</p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {/* Donut Chart Representation */}
+              <div className="flex items-center justify-center mb-6">
+                <div className="relative w-48 h-48">
+                  {/* Background Circle */}
+                  <svg
+                    className="w-full h-full transform -rotate-90"
+                    viewBox="0 0 100 100"
+                  >
+                    {(() => {
+                      const total = orderStatusDistribution.reduce(
+                        (sum, s) => sum + s.count,
+                        0,
+                      );
+                      let currentPercent = 0;
+
+                      return orderStatusDistribution.map((item, index) => {
+                        if (item.count === 0) return null;
+
+                        const percent = (item.count / total) * 100;
+                        const offset = currentPercent;
+                        currentPercent += percent;
+
+                        // Circle parameters
+                        const radius = 40;
+                        const circumference = 2 * Math.PI * radius;
+                        const strokeDasharray = `${(percent / 100) * circumference} ${circumference}`;
+                        const strokeDashoffset = -(
+                          (offset / 100) *
+                          circumference
+                        );
+
+                        return (
+                          <circle
+                            key={index}
+                            cx="50"
+                            cy="50"
+                            r={radius}
+                            fill="none"
+                            stroke={item.color}
+                            strokeWidth="20"
+                            strokeDasharray={strokeDasharray}
+                            strokeDashoffset={strokeDashoffset}
+                            className="transition-all duration-500"
+                          />
+                        );
+                      });
+                    })()}
+                  </svg>
+
+                  {/* Center Text */}
+                  <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <span className="text-3xl font-bold text-dark">
+                      {orderStatusDistribution.reduce(
+                        (sum, s) => sum + s.count,
+                        0,
+                      )}
+                    </span>
+                    <span className="text-xs text-dark-gray font-medium">
+                      Total Orders
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Legend */}
+              <div className="space-y-3">
+                {orderStatusDistribution.map((item, index) => {
+                  const total = orderStatusDistribution.reduce(
+                    (sum, s) => sum + s.count,
+                    0,
+                  );
+                  const percentage =
+                    total > 0 ? ((item.count / total) * 100).toFixed(1) : 0;
+
+                  return (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between p-3 bg-cream-light rounded-xl hover:bg-cream transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div
+                          className="w-4 h-4 rounded-full shadow-sm"
+                          style={{ backgroundColor: item.color }}
+                        ></div>
+                        <span className="text-sm font-medium text-dark">
+                          {item.icon} {item.status}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className="text-sm text-dark-gray">
+                          {percentage}%
+                        </span>
+                        <span className="text-sm font-bold text-primary min-w-[3rem] text-right">
+                          {item.count}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
