@@ -359,7 +359,7 @@ const AdminProductForm = () => {
           </div>
           <button
             onClick={() => navigate("/admin/products")}
-            className="px-6 py-3 rounded-xl bg-gray-200 text-dark hover:bg-gray-300 transition-colors font-semibold"
+            className="px-2 py-1 rounded-xl text-dark transition-colors font-semibold hover:text-primary border border-primary"
           >
             ← Back to Products
           </button>
@@ -592,12 +592,12 @@ const AdminProductForm = () => {
 
         {/* Sizes */}
         <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
             <h2 className="text-xl font-bold text-dark">Sizes *</h2>
             <button
               type="button"
               onClick={addSize}
-              className="px-4 py-2 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primary-dark transition-colors"
+              className="w-full sm:w-auto px-4 py-2 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primary-dark transition-colors"
             >
               + Add Size
             </button>
@@ -606,57 +606,59 @@ const AdminProductForm = () => {
             {formData.sizes.map((size, index) => (
               <div
                 key={index}
-                className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-cream-light rounded-xl"
+                className="p-4 bg-cream-light rounded-xl space-y-4"
               >
-                <div>
-                  <label className="block text-sm font-semibold text-dark mb-2">
-                    Size Name
-                  </label>
-                  <input
-                    type="text"
-                    value={size.name}
-                    onChange={(e) =>
-                      handleSizeChange(index, "name", e.target.value)
-                    }
-                    className={`w-full px-4 py-2 rounded-lg border-2 ${
-                      errors[`size_${index}_name`]
-                        ? "border-red-500"
-                        : "border-gray-200"
-                    } focus:border-primary focus:outline-none`}
-                    placeholder="e.g., Regular"
-                  />
-                  {errors[`size_${index}_name`] && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errors[`size_${index}_name`]}
-                    </p>
-                  )}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-semibold text-dark mb-2">
+                      Size Name
+                    </label>
+                    <input
+                      type="text"
+                      value={size.name}
+                      onChange={(e) =>
+                        handleSizeChange(index, "name", e.target.value)
+                      }
+                      className={`w-full px-4 py-2 rounded-lg border-2 ${
+                        errors[`size_${index}_name`]
+                          ? "border-red-500"
+                          : "border-gray-200"
+                      } focus:border-primary focus:outline-none`}
+                      placeholder="e.g., Regular"
+                    />
+                    {errors[`size_${index}_name`] && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors[`size_${index}_name`]}
+                      </p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-dark mb-2">
+                      Price (Rs)
+                    </label>
+                    <input
+                      type="number"
+                      value={size.price}
+                      onChange={(e) =>
+                        handleSizeChange(index, "price", e.target.value)
+                      }
+                      step="0.01"
+                      min="0"
+                      className={`w-full px-4 py-2 rounded-lg border-2 ${
+                        errors[`size_${index}_price`]
+                          ? "border-red-500"
+                          : "border-gray-200"
+                      } focus:border-primary focus:outline-none`}
+                      placeholder="9.99"
+                    />
+                    {errors[`size_${index}_price`] && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors[`size_${index}_price`]}
+                      </p>
+                    )}
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-sm font-semibold text-dark mb-2">
-                    Price (Rs)
-                  </label>
-                  <input
-                    type="number"
-                    value={size.price}
-                    onChange={(e) =>
-                      handleSizeChange(index, "price", e.target.value)
-                    }
-                    step="0.01"
-                    min="0"
-                    className={`w-full px-4 py-2 rounded-lg border-2 ${
-                      errors[`size_${index}_price`]
-                        ? "border-red-500"
-                        : "border-gray-200"
-                    } focus:border-primary focus:outline-none`}
-                    placeholder="9.99"
-                  />
-                  {errors[`size_${index}_price`] && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errors[`size_${index}_price`]}
-                    </p>
-                  )}
-                </div>
-                <div className="flex items-end gap-2">
+                <div className="flex flex-col sm:flex-row gap-2">
                   <input
                     type="text"
                     value={size.description}
@@ -670,7 +672,7 @@ const AdminProductForm = () => {
                     <button
                       type="button"
                       onClick={() => removeSize(index)}
-                      className="px-4 py-2 rounded-lg bg-red-500 text-white text-sm font-semibold hover:bg-red-600 transition-colors"
+                      className="px-4 py-2 rounded-lg bg-red-500 text-white text-sm font-semibold hover:bg-red-600 transition-colors whitespace-nowrap"
                     >
                       Remove
                     </button>
@@ -683,19 +685,19 @@ const AdminProductForm = () => {
 
         {/* Ingredients */}
         <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
             <h2 className="text-xl font-bold text-dark">Ingredients</h2>
             <button
               type="button"
               onClick={addIngredient}
-              className="px-4 py-2 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primary-dark transition-colors"
+              className="w-full sm:w-auto px-4 py-2 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primary-dark transition-colors"
             >
               + Add Ingredient
             </button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {formData.ingredients.map((ingredient, index) => (
-              <div key={index} className="flex gap-2">
+              <div key={index} className="flex flex-col sm:flex-row gap-2">
                 <input
                   type="text"
                   value={ingredient}
@@ -709,7 +711,7 @@ const AdminProductForm = () => {
                   <button
                     type="button"
                     onClick={() => removeIngredient(index)}
-                    className="px-4 py-2 rounded-lg bg-red-500 text-white text-sm font-semibold hover:bg-red-600 transition-colors"
+                    className="px-4 py-2 rounded-lg bg-red-500 text-white text-sm font-semibold hover:bg-red-600 transition-colors whitespace-nowrap"
                   >
                     Remove
                   </button>
@@ -721,7 +723,7 @@ const AdminProductForm = () => {
 
         {/* Nutrition Info */}
         <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
             <div>
               <h2 className="text-xl font-bold text-dark">
                 Nutrition Information (Optional)
@@ -733,7 +735,7 @@ const AdminProductForm = () => {
             <button
               type="button"
               onClick={addNutrition}
-              className="px-4 py-2 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primary-dark transition-colors"
+              className="w-full sm:w-auto px-4 py-2 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primary-dark transition-colors whitespace-nowrap"
             >
               + Add Nutrition
             </button>
@@ -742,38 +744,38 @@ const AdminProductForm = () => {
             {formData.nutritionInfo.map((nutrition, index) => (
               <div
                 key={index}
-                className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-cream-light rounded-xl"
+                className="p-4 bg-cream-light rounded-xl space-y-4"
               >
-                <div>
-                  <label className="block text-sm font-semibold text-dark mb-2">
-                    Label
-                  </label>
-                  <input
-                    type="text"
-                    value={nutrition.label}
-                    onChange={(e) =>
-                      handleNutritionChange(index, "label", e.target.value)
-                    }
-                    className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 focus:border-primary focus:outline-none"
-                    placeholder="e.g., Calories, Fiber, Sodium"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-dark mb-2">
-                    Value
-                  </label>
-                  <input
-                    type="text"
-                    value={nutrition.value}
-                    onChange={(e) =>
-                      handleNutritionChange(index, "value", e.target.value)
-                    }
-                    className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 focus:border-primary focus:outline-none"
-                    placeholder="e.g., 450, 15, 20"
-                  />
-                </div>
-                <div className="flex gap-2">
-                  <div className="flex-1">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-sm font-semibold text-dark mb-2">
+                      Label
+                    </label>
+                    <input
+                      type="text"
+                      value={nutrition.label}
+                      onChange={(e) =>
+                        handleNutritionChange(index, "label", e.target.value)
+                      }
+                      className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 focus:border-primary focus:outline-none"
+                      placeholder="e.g., Calories, Fiber, Sodium"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-dark mb-2">
+                      Value
+                    </label>
+                    <input
+                      type="text"
+                      value={nutrition.value}
+                      onChange={(e) =>
+                        handleNutritionChange(index, "value", e.target.value)
+                      }
+                      className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 focus:border-primary focus:outline-none"
+                      placeholder="e.g., 450, 15, 20"
+                    />
+                  </div>
+                  <div>
                     <label className="block text-sm font-semibold text-dark mb-2">
                       Unit
                     </label>
@@ -787,18 +789,18 @@ const AdminProductForm = () => {
                       placeholder="e.g., kcal, g, mg"
                     />
                   </div>
-                  {formData.nutritionInfo.length > 1 && (
-                    <div className="flex items-end">
-                      <button
-                        type="button"
-                        onClick={() => removeNutrition(index)}
-                        className="px-4 py-2 rounded-lg bg-red-500 text-white text-sm font-semibold hover:bg-red-600 transition-colors whitespace-nowrap"
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  )}
                 </div>
+                {formData.nutritionInfo.length > 1 && (
+                  <div className="flex justify-end">
+                    <button
+                      type="button"
+                      onClick={() => removeNutrition(index)}
+                      className="px-4 py-2 rounded-lg bg-red-500 text-white text-sm font-semibold hover:bg-red-600 transition-colors whitespace-nowrap"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -866,30 +868,30 @@ const AdminProductForm = () => {
 
         {/* Form Actions */}
         <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div>
-              {isEditMode && (
+          <div className="flex flex-col gap-4">
+            {isEditMode && (
+              <div className="w-full">
                 <button
                   type="button"
                   onClick={handleDelete}
-                  className="px-6 py-3 rounded-xl bg-red-500 text-white hover:bg-red-600 transition-colors font-semibold"
+                  className="w-full sm:w-auto px-6 py-3 rounded-xl bg-red-500 text-white hover:bg-red-600 transition-colors font-semibold"
                 >
                   Delete Product
                 </button>
-              )}
-            </div>
-            <div className="flex flex-col md:flex-row gap-4">
+              </div>
+            )}
+            <div className="flex flex-col sm:flex-row gap-4 w-full sm:justify-end">
               <button
                 type="button"
                 onClick={() => navigate("/admin/products")}
-                className="px-6 py-3 rounded-xl bg-gray-200 text-dark hover:bg-gray-300 transition-colors font-semibold"
+                className="w-full sm:w-auto px-6 py-3 rounded-xl bg-gray-200 text-dark hover:bg-gray-300 transition-colors font-semibold"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={loading}
-                className={`px-6 py-3 rounded-xl bg-gradient-to-r from-primary to-primary-dark text-white hover:from-primary-dark hover:to-primary transition-all shadow-lg hover:shadow-xl font-semibold ${
+                className={`w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-primary to-primary-dark text-white hover:from-primary-dark hover:to-primary transition-all shadow-lg hover:shadow-xl font-semibold ${
                   loading ? "opacity-50 cursor-not-allowed" : ""
                 }`}
               >

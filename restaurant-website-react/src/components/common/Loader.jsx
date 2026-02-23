@@ -8,7 +8,7 @@ const Loader = () => {
         <img
           src="/assets/images/BitesLogo.png"
           alt="Bites Logo"
-          className="h-28 w-48 lg:w-52 lg:h-32 object-contain transition-all"
+          className="h-32 w-48 object-cover transition-all"
         />
       </div>
       <div className="loader-spinner">

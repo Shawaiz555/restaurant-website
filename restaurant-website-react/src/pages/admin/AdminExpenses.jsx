@@ -392,8 +392,10 @@ const AdminExpenses = () => {
                 key={category}
                 className="bg-cream-light rounded-xl p-4 text-center"
               >
-                <p className="text-xs text-dark-gray mb-1">{category}</p>
-                <p className="text-lg font-bold text-primary">
+                <p className="text-xl text-dark-gray font-bold mb-1">
+                  {category}
+                </p>
+                <p className="text-md font-bold text-primary">
                   {formatCurrency(amount)}
                 </p>
               </div>
@@ -468,13 +470,13 @@ const AdminExpenses = () => {
                       <div className="flex gap-2">
                         <button
                           onClick={() => handleEdit(expense)}
-                          className="text-primary bg-primary px-6 py-2 text-white rounded-xl hover:bg-primary/80 text-sm font-semibold transition-colors"
+                          className="text-primary bg-primary px-7 py-1 text-white rounded-xl hover:bg-primary/80 text-sm font-semibold transition-colors"
                         >
                           Edit
                         </button>
                         <button
                           onClick={() => handleDeleteClick(expense)}
-                          className="text-red-600 bg-red-600 px-6 py-2 text-white rounded-xl hover:bg-red-800 text-sm font-semibold transition-colors"
+                          className="text-red-600 bg-red-600 px-7 py-1 text-white rounded-xl hover:bg-red-800 text-sm font-semibold transition-colors"
                         >
                           Delete
                         </button>

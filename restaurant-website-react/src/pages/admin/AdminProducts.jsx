@@ -234,8 +234,8 @@ const AdminProducts = () => {
           </div>
         ) : (
           <>
-            {/* Desktop Table View */}
-            <div className="hidden lg:block overflow-x-auto">
+            {/* Table View - All Devices */}
+            <div className="overflow-x-auto">
               <table className="w-full table-auto">
                 <thead className="bg-cream text-dark-gray">
                   <tr>
@@ -352,14 +352,14 @@ const AdminProducts = () => {
                             onClick={() =>
                               navigate(`/admin/products/${product.id}/edit`)
                             }
-                            className="px-8 py-2 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primary-dark transition-all hover:shadow-lg hover:scale-105"
+                            className="px-7 py-1 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primary-dark transition-all hover:shadow-lg hover:scale-105"
                             title="Edit Product"
                           >
                             Edit
                           </button>
                           <button
                             onClick={() => handleDeleteClick(product)}
-                            className="px-8 py-2 rounded-lg bg-red-500 text-white text-sm font-semibold hover:bg-red-600 transition-all hover:shadow-lg hover:scale-105"
+                            className="px-7 py-1 rounded-lg bg-red-500 text-white text-sm font-semibold hover:bg-red-600 transition-all hover:shadow-lg hover:scale-105"
                             title="Delete Product"
                           >
                             Delete
@@ -370,110 +370,6 @@ const AdminProducts = () => {
                   ))}
                 </tbody>
               </table>
-            </div>
-
-            {/* Mobile/Tablet Card View */}
-            <div className="lg:hidden divide-y divide-gray-200">
-              {paginatedProducts.map((product) => (
-                <div
-                  key={product.id}
-                  className="p-4 hover:bg-cream-light/30 transition-colors"
-                >
-                  {/* Mobile Card Layout */}
-                  <div className="flex gap-4">
-                    {/* Image */}
-                    <div className="flex-shrink-0">
-                      <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-lg overflow-hidden bg-cream-light shadow-md">
-                        <img
-                          src={product.image}
-                          alt={product.name}
-                          className="w-full h-full object-contain"
-                          onError={(e) => {
-                            e.target.src =
-                              "https://via.placeholder.com/112x112?text=No+Image";
-                          }}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Details */}
-                    <div className="flex-1 min-w-0">
-                      {/* Title and Category */}
-                      <div className="mb-2">
-                        <h3 className="text-base sm:text-lg font-bold text-dark mb-1">
-                          {product.name}
-                        </h3>
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary">
-                            {product.category}
-                          </span>
-                          <div className="flex items-center gap-1">
-                            <span className="text-yellow-500">⭐</span>
-                            <span className="text-sm font-bold text-dark">
-                              {product.rating || 0}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Description */}
-                      <p className="text-sm text-dark-gray line-clamp-2 mb-2">
-                        {product.description}
-                      </p>
-
-                      {/* Price */}
-                      <div className="mb-2">
-                        <span className="text-lg font-bold text-primary">
-                          {formatCurrency(product.basePrice)}
-                        </span>
-                        <span className="text-xs text-dark-gray ml-2">
-                          (Base Price)
-                        </span>
-                      </div>
-
-                      {/* Sizes */}
-                      <div className="mb-3">
-                        <p className="text-xs text-dark-gray mb-1">
-                          Available Sizes: {product.sizes?.length || 0}
-                        </p>
-                        <div className="flex flex-wrap gap-1">
-                          {product.sizes?.slice(0, 2).map((size, idx) => (
-                            <span
-                              key={idx}
-                              className="text-xs bg-cream px-2 py-1 rounded font-medium"
-                            >
-                              {size.name}: {formatCurrency(size.price)}
-                            </span>
-                          ))}
-                          {product.sizes?.length > 2 && (
-                            <span className="text-xs text-dark-gray font-medium">
-                              +{product.sizes.length - 2} more
-                            </span>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Actions */}
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() =>
-                            navigate(`/admin/products/${product.id}/edit`)
-                          }
-                          className="flex-1 px-3 py-2 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primary-dark transition-colors"
-                        >
-                          ✏️ Edit
-                        </button>
-                        <button
-                          onClick={() => handleDeleteClick(product)}
-                          className="flex-1 px-3 py-2 rounded-lg bg-red-500 text-white text-sm font-semibold hover:bg-red-600 transition-colors"
-                        >
-                          🗑️ Delete
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
             </div>
 
             {/* Pagination Controls - Bottom */}
