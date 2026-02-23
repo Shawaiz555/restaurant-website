@@ -23,10 +23,7 @@ import {
   TrendingDown,
   Tag,
   X,
-  Edit,
-  Trash2,
 } from "lucide-react";
-import StatsCard from "../../components/admin/common/StatsCard";
 
 const AdminExpenses = () => {
   const dispatch = useDispatch();

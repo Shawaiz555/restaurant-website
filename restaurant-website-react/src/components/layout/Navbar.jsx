@@ -5,6 +5,14 @@ import { logout } from "../../store/slices/authSlice";
 import { toggleCart } from "../../store/slices/cartSlice";
 import { showNotification } from "../../store/slices/notificationSlice";
 import Loader from "../common/Loader";
+import {
+  UserCircle,
+  Package,
+  Settings,
+  LogOut,
+  ShoppingCart,
+  X,
+} from "lucide-react";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -39,7 +47,7 @@ const Navbar = () => {
       dispatch(logout());
       dispatch(
         showNotification({
-          message: "Logged out successfully. See you soon! 👋",
+          message: "Logged out successfully. See you soon!",
           type: "success",
         }),
       );
@@ -56,14 +64,14 @@ const Navbar = () => {
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 bg-cream-light/85 backdrop-blur-sm z-[70] shadow-sm">
-        <div className="container mx-auto px-2 sm:px-4 lg:px-5">
+        <div className="container mx-auto px-2 sm:px-4 lg:px-5 py-1">
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
             <Link to="/" className="flex items-center">
               <img
                 src="/assets/images/BitesLogo.png"
                 alt="Bites Restaurant Logo"
-                className="h-28 w-32 lg:w-52 lg:h-20 object-contain transition-all"
+                className="h-28 w-32 lg:w-48 lg:h-24 object-contain transition-all"
               />
             </Link>
 
@@ -109,10 +117,12 @@ const Navbar = () => {
                 >
                   {isAuthenticated ? (
                     <div className="w-full h-full rounded-full bg-white/20 flex items-center justify-center text-white text-lg font-bold">
-                      {currentUser?.name?.charAt(0).toUpperCase() || "👤"}
+                      {currentUser?.name?.charAt(0).toUpperCase() || (
+                        <UserCircle className="w-5 h-5" />
+                      )}
                     </div>
                   ) : (
-                    <span className="text-xl text-dark">👤</span>
+                    <UserCircle className="w-5 h-5 text-dark" />
                   )}
                   {isAuthenticated && (
                     <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
@@ -133,8 +143,9 @@ const Navbar = () => {
 
                           <div className="relative flex items-center gap-3">
                             <div className="w-14 h-14 rounded-full text-primary-dark backdrop-blur-sm border-2 border-white/50 flex items-center justify-center text-2xl font-bold shadow-lg">
-                              {currentUser?.name?.charAt(0).toUpperCase() ||
-                                "👤"}
+                              {currentUser?.name?.charAt(0).toUpperCase() || (
+                                <UserCircle className="w-7 h-7" />
+                              )}
                             </div>
                             <div className="flex-1 min-w-0">
                               <p className="font-display text-lg text-primary-dark tracking-wide truncate">
@@ -150,8 +161,8 @@ const Navbar = () => {
                         {/* Menu Items */}
                         <div className="py-2 max-h-[50vh] sm:max-h-none overflow-y-auto">
                           <button className="w-full text-left px-5 py-3 sm:py-3 text-dark hover:bg-gradient-to-r hover:from-cream-light hover:to-cream transition-all flex items-center gap-3 group active:bg-cream">
-                            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-xl group-hover:bg-primary group-hover:text-white transition-all flex-shrink-0">
-                              📦
+                            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all flex-shrink-0">
+                              <Package className="w-5 h-5 text-primary group-hover:text-white" />
                             </div>
                             <div className="flex-1 min-w-0">
                               <div className="font-semibold text-sm">
@@ -164,8 +175,8 @@ const Navbar = () => {
                           </button>
 
                           <button className="w-full text-left px-5 py-3 sm:py-3 text-dark hover:bg-gradient-to-r hover:from-cream-light hover:to-cream transition-all flex items-center gap-3 group active:bg-cream">
-                            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-xl group-hover:bg-primary group-hover:text-white transition-all flex-shrink-0">
-                              ⚙️
+                            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all flex-shrink-0">
+                              <Settings className="w-5 h-5 text-primary group-hover:text-white" />
                             </div>
                             <div className="flex-1 min-w-0">
                               <div className="font-semibold text-sm">
@@ -183,8 +194,8 @@ const Navbar = () => {
                             onClick={handleLogout}
                             className="w-full text-left px-5 py-3 sm:py-3 mb-2 sm:mb-0 text-red-600 hover:bg-red-50 transition-all flex items-center gap-3 group rounded-b-3xl sm:rounded-b-2xl active:bg-red-100"
                           >
-                            <div className="w-10 h-10 rounded-lg bg-red-50 flex items-center justify-center text-xl group-hover:bg-red-100 transition-all flex-shrink-0">
-                              🚪
+                            <div className="w-10 h-10 rounded-lg bg-red-50 flex items-center justify-center group-hover:bg-red-100 transition-all flex-shrink-0">
+                              <LogOut className="w-5 h-5 text-red-500" />
                             </div>
                             <div className="flex-1 min-w-0">
                               <div className="font-semibold text-sm">
@@ -201,8 +212,8 @@ const Navbar = () => {
                       <div className="p-4 pb-6 sm:pb-4">
                         {/* Guest Header */}
                         <div className="text-center mb-4 py-6 bg-cream rounded-xl">
-                          <div className="w-16 h-16 mx-auto mb-3 rounded-full flex items-center justify-center text-3xl shadow-lg">
-                            👤
+                          <div className="w-14 h-14 mx-auto mb-3 rounded-full bg-primary/10 flex items-center justify-center shadow-lg">
+                            <UserCircle className="w-8 h-8 text-primary" />
                           </div>
                           <h3 className="font-display text-xl text-dark mb-1">
                             Welcome!
@@ -242,9 +253,9 @@ const Navbar = () => {
               {/* Cart Button */}
               <button
                 onClick={() => dispatch(toggleCart())}
-                className="relative w-10 h-10 rounded-full border-2 border-dark/10 flex items-center justify-center hover:bg-primary hover:border-primary transition-all"
+                className="relative w-10 h-10 rounded-full border-2 border-dark/10 flex items-center justify-center hover:bg-primary hover:border-primary hover:text-white transition-all text-dark"
               >
-                🛒
+                <ShoppingCart className="w-5 h-5" />
                 {cartItemCount > 0 && (
                   <span className="absolute -top-1 -right-1 bg-primary text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
                     {cartItemCount}
@@ -294,9 +305,9 @@ const Navbar = () => {
           />
           <button
             onClick={() => setShowMobileMenu(false)}
-            className="w-8 h-8 flex items-center justify-center text-dark text-xl"
+            className="w-8 h-8 flex items-center justify-center text-dark"
           >
-            ✕
+            <X className="w-5 h-5" />
           </button>
         </div>
 

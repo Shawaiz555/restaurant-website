@@ -3,6 +3,26 @@ import { useSearchParams } from "react-router-dom";
 import MenuHeroSection from "../components/menu/MenuHeroSection";
 import MenuCategoriesSection from "../components/menu/MenuCategoriesSection";
 import productsService from "../services/productsService";
+import {
+  Utensils,
+  Star,
+  Coffee,
+  Salad,
+  Fish,
+  Sandwich,
+  Pizza,
+  UtensilsCrossed,
+  Wine,
+  Soup,
+  Beef,
+  Leaf,
+  Sprout,
+  Cake,
+  Drumstick,
+  IceCream,
+  Cookie,
+  Wheat,
+} from "lucide-react";
 
 const Menu = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -27,49 +47,62 @@ const Menu = () => {
   const allProducts = productsService.getProducts();
 
   // Get unique categories from products
-  const allCategories = [...new Set(allProducts.map(p => p.category))].sort();
+  const allCategories = [...new Set(allProducts.map((p) => p.category))].sort();
 
-  // Default category icons (will auto-assign for new categories)
+  // Default category icons mapped to Lucide components
   const defaultCategoryIcons = {
-    all: "🍽️",
-    "popular-dishes": "⭐",
-    breakfast: "🥞",
-    noodles: "🍜",
-    salads: "🥗",
-    japanese: "🍱",
-    drinks: "🥤",
-    lunch: "🍔",
-    burgers: "🍔",
-    pizza: "🍕",
-    pasta: "🍝",
-    desserts: "🍰",
-    appetizers: "🥟",
-    seafood: "🦞",
-    chicken: "🍗",
-    beef: "🥩",
-    vegetarian: "🥬",
-    vegan: "🌱",
+    all: Utensils,
+    "popular-dishes": Star,
+    breakfast: Coffee,
+    noodles: Soup,
+    salads: Salad,
+    japanese: Fish,
+    drinks: Wine,
+    lunch: Sandwich,
+    burgers: Sandwich,
+    pizza: Pizza,
+    pasta: UtensilsCrossed,
+    desserts: Cake,
+    appetizers: UtensilsCrossed,
+    seafood: Fish,
+    chicken: Drumstick,
+    beef: Beef,
+    vegetarian: Leaf,
+    vegan: Sprout,
   };
 
-  // Function to get icon for category (auto-assign emojis to new categories)
+  // Fallback icon map for unknown categories
+  const fallbackIconMap = {
+    soup: Soup,
+    rice: Utensils,
+    sandwich: Sandwich,
+    steak: Beef,
+    fish: Fish,
+    meat: Beef,
+    snacks: Cookie,
+    coffee: Coffee,
+    tea: Coffee,
+    juice: Wine,
+    smoothie: Wine,
+    ice: IceCream,
+    cake: Cake,
+    cookie: Cookie,
+    bread: Wheat,
+    wrap: Sandwich,
+  };
+
+  // Function to get icon component for category
   const getCategoryIcon = (category) => {
     const categoryKey = category.toLowerCase().replace(/\s+/g, "-");
     if (defaultCategoryIcons[categoryKey]) {
       return defaultCategoryIcons[categoryKey];
     }
-    // Auto-assign emoji based on category name
-    const emojiMap = {
-      soup: "🍲", rice: "🍚", sandwich: "🥪", steak: "🥩",
-      fish: "🐟", meat: "🍖", snacks: "🍿", coffee: "☕",
-      tea: "🍵", juice: "🧃", smoothie: "🥤", ice: "🍧",
-      cake: "🎂", cookie: "🍪", bread: "🍞", wrap: "🌯",
-    };
-    for (const [key, emoji] of Object.entries(emojiMap)) {
+    for (const [key, icon] of Object.entries(fallbackIconMap)) {
       if (category.toLowerCase().includes(key)) {
-        return emoji;
+        return icon;
       }
     }
-    return "🍴"; // Default icon for unknown categories
+    return Utensils; // Default icon for unknown categories
   };
 
   // Create category buttons data dynamically
@@ -78,14 +111,14 @@ const Menu = () => {
       id: "all",
       label: "All Items",
       count: allProducts.length,
-      icon: "🍽️"
+      icon: Utensils,
     },
     ...allCategories.map((cat) => ({
       id: cat.toLowerCase().replace(/\s+/g, "-"),
       label: cat,
       originalName: cat,
-      count: allProducts.filter(p => p.category === cat).length,
-      icon: getCategoryIcon(cat)
+      count: allProducts.filter((p) => p.category === cat).length,
+      icon: getCategoryIcon(cat),
     })),
   ];
 
@@ -98,7 +131,9 @@ const Menu = () => {
     } else {
       const category = categories.find((cat) => cat.id === activeCategory);
       products = category
-        ? allProducts.filter(p => p.category === (category.originalName || category.label))
+        ? allProducts.filter(
+            (p) => p.category === (category.originalName || category.label),
+          )
         : [];
     }
 

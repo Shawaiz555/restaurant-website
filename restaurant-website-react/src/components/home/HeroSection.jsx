@@ -1,5 +1,19 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import {
+  Utensils,
+  ArrowRight,
+  Users,
+  Star,
+  Trophy,
+  Package,
+  Cake,
+  Wine,
+  Salad,
+  Check,
+  Zap,
+  ShoppingCart,
+} from "lucide-react";
 
 const HeroSection = () => {
   return (
@@ -27,8 +41,8 @@ const HeroSection = () => {
           {/* Left Content */}
           <div className="relative space-y-5 lg:space-y-6">
             {/* Enhanced Decorative Badge */}
-            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-primary/20 to-primary-light/20 backdrop-blur-md px-4 py-2 rounded-full border-2 border-primary/40 shadow-lg animate-fade-in">
-              <span className="text-xl animate-bounce-slow">🍽️</span>
+            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-primary/20 to-primary-light/20 backdrop-blur-md px-4 py-2 rounded-full border-2 border-primary/40 shadow-lg animate-fade-in group">
+              <Utensils className="w-5 h-5 text-primary animate-bounce-slow" />
               <span className="text-dark font-bold text-xs tracking-wide uppercase">
                 Welcome to Bites Restaurant
               </span>
@@ -57,9 +71,9 @@ const HeroSection = () => {
 
             {/* Enhanced Description */}
             <p className="text-dark-gray text-lg lg:text-xl max-w-xl leading-relaxed animate-slide-up-delay-2">
-              Experience authentic flavors crafted with passion and served with love.
-              From traditional favorites to innovative dishes, every bite tells a
-              story of culinary excellence.
+              Experience authentic flavors crafted with passion and served with
+              love. From traditional favorites to innovative dishes, every bite
+              tells a story of culinary excellence.
             </p>
 
             {/* Enhanced CTA Buttons */}
@@ -68,14 +82,12 @@ const HeroSection = () => {
                 <button className="group relative bg-gradient-to-r from-primary to-primary-light text-white hover:from-primary-dark hover:to-primary px-8 py-4 lg:px-10 lg:py-4 rounded-2xl font-bold text-base transition-all duration-300 shadow-2xl hover:shadow-primary/50 hover:scale-105 flex items-center gap-2 overflow-hidden">
                   <span className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
                   <span className="relative">Explore Menu</span>
-                  <span className="relative text-xl group-hover:translate-x-1 transition-transform duration-300">→</span>
+                  <ArrowRight className="relative w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
                 </button>
               </Link>
               <Link to="/menu">
                 <button className="group bg-white text-primary border-3 border-primary hover:bg-primary hover:text-white px-8 py-4 lg:px-10 lg:py-4 rounded-2xl font-bold text-base transition-all duration-300 hover:scale-105 shadow-xl hover:shadow-2xl flex items-center gap-2">
-                  <svg className="w-5 h-5 group-hover:animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
+                  <ShoppingCart className="w-5 h-5 group-hover:animate-bounce" />
                   <span>Order Now</span>
                 </button>
               </Link>
@@ -87,23 +99,29 @@ const HeroSection = () => {
                 <div className="text-primary text-3xl lg:text-4xl font-display mb-1 group-hover:scale-110 transition-transform">
                   50K+
                 </div>
-                <div className="text-dark-gray text-xs font-semibold">Happy Customers</div>
-                <div className="text-xl mt-1">😊</div>
+                <div className="text-dark-gray text-xs font-semibold">
+                  Happy Customers
+                </div>
+                <Users className="w-6 h-6 mx-auto mt-2 text-primary" />
               </div>
               <div className="group text-center p-3 rounded-xl bg-white/50 backdrop-blur-sm border border-primary/20 hover:border-primary/40 transition-all duration-300 hover:scale-105 hover:shadow-xl">
                 <div className="text-primary text-3xl lg:text-4xl font-display mb-1 group-hover:scale-110 transition-transform flex items-center justify-center gap-1">
                   4.9
-                  <span className="text-lg text-yellow-500">⭐</span>
+                  <Star className="w-5 h-5 text-yellow-500 fill-current" />
                 </div>
-                <div className="text-dark-gray text-xs font-semibold">Average Rating</div>
-                <div className="text-xl mt-1">🏆</div>
+                <div className="text-dark-gray text-xs font-semibold">
+                  Average Rating
+                </div>
+                <Trophy className="w-6 h-6 mx-auto mt-2 text-primary" />
               </div>
               <div className="group text-center p-3 rounded-xl bg-white/50 backdrop-blur-sm border border-primary/20 hover:border-primary/40 transition-all duration-300 hover:scale-105 hover:shadow-xl">
                 <div className="text-primary text-3xl lg:text-4xl font-display mb-1 group-hover:scale-110 transition-transform">
                   200+
                 </div>
-                <div className="text-dark-gray text-xs font-semibold">Menu Items</div>
-                <div className="text-xl mt-1">🍱</div>
+                <div className="text-dark-gray text-xs font-semibold">
+                  Menu Items
+                </div>
+                <Package className="w-6 h-6 mx-auto mt-2 text-primary" />
               </div>
             </div>
           </div>
@@ -138,11 +156,32 @@ const HeroSection = () => {
               {/* Enhanced Category Badges - Desktop */}
               <div className="hidden lg:flex absolute right-0 xl:-right-4 top-1/2 -translate-y-1/2 flex-col gap-3 z-20">
                 {[
-                  { emoji: "🍽️", label: "Dishes", color: "from-orange-400 to-orange-500" },
-                  { emoji: "🧁", label: "Dessert", color: "from-pink-400 to-pink-500" },
-                  { emoji: "🥤", label: "Drinks", color: "from-blue-400 to-blue-500" },
-                  { emoji: "🍱", label: "Platter", color: "from-green-400 to-green-500" },
-                  { emoji: "🥗", label: "Salads", active: true, color: "from-primary to-primary-light" },
+                  {
+                    icon: Utensils,
+                    label: "Dishes",
+                    color: "from-orange-400 to-orange-500",
+                  },
+                  {
+                    icon: Cake,
+                    label: "Dessert",
+                    color: "from-pink-400 to-pink-500",
+                  },
+                  {
+                    icon: Wine,
+                    label: "Drinks",
+                    color: "from-blue-400 to-blue-500",
+                  },
+                  {
+                    icon: Package,
+                    label: "Platter",
+                    color: "from-green-400 to-green-500",
+                  },
+                  {
+                    icon: Salad,
+                    label: "Salads",
+                    active: true,
+                    color: "from-primary to-primary-light",
+                  },
                 ].map((item, idx) => (
                   <div
                     key={idx}
@@ -157,10 +196,10 @@ const HeroSection = () => {
                     } group`}
                     style={{
                       animation: `slide-in-right ${0.5 + idx * 0.1}s ease-out`,
-                      animationFillMode: "backwards"
+                      animationFillMode: "backwards",
                     }}
                   >
-                    <span className="text-xl group-hover:scale-125 transition-transform">{item.emoji}</span>
+                    <item.icon className="w-5 h-5 group-hover:scale-125 transition-transform" />
                     <span className="font-bold text-sm">{item.label}</span>
                   </div>
                 ))}
@@ -169,11 +208,11 @@ const HeroSection = () => {
               {/* Enhanced Category Badges - Mobile */}
               <div className="lg:hidden mt-6 flex flex-wrap justify-center gap-2.5">
                 {[
-                  { emoji: "🍽️", label: "Dishes" },
-                  { emoji: "🧁", label: "Dessert" },
-                  { emoji: "🥤", label: "Drinks" },
-                  { emoji: "🍱", label: "Platter" },
-                  { emoji: "🥗", label: "Salads", active: true },
+                  { icon: Utensils, label: "Dishes" },
+                  { icon: Cake, label: "Dessert" },
+                  { icon: Wine, label: "Drinks" },
+                  { icon: Package, label: "Platter" },
+                  { icon: Salad, label: "Salads", active: true },
                 ].map((item, idx) => (
                   <div
                     key={idx}
@@ -185,7 +224,7 @@ const HeroSection = () => {
                       item.active ? "border-primary-dark" : "border-primary/30"
                     }`}
                   >
-                    <span className="text-xl">{item.emoji}</span>
+                    <item.icon className="w-5 h-5" />
                     <span className="font-bold text-sm">{item.label}</span>
                   </div>
                 ))}
@@ -194,8 +233,8 @@ const HeroSection = () => {
               {/* Floating Badge - Quality Assured */}
               <div className="absolute top-4 left-2 lg:left-4 bg-white rounded-xl shadow-xl p-3 animate-float-1 hidden sm:block">
                 <div className="flex items-center gap-2">
-                  <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center text-xl">
-                    ✓
+                  <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center">
+                    <Check className="w-6 h-6 text-white" />
                   </div>
                   <div>
                     <div className="text-dark font-bold text-xs">Quality</div>
@@ -207,8 +246,8 @@ const HeroSection = () => {
               {/* Floating Badge - Fast Delivery */}
               <div className="absolute bottom-12 right-2 lg:right-4 bg-white rounded-xl shadow-xl p-3 animate-float-2 hidden md:block">
                 <div className="flex items-center gap-2">
-                  <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-light rounded-full flex items-center justify-center text-xl">
-                    ⚡
+                  <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-light rounded-full flex items-center justify-center">
+                    <Zap className="w-6 h-6 text-white" />
                   </div>
                   <div>
                     <div className="text-dark font-bold text-xs">Fast</div>
@@ -235,7 +274,8 @@ const HeroSection = () => {
       {/* Enhanced Animations */}
       <style jsx>{`
         @keyframes floating {
-          0%, 100% {
+          0%,
+          100% {
             transform: translateY(0px) rotate(0deg);
           }
           50% {
@@ -244,7 +284,8 @@ const HeroSection = () => {
         }
 
         @keyframes float-1 {
-          0%, 100% {
+          0%,
+          100% {
             transform: translateY(0px) translateX(0px);
           }
           50% {
@@ -253,7 +294,8 @@ const HeroSection = () => {
         }
 
         @keyframes float-2 {
-          0%, 100% {
+          0%,
+          100% {
             transform: translateY(0px) translateX(0px);
           }
           50% {
@@ -262,7 +304,8 @@ const HeroSection = () => {
         }
 
         @keyframes float-3 {
-          0%, 100% {
+          0%,
+          100% {
             transform: translateY(0px) translateX(0px);
           }
           50% {
@@ -302,7 +345,8 @@ const HeroSection = () => {
         }
 
         @keyframes pulse-slow {
-          0%, 100% {
+          0%,
+          100% {
             opacity: 0.1;
           }
           50% {
@@ -311,7 +355,8 @@ const HeroSection = () => {
         }
 
         @keyframes pulse-slower {
-          0%, 100% {
+          0%,
+          100% {
             opacity: 0.08;
           }
           50% {
@@ -320,7 +365,8 @@ const HeroSection = () => {
         }
 
         @keyframes bounce-slow {
-          0%, 100% {
+          0%,
+          100% {
             transform: translateY(0);
           }
           50% {

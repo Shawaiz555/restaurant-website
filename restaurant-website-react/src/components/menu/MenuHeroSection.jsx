@@ -1,4 +1,14 @@
 import React from "react";
+import {
+  Utensils,
+  Search,
+  X,
+  Star,
+  Coffee,
+  Soup,
+  Salad,
+  Fish,
+} from "lucide-react";
 
 const MenuHeroSection = ({ searchTerm, setSearchTerm, setActiveCategory }) => {
   return (
@@ -21,7 +31,7 @@ const MenuHeroSection = ({ searchTerm, setSearchTerm, setActiveCategory }) => {
         <div className="max-w-5xl mx-auto text-center">
           {/* Enhanced Badge */}
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-primary/20 to-primary-light/20 backdrop-blur-md px-4 py-2 rounded-full border-2 border-primary/40 shadow-lg animate-fade-in mb-5">
-            <span className="text-2xl animate-bounce-slow">🍽️</span>
+            <Utensils className="w-5 h-5 text-primary animate-bounce-slow" />
             <span className="text-dark font-bold text-xs tracking-wide uppercase">
               Discover Amazing Flavors
             </span>
@@ -56,8 +66,8 @@ const MenuHeroSection = ({ searchTerm, setSearchTerm, setActiveCategory }) => {
               <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-primary-light/20 rounded-2xl blur-xl opacity-60 group-hover:opacity-100 transition-opacity"></div>
               <div className="relative bg-white rounded-2xl shadow-2xl overflow-hidden border-2 border-primary/20 hover:border-primary/40 transition-all">
                 <div className="flex items-center">
-                  <div className="pl-5 pr-2 text-3xl">
-                    <span className="animate-pulse">🔍</span>
+                  <div className="pl-5 pr-2">
+                    <Search className="w-6 h-6 text-primary/60 animate-pulse" />
                   </div>
                   <input
                     type="text"
@@ -71,7 +81,7 @@ const MenuHeroSection = ({ searchTerm, setSearchTerm, setActiveCategory }) => {
                       onClick={() => setSearchTerm("")}
                       className="mr-4 w-9 h-9 flex items-center justify-center bg-primary/10 hover:bg-primary/20 rounded-full transition-all hover:scale-110"
                     >
-                      <span className="text-primary font-bold text-lg">✕</span>
+                      <X className="w-4 h-4 text-primary font-bold" />
                     </button>
                   )}
                 </div>
@@ -80,19 +90,21 @@ const MenuHeroSection = ({ searchTerm, setSearchTerm, setActiveCategory }) => {
 
             {/* Enhanced Quick Search Tags */}
             <div className="mt-5 flex flex-wrap items-center justify-center gap-2.5">
-              <span className="text-dark-gray text-sm font-semibold">Quick Search:</span>
+              <span className="text-dark-gray text-sm font-semibold">
+                Quick Search:
+              </span>
               {[
-                { name: "Breakfast", emoji: "🥞" },
-                { name: "Noodles", emoji: "🍜" },
-                { name: "Salads", emoji: "🥗" },
-                { name: "Japanese", emoji: "🍱" }
+                { name: "Breakfast", icon: Coffee },
+                { name: "Noodles", icon: Soup },
+                { name: "Salads", icon: Salad },
+                { name: "Japanese", icon: Fish },
               ].map((tag) => (
                 <button
                   key={tag.name}
                   onClick={() => setActiveCategory(tag.name.toLowerCase())}
                   className="group px-4 py-2 bg-gradient-to-r from-white to-cream-light hover:from-primary hover:to-primary-light backdrop-blur-sm text-primary hover:text-white text-sm font-bold rounded-full border-2 border-primary/30 hover:border-primary transition-all hover:scale-105 shadow-md hover:shadow-xl flex items-center gap-1.5"
                 >
-                  <span className="text-base group-hover:scale-125 transition-transform">{tag.emoji}</span>
+                  <tag.icon className="w-4 h-4 group-hover:scale-125 transition-transform" />
                   <span>{tag.name}</span>
                 </button>
               ))}
@@ -102,17 +114,29 @@ const MenuHeroSection = ({ searchTerm, setSearchTerm, setActiveCategory }) => {
           {/* Stats Pills */}
           <div className="mt-8 flex flex-wrap justify-center gap-4 animate-slide-up-delay-4">
             <div className="bg-white/60 backdrop-blur-sm px-5 py-2.5 rounded-xl border border-primary/20 shadow-lg">
-              <span className="text-primary font-display text-2xl font-bold">200+</span>
-              <span className="text-dark-gray text-sm font-semibold ml-2">Dishes</span>
+              <span className="text-primary font-display text-2xl font-bold">
+                200+
+              </span>
+              <span className="text-dark-gray text-sm font-semibold ml-2">
+                Dishes
+              </span>
             </div>
             <div className="bg-white/60 backdrop-blur-sm px-5 py-2.5 rounded-xl border border-primary/20 shadow-lg">
-              <span className="text-primary font-display text-2xl font-bold">8</span>
-              <span className="text-dark-gray text-sm font-semibold ml-2">Categories</span>
+              <span className="text-primary font-display text-2xl font-bold">
+                8
+              </span>
+              <span className="text-dark-gray text-sm font-semibold ml-2">
+                Categories
+              </span>
             </div>
-            <div className="bg-white/60 backdrop-blur-sm px-5 py-2.5 rounded-xl border border-primary/20 shadow-lg">
-              <span className="text-yellow-500 text-xl">⭐</span>
-              <span className="text-primary font-display text-2xl font-bold ml-1">4.9</span>
-              <span className="text-dark-gray text-sm font-semibold ml-2">Rating</span>
+            <div className="bg-white/60 backdrop-blur-sm px-5 py-2.5 rounded-xl border border-primary/20 shadow-lg flex items-center">
+              <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
+              <span className="text-primary font-display text-2xl font-bold ml-1">
+                4.9
+              </span>
+              <span className="text-dark-gray text-sm font-semibold ml-2">
+                Rating
+              </span>
             </div>
           </div>
         </div>
@@ -132,7 +156,8 @@ const MenuHeroSection = ({ searchTerm, setSearchTerm, setActiveCategory }) => {
       {/* Animations */}
       <style jsx>{`
         @keyframes float-1 {
-          0%, 100% {
+          0%,
+          100% {
             transform: translateY(0px) translateX(0px);
           }
           50% {
@@ -141,7 +166,8 @@ const MenuHeroSection = ({ searchTerm, setSearchTerm, setActiveCategory }) => {
         }
 
         @keyframes float-2 {
-          0%, 100% {
+          0%,
+          100% {
             transform: translateY(0px) translateX(0px);
           }
           50% {
@@ -150,7 +176,8 @@ const MenuHeroSection = ({ searchTerm, setSearchTerm, setActiveCategory }) => {
         }
 
         @keyframes float-3 {
-          0%, 100% {
+          0%,
+          100% {
             transform: translateY(0px) translateX(0px);
           }
           50% {
@@ -179,7 +206,8 @@ const MenuHeroSection = ({ searchTerm, setSearchTerm, setActiveCategory }) => {
         }
 
         @keyframes pulse-slow {
-          0%, 100% {
+          0%,
+          100% {
             opacity: 0.1;
           }
           50% {
@@ -188,7 +216,8 @@ const MenuHeroSection = ({ searchTerm, setSearchTerm, setActiveCategory }) => {
         }
 
         @keyframes pulse-slower {
-          0%, 100% {
+          0%,
+          100% {
             opacity: 0.08;
           }
           50% {
@@ -197,7 +226,8 @@ const MenuHeroSection = ({ searchTerm, setSearchTerm, setActiveCategory }) => {
         }
 
         @keyframes bounce-slow {
-          0%, 100% {
+          0%,
+          100% {
             transform: translateY(0);
           }
           50% {

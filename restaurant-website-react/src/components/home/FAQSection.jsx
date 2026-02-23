@@ -1,4 +1,17 @@
 import React, { useState } from "react";
+import {
+  Clock,
+  Truck,
+  Sparkles,
+  Users,
+  Leaf,
+  MessageCircle,
+  HelpCircle,
+  ChevronDown,
+  Lightbulb,
+  Phone,
+  Mail,
+} from "lucide-react";
 
 const FAQSection = () => {
   const [openIndex, setOpenIndex] = useState(null);
@@ -8,37 +21,37 @@ const FAQSection = () => {
       question: "What are your operating hours?",
       answer:
         "We're open Monday to Thursday from 11:00 AM to 10:00 PM, Friday to Saturday from 11:00 AM to 11:00 PM, and Sunday from 10:00 AM to 9:00 PM. Our online ordering is available 24/7!",
-      icon: "⏰",
+      icon: Clock,
     },
     {
       question: "Do you offer delivery services?",
       answer:
         "Yes! We offer fast delivery within a 10km radius. Orders typically arrive within 30-45 minutes. You can track your order in real-time through our website or mobile app. Delivery is free for orders above Rs. 500.",
-      icon: "🚚",
+      icon: Truck,
     },
     {
       question: "Can I customize my order?",
       answer:
         "Absolutely! We understand everyone has different preferences. You can customize your order by adding special instructions during checkout. Let us know about dietary restrictions, spice levels, or ingredient modifications, and our chefs will accommodate your requests.",
-      icon: "✨",
+      icon: Sparkles,
     },
     {
       question: "Do you offer group ordering and bulk discounts?",
       answer:
         "Yes! We offer special pricing for bulk orders and group events. Whether you're ordering for an office party, family gathering, or large group, contact us to discuss your requirements and we'll provide a customized quote with attractive discounts.",
-      icon: "👥",
+      icon: Users,
     },
     {
       question: "Are your ingredients fresh and locally sourced?",
       answer:
         "We take pride in using only the freshest ingredients. We partner with local farmers and suppliers to source seasonal produce, ensuring quality and supporting our community. All our meats are premium quality, and seafood is delivered fresh daily.",
-      icon: "🌱",
+      icon: Leaf,
     },
     {
       question: "What if I have a complaint or feedback?",
       answer:
         "Your satisfaction is our priority! If you have any concerns, please contact us immediately at our customer service hotline or through the 'Contact Us' page. We take all feedback seriously and strive to resolve any issues promptly. We also offer a satisfaction guarantee on all orders.",
-      icon: "💬",
+      icon: MessageCircle,
     },
   ];
 
@@ -55,7 +68,7 @@ const FAQSection = () => {
         {/* Header */}
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 bg-primary/10 px-5 py-2 rounded-full mb-6">
-            <span className="text-2xl">❓</span>
+            <HelpCircle className="w-6 h-6 text-primary" />
             <span className="text-primary font-semibold text-sm">
               Got Questions?
             </span>
@@ -87,13 +100,13 @@ const FAQSection = () => {
                 >
                   <div className="flex items-start gap-4 flex-1">
                     <div
-                      className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl flex-shrink-0 transition-all ${
+                      className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-all ${
                         openIndex === index
                           ? "bg-primary text-white scale-110"
-                          : "bg-primary/10 group-hover:bg-primary/20"
+                          : "bg-primary/10 group-hover:bg-primary/20 text-primary"
                       }`}
                     >
-                      {faq.icon}
+                      <faq.icon className="w-6 h-6" />
                     </div>
                     <div className="flex-1">
                       <h3
@@ -114,19 +127,7 @@ const FAQSection = () => {
                         : "bg-cream text-primary group-hover:bg-primary/10"
                     }`}
                   >
-                    <svg
-                      className="w-6 h-6"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
+                    <ChevronDown className="w-6 h-6" />
                   </div>
                 </button>
 
@@ -160,7 +161,9 @@ const FAQSection = () => {
           </div>
 
           <div className="relative z-10">
-            <div className="text-5xl mb-4">💡</div>
+            <div className="flex justify-center mb-4 text-white">
+              <Lightbulb className="w-16 h-16 animate-pulse" />
+            </div>
             <h3 className="font-display text-3xl lg:text-4xl text-white mb-4">
               Still Have Questions?
             </h3>
@@ -168,11 +171,11 @@ const FAQSection = () => {
               Our friendly support team is here to help! Reach out anytime.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="bg-white text-primary px-8 py-4 rounded-2xl font-bold hover:shadow-2xl transition-all hover:scale-105">
-                📞 Call Us Now
+              <button className="bg-white text-primary px-8 py-4 rounded-2xl font-bold hover:shadow-2xl transition-all hover:scale-105 flex items-center justify-center gap-2">
+                <Phone className="w-5 h-5" /> Call Us Now
               </button>
-              <button className="bg-primary text-white border-2 border-white px-8 py-4 rounded-2xl font-bold hover:bg-white hover:text-primary transition-all hover:scale-105">
-                ✉️ Email Support
+              <button className="bg-primary text-white border-2 border-white px-8 py-4 rounded-2xl font-bold hover:bg-white hover:text-primary transition-all hover:scale-105 flex items-center justify-center gap-2">
+                <Mail className="w-5 h-5" /> Email Support
               </button>
             </div>
           </div>

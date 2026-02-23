@@ -5,6 +5,7 @@ import { useCart } from "../hooks/useCart";
 import { useAuth } from "../hooks/useAuth";
 import { showNotification } from "../store/slices/notificationSlice";
 import LocationMap from "../components/common/LocationMap";
+import { ShoppingCart, Loader2, Check, Info, CreditCard } from "lucide-react";
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -281,7 +282,7 @@ const Checkout = () => {
     return (
       <div className="min-h-screen bg-cream-light pt-24 pb-12 flex items-center justify-center">
         <div className="text-center">
-          <div className="text-6xl mb-4 animate-pulse">🛒</div>
+          <ShoppingCart className="w-16 h-16 mb-4 mx-auto text-primary animate-pulse" />
           <p className="text-dark-gray">Loading checkout...</p>
         </div>
       </div>
@@ -311,19 +312,7 @@ const Checkout = () => {
           <div className="max-w-4xl mb-6 bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-500 rounded-xl p-4 md:p-6 shadow-md">
             <div className="flex items-start gap-3">
               <div className="flex-shrink-0 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                <svg
-                  className="w-5 h-5 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
+                <Info className="w-5 h-5 text-white" />
               </div>
               <div className="flex-1">
                 <h3 className="text-sm font-semibold text-blue-900 mb-1">
@@ -553,19 +542,7 @@ const Checkout = () => {
                   <div className="bg-gradient-to-br from-cream to-cream-light rounded-2xl p-6 border-2 border-primary shadow-md hover:shadow-lg transition-all">
                     <div className="flex items-center gap-4">
                       <div className="w-14 h-14 bg-gradient-to-br from-primary to-primary-dark rounded-full flex items-center justify-center shadow-lg">
-                        <svg
-                          className="w-7 h-7 text-white"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
-                          />
-                        </svg>
+                        <CreditCard className="w-7 h-7 text-white" />
                       </div>
                       <div className="flex-1">
                         <h3 className="font-display text-lg text-dark mb-1">
@@ -576,19 +553,7 @@ const Checkout = () => {
                         </p>
                       </div>
                       <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center shadow-md">
-                        <svg
-                          className="w-5 h-5 text-white"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={3}
-                            d="M5 13l4 4L19 7"
-                          />
-                        </svg>
+                        <Check className="w-5 h-5 text-white" />
                       </div>
                     </div>
                   </div>
@@ -619,7 +584,7 @@ const Checkout = () => {
           <div className="lg:col-span-1">
             <div className="bg-cream-light rounded-3xl p-6 md:p-8 shadow-lg sticky top-24">
               <h2 className="font-display text-2xl text-dark mb-6 flex items-center gap-2">
-                <span>🛒</span>
+                <ShoppingCart className="w-6 h-6 text-primary" />
                 <span>Order Summary</span>
               </h2>
 
@@ -789,13 +754,13 @@ const Checkout = () => {
               >
                 {isProcessing ? (
                   <>
-                    <span className="animate-spin">⏳</span>
+                    <Loader2 className="w-5 h-5 animate-spin" />
                     <span>Processing...</span>
                   </>
                 ) : (
                   <>
                     <span>Place Order</span>
-                    <span className="text-xl">✓</span>
+                    <Check className="w-5 h-5" />
                   </>
                 )}
               </button>
