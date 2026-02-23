@@ -153,12 +153,6 @@ class ExpensesService {
 
   // Get summary for dashboard
   getSummary() {
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const weekStart = new Date(now);
-    weekStart.setDate(now.getDate() - 7);
-    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-
     return {
       today: this.calculateTotals('today'),
       thisWeek: this.calculateTotals('week'),

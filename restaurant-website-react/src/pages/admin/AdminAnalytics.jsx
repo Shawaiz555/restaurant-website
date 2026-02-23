@@ -16,11 +16,7 @@ const AdminAnalytics = () => {
   const [orderStatusData, setOrderStatusData] = useState([]);
   const [dateRange, setDateRange] = useState('week');
 
-  useEffect(() => {
-    loadAnalytics();
-  }, [dateRange]);
-
-  const loadAnalytics = () => {
+  const loadAnalytics = React.useCallback(() => {
     // Revenue vs Expenses
     const comparison = analyticsService.getRevenueVsExpenses(dateRange);
     setStats(comparison);
@@ -46,7 +42,11 @@ const AdminAnalytics = () => {
       { name: 'Cancelled', value: orderStats.cancelled, color: '#E74C3C' },
     ].filter(item => item.value > 0);
     setOrderStatusData(statusData);
-  };
+  }, [dateRange]);
+
+  useEffect(() => {
+    loadAnalytics();
+  }, [loadAnalytics]);
 
   const formatCurrency = (value) => {
     return `Rs ${parseFloat(value || 0).toFixed(2)}`;

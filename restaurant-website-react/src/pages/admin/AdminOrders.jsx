@@ -28,14 +28,14 @@ const AdminOrders = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
-  useEffect(() => {
-    loadOrders();
-  }, []);
-
-  const loadOrders = () => {
+  const loadOrders = React.useCallback(() => {
     const allOrders = ordersService.getOrders();
     dispatch(setOrders(allOrders));
-  };
+  }, [dispatch]);
+
+  useEffect(() => {
+    loadOrders();
+  }, [loadOrders]);
 
   const handleStatusChange = (orderId, newStatus) => {
     const result = ordersService.updateOrderStatus(orderId, newStatus);

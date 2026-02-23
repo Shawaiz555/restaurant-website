@@ -24,11 +24,7 @@ const AdminProducts = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
-  useEffect(() => {
-    loadProducts();
-  }, []);
-
-  const loadProducts = () => {
+  const loadProducts = React.useCallback(() => {
     // Migrate products from static to localStorage if not already done
     const migrated = productsService.migrateProductsToLocalStorage();
     if (migrated) {
@@ -42,7 +38,11 @@ const AdminProducts = () => {
 
     const allProducts = productsService.getProducts();
     dispatch(setProducts(allProducts));
-  };
+  }, [dispatch]);
+
+  useEffect(() => {
+    loadProducts();
+  }, [loadProducts]);
 
   const handleDeleteClick = (product) => {
     setProductToDelete(product);

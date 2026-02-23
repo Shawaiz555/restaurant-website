@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import productsService from "../../services/productsService";
-import imageService from "../../services/imageService";
 import { showNotification } from "../../store/slices/notificationSlice";
 
 const AdminProductForm = () => {
@@ -36,26 +35,11 @@ const AdminProductForm = () => {
 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  const [imageFile, setImageFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState("");
   const [showNewCategoryInput, setShowNewCategoryInput] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState("");
   const [existingCategories, setExistingCategories] = useState([]);
 
-  // Load existing categories on mount
-  useEffect(() => {
-    const allProducts = productsService.getProducts();
-    const categories = [...new Set(allProducts.map((p) => p.category))].sort();
-    setExistingCategories(categories);
-  }, []);
-
-  useEffect(() => {
-    if (isEditMode) {
-      loadProduct();
-    }
-  }, [id]);
-
-  const loadProduct = () => {
+  const loadProduct = React.useCallback(() => {
     const product = productsService.getProductById(id);
     if (product) {
       // Convert old nutrition format to new array format
@@ -103,7 +87,20 @@ const AdminProductForm = () => {
       );
       navigate("/admin/products");
     }
-  };
+  }, [id, dispatch, navigate]);
+
+  // Load existing categories on mount
+  useEffect(() => {
+    const allProducts = productsService.getProducts();
+    const categories = [...new Set(allProducts.map((p) => p.category))].sort();
+    setExistingCategories(categories);
+  }, []);
+
+  useEffect(() => {
+    if (isEditMode) {
+      loadProduct();
+    }
+  }, [isEditMode, loadProduct]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -191,12 +188,9 @@ const AdminProductForm = () => {
     const file = e.target.files[0];
     if (!file) return;
 
-    setImageFile(file);
-
     // Create preview
     const reader = new FileReader();
     reader.onloadend = () => {
-      setImagePreview(reader.result);
       setFormData((prev) => ({ ...prev, image: reader.result }));
     };
     reader.readAsDataURL(file);
@@ -577,8 +571,6 @@ const AdminProductForm = () => {
                   type="button"
                   onClick={() => {
                     setFormData((prev) => ({ ...prev, image: "" }));
-                    setImagePreview("");
-                    setImageFile(null);
                   }}
                   className="absolute top-2 right-2 bg-red-500 text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors shadow-lg"
                   title="Remove image"

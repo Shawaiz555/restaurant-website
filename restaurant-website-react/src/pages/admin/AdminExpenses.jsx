@@ -36,15 +36,15 @@ const AdminExpenses = () => {
     paymentMethod: "Cash",
   });
 
-  useEffect(() => {
-    loadExpenses();
-  }, []);
-
-  const loadExpenses = () => {
+  const loadExpenses = React.useCallback(() => {
     const allExpenses = expensesService.getExpenses();
     dispatch(setExpenses(allExpenses));
     dispatch(calculateSummary());
-  };
+  }, [dispatch]);
+
+  useEffect(() => {
+    loadExpenses();
+  }, [loadExpenses]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

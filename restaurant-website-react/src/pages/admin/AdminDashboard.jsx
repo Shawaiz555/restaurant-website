@@ -29,11 +29,7 @@ const AdminDashboard = () => {
   const [revenueTrend, setRevenueTrend] = useState([]);
   const [orderStatusDistribution, setOrderStatusDistribution] = useState([]);
 
-  useEffect(() => {
-    loadDashboardData();
-  }, []);
-
-  const loadDashboardData = () => {
+  const loadDashboardData = React.useCallback(() => {
     // Load orders
     const orders = ordersService.getOrders();
     dispatch(setOrders(orders));
@@ -75,7 +71,11 @@ const AdminDashboard = () => {
     // Calculate order status distribution
     const distribution = calculateOrderStatusDistribution(orderStats);
     setOrderStatusDistribution(distribution);
-  };
+  }, [dispatch]);
+
+  useEffect(() => {
+    loadDashboardData();
+  }, [loadDashboardData]);
 
   const calculateRevenueTrend = (orders) => {
     const last7Days = [];
@@ -138,16 +138,6 @@ const AdminDashboard = () => {
 
   const formatCurrency = (amount) => {
     return `Rs ${parseFloat(amount || 0).toFixed(2)}`;
-  };
-
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
   };
 
   return (

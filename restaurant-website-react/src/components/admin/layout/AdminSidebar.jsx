@@ -63,7 +63,7 @@ const AdminSidebar = ({ isOpen, onClose }) => {
                 <img
                   src="/assets/images/BitesLogo.png"
                   alt="logo"
-                  className="w-34 h-24 lg:w-48 lg:h-32"
+                  className="w-34 h-24 lg:w-44 lg:h-28"
                 />
               </div>
               <div>
@@ -87,7 +87,7 @@ const AdminSidebar = ({ isOpen, onClose }) => {
 
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto p-4">
-          <div className="space-y-2">
+          <div className="space-y-5">
             {navItems.map((item) => (
               <Link
                 key={item.path}
@@ -110,7 +110,7 @@ const AdminSidebar = ({ isOpen, onClose }) => {
         </nav>
 
         {/* Admin Info */}
-        <div className="p-4 bg-cream-light border-b border-gray-200">
+        <div className="p-4 py-6 bg-cream-light border-b border-gray-200">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-dark rounded-full flex items-center justify-center text-white font-bold">
               {currentUser?.name?.charAt(0) || "A"}
