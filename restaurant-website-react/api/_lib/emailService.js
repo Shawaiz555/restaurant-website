@@ -1,25 +1,46 @@
-const { Resend } = require('resend');
+const Mailjet = require('node-mailjet');
 
 const ADMIN_EMAIL = 'shiningstardeveloper@gmail.com';
-const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev';
+const FROM_EMAIL = process.env.MAILJET_FROM_EMAIL || 'noreply@yourdomain.com';
+const FROM_NAME = process.env.MAILJET_FROM_NAME || 'Restaurant';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const mailjet = Mailjet.apiConnect(
+  process.env.MAILJET_API_KEY,
+  process.env.MAILJET_SECRET_KEY
+);
 
 const formatOrderItems = (items) => {
   return items
     .map((item) => {
+      // Ensure image URL is absolute
+      const getAbsoluteImageUrl = (imagePath) => {
+        if (!imagePath) return 'https://via.placeholder.com/100x100?text=No+Image';
+        if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+          return imagePath;
+        }
+        // Convert relative path to absolute URL
+        // Assumes your app runs on localhost:3000 or you can use your domain
+        const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+        return `${baseUrl}${imagePath.startsWith('/') ? '' : '/'}${imagePath}`;
+      };
+
+      const imageUrl = getAbsoluteImageUrl(item.image);
+
       let itemText = `
         <tr>
           <td style="padding: 15px; border-bottom: 1px solid #e5e7eb;">
-            <div style="display: flex; align-items: start; gap: 20px;">
-              <img src="${item.image}" alt="${item.name}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 12px; flex-shrink: 0;" />
-              <div style="flex: 1; padding-left: 10px;">
-                <h4 style="margin: 0 0 8px 0; color: #1f2937; font-size: 16px; font-weight: 600;">${item.name}</h4>
-                ${item.size ? `<p style="margin: 0 0 6px 0; color: #6b7280; font-size: 14px;">Size: ${item.size}</p>` : ''}
-                <p style="margin: 0 0 8px 0; color: #6b7280; font-size: 14px;">Quantity: ${item.quantity}</p>
-                <p style="margin: 0; color: #E67E22; font-weight: bold; font-size: 16px;">Rs.${(item.price * item.quantity).toFixed(2)}</p>
-              </div>
-            </div>
+            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td width="100" valign="top" style="padding-right: 20px;">
+                  <img src="${imageUrl}" alt="${item.name}" width="100" height="100" style="width: 100px; height: 100px; object-fit: cover; border-radius: 12px; display: block; border: none;" />
+                </td>
+                <td valign="top">
+                  <h4 style="margin: 0 0 8px 0; color: #1f2937; font-size: 16px; font-weight: 600;">${item.name}</h4>
+                  ${item.size ? `<p style="margin: 0 0 6px 0; color: #6b7280; font-size: 14px;">Size: ${item.size}</p>` : ''}
+                  <p style="margin: 0 0 8px 0; color: #6b7280; font-size: 14px;">Quantity: ${item.quantity}</p>
+                  <p style="margin: 0; color: #E67E22; font-weight: bold; font-size: 16px;">Rs.${(item.price * item.quantity).toFixed(2)}</p>
+                </td>
+              </tr>
       `;
 
       if (
@@ -30,8 +51,10 @@ const formatOrderItems = (items) => {
           item.spiceLevel)
       ) {
         itemText += `
-          <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #e5e7eb;">
-            <p style="margin: 0 0 8px 0; color: #6b7280; font-size: 13px; font-weight: 600;">Customizations:</p>
+            <tr>
+              <td colspan="2" style="padding-top: 10px;">
+                <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #e5e7eb;">
+                  <p style="margin: 0 0 8px 0; color: #6b7280; font-size: 13px; font-weight: 600;">Customizations:</p>
         `;
 
         if (item.spiceLevel) {
@@ -60,10 +83,14 @@ const formatOrderItems = (items) => {
           });
         }
 
-        itemText += `</div>`;
+        itemText += `
+                </div>
+              </td>
+            </tr>`;
       }
 
       itemText += `
+            </table>
           </td>
         </tr>
       `;
@@ -278,12 +305,26 @@ const sendCustomerEmail = async (order) => {
   }
 
   try {
-    await resend.emails.send({
-      from: `Restaurant <${FROM_EMAIL}>`,
-      to: order.customerInfo.email,
-      subject: `Order Confirmation - ${order.orderId}`,
-      html: getCustomerEmailTemplate(order),
+    const request = mailjet.post('send', { version: 'v3.1' }).request({
+      Messages: [
+        {
+          From: {
+            Email: FROM_EMAIL,
+            Name: FROM_NAME,
+          },
+          To: [
+            {
+              Email: order.customerInfo.email,
+              Name: order.customerInfo.fullName,
+            },
+          ],
+          Subject: `Order Confirmation - ${order.orderId}`,
+          HTMLPart: getCustomerEmailTemplate(order),
+        },
+      ],
     });
+
+    await request;
     console.log('Customer email sent successfully to:', order.customerInfo.email);
     return { success: true, message: 'Customer email sent successfully' };
   } catch (err) {
@@ -294,12 +335,26 @@ const sendCustomerEmail = async (order) => {
 
 const sendAdminEmail = async (order) => {
   try {
-    await resend.emails.send({
-      from: `Restaurant Order System <${FROM_EMAIL}>`,
-      to: ADMIN_EMAIL,
-      subject: `🔔 New Order - ${order.orderId} - Rs.${order.total.toFixed(2)}`,
-      html: getAdminEmailTemplate(order),
+    const request = mailjet.post('send', { version: 'v3.1' }).request({
+      Messages: [
+        {
+          From: {
+            Email: FROM_EMAIL,
+            Name: 'Restaurant Order System',
+          },
+          To: [
+            {
+              Email: ADMIN_EMAIL,
+              Name: 'Restaurant Admin',
+            },
+          ],
+          Subject: `🔔 New Order - ${order.orderId} - Rs.${order.total.toFixed(2)}`,
+          HTMLPart: getAdminEmailTemplate(order),
+        },
+      ],
     });
+
+    await request;
     console.log('Admin email sent successfully to:', ADMIN_EMAIL);
     return { success: true, message: 'Admin email sent successfully' };
   } catch (err) {
@@ -312,12 +367,26 @@ const sendOrderEmails = async (order) => {
   let customerEmailSent = false;
   if (order.customerInfo.email) {
     try {
-      await resend.emails.send({
-        from: `Restaurant <${FROM_EMAIL}>`,
-        to: order.customerInfo.email,
-        subject: `Order Confirmation - ${order.orderId}`,
-        html: getCustomerEmailTemplate(order),
+      const request = mailjet.post('send', { version: 'v3.1' }).request({
+        Messages: [
+          {
+            From: {
+              Email: FROM_EMAIL,
+              Name: FROM_NAME,
+            },
+            To: [
+              {
+                Email: order.customerInfo.email,
+                Name: order.customerInfo.fullName,
+              },
+            ],
+            Subject: `Order Confirmation - ${order.orderId}`,
+            HTMLPart: getCustomerEmailTemplate(order),
+          },
+        ],
       });
+
+      await request;
       customerEmailSent = true;
       console.log('Customer email sent successfully to:', order.customerInfo.email);
     } catch (err) {
@@ -327,12 +396,26 @@ const sendOrderEmails = async (order) => {
 
   let adminEmailSent = false;
   try {
-    await resend.emails.send({
-      from: `Restaurant Order System <${FROM_EMAIL}>`,
-      to: ADMIN_EMAIL,
-      subject: `🔔 New Order - ${order.orderId} - Rs.${order.total.toFixed(2)}`,
-      html: getAdminEmailTemplate(order),
+    const request = mailjet.post('send', { version: 'v3.1' }).request({
+      Messages: [
+        {
+          From: {
+            Email: FROM_EMAIL,
+            Name: 'Restaurant Order System',
+          },
+          To: [
+            {
+              Email: ADMIN_EMAIL,
+              Name: 'Restaurant Admin',
+            },
+          ],
+          Subject: `🔔 New Order - ${order.orderId} - Rs.${order.total.toFixed(2)}`,
+          HTMLPart: getAdminEmailTemplate(order),
+        },
+      ],
     });
+
+    await request;
     adminEmailSent = true;
     console.log('Admin email sent successfully to:', ADMIN_EMAIL);
   } catch (err) {
