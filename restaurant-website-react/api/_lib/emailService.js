@@ -1,6 +1,6 @@
 const { Resend } = require('resend');
 
-const ADMIN_EMAIL = 'shawaizbutt555@gmail.com';
+const ADMIN_EMAIL = 'shiningstardeveloper@gmail.com';
 const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -271,6 +271,43 @@ const getAdminEmailTemplate = (order) => `
   </html>
 `;
 
+const sendCustomerEmail = async (order) => {
+  if (!order.customerInfo.email) {
+    console.log('No customer email provided, skipping customer notification');
+    return { success: false, message: 'No customer email provided' };
+  }
+
+  try {
+    await resend.emails.send({
+      from: `Restaurant <${FROM_EMAIL}>`,
+      to: order.customerInfo.email,
+      subject: `Order Confirmation - ${order.orderId}`,
+      html: getCustomerEmailTemplate(order),
+    });
+    console.log('Customer email sent successfully to:', order.customerInfo.email);
+    return { success: true, message: 'Customer email sent successfully' };
+  } catch (err) {
+    console.error('Error sending customer email:', err);
+    return { success: false, message: err.message };
+  }
+};
+
+const sendAdminEmail = async (order) => {
+  try {
+    await resend.emails.send({
+      from: `Restaurant Order System <${FROM_EMAIL}>`,
+      to: ADMIN_EMAIL,
+      subject: `🔔 New Order - ${order.orderId} - Rs.${order.total.toFixed(2)}`,
+      html: getAdminEmailTemplate(order),
+    });
+    console.log('Admin email sent successfully to:', ADMIN_EMAIL);
+    return { success: true, message: 'Admin email sent successfully' };
+  } catch (err) {
+    console.error('Error sending admin email:', err);
+    return { success: false, message: err.message };
+  }
+};
+
 const sendOrderEmails = async (order) => {
   let customerEmailSent = false;
   if (order.customerInfo.email) {
@@ -305,4 +342,4 @@ const sendOrderEmails = async (order) => {
   return { customerEmailSent, adminEmailSent };
 };
 
-module.exports = { sendOrderEmails };
+module.exports = { sendOrderEmails, sendCustomerEmail, sendAdminEmail };
