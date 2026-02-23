@@ -20,7 +20,7 @@ const AdminLayout = () => {
       <AdminSidebar isOpen={isSidebarOpen} onClose={closeSidebar} />
 
       {/* Main Content Area */}
-      <div className="lg:ml-[250px] min-h-screen flex flex-col">
+      <div className="lg:ml-[240px] min-h-screen flex flex-col">
         {/* Header */}
         <AdminHeader onMenuToggle={toggleSidebar} />
 

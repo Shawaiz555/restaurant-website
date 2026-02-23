@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setExpenses,
   addExpense as addExpenseAction,
   deleteExpense as deleteExpenseAction,
   calculateSummary,
+  updateExpense as updateExpenseAction,
 } from "../../store/slices/expensesSlice";
 import {
   selectAllExpenses,
@@ -14,6 +15,17 @@ import {
 import expensesService from "../../services/expensesService";
 import { showNotification } from "../../store/slices/notificationSlice";
 import ConfirmModal from "../../components/admin/common/ConfirmModal";
+import {
+  Plus,
+  DollarSign,
+  Calendar,
+  CalendarDays,
+  TrendingDown,
+  Tag,
+  X,
+  Edit,
+  Trash2,
+} from "lucide-react";
 import StatsCard from "../../components/admin/common/StatsCard";
 
 const AdminExpenses = () => {
@@ -36,7 +48,7 @@ const AdminExpenses = () => {
     paymentMethod: "Cash",
   });
 
-  const loadExpenses = React.useCallback(() => {
+  const loadExpenses = useCallback(() => {
     const allExpenses = expensesService.getExpenses();
     dispatch(setExpenses(allExpenses));
     dispatch(calculateSummary());
@@ -78,7 +90,8 @@ const AdminExpenses = () => {
       // Update expense
       const result = expensesService.updateExpense(editingExpense.id, formData);
       if (result.success) {
-        loadExpenses();
+        dispatch(updateExpenseAction(result.expense)); // Dispatch update action
+        dispatch(calculateSummary());
         dispatch(
           showNotification({
             type: "success",
@@ -195,7 +208,7 @@ const AdminExpenses = () => {
       <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
           <div>
-            <h1 className="text-3xl font-display text-primary mb-2">
+            <h1 className="text-2xl lg:text-4xl font-display text-primary mb-2">
               Expense Tracker
             </h1>
             <p className="text-dark-gray">
@@ -209,7 +222,7 @@ const AdminExpenses = () => {
             }}
             className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-primary to-primary-dark text-white hover:from-primary-dark hover:to-primary transition-all shadow-lg hover:shadow-xl hover:scale-105 font-semibold"
           >
-            <span className="text-xl">➕</span>
+            <Plus className="w-5 h-5" />
             <span>Add Expense</span>
           </button>
         </div>
@@ -217,26 +230,50 @@ const AdminExpenses = () => {
 
       {/* Summary Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <StatsCard
-          icon="💸"
-          label="Today"
-          value={formatCurrency(summary.today)}
-        />
-        <StatsCard
-          icon="📅"
-          label="This Week"
-          value={formatCurrency(summary.thisWeek)}
-        />
-        <StatsCard
-          icon="📆"
-          label="This Month"
-          value={formatCurrency(summary.thisMonth)}
-        />
-        <StatsCard
-          icon="💰"
-          label="All Time"
-          value={formatCurrency(summary.total)}
-        />
+        <div className="bg-white rounded-2xl p-5 shadow-lg border-2 border-gray-100 text-center">
+          <div className="w-12 h-12 mx-auto bg-gradient-to-br from-red-100 to-red-200 rounded-xl flex items-center justify-center mb-3">
+            <TrendingDown className="w-6 h-6 text-red-600" />
+          </div>
+          <p className="text-xs text-dark-gray font-semibold uppercase tracking-wide">
+            Today
+          </p>
+          <p className="text-2xl font-bold text-primary mt-1">
+            {formatCurrency(summary?.today || 0)}
+          </p>
+        </div>
+        <div className="bg-white rounded-2xl p-5 shadow-lg border-2 border-gray-100 text-center">
+          <div className="w-12 h-12 mx-auto bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl flex items-center justify-center mb-3">
+            <Calendar className="w-6 h-6 text-blue-600" />
+          </div>
+          <p className="text-xs text-dark-gray font-semibold uppercase tracking-wide">
+            This Week
+          </p>
+          <p className="text-2xl font-bold text-primary mt-1">
+            {formatCurrency(summary?.thisWeek || 0)}
+          </p>
+        </div>
+        <div className="bg-white rounded-2xl p-5 shadow-lg border-2 border-gray-100 text-center">
+          <div className="w-12 h-12 mx-auto bg-gradient-to-br from-green-100 to-green-200 rounded-xl flex items-center justify-center mb-3">
+            <CalendarDays className="w-6 h-6 text-green-600" />
+          </div>
+          <p className="text-xs text-dark-gray font-semibold uppercase tracking-wide">
+            This Month
+          </p>
+          <p className="text-2xl font-bold text-primary mt-1">
+            {formatCurrency(summary?.thisMonth || 0)}
+          </p>
+        </div>
+        <div className="bg-white rounded-2xl p-5 shadow-lg border-2 border-gray-100 text-center">
+          <div className="w-12 h-12 mx-auto bg-gradient-to-br from-primary/20 to-primary-light/20 rounded-xl flex items-center justify-center mb-3">
+            <DollarSign className="w-6 h-6 text-primary" />
+          </div>
+          <p className="text-xs text-dark-gray font-semibold uppercase tracking-wide">
+            All Time
+          </p>
+          <p className="text-2xl font-bold text-primary mt-1">
+            {formatCurrency(summary?.total || 0)}
+          </p>
+        </div>
       </div>
 
       {/* Add/Edit Form */}
@@ -250,7 +287,7 @@ const AdminExpenses = () => {
               onClick={resetForm}
               className="text-dark-gray hover:text-dark transition-colors"
             >
-              ✕ Cancel
+              <X className="w-5 h-5" />
             </button>
           </div>
 
@@ -408,7 +445,9 @@ const AdminExpenses = () => {
       <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
         {filteredExpenses.length === 0 ? (
           <div className="text-center py-16">
-            <div className="text-6xl mb-4">💰</div>
+            <div className="mb-4 flex justify-center">
+              <Tag className="w-16 h-16 text-gray-400" />
+            </div>
             <h3 className="text-xl font-bold text-dark mb-2">
               No Expenses Found
             </h3>

@@ -4,6 +4,15 @@ import { useDispatch } from "react-redux";
 import { logout } from "../../../store/slices/authSlice";
 import { useAuth } from "../../../hooks/useAuth";
 import { showNotification } from "../../../store/slices/notificationSlice";
+import {
+  LayoutDashboard,
+  Package,
+  Pizza,
+  DollarSign,
+  TrendingUp,
+  LogOut,
+  X,
+} from "lucide-react";
 
 const AdminSidebar = ({ isOpen, onClose }) => {
   const location = useLocation();
@@ -12,11 +21,11 @@ const AdminSidebar = ({ isOpen, onClose }) => {
   const { currentUser } = useAuth();
 
   const navItems = [
-    { path: "/admin/dashboard", icon: "📊", label: "Dashboard" },
-    { path: "/admin/orders", icon: "📦", label: "Orders" },
-    { path: "/admin/products", icon: "🍕", label: "Products" },
-    { path: "/admin/expenses", icon: "💰", label: "Expenses" },
-    { path: "/admin/analytics", icon: "📈", label: "Analytics" },
+    { path: "/admin/dashboard", icon: LayoutDashboard, label: "Dashboard" },
+    { path: "/admin/orders", icon: Package, label: "Orders" },
+    { path: "/admin/products", icon: Pizza, label: "Products" },
+    { path: "/admin/expenses", icon: DollarSign, label: "Expenses" },
+    { path: "/admin/analytics", icon: TrendingUp, label: "Analytics" },
   ];
 
   const handleLogout = () => {
@@ -49,14 +58,14 @@ const AdminSidebar = ({ isOpen, onClose }) => {
       <aside
         className={`
           fixed top-0 left-0 h-full bg-white z-[70] transition-transform duration-300 ease-in-out
-          w-[260px] border-r-2 border-gray-200 flex flex-col
+          w-[250px] border-r-2 border-gray-200 flex flex-col
           lg:translate-x-0
           ${isOpen ? "translate-x-0" : "-translate-x-full"}
         `}
       >
         {/* Logo/Header */}
         <div className="p-6 border-b-2 border-gray-200 bg-gradient-to-br from-cream-light to-white">
-          <div className="flex items-center justify-center">
+          <div className="flex items-center justify-start">
             <div>
               {/* Logo */}
               <div className="flex items-center justify-center">
@@ -80,7 +89,7 @@ const AdminSidebar = ({ isOpen, onClose }) => {
               onClick={onClose}
               className="lg:hidden w-8 h-8 rounded-lg hover:bg-gray-100 flex items-center justify-center transition-colors"
             >
-              ✕
+              <X className="w-4 h-4" />
             </button>
           </div>
         </div>
@@ -102,7 +111,7 @@ const AdminSidebar = ({ isOpen, onClose }) => {
                   }
                 `}
               >
-                <span className="text-2xl">{item.icon}</span>
+                <item.icon className="w-5 h-5 flex-shrink-0" />
                 <span className="text-sm">{item.label}</span>
               </Link>
             ))}
@@ -132,7 +141,7 @@ const AdminSidebar = ({ isOpen, onClose }) => {
             onClick={handleLogout}
             className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white text-red-600 border-2 border-red-200 hover:bg-red-50 hover:border-red-300 transition-all font-semibold"
           >
-            <span className="text-xl">🚪</span>
+            <LogOut className="w-5 h-5" />
             <span className="text-sm">Logout</span>
           </button>
         </div>

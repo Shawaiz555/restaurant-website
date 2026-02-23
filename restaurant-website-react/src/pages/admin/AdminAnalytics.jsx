@@ -1,8 +1,31 @@
-import React, { useEffect, useState } from 'react';
-import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import StatsCard from '../../components/admin/common/StatsCard';
-import analyticsService from '../../services/analyticsService';
-import ordersService from '../../services/ordersService';
+import React, { useEffect, useState } from "react";
+import {
+  LineChart,
+  Line,
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
+import {
+  DollarSign,
+  TrendingDown,
+  Wallet,
+  BarChart2,
+  TrendingUp,
+  PieChart as PieChartIcon,
+  Pizza,
+} from "lucide-react";
+import StatsCard from "../../components/admin/common/StatsCard";
+import analyticsService from "../../services/analyticsService";
+import ordersService from "../../services/ordersService";
 
 const AdminAnalytics = () => {
   const [stats, setStats] = useState({
@@ -14,7 +37,7 @@ const AdminAnalytics = () => {
   const [revenueData, setRevenueData] = useState([]);
   const [topProducts, setTopProducts] = useState([]);
   const [orderStatusData, setOrderStatusData] = useState([]);
-  const [dateRange, setDateRange] = useState('week');
+  const [dateRange, setDateRange] = useState("week");
 
   const loadAnalytics = React.useCallback(() => {
     // Revenue vs Expenses
@@ -23,10 +46,15 @@ const AdminAnalytics = () => {
 
     // Revenue trend data
     const revenue = analyticsService.getRevenueData(dateRange);
-    const chartData = Object.entries(revenue.revenueByDate || {}).map(([date, amount]) => ({
-      date: new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-      revenue: amount,
-    }));
+    const chartData = Object.entries(revenue.revenueByDate || {}).map(
+      ([date, amount]) => ({
+        date: new Date(date).toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+        }),
+        revenue: amount,
+      }),
+    );
     setRevenueData(chartData);
 
     // Top products
@@ -36,11 +64,11 @@ const AdminAnalytics = () => {
     // Order status distribution
     const orderStats = ordersService.getOrderStats();
     const statusData = [
-      { name: 'Pending', value: orderStats.pending, color: '#F39C12' },
-      { name: 'Processing', value: orderStats.processing, color: '#3498DB' },
-      { name: 'Completed', value: orderStats.completed, color: '#27AE60' },
-      { name: 'Cancelled', value: orderStats.cancelled, color: '#E74C3C' },
-    ].filter(item => item.value > 0);
+      { name: "Pending", value: orderStats.pending, color: "#F39C12" },
+      { name: "Processing", value: orderStats.processing, color: "#3498DB" },
+      { name: "Completed", value: orderStats.completed, color: "#27AE60" },
+      { name: "Cancelled", value: orderStats.cancelled, color: "#E74C3C" },
+    ].filter((item) => item.value > 0);
     setOrderStatusData(statusData);
   }, [dateRange]);
 
@@ -58,8 +86,12 @@ const AdminAnalytics = () => {
       <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-lg border border-gray-100">
         <div className="flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-display text-primary mb-2">Analytics</h1>
-            <p className="text-sm sm:text-base text-dark-gray">View detailed insights and reports</p>
+            <h1 className="text-2xl sm:text-4xl font-display text-primary mb-2">
+              Analytics
+            </h1>
+            <p className="text-sm sm:text-base text-dark-gray">
+              View detailed insights and reports
+            </p>
           </div>
           <select
             value={dateRange}
@@ -77,28 +109,28 @@ const AdminAnalytics = () => {
       {/* Key Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <StatsCard
-          icon="💰"
+          icon={DollarSign}
           label="Total Revenue"
           value={formatCurrency(stats.revenue)}
           trend="up"
         />
         <StatsCard
-          icon="💸"
+          icon={TrendingDown}
           label="Total Expenses"
           value={formatCurrency(stats.expenses)}
           trend="neutral"
         />
         <StatsCard
-          icon="💵"
+          icon={Wallet}
           label="Net Profit"
           value={formatCurrency(stats.profit)}
-          trend={stats.profit > 0 ? 'up' : 'down'}
+          trend={stats.profit > 0 ? "up" : "down"}
         />
         <StatsCard
-          icon="📊"
+          icon={BarChart2}
           label="Profit Margin"
-          value={`${stats.profitMargin}%`}
-          trend={parseFloat(stats.profitMargin) > 0 ? 'up' : 'down'}
+          value={`${parseFloat(stats.profitMargin || 0).toFixed(1)}%`}
+          trend={parseFloat(stats.profitMargin) > 0 ? "up" : "down"}
         />
       </div>
 
@@ -111,13 +143,17 @@ const AdminAnalytics = () => {
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={revenueData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                <XAxis dataKey="date" stroke="#4A4A4A" style={{ fontSize: '12px' }} />
-                <YAxis stroke="#4A4A4A" style={{ fontSize: '12px' }} />
+                <XAxis
+                  dataKey="date"
+                  stroke="#4A4A4A"
+                  style={{ fontSize: "12px" }}
+                />
+                <YAxis stroke="#4A4A4A" style={{ fontSize: "12px" }} />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: '#fff',
-                    border: '1px solid #E67E22',
-                    borderRadius: '8px',
+                    backgroundColor: "#fff",
+                    border: "1px solid #E67E22",
+                    borderRadius: "8px",
                   }}
                   formatter={(value) => formatCurrency(value)}
                 />
@@ -127,7 +163,7 @@ const AdminAnalytics = () => {
                   dataKey="revenue"
                   stroke="#E67E22"
                   strokeWidth={3}
-                  dot={{ fill: '#E67E22', r: 5 }}
+                  dot={{ fill: "#E67E22", r: 5 }}
                   activeDot={{ r: 7 }}
                   name="Revenue"
                 />
@@ -135,9 +171,9 @@ const AdminAnalytics = () => {
             </ResponsiveContainer>
           ) : (
             <div className="h-[300px] flex items-center justify-center text-dark-gray">
-              <div className="text-center">
-                <p className="text-4xl mb-2">📈</p>
-                <p>No revenue data available</p>
+              <div className="text-center py-12 text-dark-gray">
+                <TrendingUp className="w-16 h-16 mx-auto mb-4 text-dark-gray/40" />
+                <p className="text-sm">No revenue data for this period</p>
               </div>
             </div>
           )}
@@ -145,7 +181,9 @@ const AdminAnalytics = () => {
 
         {/* Order Status Distribution */}
         <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-          <h2 className="text-xl font-bold text-dark mb-4">Order Status Distribution</h2>
+          <h2 className="text-xl font-bold text-dark mb-4">
+            Order Status Distribution
+          </h2>
           {orderStatusData.length > 0 ? (
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
@@ -154,7 +192,9 @@ const AdminAnalytics = () => {
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  label={({ name, percent }) =>
+                    `${name} ${(percent * 100).toFixed(0)}%`
+                  }
                   outerRadius={100}
                   fill="#8884d8"
                   dataKey="value"
@@ -168,9 +208,9 @@ const AdminAnalytics = () => {
             </ResponsiveContainer>
           ) : (
             <div className="h-[300px] flex items-center justify-center text-dark-gray">
-              <div className="text-center">
-                <p className="text-4xl mb-2">📊</p>
-                <p>No order data available</p>
+              <div className="text-center py-12 text-dark-gray">
+                <PieChartIcon className="w-16 h-16 mx-auto mb-4 text-dark-gray/40" />
+                <p className="text-sm">No order data available</p>
               </div>
             </div>
           )}
@@ -179,38 +219,54 @@ const AdminAnalytics = () => {
 
       {/* Top Selling Products */}
       <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-        <h2 className="text-xl font-bold text-dark mb-4">Top Selling Products</h2>
+        <h2 className="text-xl font-bold text-dark mb-4">
+          Top Selling Products
+        </h2>
         {topProducts.length > 0 ? (
           <ResponsiveContainer width="100%" height={400}>
             <BarChart data={topProducts} layout="vertical">
               <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-              <XAxis type="number" stroke="#4A4A4A" style={{ fontSize: '12px' }} />
+              <XAxis
+                type="number"
+                stroke="#4A4A4A"
+                style={{ fontSize: "12px" }}
+              />
               <YAxis
                 dataKey="name"
                 type="category"
                 width={150}
                 stroke="#4A4A4A"
-                style={{ fontSize: '12px' }}
+                style={{ fontSize: "12px" }}
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: '#fff',
-                  border: '1px solid #E67E22',
-                  borderRadius: '8px',
+                  backgroundColor: "#fff",
+                  border: "1px solid #E67E22",
+                  borderRadius: "8px",
                 }}
                 formatter={(value, name) =>
-                  name === 'revenue' ? formatCurrency(value) : value
+                  name === "revenue" ? formatCurrency(value) : value
                 }
               />
               <Legend />
-              <Bar dataKey="count" fill="#E67E22" name="Orders" radius={[0, 8, 8, 0]} />
-              <Bar dataKey="revenue" fill="#F39C12" name="Revenue" radius={[0, 8, 8, 0]} />
+              <Bar
+                dataKey="count"
+                fill="#E67E22"
+                name="Orders"
+                radius={[0, 8, 8, 0]}
+              />
+              <Bar
+                dataKey="revenue"
+                fill="#F39C12"
+                name="Revenue"
+                radius={[0, 8, 8, 0]}
+              />
             </BarChart>
           </ResponsiveContainer>
         ) : (
           <div className="h-[400px] flex items-center justify-center text-dark-gray">
             <div className="text-center">
-              <p className="text-6xl mb-2">🍕</p>
+              <Pizza className="w-16 h-16 mx-auto mb-4 text-dark-gray/40" />
               <p>No sales data available</p>
             </div>
           </div>
@@ -221,39 +277,58 @@ const AdminAnalytics = () => {
       {topProducts.length > 0 && (
         <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
           <div className="p-6 border-b border-gray-200">
-            <h2 className="text-xl font-bold text-dark">Product Performance Details</h2>
+            <h2 className="text-xl font-bold text-dark">
+              Product Performance Details
+            </h2>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-cream border-b-2 border-gray-200">
                 <tr>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-dark">Rank</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-dark">Product Name</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-dark">Orders</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-dark">Revenue</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-dark">Avg. Order Value</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-dark">
+                    Rank
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-dark">
+                    Product Name
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-dark">
+                    Orders
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-dark">
+                    Revenue
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-dark">
+                    Avg. Order Value
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
                 {topProducts.map((product, index) => (
-                  <tr key={product.name} className="hover:bg-cream-light transition-colors">
+                  <tr
+                    key={product.name}
+                    className="hover:bg-cream-light transition-colors"
+                  >
                     <td className="px-6 py-4">
                       <div
                         className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm ${
                           index === 0
-                            ? 'bg-yellow-500'
+                            ? "bg-yellow-500"
                             : index === 1
-                            ? 'bg-gray-400'
-                            : index === 2
-                            ? 'bg-yellow-700'
-                            : 'bg-primary'
+                              ? "bg-gray-400"
+                              : index === 2
+                                ? "bg-yellow-700"
+                                : "bg-primary"
                         }`}
                       >
                         {index + 1}
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-sm font-semibold text-dark">{product.name}</td>
-                    <td className="px-6 py-4 text-sm text-dark-gray">{product.count} orders</td>
+                    <td className="px-6 py-4 text-sm font-semibold text-dark">
+                      {product.name}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-dark-gray">
+                      {product.count} orders
+                    </td>
                     <td className="px-6 py-4 text-sm font-bold text-primary">
                       {formatCurrency(product.revenue)}
                     </td>

@@ -13,6 +13,20 @@ import ordersService from "../../services/ordersService";
 import productsService from "../../services/productsService";
 import expensesService from "../../services/expensesService";
 import analyticsService from "../../services/analyticsService";
+import {
+  DollarSign,
+  ShoppingBag,
+  Pizza,
+  Receipt,
+  Plus,
+  Package,
+  TrendingUp,
+  BarChart2,
+  Clock,
+  RefreshCw,
+  CheckCircle,
+  XCircle,
+} from "lucide-react";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -113,25 +127,25 @@ const AdminDashboard = () => {
         status: "Pending",
         count: orderStats.pending,
         color: "#FCD34D",
-        icon: "⏳",
+        icon: Clock,
       },
       {
         status: "Processing",
         count: orderStats.processing,
         color: "#60A5FA",
-        icon: "🔄",
+        icon: RefreshCw,
       },
       {
         status: "Completed",
         count: orderStats.completed,
         color: "#34D399",
-        icon: "✅",
+        icon: CheckCircle,
       },
       {
         status: "Cancelled",
         count: orderStats.cancelled,
         color: "#F87171",
-        icon: "❌",
+        icon: XCircle,
       },
     ];
   };
@@ -144,20 +158,22 @@ const AdminDashboard = () => {
     <div className="space-y-6">
       {/* Page Header */}
       <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-        <h1 className="text-3xl font-display text-primary mb-2">Dashboard</h1>
+        <h1 className="text-2xl lg:text-4xl font-display text-primary mb-2">
+          Dashboard
+        </h1>
         <p className="text-dark-gray">Welcome to your restaurant admin panel</p>
       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         <StatsCard
-          icon="💰"
+          icon={DollarSign}
           label="Total Revenue"
           value={formatCurrency(stats.revenue)}
           onClick={() => navigate("/admin/analytics")}
         />
         <StatsCard
-          icon="📦"
+          icon={ShoppingBag}
           label="Total Orders"
           value={stats.orders}
           change={
@@ -167,13 +183,13 @@ const AdminDashboard = () => {
           onClick={() => navigate("/admin/orders")}
         />
         <StatsCard
-          icon="🍕"
+          icon={Pizza}
           label="Active Products"
           value={stats.products}
           onClick={() => navigate("/admin/products")}
         />
         <StatsCard
-          icon="💸"
+          icon={Receipt}
           label="Monthly Expenses"
           value={formatCurrency(stats.expenses)}
           onClick={() => navigate("/admin/expenses")}
@@ -188,21 +204,21 @@ const AdminDashboard = () => {
             onClick={() => navigate("/admin/products/new")}
             className="flex items-center gap-3 p-4 rounded-xl bg-gradient-to-r from-primary to-primary-light text-white hover:from-primary-dark hover:to-primary transition-all shadow-lg hover:shadow-xl hover:scale-105"
           >
-            <span className="text-2xl">➕</span>
+            <Plus className="w-6 h-6" />
             <span className="font-semibold">Add New Product</span>
           </button>
           <button
             onClick={() => navigate("/admin/orders")}
             className="flex items-center gap-3 p-4 rounded-xl bg-white border-2 border-primary text-primary hover:bg-primary hover:text-white transition-all shadow-md hover:shadow-lg hover:scale-105"
           >
-            <span className="text-2xl">📦</span>
+            <Package className="w-6 h-6" />
             <span className="font-semibold">View All Orders</span>
           </button>
           <button
             onClick={() => navigate("/admin/expenses/new")}
             className="flex items-center gap-3 p-4 rounded-xl bg-white border-2 border-gray-300 text-dark hover:bg-cream transition-all shadow-md hover:shadow-lg hover:scale-105"
           >
-            <span className="text-2xl">💰</span>
+            <DollarSign className="w-6 h-6" />
             <span className="font-semibold">Record Expense</span>
           </button>
         </div>
@@ -216,13 +232,13 @@ const AdminDashboard = () => {
             <h2 className="text-xl font-display text-dark">
               Revenue Trend (Last 7 Days)
             </h2>
-            <span className="text-sm text-dark-gray">📈</span>
+            <TrendingUp className="w-5 h-5 text-dark-gray" />
           </div>
 
           {revenueTrend.length === 0 ||
           revenueTrend.every((d) => d.revenue === 0) ? (
             <div className="text-center py-12 text-dark-gray">
-              <div className="text-4xl mb-2">📊</div>
+              <BarChart2 className="w-12 h-12 mx-auto mb-2 text-dark-gray/40" />
               <p>No revenue data yet</p>
             </div>
           ) : (
@@ -288,12 +304,12 @@ const AdminDashboard = () => {
             <h2 className="text-xl font-display text-dark">
               Order Status Distribution
             </h2>
-            <span className="text-sm text-dark-gray">📊</span>
+            <BarChart2 className="w-5 h-5 text-dark-gray" />
           </div>
 
           {orderStatusDistribution.every((s) => s.count === 0) ? (
             <div className="text-center py-12 text-dark-gray">
-              <div className="text-4xl mb-2">📦</div>
+              <Package className="w-12 h-12 mx-auto mb-2 text-dark-gray/40" />
               <p>No orders yet</p>
             </div>
           ) : (
@@ -382,8 +398,12 @@ const AdminDashboard = () => {
                           className="w-4 h-4 rounded-full shadow-sm"
                           style={{ backgroundColor: item.color }}
                         ></div>
-                        <span className="text-sm font-medium text-dark">
-                          {item.icon} {item.status}
+                        <span className="text-sm font-medium text-dark flex items-center gap-1.5">
+                          {React.createElement(item.icon, {
+                            className: "w-3.5 h-3.5",
+                            style: { color: item.color },
+                          })}{" "}
+                          {item.status}
                         </span>
                       </div>
                       <div className="flex items-center gap-3">
@@ -419,7 +439,7 @@ const AdminDashboard = () => {
 
           {recentOrders.length === 0 ? (
             <div className="text-center py-8 text-dark-gray">
-              <div className="text-4xl mb-2">📦</div>
+              <Package className="w-12 h-12 mx-auto mb-2 text-dark-gray/40" />
               <p>No orders yet</p>
             </div>
           ) : (
@@ -466,7 +486,7 @@ const AdminDashboard = () => {
 
           {topProducts.length === 0 ? (
             <div className="text-center py-8 text-dark-gray">
-              <div className="text-4xl mb-2">🍕</div>
+              <Pizza className="w-12 h-12 mx-auto mb-2 text-dark-gray/40" />
               <p>No sales data yet</p>
             </div>
           ) : (
