@@ -5,14 +5,7 @@ import { logout } from "../../store/slices/authSlice";
 import { toggleCart } from "../../store/slices/cartSlice";
 import { showNotification } from "../../store/slices/notificationSlice";
 import Loader from "../common/Loader";
-import {
-  UserCircle,
-  Package,
-  Settings,
-  LogOut,
-  ShoppingCart,
-  X,
-} from "lucide-react";
+import { UserCircle, Package, Settings, LogOut, X } from "lucide-react";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -71,7 +64,7 @@ const Navbar = () => {
               <img
                 src="/assets/images/BitesLogo.png"
                 alt="Bites Restaurant Logo"
-                className="h-28 w-32 lg:w-48 lg:h-24 object-contain transition-all"
+                className="h-28 w-32 lg:w-52 lg:h-20 object-contain transition-all"
               />
             </Link>
 
@@ -255,7 +248,7 @@ const Navbar = () => {
                 onClick={() => dispatch(toggleCart())}
                 className="relative w-10 h-10 rounded-full border-2 border-dark/10 flex items-center justify-center hover:bg-primary hover:border-primary hover:text-white transition-all text-dark"
               >
-                <ShoppingCart className="w-5 h-5" />
+                <span>🛒</span>
                 {cartItemCount > 0 && (
                   <span className="absolute -top-1 -right-1 bg-primary text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
                     {cartItemCount}
@@ -297,7 +290,7 @@ const Navbar = () => {
           showMobileMenu ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="flex items-center justify-between mb-12">
+        <div className="flex items-center justify-center mb-12">
           <img
             src="/assets/images/BitesLogo.png"
             alt="Bites Restaurant Logo"
@@ -311,7 +304,7 @@ const Navbar = () => {
           </button>
         </div>
 
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col justify-center items-center gap-6">
           <Link
             to="/"
             onClick={() => setShowMobileMenu(false)}

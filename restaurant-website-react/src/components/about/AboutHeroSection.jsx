@@ -1,4 +1,16 @@
 import React from "react";
+import {
+  BookOpen,
+  Trophy,
+  Users,
+  Star,
+  Utensils,
+  Award,
+  Sparkles,
+  Heart,
+  Leaf,
+  ChefHat,
+} from "lucide-react";
 
 const AboutHeroSection = () => {
   return (
@@ -21,7 +33,7 @@ const AboutHeroSection = () => {
         <div className="max-w-6xl mx-auto text-center">
           {/* Enhanced Badge */}
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-primary/20 to-primary-light/20 backdrop-blur-md px-4 py-2 rounded-full border-2 border-primary/40 shadow-lg animate-fade-in mb-5">
-            <span className="text-2xl animate-bounce-slow">📖</span>
+            <BookOpen className="w-5 h-5 text-primary animate-bounce-slow" />
             <span className="text-dark font-bold text-xs tracking-wide uppercase">
               Our Story
             </span>
@@ -52,53 +64,66 @@ const AboutHeroSection = () => {
 
           {/* Stats Grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6 max-w-5xl mx-auto mb-10 animate-slide-up-delay-3">
-            <div className="group bg-white/70 backdrop-blur-sm rounded-2xl p-5 lg:p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 border-2 border-primary/20 hover:border-primary/40">
-              <div className="text-5xl mb-3 group-hover:scale-110 transition-transform">🏆</div>
-              <div className="text-primary font-display text-3xl lg:text-4xl font-bold mb-1">15+</div>
-              <div className="text-dark-gray text-sm font-semibold">Years Experience</div>
+            <div className="group bg-white/70 backdrop-blur-sm rounded-2xl p-5 lg:p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 border-2 border-primary/20 hover:border-primary/40 text-center">
+              <Trophy className="w-10 h-10 mx-auto mb-3 text-primary group-hover:scale-110 transition-transform" />
+              <div className="text-primary font-display text-3xl lg:text-4xl font-bold mb-1">
+                15+
+              </div>
+              <div className="text-dark-gray text-sm font-semibold">
+                Years Experience
+              </div>
             </div>
 
-            <div className="group bg-white/70 backdrop-blur-sm rounded-2xl p-5 lg:p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 border-2 border-primary/20 hover:border-primary/40">
-              <div className="text-5xl mb-3 group-hover:scale-110 transition-transform">👥</div>
-              <div className="text-primary font-display text-3xl lg:text-4xl font-bold mb-1">50K+</div>
-              <div className="text-dark-gray text-sm font-semibold">Happy Customers</div>
+            <div className="group bg-white/70 backdrop-blur-sm rounded-2xl p-5 lg:p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 border-2 border-primary/20 hover:border-primary/40 text-center">
+              <Users className="w-10 h-10 mx-auto mb-3 text-primary group-hover:scale-110 transition-transform" />
+              <div className="text-primary font-display text-3xl lg:text-4xl font-bold mb-1">
+                50K+
+              </div>
+              <div className="text-dark-gray text-sm font-semibold">
+                Happy Customers
+              </div>
             </div>
 
-            <div className="group bg-white/70 backdrop-blur-sm rounded-2xl p-5 lg:p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 border-2 border-primary/20 hover:border-primary/40">
-              <div className="text-5xl mb-3 group-hover:scale-110 transition-transform">⭐</div>
-              <div className="text-primary font-display text-3xl lg:text-4xl font-bold mb-1">4.9</div>
-              <div className="text-dark-gray text-sm font-semibold">Average Rating</div>
+            <div className="group bg-white/70 backdrop-blur-sm rounded-2xl p-5 lg:p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 border-2 border-primary/20 hover:border-primary/40 text-center">
+              <Star className="w-10 h-10 mx-auto mb-3 text-primary group-hover:scale-110 transition-transform fill-current" />
+              <div className="text-primary font-display text-3xl lg:text-4xl font-bold mb-1">
+                4.9
+              </div>
+              <div className="text-dark-gray text-sm font-semibold">
+                Average Rating
+              </div>
             </div>
 
-            <div className="group bg-white/70 backdrop-blur-sm rounded-2xl p-5 lg:p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 border-2 border-primary/20 hover:border-primary/40">
-              <div className="text-5xl mb-3 group-hover:scale-110 transition-transform">🍽️</div>
-              <div className="text-primary font-display text-3xl lg:text-4xl font-bold mb-1">200+</div>
-              <div className="text-dark-gray text-sm font-semibold">Menu Items</div>
+            <div className="group bg-white/70 backdrop-blur-sm rounded-2xl p-5 lg:p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 border-2 border-primary/20 hover:border-primary/40 text-center">
+              <Utensils className="w-10 h-10 mx-auto mb-3 text-primary group-hover:scale-110 transition-transform" />
+              <div className="text-primary font-display text-3xl lg:text-4xl font-bold mb-1">
+                200+
+              </div>
+              <div className="text-dark-gray text-sm font-semibold">
+                Menu Items
+              </div>
             </div>
           </div>
 
           {/* Feature Pills */}
           <div className="flex flex-wrap justify-center gap-3 animate-slide-up-delay-4">
-            <div className="group bg-gradient-to-r from-white to-cream-light hover:from-primary hover:to-primary-light px-6 py-3 rounded-full border-2 border-primary/30 hover:border-primary shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center gap-2">
-              <span className="text-2xl group-hover:scale-125 transition-transform">🏆</span>
-              <span className="text-primary group-hover:text-white text-sm font-bold transition-colors">Award Winning</span>
-            </div>
-            <div className="group bg-gradient-to-r from-white to-cream-light hover:from-primary hover:to-primary-light px-6 py-3 rounded-full border-2 border-primary/30 hover:border-primary shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center gap-2">
-              <span className="text-2xl group-hover:scale-125 transition-transform">🌟</span>
-              <span className="text-primary group-hover:text-white text-sm font-bold transition-colors">Since 2010</span>
-            </div>
-            <div className="group bg-gradient-to-r from-white to-cream-light hover:from-primary hover:to-primary-light px-6 py-3 rounded-full border-2 border-primary/30 hover:border-primary shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center gap-2">
-              <span className="text-2xl group-hover:scale-125 transition-transform">❤️</span>
-              <span className="text-primary group-hover:text-white text-sm font-bold transition-colors">Family Owned</span>
-            </div>
-            <div className="group bg-gradient-to-r from-white to-cream-light hover:from-primary hover:to-primary-light px-6 py-3 rounded-full border-2 border-primary/30 hover:border-primary shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center gap-2">
-              <span className="text-2xl group-hover:scale-125 transition-transform">🌱</span>
-              <span className="text-primary group-hover:text-white text-sm font-bold transition-colors">Fresh Ingredients</span>
-            </div>
-            <div className="group bg-gradient-to-r from-white to-cream-light hover:from-primary hover:to-primary-light px-6 py-3 rounded-full border-2 border-primary/30 hover:border-primary shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center gap-2">
-              <span className="text-2xl group-hover:scale-125 transition-transform">👨‍🍳</span>
-              <span className="text-primary group-hover:text-white text-sm font-bold transition-colors">Expert Chefs</span>
-            </div>
+            {[
+              { icon: Award, label: "Award Winning" },
+              { icon: Sparkles, label: "Since 2010" },
+              { icon: Heart, label: "Family Owned" },
+              { icon: Leaf, label: "Fresh Ingredients" },
+              { icon: ChefHat, label: "Expert Chefs" },
+            ].map((feature, idx) => (
+              <div
+                key={idx}
+                className="group bg-gradient-to-r from-white to-cream-light hover:from-primary hover:to-primary-light px-6 py-3 rounded-full border-2 border-primary/30 hover:border-primary shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center gap-2"
+              >
+                <feature.icon className="w-5 h-5 text-primary group-hover:text-white group-hover:scale-110 transition-all" />
+                <span className="text-primary group-hover:text-white text-sm font-bold transition-colors">
+                  {feature.label}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -117,7 +142,8 @@ const AboutHeroSection = () => {
       {/* Animations */}
       <style jsx>{`
         @keyframes float-1 {
-          0%, 100% {
+          0%,
+          100% {
             transform: translateY(0px) translateX(0px);
           }
           50% {
@@ -126,7 +152,8 @@ const AboutHeroSection = () => {
         }
 
         @keyframes float-2 {
-          0%, 100% {
+          0%,
+          100% {
             transform: translateY(0px) translateX(0px);
           }
           50% {
@@ -135,7 +162,8 @@ const AboutHeroSection = () => {
         }
 
         @keyframes float-3 {
-          0%, 100% {
+          0%,
+          100% {
             transform: translateY(0px) translateX(0px);
           }
           50% {
@@ -164,7 +192,8 @@ const AboutHeroSection = () => {
         }
 
         @keyframes pulse-slow {
-          0%, 100% {
+          0%,
+          100% {
             opacity: 0.1;
           }
           50% {
@@ -173,7 +202,8 @@ const AboutHeroSection = () => {
         }
 
         @keyframes pulse-slower {
-          0%, 100% {
+          0%,
+          100% {
             opacity: 0.08;
           }
           50% {
@@ -182,7 +212,8 @@ const AboutHeroSection = () => {
         }
 
         @keyframes bounce-slow {
-          0%, 100% {
+          0%,
+          100% {
             transform: translateY(0);
           }
           50% {

@@ -1,11 +1,34 @@
 import React from "react";
+import {
+  Sparkles,
+  Utensils,
+  Truck,
+  PartyPopper,
+  Smartphone,
+  Zap,
+  Target,
+  Award,
+  ArrowRight,
+} from "lucide-react";
 
 const ServicesHeroSection = () => {
   const services = [
-    { icon: "🍽️", label: "Dine-In", color: "from-orange-400 to-orange-500" },
-    { icon: "🚚", label: "Delivery", color: "from-blue-400 to-blue-500" },
-    { icon: "🎉", label: "Catering", color: "from-purple-400 to-purple-500" },
-    { icon: "📱", label: "Online Order", color: "from-green-400 to-green-500" }
+    {
+      icon: Utensils,
+      label: "Dine-In",
+      color: "from-orange-400 to-orange-500",
+    },
+    { icon: Truck, label: "Delivery", color: "from-blue-400 to-blue-500" },
+    {
+      icon: PartyPopper,
+      label: "Catering",
+      color: "from-purple-400 to-purple-500",
+    },
+    {
+      icon: Smartphone,
+      label: "Online Order",
+      color: "from-green-400 to-green-500",
+    },
   ];
 
   return (
@@ -28,7 +51,7 @@ const ServicesHeroSection = () => {
         <div className="max-w-5xl mx-auto text-center">
           {/* Enhanced Badge */}
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-primary/20 to-primary-light/20 backdrop-blur-md px-4 py-2 rounded-full border-2 border-primary/40 shadow-lg animate-fade-in mb-5">
-            <span className="text-2xl animate-bounce-slow">✨</span>
+            <Sparkles className="w-5 h-5 text-primary animate-bounce-slow" />
             <span className="text-dark font-bold text-xs tracking-wide uppercase">
               What We Offer
             </span>
@@ -64,15 +87,21 @@ const ServicesHeroSection = () => {
                 key={service.label}
                 className="group relative"
                 style={{
-                  animation: `slide-up 0.8s ease-out ${0.8 + idx * 0.1}s backwards`
+                  animation: `slide-up 0.8s ease-out ${0.8 + idx * 0.1}s backwards`,
                 }}
               >
-                <div className={`absolute inset-0 bg-gradient-to-br ${service.color} rounded-2xl blur-lg opacity-0 group-hover:opacity-40 transition-opacity duration-300`}></div>
+                <div
+                  className={`absolute inset-0 bg-gradient-to-br ${service.color} rounded-2xl blur-lg opacity-0 group-hover:opacity-40 transition-opacity duration-300`}
+                ></div>
                 <div className="relative bg-white rounded-2xl p-5 lg:p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 border-2 border-primary/20 hover:border-primary/40">
-                  <div className={`w-14 h-14 lg:w-16 lg:h-16 mx-auto mb-3 bg-gradient-to-br ${service.color} rounded-xl flex items-center justify-center text-3xl lg:text-4xl shadow-lg group-hover:scale-110 transition-transform`}>
-                    {service.icon}
+                  <div
+                    className={`w-14 h-14 lg:w-16 lg:h-16 mx-auto mb-3 bg-gradient-to-br ${service.color} rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform`}
+                  >
+                    <service.icon className="w-8 h-8 lg:w-9 lg:h-9 text-white" />
                   </div>
-                  <div className="text-dark font-bold text-sm lg:text-base">{service.label}</div>
+                  <div className="text-dark font-bold text-sm lg:text-base">
+                    {service.label}
+                  </div>
                 </div>
               </div>
             ))}
@@ -81,38 +110,46 @@ const ServicesHeroSection = () => {
           {/* Features Row */}
           <div className="mt-10 flex flex-wrap justify-center gap-4 animate-slide-up-delay-4">
             <div className="bg-white/70 backdrop-blur-sm px-5 py-3 rounded-xl border border-primary/20 shadow-lg flex items-center gap-2 hover:scale-105 transition-transform">
-              <span className="text-2xl">⚡</span>
+              <Zap className="w-6 h-6 text-primary" />
               <div className="text-left">
                 <div className="text-dark font-bold text-xs">Fast Service</div>
-                <div className="text-dark-gray text-[10px]">30 min delivery</div>
+                <div className="text-dark-gray text-[10px]">
+                  30 min delivery
+                </div>
               </div>
             </div>
 
             <div className="bg-white/70 backdrop-blur-sm px-5 py-3 rounded-xl border border-primary/20 shadow-lg flex items-center gap-2 hover:scale-105 transition-transform">
-              <span className="text-2xl">🎯</span>
+              <Target className="w-6 h-6 text-primary" />
               <div className="text-left">
-                <div className="text-dark font-bold text-xs">24/7 Available</div>
+                <div className="text-dark font-bold text-xs">
+                  24/7 Available
+                </div>
                 <div className="text-dark-gray text-[10px]">Always open</div>
               </div>
             </div>
 
             <div className="bg-white/70 backdrop-blur-sm px-5 py-3 rounded-xl border border-primary/20 shadow-lg flex items-center gap-2 hover:scale-105 transition-transform">
-              <span className="text-2xl">💯</span>
+              <Award className="w-6 h-6 text-primary" />
               <div className="text-left">
                 <div className="text-dark font-bold text-xs">Quality First</div>
-                <div className="text-dark-gray text-[10px]">Premium ingredients</div>
+                <div className="text-dark-gray text-[10px]">
+                  Premium ingredients
+                </div>
               </div>
             </div>
           </div>
 
           {/* CTA Section */}
           <div className="mt-10 animate-slide-up-delay-4">
-            <p className="text-dark-gray text-sm mb-4">Ready to experience our services?</p>
+            <p className="text-dark-gray text-sm mb-4">
+              Ready to experience our services?
+            </p>
             <div className="flex flex-wrap justify-center gap-3">
               <button className="group relative bg-gradient-to-r from-primary to-primary-light text-white hover:from-primary-dark hover:to-primary px-8 py-3 rounded-xl font-bold text-sm transition-all duration-300 shadow-xl hover:shadow-primary/50 hover:scale-105 flex items-center gap-2 overflow-hidden">
                 <span className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
                 <span className="relative">Book a Table</span>
-                <span className="relative text-lg group-hover:translate-x-1 transition-transform">→</span>
+                <ArrowRight className="relative w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </button>
               <button className="bg-white text-primary border-2 border-primary hover:bg-primary hover:text-white px-8 py-3 rounded-xl font-bold text-sm transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl">
                 View Menu
@@ -136,7 +173,8 @@ const ServicesHeroSection = () => {
       {/* Animations */}
       <style jsx>{`
         @keyframes float-1 {
-          0%, 100% {
+          0%,
+          100% {
             transform: translateY(0px) translateX(0px);
           }
           50% {
@@ -145,7 +183,8 @@ const ServicesHeroSection = () => {
         }
 
         @keyframes float-2 {
-          0%, 100% {
+          0%,
+          100% {
             transform: translateY(0px) translateX(0px);
           }
           50% {
@@ -154,7 +193,8 @@ const ServicesHeroSection = () => {
         }
 
         @keyframes float-3 {
-          0%, 100% {
+          0%,
+          100% {
             transform: translateY(0px) translateX(0px);
           }
           50% {
@@ -183,7 +223,8 @@ const ServicesHeroSection = () => {
         }
 
         @keyframes pulse-slow {
-          0%, 100% {
+          0%,
+          100% {
             opacity: 0.1;
           }
           50% {
@@ -192,7 +233,8 @@ const ServicesHeroSection = () => {
         }
 
         @keyframes pulse-slower {
-          0%, 100% {
+          0%,
+          100% {
             opacity: 0.08;
           }
           50% {
@@ -201,7 +243,8 @@ const ServicesHeroSection = () => {
         }
 
         @keyframes bounce-slow {
-          0%, 100% {
+          0%,
+          100% {
             transform: translateY(0);
           }
           50% {

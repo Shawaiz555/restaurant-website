@@ -1,4 +1,11 @@
 import React from "react";
+import {
+  ClipboardList,
+  ShoppingCart,
+  ChefHat,
+  Car,
+  ArrowRight,
+} from "lucide-react";
 
 const HowItWorksSection = () => {
   const process = [
@@ -6,25 +13,25 @@ const HowItWorksSection = () => {
       step: "1",
       title: "Browse Menu",
       description: "Explore our extensive menu and select your favorites",
-      icon: "📋",
+      icon: ClipboardList,
     },
     {
       step: "2",
       title: "Place Order",
       description: "Add items to cart and proceed to checkout",
-      icon: "🛒",
+      icon: ShoppingCart,
     },
     {
       step: "3",
       title: "We Prepare",
       description: "Our chefs prepare your order with care",
-      icon: "👨‍🍳",
+      icon: ChefHat,
     },
     {
       step: "4",
       title: "Delivery/Pickup",
       description: "Get it delivered or pick it up fresh",
-      icon: "🚗",
+      icon: Car,
     },
   ];
 
@@ -45,7 +52,7 @@ const HowItWorksSection = () => {
                 <div className="w-20 h-20 bg-gradient-to-br from-primary to-primary-dark rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-6 shadow-lg">
                   {item.step}
                 </div>
-                <div className="text-5xl mb-4">{item.icon}</div>
+                <item.icon className="w-12 h-12 mx-auto mb-4 text-primary" />
                 <h3 className="font-display text-2xl text-dark mb-3">
                   {item.title}
                 </h3>
@@ -54,7 +61,7 @@ const HowItWorksSection = () => {
 
               {index < process.length - 1 && (
                 <div className="hidden lg:block absolute top-1/2 -right-4 transform -translate-y-1/2 z-10">
-                  <div className="text-primary text-4xl">→</div>
+                  <ArrowRight className="text-primary w-10 h-10" />
                 </div>
               )}
             </div>

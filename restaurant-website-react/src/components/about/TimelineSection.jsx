@@ -1,4 +1,5 @@
 import React from "react";
+import { Check } from "lucide-react";
 
 const TimelineSection = () => {
   const timeline = [
@@ -38,9 +39,7 @@ const TimelineSection = () => {
     <section className="py-20">
       <div className="container mx-auto px-6 sm:px-6 lg:px-16">
         <div className="text-center mb-16">
-          <h2 className="font-display text-5xl text-dark mb-4">
-            Our Journey
-          </h2>
+          <h2 className="font-display text-5xl text-dark mb-4">Our Journey</h2>
           <p className="text-dark-gray text-xl">
             Milestones that shaped who we are today
           </p>
@@ -52,8 +51,8 @@ const TimelineSection = () => {
               key={index}
               className="relative pl-8 pb-12 border-l-4 border-primary/20 last:pb-0"
             >
-              <div className="absolute left-0 top-0 w-8 h-8 bg-gradient-to-br from-primary to-primary-dark rounded-full transform -translate-x-[18px] flex items-center justify-center text-white font-bold shadow-lg">
-                ✓
+              <div className="absolute left-0 top-0 w-8 h-8 bg-gradient-to-br from-primary to-primary-dark rounded-full transform -translate-x-[18px] flex items-center justify-center shadow-lg">
+                <Check className="w-5 h-5 text-white" />
               </div>
               <div className="bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all border-2 border-primary/10 ml-8">
                 <div className="text-primary font-bold text-xl mb-2">
