@@ -141,8 +141,8 @@ const HeroSection = () => {
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-primary-light/30 rounded-full blur-2xl transform scale-105"></div>
 
                 <img
-                  src="/assets/images/FoodPlateImg.png"
-                  alt="Delicious biryani"
+                  src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&h=800&fit=crop&q=80"
+                  alt="Delicious gourmet food platter"
                   className="relative w-full max-w-md lg:max-w-lg xl:max-w-xl mx-auto rounded-full drop-shadow-[0_35px_35px_rgba(230,126,34,0.4)] hover:drop-shadow-[0_45px_45px_rgba(230,126,34,0.5)] transition-all duration-500 hover:scale-105"
                   style={{ animation: "floating 4s ease-in-out infinite" }}
                 />

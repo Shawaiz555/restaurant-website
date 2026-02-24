@@ -44,8 +44,8 @@ const ServicesSection = () => {
               <div className="absolute -bottom-6 -right-6 w-40 h-40 border-4 border-dashed border-primary/20 rounded-full animate-spin-slow"></div>
 
               <img
-                src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=800&h=800&fit=crop"
-                alt="Our Expert Chef"
+                src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=800&h=800&fit=crop&q=80"
+                alt="Professional chef preparing gourmet food"
                 className="relative rounded-full w-full max-w-lg mx-auto shadow-2xl z-10 border-8 border-white group-hover:scale-105 transition-transform duration-500"
               />
 
