@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setExpenses,
@@ -36,6 +36,9 @@ const AdminExpenses = () => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [expenseToDelete, setExpenseToDelete] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("All");
+
+  // Ref for expense form section
+  const expenseFormRef = useRef(null);
 
   const [formData, setFormData] = useState({
     date: new Date().toISOString().split("T")[0],
@@ -138,6 +141,20 @@ const AdminExpenses = () => {
       paymentMethod: expense.paymentMethod,
     });
     setShowAddForm(true);
+
+    // Scroll to form after it's shown
+    setTimeout(() => {
+      if (expenseFormRef.current) {
+        const element = expenseFormRef.current;
+        const elementTop = element.offsetTop;
+        const offset = 80; // Offset for better visibility (accounts for any fixed headers)
+
+        window.scrollTo({
+          top: elementTop - offset,
+          behavior: "smooth"
+        });
+      }
+    }, 150);
   };
 
   const handleDeleteClick = (expense) => {
@@ -216,6 +233,20 @@ const AdminExpenses = () => {
             onClick={() => {
               resetForm();
               setShowAddForm(true);
+
+              // Scroll to form after it's shown
+              setTimeout(() => {
+                if (expenseFormRef.current) {
+                  const element = expenseFormRef.current;
+                  const elementTop = element.offsetTop;
+                  const offset = 80; // Offset for better visibility (accounts for any fixed headers)
+
+                  window.scrollTo({
+                    top: elementTop - offset,
+                    behavior: "smooth"
+                  });
+                }
+              }, 150);
             }}
             className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-primary to-primary-dark text-white hover:from-primary-dark hover:to-primary transition-all shadow-lg hover:shadow-xl hover:scale-105 font-semibold"
           >
@@ -275,7 +306,10 @@ const AdminExpenses = () => {
 
       {/* Add/Edit Form */}
       {showAddForm && (
-        <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+        <div
+          ref={expenseFormRef}
+          className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100"
+        >
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold text-dark">
               {editingExpense ? "Edit Expense" : "Add New Expense"}

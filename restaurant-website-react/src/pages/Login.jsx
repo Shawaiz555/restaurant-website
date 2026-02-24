@@ -88,14 +88,6 @@ const Login = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 bg-white rounded-3xl shadow-2xl overflow-hidden">
           {/* Left Side - Decorative */}
           <div className="hidden lg:flex relative bg-gradient-to-br from-primary via-orange-600 to-amber-600 p-12 overflow-hidden">
-            {/* Decorative Pattern */}
-            <div className="absolute inset-0 opacity-20">
-              <div className="absolute top-10 left-10 w-20 h-20 border-4 border-white rounded-full"></div>
-              <div className="absolute top-32 right-20 w-16 h-16 border-4 border-white rounded-full"></div>
-              <div className="absolute bottom-20 left-1/4 w-24 h-24 border-4 border-white rounded-full"></div>
-              <div className="absolute bottom-40 right-10 w-12 h-12 border-4 border-white rounded-full"></div>
-            </div>
-
             <div className="relative h-full flex flex-col justify-between text-white z-10">
               {/* Top Section */}
               <div className="flex items-center gap-3">
@@ -103,10 +95,8 @@ const Login = () => {
                   <Utensils className="w-8 h-8" />
                 </div>
                 <div>
-                  <h3 className="font-display text-2xl font-bold ml-3">
-                    Bites
-                  </h3>
-                  <p className="text-sm text-white/80 ml-3">
+                  <h3 className="font-display text-2xl font-bold">Bites</h3>
+                  <p className="text-sm text-white/80">
                     Delicious Food Delivered
                   </p>
                 </div>
@@ -131,30 +121,13 @@ const Login = () => {
                 </p>
 
                 {/* Decorative Food Image */}
-                <div className="relative w-full max-w-md mx-auto mt-8">
+                <div className="relative w-full max-w-lg mx-auto mt-8">
                   <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent rounded-3xl blur-2xl"></div>
                   <img
                     src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&h=600&fit=crop"
                     alt="Delicious Food"
                     className="relative rounded-3xl shadow-2xl transform hover:scale-105 transition-transform duration-500"
-                    style={{ animation: "floating 4s ease-in-out infinite" }}
                   />
-                </div>
-              </div>
-
-              {/* Bottom Stats */}
-              <div className="grid grid-cols-3 gap-4 text-center mt-4">
-                <div className="p-4 bg-white/10 backdrop-blur-sm rounded-2xl">
-                  <div className="font-display text-3xl font-bold">500+</div>
-                  <div className="text-sm text-white/80">Dishes</div>
-                </div>
-                <div className="p-4 bg-white/10 backdrop-blur-sm rounded-2xl">
-                  <div className="font-display text-3xl font-bold">10k+</div>
-                  <div className="text-sm text-white/80">Customers</div>
-                </div>
-                <div className="p-4 bg-white/10 backdrop-blur-sm rounded-2xl">
-                  <div className="font-display text-3xl font-bold">4.9</div>
-                  <div className="text-sm text-white/80">Rating</div>
                 </div>
               </div>
             </div>
@@ -183,7 +156,7 @@ const Login = () => {
             </div>
 
             {/* Header */}
-            <div className="text-center mb-8">
+            <div className="text-center mb-8 md:mt-16">
               <h2 className="font-display text-4xl lg:text-5xl font-bold text-dark mb-3">
                 Login
               </h2>

@@ -138,14 +138,6 @@ const Signup = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 bg-white rounded-3xl shadow-2xl overflow-hidden">
           {/* Left Side - Decorative */}
           <div className="hidden lg:flex relative bg-gradient-to-br from-primary via-orange-600 to-amber-600 p-12 overflow-hidden">
-            {/* Decorative Pattern */}
-            <div className="absolute inset-0 opacity-20">
-              <div className="absolute top-10 right-10 w-20 h-20 border-4 border-white rounded-full"></div>
-              <div className="absolute top-32 left-20 w-16 h-16 border-4 border-white rounded-full"></div>
-              <div className="absolute bottom-20 right-1/4 w-24 h-24 border-4 border-white rounded-full"></div>
-              <div className="absolute bottom-40 left-10 w-12 h-12 border-4 border-white rounded-full"></div>
-            </div>
-
             <div className="relative h-full flex flex-col justify-between text-white z-10">
               {/* Top Section */}
               <div className="flex items-center gap-3">
@@ -181,36 +173,13 @@ const Signup = () => {
                 </p>
 
                 {/* Decorative Food Image */}
-                <div className="relative w-full max-w-md mx-auto mt-8">
+                <div className="relative w-full max-w-lg mx-auto mt-8">
                   <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent rounded-3xl blur-2xl"></div>
                   <img
                     src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&h=600&fit=crop"
                     alt="Delicious Food"
                     className="relative rounded-3xl shadow-2xl transform hover:scale-105 transition-transform duration-500"
-                    style={{ animation: "floating 4s ease-in-out infinite" }}
                   />
-                </div>
-              </div>
-
-              {/* Bottom Features */}
-              <div className="space-y-3 mt-4">
-                <div className="flex items-center gap-3 p-4 bg-white/10 backdrop-blur-sm rounded-2xl">
-                  <Check className="w-6 h-6 flex-shrink-0" />
-                  <p className="text-sm font-medium">
-                    Order from 500+ delicious dishes
-                  </p>
-                </div>
-                <div className="flex items-center gap-3 p-4 bg-white/10 backdrop-blur-sm rounded-2xl">
-                  <Check className="w-6 h-6 flex-shrink-0" />
-                  <p className="text-sm font-medium">
-                    Fast delivery to your doorstep
-                  </p>
-                </div>
-                <div className="flex items-center gap-3 p-4 bg-white/10 backdrop-blur-sm rounded-2xl">
-                  <Check className="w-6 h-6 flex-shrink-0" />
-                  <p className="text-sm font-medium">
-                    Exclusive member discounts
-                  </p>
                 </div>
               </div>
             </div>
@@ -239,7 +208,7 @@ const Signup = () => {
             </div>
 
             {/* Header */}
-            <div className="text-center mb-6">
+            <div className="text-center mb-6 md:mt-5">
               <h2 className="font-display text-4xl lg:text-5xl font-bold text-dark mb-3">
                 Sign Up
               </h2>

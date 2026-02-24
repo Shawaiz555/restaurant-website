@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import StatusBadge from "../../components/admin/common/StatusBadge";
 import SearchBar from "../../components/admin/common/SearchBar";
@@ -54,6 +54,9 @@ const AdminOrders = () => {
   const [orderToDelete, setOrderToDelete] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  // Ref for order details section
+  const orderDetailsRef = useRef(null);
 
   const loadOrders = React.useCallback(() => {
     const allOrders = ordersService.getOrders();
@@ -368,13 +371,29 @@ const AdminOrders = () => {
                       className={`${
                         index % 2 === 0 ? "bg-white" : "bg-gray-50/50"
                       } hover:bg-cream-light/60 transition-all duration-200 cursor-pointer border-l-4 border-transparent hover:border-primary group`}
-                      onClick={() =>
-                        setSelectedOrder(
+                      onClick={() => {
+                        const newSelectedOrder =
                           selectedOrder?.orderId === order.orderId
                             ? null
-                            : order,
-                        )
-                      }
+                            : order;
+                        setSelectedOrder(newSelectedOrder);
+
+                        // Scroll to order details if order is selected
+                        if (newSelectedOrder) {
+                          setTimeout(() => {
+                            if (orderDetailsRef.current) {
+                              const element = orderDetailsRef.current;
+                              const elementTop = element.offsetTop;
+                              const offset = 80; // Offset for better visibility (accounts for any fixed headers)
+
+                              window.scrollTo({
+                                top: elementTop - offset,
+                                behavior: "smooth"
+                              });
+                            }
+                          }, 150);
+                        }
+                      }}
                     >
                       <td className="px-4 lg:px-6 py-4 whitespace-nowrap">
                         <div className="flex flex-col items-center gap-1">
@@ -599,7 +618,10 @@ const AdminOrders = () => {
 
       {/* Order Details Panel */}
       {selectedOrder && (
-        <div className="bg-gradient-to-br from-white via-cream-light/30 to-white rounded-2xl p-6 lg:p-8 shadow-2xl border-2 border-primary/10">
+        <div
+          ref={orderDetailsRef}
+          className="bg-gradient-to-br from-white via-cream-light/30 to-white rounded-2xl p-6 lg:p-8 shadow-2xl border-2 border-primary/10"
+        >
           {/* Header */}
           <div className="flex items-center justify-between mb-6 pb-4 border-b-2 border-primary/20">
             <div className="flex items-center gap-3">

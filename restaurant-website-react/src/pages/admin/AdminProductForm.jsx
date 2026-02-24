@@ -377,7 +377,7 @@ const AdminProductForm = () => {
                 )}
               </div>
               <div>
-                <h1 className="text-2xl lg:text-3xl font-display font-bold text-primary">
+                <h1 className="text-2xl lg:text-3xl font-bold text-primary">
                   {isEditMode ? "Edit Product" : "Add New Product"}
                 </h1>
                 <p className="text-sm text-dark-gray">
@@ -389,7 +389,7 @@ const AdminProductForm = () => {
             </div>
             <button
               onClick={() => navigate("/admin/products")}
-              className="px-6 py-3 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 transition-all shadow-md hover:shadow-lg hover:scale-105 active:scale-95 whitespace-nowrap flex items-center gap-2"
+              className="px-6 py-3 rounded-xl text-sm font-semibold bg-gradient-to-r from-primary to-primary-dark text-white hover:from-primary-dark hover:to-primary transition-all shadow-md hover:shadow-lg hover:scale-105 active:scale-95 whitespace-nowrap flex items-center gap-2"
             >
               <ArrowLeft className="w-4 h-4" />
               Back to Products
@@ -402,7 +402,7 @@ const AdminProductForm = () => {
           <div className="bg-white rounded-xl lg:rounded-2xl p-5 sm:p-6 lg:p-8 shadow-xl border-2 border-gray-100 hover:border-primary/30 transition-all">
             <div className="flex items-center gap-3 mb-5 sm:mb-6 pb-4 border-b-2 border-gray-100">
               <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary/10 to-primary-light/20 rounded-xl flex items-center justify-center">
-                <Info className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+                <Info className="w-5 h-5 sm:w-8 sm:h-8 text-primary" />
               </div>
               <div>
                 <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-dark">
@@ -431,7 +431,7 @@ const AdminProductForm = () => {
                 />
                 {errors.name && (
                   <p className="text-red-500 text-xs mt-1.5 flex items-center gap-1">
-                    <AlertCircle className="w-3 h-3" /> {errors.name}
+                    <AlertCircle className="w-5 h-5" /> {errors.name}
                   </p>
                 )}
               </div>

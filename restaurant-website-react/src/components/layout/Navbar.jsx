@@ -111,11 +111,11 @@ const Navbar = () => {
                   {isAuthenticated ? (
                     <div className="w-full h-full rounded-full bg-white/20 flex items-center justify-center text-white text-lg font-bold">
                       {currentUser?.name?.charAt(0).toUpperCase() || (
-                        <UserCircle className="w-7 h-7" />
+                        <UserCircle className="w-6 h-6" />
                       )}
                     </div>
                   ) : (
-                    <UserCircle className="w-7 h-7 text-gray-500" />
+                    <UserCircle className="w-6 h-6 text-primary" />
                   )}
                   {isAuthenticated && (
                     <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
@@ -206,7 +206,7 @@ const Navbar = () => {
                         {/* Guest Header */}
                         <div className="text-center mb-4 py-6 bg-cream rounded-xl">
                           <div className="w-14 h-14 mx-auto mb-3 rounded-full bg-primary/10 flex items-center justify-center shadow-lg">
-                            <UserCircle className="w-10 h-10 text-primary" />
+                            <UserCircle className="w-9 h-9 text-primary" />
                           </div>
                           <h3 className="font-display text-xl text-dark mb-1">
                             Welcome!
