@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bites Favicon Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { color: #FF6B35; }
+        .preview {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .preview-item {
+            text-align: center;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 5px;
+        }
+        canvas {
+            border: 1px solid #ddd;
+            margin: 10px 0;
+            background: white;
+        }
+        button {
+            background: #FF6B35;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #e55a24;
+        }
+        .instructions {
+            background: #fff9e6;
+            padding: 15px;
+            border-left: 4px solid #FFD700;
+            margin: 20px 0;
+        }
+        .success {
+            background: #e6f9e6;
+            padding: 15px;
+            border-left: 4px solid #4CAF50;
+            margin: 20px 0;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🍔 Bites Favicon Generator</h1>
+
+        <div class="instructions">
+            <h3>Instructions:</h3>
+            <ol>
+                <li>The favicons will be generated automatically from your logo</li>
+                <li>Click the download buttons to save each size</li>
+                <li>Replace the existing files in the public folder:
+                    <ul>
+                        <li>favicon.ico (16x16, 32x32)</li>
+                        <li>logo192.png (192x192)</li>
+                        <li>logo512.png (512x512)</li>
+                        <li>apple-touch-icon.png (180x180)</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+
+        <div class="preview">
+            <div class="preview-item">
+                <h3>16x16 (favicon.ico)</h3>
+                <canvas id="canvas16" width="16" height="16"></canvas>
+                <br>
+                <button onclick="downloadCanvas('canvas16', 'favicon-16x16.png')">Download 16x16</button>
+            </div>
+
+            <div class="preview-item">
+                <h3>32x32 (favicon.ico)</h3>
+                <canvas id="canvas32" width="32" height="32"></canvas>
+                <br>
+                <button onclick="downloadCanvas('canvas32', 'favicon-32x32.png')">Download 32x32</button>
+            </div>
+
+            <div class="preview-item">
+                <h3>180x180 (Apple)</h3>
+                <canvas id="canvas180" width="180" height="180"></canvas>
+                <br>
+                <button onclick="downloadCanvas('canvas180', 'apple-touch-icon.png')">Download 180x180</button>
+            </div>
+
+            <div class="preview-item">
+                <h3>192x192 (Android)</h3>
+                <canvas id="canvas192" width="192" height="192"></canvas>
+                <br>
+                <button onclick="downloadCanvas('canvas192', 'logo192.png')">Download 192x192</button>
+            </div>
+
+            <div class="preview-item">
+                <h3>512x512 (Android)</h3>
+                <canvas id="canvas512" width="512" height="512"></canvas>
+                <br>
+                <button onclick="downloadCanvas('canvas512', 'logo512.png')">Download 512x512</button>
+            </div>
+        </div>
+
+        <div class="success" id="success">
+            ✅ Image downloaded! Replace the file in your public folder.
+        </div>
+
+        <div class="instructions">
+            <h3>Alternative Method:</h3>
+            <p>If you prefer to use your full logo instead of the "B" icon:</p>
+            <ol>
+                <li>Go to <a href="https://realfavicongenerator.net/" target="_blank">RealFaviconGenerator.net</a></li>
+                <li>Upload: <code>public/assets/images/BitesLogo.png</code></li>
+                <li>Download and extract the generated files</li>
+                <li>Replace all favicon files in the public folder</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        // Draw favicon on all canvases
+        function drawFavicon(canvasId, size) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+
+            // Background gradient
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#FF6B35');
+            gradient.addColorStop(1, '#F7931E');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+
+            // Draw "B" letter
+            ctx.fillStyle = 'white';
+            ctx.font = `bold ${size * 0.65}px Arial, sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.strokeStyle = '#8B4513';
+            ctx.lineWidth = size > 32 ? 2 : 1;
+
+            ctx.strokeText('B', size / 2, size / 2);
+            ctx.fillText('B', size / 2, size / 2);
+
+            // Small burger accent (only on larger sizes)
+            if (size >= 32) {
+                const accentSize = size * 0.12;
+                const accentX = size * 0.75;
+                const accentY = size * 0.25;
+
+                // Red circle
+                ctx.fillStyle = '#DC143C';
+                ctx.beginPath();
+                ctx.arc(accentX, accentY, accentSize, 0, 2 * Math.PI);
+                ctx.fill();
+
+                // Yellow line (cheese)
+                ctx.strokeStyle = '#FFD700';
+                ctx.lineWidth = size > 100 ? 2 : 1;
+                ctx.beginPath();
+                ctx.moveTo(accentX - accentSize/1.5, accentY);
+                ctx.lineTo(accentX + accentSize/1.5, accentY);
+                ctx.stroke();
+            }
+        }
+
+        // Download canvas as PNG
+        function downloadCanvas(canvasId, filename) {
+            const canvas = document.getElementById(canvasId);
+            const url = canvas.toDataURL('image/png');
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = url;
+            link.click();
+
+            // Show success message
+            const successDiv = document.getElementById('success');
+            successDiv.style.display = 'block';
+            setTimeout(() => {
+                successDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        // Generate all favicons on load
+        window.onload = function() {
+            drawFavicon('canvas16', 16);
+            drawFavicon('canvas32', 32);
+            drawFavicon('canvas180', 180);
+            drawFavicon('canvas192', 192);
+            drawFavicon('canvas512', 512);
+        };
+    </script>
+</body>
+</html>
