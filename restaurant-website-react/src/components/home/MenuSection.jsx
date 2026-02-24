@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ProductCard from "../common/ProductCard";
-import { getProductsByCategory } from "../../store/productsData";
+import productsService from "../../services/productsService";
 import {
   Coffee,
   Soup,
@@ -11,31 +11,112 @@ import {
   UtensilsCrossed,
   ArrowRight,
   Sparkles,
+  Utensils,
+  Star,
+  Sandwich,
+  Pizza,
+  Cake,
+  Drumstick,
+  IceCream,
+  Cookie,
+  Wheat,
+  Beef,
+  Leaf,
+  Sprout,
 } from "lucide-react";
+
+// Default category icons
+const defaultCategoryIcons = {
+  breakfast: Coffee,
+  noodles: Soup,
+  salads: Salad,
+  japanese: Fish,
+  drinks: Wine,
+  lunch: UtensilsCrossed,
+  "popular-dishes": Star,
+  burgers: Sandwich,
+  pizza: Pizza,
+  pasta: UtensilsCrossed,
+  desserts: Cake,
+  appetizers: UtensilsCrossed,
+  seafood: Fish,
+  chicken: Drumstick,
+  beef: Beef,
+  vegetarian: Leaf,
+  vegan: Sprout,
+};
+
+// Fallback icon map
+const fallbackIconMap = {
+  soup: Soup,
+  rice: Utensils,
+  sandwich: Sandwich,
+  steak: Beef,
+  fish: Fish,
+  meat: Beef,
+  snacks: Cookie,
+  coffee: Coffee,
+  tea: Coffee,
+  juice: Wine,
+  smoothie: Wine,
+  ice: IceCream,
+  cake: Cake,
+  cookie: Cookie,
+  bread: Wheat,
+  wrap: Sandwich,
+};
+
+// Get icon for category (moved outside component to avoid dependency issues)
+const getCategoryIcon = (category) => {
+  const categoryKey = category.toLowerCase().replace(/\s+/g, "-");
+  if (defaultCategoryIcons[categoryKey]) {
+    return defaultCategoryIcons[categoryKey];
+  }
+  for (const [key, icon] of Object.entries(fallbackIconMap)) {
+    if (category.toLowerCase().includes(key)) {
+      return icon;
+    }
+  }
+  return Utensils; // Default icon
+};
 
 const MenuSection = () => {
   const navigate = useNavigate();
-  const [activeCategory, setActiveCategory] = useState("breakfast");
+  const [allCategories, setAllCategories] = useState([]);
+  const [activeCategory, setActiveCategory] = useState("");
+  const [menuItems, setMenuItems] = useState([]);
 
-  const categories = [
-    { id: "breakfast", label: "Breakfast", icon: Coffee },
-    { id: "noodles", label: "Noodles", icon: Soup },
-    { id: "salads", label: "Salad", icon: Salad },
-    { id: "japanese", label: "Japanese", icon: Fish },
-    { id: "drinks", label: "Drinks", icon: Wine },
-    { id: "lunch", label: "Lunch", icon: UtensilsCrossed },
-  ];
+  // Load categories dynamically from products
+  useEffect(() => {
+    const allProducts = productsService.getProducts();
+    const uniqueCategories = [...new Set(allProducts.map((p) => p.category))].sort();
 
-  const categoryMap = {
-    breakfast: "Breakfast",
-    noodles: "Noodles",
-    salads: "Salads",
-    japanese: "Japanese",
-    drinks: "Drinks",
-    lunch: "Lunch",
-  };
+    // Show all categories
+    const categoriesToShow = uniqueCategories.map((cat) => ({
+      id: cat.toLowerCase().replace(/\s+/g, "-"),
+      label: cat,
+      originalName: cat,
+      icon: getCategoryIcon(cat),
+    }));
 
-  const menuItems = getProductsByCategory(categoryMap[activeCategory]) || [];
+    setAllCategories(categoriesToShow);
+
+    // Set first category as active
+    if (categoriesToShow.length > 0) {
+      setActiveCategory(categoriesToShow[0].id);
+    }
+  }, []);
+
+  // Load menu items when active category changes
+  useEffect(() => {
+    if (activeCategory) {
+      const category = allCategories.find((cat) => cat.id === activeCategory);
+      if (category) {
+        const items = productsService.getProductsByCategory(category.originalName) || [];
+        setMenuItems(items);
+      }
+    }
+  }, [activeCategory, allCategories]);
 
   return (
     <section
@@ -64,7 +145,7 @@ const MenuSection = () => {
 
         {/* Category Filter */}
         <div className="flex flex-wrap justify-center gap-4 mb-16">
-          {categories.map((category) => (
+          {allCategories.map((category) => (
             <button
               key={category.id}
               onClick={() => setActiveCategory(category.id)}

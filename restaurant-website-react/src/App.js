@@ -6,6 +6,7 @@ import { loadCart } from './store/slices/cartSlice';
 import Loader from './components/common/Loader';
 import NotificationManager from './components/common/NotificationManager';
 import authService from './services/authService';
+import productsService from './services/productsService';
 
 import Home from './pages/Home';
 import Menu from './pages/Menu';
@@ -36,9 +37,11 @@ function AppContent() {
   const location = useLocation();
   const [loading, setLoading] = useState(false);
 
-  // Initialize admin user on app startup
+  // Initialize admin user and migrate products on app startup
   useEffect(() => {
     authService.initializeAdminUser();
+    // Migrate products from static file to localStorage if not already done
+    productsService.migrateProductsToLocalStorage();
   }, []);
 
   // Load cart when app mounts or user changes
