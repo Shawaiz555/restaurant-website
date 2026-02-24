@@ -89,7 +89,9 @@ const MenuSection = () => {
   // Load categories dynamically from products
   useEffect(() => {
     const allProducts = productsService.getProducts();
-    const uniqueCategories = [...new Set(allProducts.map((p) => p.category))].sort();
+    const uniqueCategories = [
+      ...new Set(allProducts.map((p) => p.category)),
+    ].sort();
 
     // Show all categories
     const categoriesToShow = uniqueCategories.map((cat) => ({
@@ -112,7 +114,8 @@ const MenuSection = () => {
     if (activeCategory) {
       const category = allCategories.find((cat) => cat.id === activeCategory);
       if (category) {
-        const items = productsService.getProductsByCategory(category.originalName) || [];
+        const items =
+          productsService.getProductsByCategory(category.originalName) || [];
         setMenuItems(items);
       }
     }
@@ -144,7 +147,7 @@ const MenuSection = () => {
         </div>
 
         {/* Category Filter */}
-        <div className="flex flex-wrap justify-center gap-4 mb-16">
+        <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 justify-center gap-4 mb-5">
           {allCategories.map((category) => (
             <button
               key={category.id}
@@ -169,7 +172,7 @@ const MenuSection = () => {
         </div>
 
         {/* Menu Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {menuItems.map((product) => (
             <div
               key={product.id}

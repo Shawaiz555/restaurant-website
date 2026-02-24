@@ -42,7 +42,7 @@ const HeroSection = () => {
           <div className="relative space-y-5 lg:space-y-6">
             {/* Enhanced Decorative Badge */}
             <div className="inline-flex items-center gap-2 bg-gradient-to-r from-primary/20 to-primary-light/20 backdrop-blur-md px-4 py-2 rounded-full border-2 border-primary/40 shadow-lg animate-fade-in group">
-              <Utensils className="w-5 h-5 text-primary animate-bounce-slow" />
+              <Utensils className="w-5 h-5 text-primary" />
               <span className="text-dark font-bold text-xs tracking-wide uppercase">
                 Welcome to Bites Restaurant
               </span>

@@ -215,7 +215,7 @@ const AdminDashboard = () => {
             <span className="font-semibold">View All Orders</span>
           </button>
           <button
-            onClick={() => navigate("/admin/expenses/new")}
+            onClick={() => navigate("/admin/expenses")}
             className="flex items-center gap-3 p-4 rounded-xl bg-white border-2 border-gray-300 text-dark hover:bg-cream transition-all shadow-md hover:shadow-lg hover:scale-105"
           >
             <DollarSign className="w-6 h-6" />

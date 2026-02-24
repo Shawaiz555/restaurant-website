@@ -31,7 +31,7 @@ const MenuHeroSection = ({ searchTerm, setSearchTerm, setActiveCategory }) => {
         <div className="max-w-5xl mx-auto text-center">
           {/* Enhanced Badge */}
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-primary/20 to-primary-light/20 backdrop-blur-md px-4 py-2 rounded-full border-2 border-primary/40 shadow-lg animate-fade-in mb-5">
-            <Utensils className="w-5 h-5 text-primary animate-bounce-slow" />
+            <Utensils className="w-5 h-5 text-primary" />
             <span className="text-dark font-bold text-xs tracking-wide uppercase">
               Discover Amazing Flavors
             </span>

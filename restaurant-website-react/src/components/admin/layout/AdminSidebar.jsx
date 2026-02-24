@@ -68,18 +68,18 @@ const AdminSidebar = ({ isOpen, onClose }) => {
           <div className="flex items-center justify-start">
             <div>
               {/* Logo */}
-              <div className="flex items-center justify-center">
+              <div className="flex items-center justify-center md:ml-4">
                 <img
                   src="/assets/images/BitesLogo.png"
                   alt="logo"
-                  className="w-34 h-24 lg:w-44 lg:h-28"
+                  className="w-34 h-24 lg:w-40 lg:h-28"
                 />
               </div>
               <div>
-                <h1 className="text-xl font-display text-center text-primary">
+                <h1 className="text-xl font-display text-center text-primary md:ml-3">
                   Admin Panel
                 </h1>
-                <p className="text-xs text-dark-gray text-center mt-0.5">
+                <p className="text-xs text-dark-gray text-center mt-0.5 md:ml-3">
                   Restaurant Management
                 </p>
               </div>
@@ -128,7 +128,7 @@ const AdminSidebar = ({ isOpen, onClose }) => {
               <p className="text-sm font-semibold text-dark truncate">
                 {currentUser?.name}
               </p>
-              <p className="text-xs text-dark-gray truncate">
+              <p className="text-[10px] text-dark-gray truncate">
                 {currentUser?.email}
               </p>
             </div>
