@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { showNotification } from "../store/slices/notificationSlice";
-import authService from "../services/authService";
+import { registerUser } from "../store/slices/authSlice";
 import Loader from "../components/common/Loader";
 import {
   Mail,
@@ -98,34 +98,49 @@ const Signup = () => {
       return;
     }
 
-    const result = authService.register({
-      name: formData.name,
-      email: formData.email,
-      password: formData.password,
-    });
-
-    if (result.success) {
-      setSuccess(result.message);
-      dispatch(
-        showNotification({
-          message: "Account created successfully! Redirecting to login... ✅",
-          type: "success",
-        }),
+    try {
+      // Use Redux thunk for registration
+      const resultAction = await dispatch(
+        registerUser({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+        })
       );
-      setTimeout(() => {
-        navigate("/login");
-      }, 1500);
-    } else {
-      setError(result.message);
+
+      if (registerUser.fulfilled.match(resultAction)) {
+        setSuccess("Account created successfully!");
+        dispatch(
+          showNotification({
+            message: "Account created successfully! Redirecting to login... ✅",
+            type: "success",
+          }),
+        );
+        setTimeout(() => {
+          navigate("/login");
+        }, 1500);
+      } else {
+        // Registration failed
+        const errorMessage = resultAction.payload || "Registration failed";
+        setError(errorMessage);
+        dispatch(
+          showNotification({
+            message: errorMessage,
+            type: "error",
+          }),
+        );
+        setLoading(false);
+      }
+    } catch (err) {
+      setError("An unexpected error occurred");
       dispatch(
         showNotification({
-          message: result.message,
+          message: "An unexpected error occurred",
           type: "error",
         }),
       );
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   if (pageLoading || navigating) {

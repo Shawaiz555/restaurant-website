@@ -27,34 +27,38 @@ const ProductDetail = () => {
   const [activeAddOnTab, setActiveAddOnTab] = useState("drinks");
 
   useEffect(() => {
-    setLoading(true);
+    const loadProduct = async () => {
+      setLoading(true);
 
-    // Reset customizations when product changes
-    setSelectedAddOns({
-      drinks: [],
-      desserts: [],
-      extras: [],
-    });
-    setSelectedSpiceLevel(null);
-    setSelectedSizeIndex(0);
-    setActiveAddOnTab("drinks");
+      // Reset customizations when product changes
+      setSelectedAddOns({
+        drinks: [],
+        desserts: [],
+        extras: [],
+      });
+      setSelectedSpiceLevel(null);
+      setSelectedSizeIndex(0);
+      setActiveAddOnTab("drinks");
 
-    // Simulate loading time
-    setTimeout(() => {
-      const productData = productsService.getProductById(id);
-      if (!productData) {
+      try {
+        const productData = await productsService.fetchProductById(id);
+        if (!productData) {
+          navigate("/");
+          return;
+        }
+        setProduct(productData);
+
+        // Get related products
+        const related = await productsService.fetchProductsByCategory(productData.category);
+        setRelatedProducts(related.filter((p) => (p.id || p._id) !== id).slice(0, 6));
+        setLoading(false);
+      } catch (error) {
+        console.error('Error loading product:', error);
         navigate("/");
-        return;
       }
-      setProduct(productData);
+    };
 
-      // Get related products
-      const related = productsService.getProductsByCategory(productData.category)
-        .filter((p) => p.id !== id)
-        .slice(0, 6);
-      setRelatedProducts(related);
-      setLoading(false);
-    }, 800);
+    loadProduct();
   }, [id, navigate]);
 
   const handleBackToHome = () => {
@@ -77,12 +81,16 @@ const ProductDetail = () => {
     showExtras: false,
   };
   const addOnsConfig = product.addOnsConfig || defaultAddOnsConfig;
+  console.log('Product addOnsConfig:', product.addOnsConfig);
+  console.log('Final addOnsConfig:', addOnsConfig);
 
   // Convert nutrition info to consistent format
   // Handles both old format {calories: "...", protein: "..."}
-  // and new array format [{label: "Calories", value: "...", unit: "..."}]
+  // and new array format [{label: "Calories", value: "...", unit: "..."}] or [{name: "calories", value: "280 kcal"}]
   const getNutritionInfo = () => {
-    if (!product.nutritionInfo) return null;
+    if (!product.nutritionInfo || product.nutritionInfo.length === 0) {
+      return null;
+    }
 
     // If it's already in object format, return as is
     if (!Array.isArray(product.nutritionInfo)) {
@@ -92,11 +100,21 @@ const ProductDetail = () => {
     // Convert array format to object format
     const nutritionObj = {};
     product.nutritionInfo.forEach((item) => {
-      const key = item.label.toLowerCase();
-      nutritionObj[key] = item.value + (item.unit ? " " + item.unit : "");
+      if (item && item.value) {
+        // Handle both 'label' and 'name' properties
+        const key = (item.label || item.name)?.toLowerCase();
+        if (key) {
+          // If value already includes unit (e.g., "280 kcal"), use as is
+          // Otherwise add unit if present
+          const valueStr = item.value.toString().trim();
+          nutritionObj[key] = item.unit && !valueStr.includes(item.unit)
+            ? valueStr + " " + item.unit
+            : valueStr;
+        }
+      }
     });
 
-    return nutritionObj;
+    return Object.keys(nutritionObj).length > 0 ? nutritionObj : null;
   };
 
   const nutritionInfo = getNutritionInfo();
@@ -204,8 +222,11 @@ const ProductDetail = () => {
                 {/* Main Product Image */}
                 <div className="rounded-3xl p-3 lg:p-5">
                   <img
-                    src={product.image}
+                    src={productsService.getImageUrl(product)}
                     alt={product.name}
+                    onError={(e) => {
+                      e.target.src = "https://via.placeholder.com/600x400?text=No+Image";
+                    }}
                     className="w-full h-64 sm:h-80 lg:h-96 object-cover rounded-2xl"
                   />
                 </div>
@@ -1122,14 +1143,17 @@ const ProductDetail = () => {
                     <SwiperSlide key={relatedProduct.id}>
                       <div
                         onClick={() =>
-                          navigate(`/product/${relatedProduct.id}`)
+                          navigate(`/product/${relatedProduct.id || relatedProduct._id}`)
                         }
                         className="bg-white rounded-3xl p-6 hover:shadow-xl transition-all duration-300 cursor-pointer group"
                       >
                         <div className="mb-4 overflow-hidden rounded-2xl">
                           <img
-                            src={relatedProduct.image}
+                            src={productsService.getImageUrl(relatedProduct)}
                             alt={relatedProduct.name}
+                            onError={(e) => {
+                              e.target.src = "https://via.placeholder.com/400x300?text=No+Image";
+                            }}
                             className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
                           />
                         </div>

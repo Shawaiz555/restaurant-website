@@ -88,37 +88,46 @@ const MenuSection = () => {
 
   // Load categories dynamically from products
   useEffect(() => {
-    const allProducts = productsService.getProducts();
-    const uniqueCategories = [
-      ...new Set(allProducts.map((p) => p.category)),
-    ].sort();
+    const loadCategories = async () => {
+      const allProducts = (await productsService.fetchProducts()) || [];
+      const uniqueCategories = [
+        ...new Set(allProducts.map((p) => p.category)),
+      ].sort();
 
-    // Show all categories
-    const categoriesToShow = uniqueCategories.map((cat) => ({
-      id: cat.toLowerCase().replace(/\s+/g, "-"),
-      label: cat,
-      originalName: cat,
-      icon: getCategoryIcon(cat),
-    }));
+      // Show all categories
+      const categoriesToShow = uniqueCategories.map((cat) => ({
+        id: cat.toLowerCase().replace(/\s+/g, "-"),
+        label: cat,
+        originalName: cat,
+        icon: getCategoryIcon(cat),
+      }));
 
-    setAllCategories(categoriesToShow);
+      setAllCategories(categoriesToShow);
 
-    // Set first category as active
-    if (categoriesToShow.length > 0) {
-      setActiveCategory(categoriesToShow[0].id);
-    }
+      // Set first category as active
+      if (categoriesToShow.length > 0) {
+        setActiveCategory(categoriesToShow[0].id);
+      }
+    };
+
+    loadCategories();
   }, []);
 
   // Load menu items when active category changes
   useEffect(() => {
-    if (activeCategory) {
-      const category = allCategories.find((cat) => cat.id === activeCategory);
-      if (category) {
-        const items =
-          productsService.getProductsByCategory(category.originalName) || [];
-        setMenuItems(items);
-      }
-    }
+    if (!activeCategory) return;
+    const category = allCategories.find((cat) => cat.id === activeCategory);
+    if (!category) return;
+
+    const loadItems = async () => {
+      const items =
+        (await productsService.fetchProductsByCategory(
+          category.originalName,
+        )) || [];
+      setMenuItems(items);
+    };
+
+    loadItems();
   }, [activeCategory, allCategories]);
 
   return (

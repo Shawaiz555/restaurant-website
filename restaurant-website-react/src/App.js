@@ -2,11 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import store from './store/store';
-import { loadCart } from './store/slices/cartSlice';
+import { loadCart, fetchCart } from './store/slices/cartSlice';
 import Loader from './components/common/Loader';
 import NotificationManager from './components/common/NotificationManager';
-import authService from './services/authService';
-import productsService from './services/productsService';
 
 import Home from './pages/Home';
 import Menu from './pages/Menu';
@@ -37,17 +35,16 @@ function AppContent() {
   const location = useLocation();
   const [loading, setLoading] = useState(false);
 
-  // Initialize admin user and migrate products on app startup
-  useEffect(() => {
-    authService.initializeAdminUser();
-    // Migrate products from static file to localStorage if not already done
-    productsService.migrateProductsToLocalStorage();
-  }, []);
-
   // Load cart when app mounts or user changes
   useEffect(() => {
-    dispatch(loadCart(currentUser?.id));
-  }, [dispatch, currentUser?.id]);
+    if (currentUser) {
+      // For logged-in users, fetch cart from server
+      dispatch(fetchCart());
+    } else {
+      // For guests, load from localStorage
+      dispatch(loadCart(null));
+    }
+  }, [dispatch, currentUser]);
 
   // Show loader on route change and scroll to top
   useEffect(() => {

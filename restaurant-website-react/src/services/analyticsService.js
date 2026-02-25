@@ -3,9 +3,9 @@ import expensesService from './expensesService';
 
 class AnalyticsService {
   // Get revenue data for a date range
-  getRevenueData(dateRange = 'week') {
-    const orders = ordersService.getOrders();
-    const completedOrders = orders.filter((o) => o.status === 'Completed');
+  async getRevenueData(dateRange = 'week') {
+    const orders = (await ordersService.getOrders()) || [];
+    const completedOrders = orders.filter((o) => o && o.status === 'Completed');
 
     const now = new Date();
     let startDate;
@@ -50,8 +50,8 @@ class AnalyticsService {
   }
 
   // Get top selling products
-  getTopProducts(limit = 10) {
-    const orders = ordersService.getOrders();
+  async getTopProducts(limit = 10) {
+    const orders = (await ordersService.getOrders()) || [];
     const productCount = {};
     const productRevenue = {};
 
@@ -87,9 +87,9 @@ class AnalyticsService {
   }
 
   // Get order statistics
-  getOrderStats() {
-    const stats = ordersService.getOrderStats();
-    const orders = ordersService.getOrders();
+  async getOrderStats() {
+    const stats = await ordersService.getOrderStats();
+    const orders = (await ordersService.getOrders()) || [];
 
     const completedOrders = orders.filter((o) => o.status === 'Completed');
     const totalRevenue = completedOrders.reduce(
@@ -108,8 +108,8 @@ class AnalyticsService {
   }
 
   // Get customer statistics
-  getCustomerStats() {
-    const orders = ordersService.getOrders();
+  async getCustomerStats() {
+    const orders = (await ordersService.getOrders()) || [];
     const uniqueCustomers = new Set();
     const customerOrderCount = {};
 
@@ -141,9 +141,9 @@ class AnalyticsService {
   }
 
   // Get revenue vs expenses comparison
-  getRevenueVsExpenses(dateRange = 'month') {
-    const revenueData = this.getRevenueData(dateRange);
-    const expenseSummary = expensesService.calculateTotals(dateRange);
+  async getRevenueVsExpenses(dateRange = 'month') {
+    const revenueData = await this.getRevenueData(dateRange);
+    const expenseSummary = await expensesService.getSummary(); // Corrected call
 
     const profit = revenueData.totalRevenue - expenseSummary.total;
     const profitMargin =
@@ -160,8 +160,8 @@ class AnalyticsService {
   }
 
   // Get peak ordering times (hour of day analysis)
-  getPeakOrderingTimes() {
-    const orders = ordersService.getOrders();
+  async getPeakOrderingTimes() {
+    const orders = (await ordersService.getOrders()) || [];
     const hourlyOrders = Array(24).fill(0);
 
     orders.forEach((order) => {
@@ -176,8 +176,8 @@ class AnalyticsService {
   }
 
   // Get revenue by category
-  getRevenueByCategory() {
-    const orders = ordersService.getOrders();
+  async getRevenueByCategory() {
+    const orders = (await ordersService.getOrders()) || [];
     const categoryRevenue = {};
 
     orders
@@ -200,19 +200,19 @@ class AnalyticsService {
   }
 
   // Get dashboard summary
-  getDashboardSummary() {
-    const orderStats = this.getOrderStats();
-    const expenseSummary = expensesService.getSummary();
-    const topProducts = this.getTopProducts(5);
-    const customerStats = this.getCustomerStats();
+  async getDashboardSummary() {
+    const orderStats = await this.getOrderStats();
+    const expenseSummary = await expensesService.getSummary();
+    const topProducts = await this.getTopProducts(5);
+    const customerStats = await this.getCustomerStats();
+    const expenses = (expenseSummary?.thisMonth?.total || expenseSummary?.total || 0);
 
     return {
       orders: orderStats,
       expenses: expenseSummary,
       topProducts,
       customers: customerStats,
-      profit:
-        orderStats.totalRevenue - (expenseSummary.thisMonth?.total || 0),
+      profit: orderStats.totalRevenue - expenses,
     };
   }
 }

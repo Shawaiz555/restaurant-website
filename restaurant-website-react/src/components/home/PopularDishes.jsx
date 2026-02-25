@@ -1,13 +1,21 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import ProductCard from '../common/ProductCard';
-import { getProductsByCategory } from '../../store/productsData';
+import productsService from '../../services/productsService';
 
 const PopularDishes = () => {
-  const popularDishes = getProductsByCategory('Popular Dishes');
+  const [popularDishes, setPopularDishes] = useState([]);
+
+  useEffect(() => {
+    const loadPopularDishes = async () => {
+      const products = await productsService.fetchProductsByCategory('Popular Dishes');
+      setPopularDishes(products.slice(0, 8)); // Show top 8 products
+    };
+    loadPopularDishes();
+  }, []);
 
   return (
     <section className="py-16 lg:py-24">
@@ -54,7 +62,7 @@ const PopularDishes = () => {
           className="pb-8"
         >
           {popularDishes.map((product) => (
-            <SwiperSlide key={product.id}>
+            <SwiperSlide key={product.id || product._id}>
               <ProductCard product={product} />
             </SwiperSlide>
           ))}

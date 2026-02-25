@@ -65,53 +65,68 @@ const AdminProductForm = () => {
   const [newCategoryName, setNewCategoryName] = useState("");
   const [existingCategories, setExistingCategories] = useState([]);
 
-  const loadProduct = React.useCallback(() => {
-    const product = productsService.getProductById(id);
-    if (product) {
-      // Convert old nutrition format to new array format
-      let nutritionInfo = product.nutritionInfo;
-      if (nutritionInfo && !Array.isArray(nutritionInfo)) {
-        nutritionInfo = [
-          {
-            label: "Calories",
-            value: nutritionInfo.calories || "",
-            unit: "kcal",
-          },
-          { label: "Protein", value: nutritionInfo.protein || "", unit: "g" },
-          { label: "Carbs", value: nutritionInfo.carbs || "", unit: "g" },
-          { label: "Fat", value: nutritionInfo.fat || "", unit: "g" },
-        ];
-      } else if (!nutritionInfo) {
-        nutritionInfo = [
-          { label: "Calories", value: "", unit: "kcal" },
-          { label: "Protein", value: "", unit: "g" },
-          { label: "Carbs", value: "", unit: "g" },
-          { label: "Fat", value: "", unit: "g" },
-        ];
-      }
+  const loadProduct = React.useCallback(async () => {
+    setLoading(true);
+    try {
+      const product = await productsService.fetchProductById(id);
+      if (product) {
+        // Convert old nutrition format to new array format
+        let nutritionInfo = product.nutritionInfo;
+        if (nutritionInfo && !Array.isArray(nutritionInfo)) {
+          nutritionInfo = [
+            {
+              label: "Calories",
+              value: nutritionInfo.calories || "",
+              unit: "kcal",
+            },
+            { label: "Protein", value: nutritionInfo.protein || "", unit: "g" },
+            { label: "Carbs", value: nutritionInfo.carbs || "", unit: "g" },
+            { label: "Fat", value: nutritionInfo.fat || "", unit: "g" },
+          ];
+        } else if (!nutritionInfo) {
+          nutritionInfo = [
+            { label: "Calories", value: "", unit: "kcal" },
+            { label: "Protein", value: "", unit: "g" },
+            { label: "Carbs", value: "", unit: "g" },
+            { label: "Fat", value: "", unit: "g" },
+          ];
+        }
 
-      setFormData({
-        ...product,
-        ingredients: product.ingredients || [""],
-        sizes: product.sizes || [
-          { name: "Regular", price: "", description: "" },
-        ],
-        nutritionInfo,
-        addOnsConfig: product.addOnsConfig || {
-          showSpiceLevel: false,
-          showDrinks: false,
-          showDesserts: false,
-          showExtras: false,
-        },
-      });
-    } else {
+        setFormData({
+          ...product,
+          image: product.image || product.imageUrl || product.imageId || "",
+          ingredients: product.ingredients || [""],
+          sizes: product.sizes || [
+            { name: "Regular", price: "", description: "" },
+          ],
+          nutritionInfo,
+          addOnsConfig: product.addOnsConfig || {
+            showSpiceLevel: false,
+            showDrinks: false,
+            showDesserts: false,
+            showExtras: false,
+          },
+        });
+      } else {
+        dispatch(
+          showNotification({
+            type: "error",
+            message: "Product not found",
+          }),
+        );
+        navigate("/admin/products");
+      }
+    } catch (error) {
+      console.error("Error loading product:", error);
       dispatch(
         showNotification({
           type: "error",
-          message: "Product not found",
+          message: "An error occurred while loading the product",
         }),
       );
       navigate("/admin/products");
+    } finally {
+      setLoading(false);
     }
   }, [id, dispatch, navigate]);
 
@@ -305,9 +320,9 @@ const AdminProductForm = () => {
     try {
       let result;
       if (isEditMode) {
-        result = productsService.updateProduct(id, cleanedData);
+        result = await productsService.updateProduct(id, cleanedData);
       } else {
-        result = productsService.addProduct(cleanedData);
+        result = await productsService.addProduct(cleanedData);
       }
 
       if (result.success) {
@@ -332,7 +347,7 @@ const AdminProductForm = () => {
       dispatch(
         showNotification({
           type: "error",
-          message: "An error occurred while saving the product",
+          message: error.message || "An error occurred while saving the product",
         }),
       );
     } finally {
@@ -624,7 +639,7 @@ const AdminProductForm = () => {
                 <div className="relative w-full max-w-md mx-auto lg:mx-0">
                   <div className="aspect-video rounded-xl overflow-hidden border-4 border-primary/20 shadow-2xl group">
                     <img
-                      src={formData.image}
+                      src={productsService.getImageUrl(formData.image)}
                       alt="Product Preview"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       onError={(e) => {

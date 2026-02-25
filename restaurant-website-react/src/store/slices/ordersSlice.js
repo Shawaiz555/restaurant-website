@@ -17,7 +17,11 @@ const ordersSlice = createSlice({
   initialState,
   reducers: {
     setOrders: (state, action) => {
-      state.orders = action.payload;
+      const orders = (Array.isArray(action.payload) ? action.payload : []).map(o => ({
+        ...o,
+        id: o._id || o.orderId || o.id // Prioritize _id for internal tracking
+      }));
+      state.orders = orders;
       state.loading = false;
     },
     setLoading: (state, action) => {
@@ -29,7 +33,13 @@ const ordersSlice = createSlice({
     },
     updateOrderStatus: (state, action) => {
       const { orderId, status } = action.payload;
-      const order = state.orders.find((o) => o.orderId === orderId);
+      // Search by all possible ID fields to ensure we find the match
+      const order = state.orders.find((o) =>
+        o._id === orderId ||
+        o.orderId === orderId ||
+        o.id === orderId
+      );
+
       if (order) {
         order.status = status;
         order.statusHistory = order.statusHistory || [];
@@ -40,7 +50,12 @@ const ordersSlice = createSlice({
       }
     },
     deleteOrder: (state, action) => {
-      state.orders = state.orders.filter((o) => o.orderId !== action.payload);
+      const orderId = action.payload;
+      state.orders = state.orders.filter((o) =>
+        o._id !== orderId &&
+        o.orderId !== orderId &&
+        o.id !== orderId
+      );
     },
     setFilters: (state, action) => {
       state.filters = { ...state.filters, ...action.payload };
@@ -67,7 +82,8 @@ export const selectFilters = (state) => state.orders.filters;
 export const selectLoading = (state) => state.orders.loading;
 
 export const selectFilteredOrders = (state) => {
-  const { orders, filters } = state.orders;
+  const orders = Array.isArray(state.orders.orders) ? state.orders.orders : [];
+  const filters = state.orders.filters;
   let filtered = [...orders];
 
   // Filter by status
@@ -102,7 +118,7 @@ export const selectFilteredOrders = (state) => {
 };
 
 export const selectOrderStats = (state) => {
-  const orders = state.orders.orders;
+  const orders = Array.isArray(state.orders.orders) ? state.orders.orders : [];
   return {
     total: orders.length,
     pending: orders.filter((o) => o.status === 'Pending').length,

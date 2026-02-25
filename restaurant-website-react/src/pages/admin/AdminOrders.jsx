@@ -58,8 +58,8 @@ const AdminOrders = () => {
   // Ref for order details section
   const orderDetailsRef = useRef(null);
 
-  const loadOrders = React.useCallback(() => {
-    const allOrders = ordersService.getOrders();
+  const loadOrders = React.useCallback(async () => {
+    const allOrders = await ordersService.getOrders();
     dispatch(setOrders(allOrders));
   }, [dispatch]);
 
@@ -67,10 +67,16 @@ const AdminOrders = () => {
     loadOrders();
   }, [loadOrders]);
 
-  const handleStatusChange = (orderId, newStatus) => {
-    const result = ordersService.updateOrderStatus(orderId, newStatus);
+  const handleStatusChange = async (id, newStatus) => {
+    const result = await ordersService.updateOrderStatus(id, newStatus);
     if (result.success) {
-      dispatch(updateOrderStatus({ orderId, status: newStatus }));
+      dispatch(updateOrderStatus({ orderId: id, status: newStatus }));
+
+      // Update selected order if it's the one being modified
+      if (selectedOrder && selectedOrder._id === id) {
+        setSelectedOrder((prev) => ({ ...prev, status: newStatus }));
+      }
+
       dispatch(
         showNotification({
           type: "success",
@@ -92,10 +98,16 @@ const AdminOrders = () => {
     setShowDeleteConfirm(true);
   };
 
-  const handleDeleteConfirm = () => {
-    const result = ordersService.deleteOrder(orderToDelete.orderId);
+  const handleDeleteConfirm = async () => {
+    const result = await ordersService.deleteOrder(orderToDelete._id);
     if (result.success) {
-      dispatch(deleteOrder(orderToDelete.orderId));
+      dispatch(deleteOrder(orderToDelete._id));
+
+      // Clear selection if the deleted order was selected
+      if (selectedOrder && selectedOrder._id === orderToDelete._id) {
+        setSelectedOrder(null);
+      }
+
       dispatch(
         showNotification({
           type: "success",
@@ -367,15 +379,13 @@ const AdminOrders = () => {
                 <tbody className="divide-y divide-gray-200 bg-white">
                   {paginatedOrders.map((order, index) => (
                     <tr
-                      key={order.orderId}
+                      key={order._id}
                       className={`${
                         index % 2 === 0 ? "bg-white" : "bg-gray-50/50"
                       } hover:bg-cream-light/60 transition-all duration-200 cursor-pointer border-l-4 border-transparent hover:border-primary group`}
                       onClick={() => {
                         const newSelectedOrder =
-                          selectedOrder?.orderId === order.orderId
-                            ? null
-                            : order;
+                          selectedOrder?._id === order._id ? null : order;
                         setSelectedOrder(newSelectedOrder);
 
                         // Scroll to order details if order is selected
@@ -388,7 +398,7 @@ const AdminOrders = () => {
 
                               window.scrollTo({
                                 top: elementTop - offset,
-                                behavior: "smooth"
+                                behavior: "smooth",
                               });
                             }
                           }, 150);
@@ -440,7 +450,7 @@ const AdminOrders = () => {
                             value={order.status}
                             onChange={(e) => {
                               e.stopPropagation();
-                              handleStatusChange(order.orderId, e.target.value);
+                              handleStatusChange(order._id, e.target.value);
                             }}
                             className="w-auto min-w-[130px] text-xs px-2.5 py-1.5 rounded-lg border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 bg-white font-semibold transition-all hover:border-primary/50"
                             onClick={(e) => e.stopPropagation()}

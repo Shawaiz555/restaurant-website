@@ -1,164 +1,91 @@
+import apiClient from './apiClient';
+
 class ExpensesService {
-  // Get all expenses from localStorage
-  getExpenses() {
+  async getExpenses(filters = {}) {
     try {
-      const expenses = localStorage.getItem('expenses');
-      return expenses ? JSON.parse(expenses) : [];
+      const queryParams = new URLSearchParams(filters).toString();
+      const endpoint = queryParams ? `/expenses?${queryParams}` : '/expenses';
+      const response = await apiClient.get(endpoint);
+      return response.expenses || [];
     } catch (error) {
-      console.error('Error reading expenses:', error);
-      return [];
+      console.error('Get expenses error:', error);
+      throw error;
     }
   }
 
-  // Save expenses to localStorage
-  saveExpenses(expenses) {
+  async addExpense(expenseData) {
     try {
-      localStorage.setItem('expenses', JSON.stringify(expenses));
+      const response = await apiClient.post('/expenses', expenseData);
+      return {
+        success: true,
+        message: response.message,
+        expense: response.expense
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: error.message
+      };
+    }
+  }
+
+  async updateExpense(expenseId, updates) {
+    try {
+      const response = await apiClient.put(`/expenses/${expenseId}`, updates);
+      return {
+        success: true,
+        message: response.message,
+        expense: response.expense
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: error.message
+      };
+    }
+  }
+
+  async deleteExpense(expenseId) {
+    try {
+      const response = await apiClient.delete(`/expenses/${expenseId}`);
+      return {
+        success: true,
+        message: response.message
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: error.message
+      };
+    }
+  }
+
+  async getSummary() {
+    try {
+      const response = await apiClient.get('/expenses/stats/summary');
+      return response.summary;
+    } catch (error) {
+      console.error('Get summary error:', error);
+      throw error;
+    }
+  }
+
+  // Utility methods
+  getCategories() {
+    return ['Ingredients', 'Utilities', 'Salaries', 'Rent', 'Marketing', 'Other'];
+  }
+
+  // Client-side helper for filtering by date range
+  filterByDateRange(expenses, startDate, endDate) {
+    return expenses.filter(expense => {
+      const expenseDate = new Date(expense.date);
+      const start = startDate ? new Date(startDate) : null;
+      const end = endDate ? new Date(endDate) : null;
+
+      if (start && expenseDate < start) return false;
+      if (end && expenseDate > end) return false;
       return true;
-    } catch (error) {
-      console.error('Error saving expenses:', error);
-      return false;
-    }
-  }
-
-  // Generate unique ID
-  generateId() {
-    return 'expense_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-  }
-
-  // Add new expense
-  addExpense(expenseData) {
-    const { date, category, description, amount, paymentMethod } = expenseData;
-
-    // Validation
-    if (!date) {
-      return { success: false, message: 'Date is required' };
-    }
-    if (!category) {
-      return { success: false, message: 'Category is required' };
-    }
-    if (!description || description.trim().length === 0) {
-      return { success: false, message: 'Description is required' };
-    }
-    if (!amount || parseFloat(amount) <= 0) {
-      return { success: false, message: 'Amount must be a positive number' };
-    }
-    if (!paymentMethod) {
-      return { success: false, message: 'Payment method is required' };
-    }
-
-    const newExpense = {
-      id: this.generateId(),
-      date,
-      category,
-      description: description.trim(),
-      amount: parseFloat(amount),
-      paymentMethod,
-      createdAt: new Date().toISOString(),
-      createdBy: 'admin', // Could be dynamic based on logged-in admin
-    };
-
-    const expenses = this.getExpenses();
-    expenses.push(newExpense);
-    this.saveExpenses(expenses);
-
-    return {
-      success: true,
-      message: 'Expense added successfully',
-      expense: newExpense,
-    };
-  }
-
-  // Update expense
-  updateExpense(expenseId, updates) {
-    const expenses = this.getExpenses();
-    const index = expenses.findIndex((e) => e.id === expenseId);
-
-    if (index === -1) {
-      return { success: false, message: 'Expense not found' };
-    }
-
-    expenses[index] = {
-      ...expenses[index],
-      ...updates,
-      amount: parseFloat(updates.amount),
-      updatedAt: new Date().toISOString(),
-    };
-
-    this.saveExpenses(expenses);
-
-    return {
-      success: true,
-      message: 'Expense updated successfully',
-      expense: expenses[index],
-    };
-  }
-
-  // Delete expense
-  deleteExpense(expenseId) {
-    const expenses = this.getExpenses();
-    const filtered = expenses.filter((e) => e.id !== expenseId);
-
-    if (filtered.length === expenses.length) {
-      return { success: false, message: 'Expense not found' };
-    }
-
-    this.saveExpenses(filtered);
-    return { success: true, message: 'Expense deleted successfully' };
-  }
-
-  // Get expenses by category
-  getExpensesByCategory(category) {
-    const expenses = this.getExpenses();
-    return expenses.filter((e) => e.category === category);
-  }
-
-  // Calculate totals by time period
-  calculateTotals(dateRange = 'all') {
-    const expenses = this.getExpenses();
-    const now = new Date();
-    let filtered = expenses;
-
-    if (dateRange === 'today') {
-      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      filtered = expenses.filter((e) => new Date(e.date) >= today);
-    } else if (dateRange === 'week') {
-      const weekStart = new Date(now);
-      weekStart.setDate(now.getDate() - 7);
-      filtered = expenses.filter((e) => new Date(e.date) >= weekStart);
-    } else if (dateRange === 'month') {
-      const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-      filtered = expenses.filter((e) => new Date(e.date) >= monthStart);
-    } else if (dateRange === 'year') {
-      const yearStart = new Date(now.getFullYear(), 0, 1);
-      filtered = expenses.filter((e) => new Date(e.date) >= yearStart);
-    }
-
-    const total = filtered.reduce((sum, e) => sum + e.amount, 0);
-    const byCategory = {};
-
-    filtered.forEach((expense) => {
-      if (!byCategory[expense.category]) {
-        byCategory[expense.category] = 0;
-      }
-      byCategory[expense.category] += expense.amount;
     });
-
-    return {
-      total,
-      count: filtered.length,
-      byCategory,
-    };
-  }
-
-  // Get summary for dashboard
-  getSummary() {
-    return {
-      today: this.calculateTotals('today'),
-      thisWeek: this.calculateTotals('week'),
-      thisMonth: this.calculateTotals('month'),
-      all: this.calculateTotals('all'),
-    };
   }
 }
 

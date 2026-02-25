@@ -32,6 +32,16 @@ const Menu = () => {
   const [activeCategory, setActiveCategory] = useState(categoryFromUrl);
   const [searchTerm, setSearchTerm] = useState("");
   const [showMobileCategories, setShowMobileCategories] = useState(false);
+  const [allProducts, setAllProducts] = useState([]);
+
+  // Load products from API
+  useEffect(() => {
+    const loadProducts = async () => {
+      const products = await productsService.fetchProducts();
+      setAllProducts(products);
+    };
+    loadProducts();
+  }, []);
 
   // Update URL when category changes
   useEffect(() => {
@@ -42,9 +52,6 @@ const Menu = () => {
     }
     setSearchParams(searchParams, { replace: true });
   }, [activeCategory, searchParams, setSearchParams]);
-
-  // Get all products dynamically
-  const allProducts = productsService.getProducts();
 
   // Get unique categories from products
   const allCategories = [...new Set(allProducts.map((p) => p.category))].sort();

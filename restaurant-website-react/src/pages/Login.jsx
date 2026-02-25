@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
-import { loginSuccess } from "../store/slices/authSlice";
-import { loadCart } from "../store/slices/cartSlice";
+import { loginUser } from "../store/slices/authSlice";
+import { fetchCart } from "../store/slices/cartSlice";
 import { showNotification } from "../store/slices/notificationSlice";
-import authService from "../services/authService";
 import Loader from "../components/common/Loader";
 import {
   Mail,
@@ -38,32 +37,51 @@ const Login = () => {
     setLoading(true);
     setError("");
 
-    const result = authService.login(formData.email, formData.password);
-
-    if (result.success) {
-      dispatch(loginSuccess(result.user));
-      dispatch(loadCart(result.user.id));
-      dispatch(
-        showNotification({
-          message: `Welcome back, ${result.user.name}! 🎉`,
-          type: "success",
-        }),
+    try {
+      // Use Redux thunk for login
+      const resultAction = await dispatch(
+        loginUser({ email: formData.email, password: formData.password })
       );
-      setNavigating(true);
 
-      // Redirect admin users to admin panel, regular users to home
-      setTimeout(() => {
-        if (result.user.role === "admin") {
-          navigate("/admin/dashboard");
-        } else {
-          navigate("/");
-        }
-      }, 800);
-    } else {
-      setError(result.message);
+      if (loginUser.fulfilled.match(resultAction)) {
+        const user = resultAction.payload;
+
+        // Fetch user's cart from server
+        await dispatch(fetchCart());
+
+        dispatch(
+          showNotification({
+            message: `Welcome back, ${user.name}! 🎉`,
+            type: "success",
+          }),
+        );
+        setNavigating(true);
+
+        // Redirect admin users to admin panel, regular users to home
+        setTimeout(() => {
+          if (user.role === "admin") {
+            navigate("/admin/dashboard");
+          } else {
+            navigate("/");
+          }
+        }, 800);
+      } else {
+        // Login failed
+        const errorMessage = resultAction.payload || "Login failed";
+        setError(errorMessage);
+        dispatch(
+          showNotification({
+            message: errorMessage,
+            type: "error",
+          }),
+        );
+        setLoading(false);
+      }
+    } catch (err) {
+      setError("An unexpected error occurred");
       dispatch(
         showNotification({
-          message: result.message,
+          message: "An unexpected error occurred",
           type: "error",
         }),
       );

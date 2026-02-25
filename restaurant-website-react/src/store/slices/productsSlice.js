@@ -13,8 +13,12 @@ const productsSlice = createSlice({
   initialState,
   reducers: {
     setProducts: (state, action) => {
-      state.products = action.payload;
-      state.categories = [...new Set(action.payload.map((p) => p.category))];
+      const products = (Array.isArray(action.payload) ? action.payload : []).map(p => ({
+        ...p,
+        id: p.id || p._id // Ensure every product has an id property
+      }));
+      state.products = products;
+      state.categories = [...new Set(products.map((p) => p.category))];
       state.loading = false;
       state.isInitialized = true;
     },
@@ -26,9 +30,10 @@ const productsSlice = createSlice({
       state.loading = false;
     },
     addProduct: (state, action) => {
-      state.products.push(action.payload);
-      if (!state.categories.includes(action.payload.category)) {
-        state.categories.push(action.payload.category);
+      const product = { ...action.payload, id: action.payload.id || action.payload._id };
+      state.products.push(product);
+      if (!state.categories.includes(product.category)) {
+        state.categories.push(product.category);
       }
     },
     updateProduct: (state, action) => {

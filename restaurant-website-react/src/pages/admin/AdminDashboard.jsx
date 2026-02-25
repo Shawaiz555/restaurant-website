@@ -43,48 +43,55 @@ const AdminDashboard = () => {
   const [revenueTrend, setRevenueTrend] = useState([]);
   const [orderStatusDistribution, setOrderStatusDistribution] = useState([]);
 
-  const loadDashboardData = React.useCallback(() => {
-    // Load orders
-    const orders = ordersService.getOrders();
-    dispatch(setOrders(orders));
+  const loadDashboardData = React.useCallback(async () => {
+    try {
+      // Load orders
+      const orders = (await ordersService.getOrders()) || [];
+      dispatch(setOrders(orders));
 
-    // Load products
-    const products = productsService.getProducts();
-    dispatch(setProducts(products));
+      // Load products
+      const products = (await productsService.fetchProducts()) || [];
+      // If products is the response object { success, products }, extract it
+      const productsArray = products.products || products;
+      dispatch(setProducts(productsArray));
 
-    // Load expenses
-    const expenses = expensesService.getExpenses();
-    dispatch(setExpenses(expenses));
-    dispatch(calculateSummary());
+      // Load expenses
+      const expenses = (await expensesService.getExpenses()) || [];
+      dispatch(setExpenses(expenses));
+      dispatch(calculateSummary());
 
-    // Calculate stats
-    const orderStats = ordersService.getOrderStats();
-    const totalRevenue = ordersService.getTotalRevenue();
-    const expenseSummary = expensesService.getSummary();
+      // Calculate stats using analytics service (now async)
+      const orderStats = (await analyticsService.getOrderStats()) || {}; // Ensure orderStats is an object
+      const totalRevenue = ordersService.getTotalRevenue(orders); // Synchronous helper
+      const expenseSummary = await expensesService.getSummary();
 
-    setStats({
-      revenue: totalRevenue,
-      orders: orderStats.total,
-      pendingOrders: orderStats.pending,
-      products: products.length,
-      expenses: expenseSummary.thisMonth.total,
-    });
+      setStats({
+        revenue: totalRevenue,
+        orders: orderStats.total || 0, // Add fallback
+        pendingOrders: orderStats.pending || 0, // Add fallback
+        products: productsArray.length,
+        expenses:
+          expenseSummary?.thisMonth?.total || expenseSummary?.total || 0,
+      });
 
-    // Get recent orders
-    const recent = ordersService.getRecentOrders(5);
-    setRecentOrders(recent);
+      // Get recent orders
+      const recent = ordersService.getRecentOrders(orders, 5);
+      setRecentOrders(recent);
 
-    // Get top products
-    const top = analyticsService.getTopProducts(5);
-    setTopProducts(top);
+      // Get top products
+      const top = await analyticsService.getTopProducts(5);
+      setTopProducts(top);
 
-    // Calculate revenue trend for last 7 days
-    const trend = calculateRevenueTrend(orders);
-    setRevenueTrend(trend);
+      // Calculate revenue trend for last 7 days
+      const trend = calculateRevenueTrend(orders);
+      setRevenueTrend(trend);
 
-    // Calculate order status distribution
-    const distribution = calculateOrderStatusDistribution(orderStats);
-    setOrderStatusDistribution(distribution);
+      // Calculate order status distribution
+      const distribution = calculateOrderStatusDistribution(orderStats);
+      setOrderStatusDistribution(distribution);
+    } catch (error) {
+      console.error("Dashboard data load error:", error);
+    }
   }, [dispatch]);
 
   useEffect(() => {
@@ -122,28 +129,29 @@ const AdminDashboard = () => {
   };
 
   const calculateOrderStatusDistribution = (orderStats) => {
+    if (!orderStats) return [];
     return [
       {
         status: "Pending",
-        count: orderStats.pending,
+        count: parseInt(orderStats.pending || 0),
         color: "#FCD34D",
         icon: Clock,
       },
       {
         status: "Processing",
-        count: orderStats.processing,
+        count: parseInt(orderStats.processing || 0),
         color: "#60A5FA",
         icon: RefreshCw,
       },
       {
         status: "Completed",
-        count: orderStats.completed,
+        count: parseInt(orderStats.completed || 0),
         color: "#34D399",
         icon: CheckCircle,
       },
       {
         status: "Cancelled",
-        count: orderStats.cancelled,
+        count: parseInt(orderStats.cancelled || 0),
         color: "#F87171",
         icon: XCircle,
       },

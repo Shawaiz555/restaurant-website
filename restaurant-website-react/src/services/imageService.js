@@ -1,149 +1,107 @@
-/**
- * Image Service
- * Handles local image storage using base64 encoding
- */
+import apiClient from './apiClient';
 
 class ImageService {
-  STORAGE_KEY = 'product_images';
-
-  /**
-   * Upload image file and store as base64
-   * @param {File} file - Image file
-   * @param {string} productId - Unique product identifier
-   * @returns {Promise<{success: boolean, imageUrl?: string, message?: string}>}
-   */
-  uploadImage(file, productId) {
-    return new Promise((resolve) => {
+  // Upload image to GridFS
+  async uploadImage(file, productId = null) {
+    try {
       // Validate file
-      if (!file) {
-        resolve({ success: false, message: 'No file provided' });
-        return;
-      }
-
-      // Validate file type
       const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
       if (!validTypes.includes(file.type)) {
-        resolve({
+        return {
           success: false,
           message: 'Invalid file type. Please upload JPG, PNG, WEBP, or GIF'
-        });
-        return;
+        };
       }
 
-      // Validate file size (max 5MB)
-      const maxSize = 5 * 1024 * 1024; // 5MB
-      if (file.size > maxSize) {
-        resolve({
+      if (file.size > 5 * 1024 * 1024) {
+        return {
           success: false,
           message: 'File too large. Maximum size is 5MB'
-        });
-        return;
+        };
       }
 
-      // Read file as base64
+      // Create FormData
+      const formData = new FormData();
+      formData.append('image', file);
+      if (productId) {
+        formData.append('productId', productId);
+      }
+
+      // Upload to server
+      const response = await apiClient.uploadFile('/images/upload', formData);
+
+      return {
+        success: true,
+        imageId: response.imageId,
+        filename: response.filename,
+        imageUrl: this.getImageUrl(response.imageId)
+      };
+    } catch (error) {
+      console.error('Upload error:', error);
+      return {
+        success: false,
+        message: error.message || 'Failed to upload image'
+      };
+    }
+  }
+
+  // Get image URL for GridFS image
+  getImageUrl(imageId) {
+    if (!imageId) return null;
+    return `http://localhost:8000/api/images/${imageId}`;
+  }
+
+  // Delete image from GridFS
+  async deleteImage(imageId) {
+    try {
+      const response = await apiClient.delete(`/images/${imageId}`);
+      return {
+        success: true,
+        message: response.message
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: error.message
+      };
+    }
+  }
+
+  // Validate image before upload
+  validateImage(file) {
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
+
+    if (!file) {
+      return { valid: false, message: 'No file provided' };
+    }
+
+    if (!validTypes.includes(file.type)) {
+      return {
+        valid: false,
+        message: 'Invalid file type. Please upload JPG, PNG, WEBP, or GIF'
+      };
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      return {
+        valid: false,
+        message: 'File too large. Maximum size is 5MB'
+      };
+    }
+
+    return { valid: true };
+  }
+
+  // Convert file to base64 for preview (client-side only)
+  fileToBase64(file) {
+    return new Promise((resolve, reject) => {
       const reader = new FileReader();
-
-      reader.onload = (e) => {
-        try {
-          const base64String = e.target.result;
-
-          // Store image with product ID
-          this.saveImageToStorage(productId, base64String);
-
-          resolve({
-            success: true,
-            imageUrl: base64String
-          });
-        } catch (error) {
-          resolve({
-            success: false,
-            message: 'Failed to process image'
-          });
-        }
-      };
-
-      reader.onerror = () => {
-        resolve({
-          success: false,
-          message: 'Failed to read image file'
-        });
-      };
-
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
       reader.readAsDataURL(file);
     });
   }
-
-  /**
-   * Save image to localStorage
-   * @param {string} productId
-   * @param {string} base64String
-   */
-  saveImageToStorage(productId, base64String) {
-    try {
-      const images = this.getAllImages();
-      images[productId] = base64String;
-      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(images));
-    } catch (error) {
-      console.error('Failed to save image to storage:', error);
-    }
-  }
-
-  /**
-   * Get image by product ID
-   * @param {string} productId
-   * @returns {string|null}
-   */
-  getImage(productId) {
-    try {
-      const images = this.getAllImages();
-      return images[productId] || null;
-    } catch (error) {
-      console.error('Failed to get image:', error);
-      return null;
-    }
-  }
-
-  /**
-   * Get all images
-   * @returns {Object}
-   */
-  getAllImages() {
-    try {
-      const imagesJson = localStorage.getItem(this.STORAGE_KEY);
-      return imagesJson ? JSON.parse(imagesJson) : {};
-    } catch (error) {
-      console.error('Failed to get images:', error);
-      return {};
-    }
-  }
-
-  /**
-   * Delete image by product ID
-   * @param {string} productId
-   * @returns {boolean}
-   */
-  deleteImage(productId) {
-    try {
-      const images = this.getAllImages();
-      delete images[productId];
-      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(images));
-      return true;
-    } catch (error) {
-      console.error('Failed to delete image:', error);
-      return false;
-    }
-  }
-
-  /**
-   * Clear all images
-   */
-  clearAllImages() {
-    try {
-      localStorage.removeItem(this.STORAGE_KEY);
-    } catch (error) {
-      console.error('Failed to clear images:', error);
-    }
-  }
 }
 
-export default new ImageService();
+const imageService = new ImageService();
+export default imageService;

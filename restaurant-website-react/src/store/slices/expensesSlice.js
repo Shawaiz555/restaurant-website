@@ -26,7 +26,11 @@ const expensesSlice = createSlice({
   initialState,
   reducers: {
     setExpenses: (state, action) => {
-      state.expenses = action.payload;
+      const expenses = (Array.isArray(action.payload) ? action.payload : []).map(e => ({
+        ...e,
+        id: e.id || e._id // Ensure every expense has an id property
+      }));
+      state.expenses = expenses;
       state.loading = false;
     },
     setLoading: (state, action) => {
@@ -37,19 +41,25 @@ const expensesSlice = createSlice({
       state.loading = false;
     },
     addExpense: (state, action) => {
-      state.expenses.push(action.payload);
+      const expense = { ...action.payload, id: action.payload.id || action.payload._id };
+      state.expenses.push(expense);
     },
     updateExpense: (state, action) => {
-      const { id, updates } = action.payload;
-      const index = state.expenses.findIndex((e) => e.id === id);
+      const payload = action.payload;
+      const id = payload.id || payload._id;
+      const index = state.expenses.findIndex((e) => (e.id || e._id) === id);
       if (index !== -1) {
-        state.expenses[index] = { ...state.expenses[index], ...updates };
+        state.expenses[index] = { ...state.expenses[index], ...payload, id };
       }
     },
     deleteExpense: (state, action) => {
-      state.expenses = state.expenses.filter((e) => e.id !== action.payload);
+      const id = action.payload;
+      state.expenses = state.expenses.filter((e) => (e.id || e._id) !== id);
     },
     calculateSummary: (state) => {
+      if (!Array.isArray(state.expenses)) {
+        state.expenses = [];
+      }
       const now = new Date();
       const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
       const weekStart = new Date(today);

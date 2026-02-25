@@ -4,8 +4,11 @@ import { useDispatch } from "react-redux";
 import { useCart } from "../hooks/useCart";
 import { useAuth } from "../hooks/useAuth";
 import { showNotification } from "../store/slices/notificationSlice";
+import { clearServerCart } from "../store/slices/cartSlice";
 import LocationMap from "../components/common/LocationMap";
 import { ShoppingCart, Loader2, Check, Info, CreditCard } from "lucide-react";
+import ordersService from "../services/ordersService";
+import cartService from "../services/cartService";
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -180,7 +183,7 @@ const Checkout = () => {
       // Create order object
       const order = {
         orderId: `ORD-${Date.now()}`,
-        userId: currentUser?.id || null, // null for guest users
+        userId: currentUser?._id || null, // MongoDB ObjectId
         customerInfo: formData,
         items: items,
         subtotal: subtotal,
@@ -189,30 +192,20 @@ const Checkout = () => {
         paymentMethod: "Cash on Delivery",
         status: "Pending",
         orderDate: new Date().toISOString(),
-        isGuestOrder: !isAuthenticated, // Flag to identify guest orders
+        isGuestOrder: !isAuthenticated,
       };
 
-      // Send order to backend
-      const response = await fetch("/api/orders/placeOrder", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(order),
-      });
-
-      const result = await response.json();
+      // Place order via MongoDB API
+      const result = await ordersService.placeOrder(order);
 
       if (result.success) {
-        // Store order in localStorage
-        const existingOrders = JSON.parse(
-          localStorage.getItem("orders") || "[]",
-        );
-        existingOrders.push(order);
-        localStorage.setItem("orders", JSON.stringify(existingOrders));
-
-        // Clear cart (pass userId for logged-in users, undefined for guests)
-        clearCart(true);
+        // Clear cart from server (for authenticated users) or localStorage (for guests)
+        if (isAuthenticated) {
+          await dispatch(clearServerCart()).unwrap();
+        } else {
+          cartService.clearGuestCart();
+          clearCart(false);
+        }
 
         // Show success notification with email status
         let successMessage = `Order placed successfully! Order ID: ${order.orderId}`;
@@ -231,7 +224,7 @@ const Checkout = () => {
 
         setIsProcessing(false);
 
-        // Redirect to home or order confirmation page
+        // Redirect to home
         setTimeout(() => {
           navigate("/");
         }, 2000);
@@ -241,39 +234,14 @@ const Checkout = () => {
     } catch (error) {
       console.error("Error placing order:", error);
 
-      // Fallback: Still save order locally if backend fails
-      const fallbackOrder = {
-        orderId: `ORD-${Date.now()}`,
-        userId: currentUser?.id || null, // null for guest users
-        customerInfo: formData,
-        items: items,
-        subtotal: subtotal,
-        deliveryFee: deliveryFee,
-        total: grandTotal,
-        paymentMethod: "Cash on Delivery",
-        status: "Pending",
-        orderDate: new Date().toISOString(),
-        isGuestOrder: !isAuthenticated,
-      };
-
-      const existingOrders = JSON.parse(localStorage.getItem("orders") || "[]");
-      existingOrders.push(fallbackOrder);
-      localStorage.setItem("orders", JSON.stringify(existingOrders));
-
-      clearCart(true);
-
       dispatch(
         showNotification({
-          message: `Order placed! Order ID: ${fallbackOrder.orderId}. (Email notification may be delayed)`,
-          type: "success",
+          message: error.message || "Failed to place order. Please try again.",
+          type: "error",
         }),
       );
 
       setIsProcessing(false);
-
-      setTimeout(() => {
-        navigate("/");
-      }, 2000);
     }
   };
 

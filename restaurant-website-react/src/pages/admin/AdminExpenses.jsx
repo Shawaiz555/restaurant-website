@@ -48,10 +48,19 @@ const AdminExpenses = () => {
     paymentMethod: "Cash",
   });
 
-  const loadExpenses = useCallback(() => {
-    const allExpenses = expensesService.getExpenses();
-    dispatch(setExpenses(allExpenses));
-    dispatch(calculateSummary());
+  const loadExpenses = useCallback(async () => {
+    try {
+      const allExpenses = await expensesService.getExpenses();
+      dispatch(setExpenses(allExpenses));
+      dispatch(calculateSummary());
+    } catch (error) {
+      dispatch(
+        showNotification({
+          type: "error",
+          message: "Failed to load expenses",
+        }),
+      );
+    }
   }, [dispatch]);
 
   useEffect(() => {
@@ -63,7 +72,7 @@ const AdminExpenses = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!formData.description.trim()) {
@@ -88,7 +97,10 @@ const AdminExpenses = () => {
 
     if (editingExpense) {
       // Update expense
-      const result = expensesService.updateExpense(editingExpense.id, formData);
+      const result = await expensesService.updateExpense(
+        editingExpense._id || editingExpense.id,
+        formData,
+      );
       if (result.success) {
         dispatch(updateExpenseAction(result.expense)); // Dispatch update action
         dispatch(calculateSummary());
@@ -99,6 +111,7 @@ const AdminExpenses = () => {
           }),
         );
         resetForm();
+        loadExpenses(); // Refresh from server
       } else {
         dispatch(
           showNotification({
@@ -109,7 +122,7 @@ const AdminExpenses = () => {
       }
     } else {
       // Add new expense
-      const result = expensesService.addExpense(formData);
+      const result = await expensesService.addExpense(formData);
       if (result.success) {
         dispatch(addExpenseAction(result.expense));
         dispatch(calculateSummary());
@@ -120,6 +133,7 @@ const AdminExpenses = () => {
           }),
         );
         resetForm();
+        loadExpenses(); // Refresh from server
       } else {
         dispatch(
           showNotification({
@@ -151,7 +165,7 @@ const AdminExpenses = () => {
 
         window.scrollTo({
           top: elementTop - offset,
-          behavior: "smooth"
+          behavior: "smooth",
         });
       }
     }, 150);
@@ -162,10 +176,12 @@ const AdminExpenses = () => {
     setShowDeleteConfirm(true);
   };
 
-  const handleDeleteConfirm = () => {
-    const result = expensesService.deleteExpense(expenseToDelete.id);
+  const handleDeleteConfirm = async () => {
+    const result = await expensesService.deleteExpense(
+      expenseToDelete._id || expenseToDelete.id,
+    );
     if (result.success) {
-      dispatch(deleteExpenseAction(expenseToDelete.id));
+      dispatch(deleteExpenseAction(expenseToDelete._id || expenseToDelete.id));
       dispatch(calculateSummary());
       dispatch(
         showNotification({
@@ -173,6 +189,7 @@ const AdminExpenses = () => {
           message: "Expense deleted successfully",
         }),
       );
+      loadExpenses(); // Refresh from server
     } else {
       dispatch(
         showNotification({
@@ -243,7 +260,7 @@ const AdminExpenses = () => {
 
                   window.scrollTo({
                     top: elementTop - offset,
-                    behavior: "smooth"
+                    behavior: "smooth",
                   });
                 }
               }, 150);
@@ -516,7 +533,7 @@ const AdminExpenses = () => {
               <tbody className="divide-y divide-gray-200">
                 {filteredExpenses.map((expense) => (
                   <tr
-                    key={expense.id}
+                    key={expense._id || expense.id}
                     className="hover:bg-cream-light transition-colors"
                   >
                     <td className="px-6 py-4 text-sm text-dark whitespace-nowrap">

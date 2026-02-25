@@ -39,37 +39,53 @@ const AdminAnalytics = () => {
   const [orderStatusData, setOrderStatusData] = useState([]);
   const [dateRange, setDateRange] = useState("week");
 
-  const loadAnalytics = React.useCallback(() => {
-    // Revenue vs Expenses
-    const comparison = analyticsService.getRevenueVsExpenses(dateRange);
-    setStats(comparison);
+  const loadAnalytics = React.useCallback(async () => {
+    try {
+      // Revenue vs Expenses
+      const comparison = await analyticsService.getRevenueVsExpenses(dateRange);
+      setStats(comparison);
 
-    // Revenue trend data
-    const revenue = analyticsService.getRevenueData(dateRange);
-    const chartData = Object.entries(revenue.revenueByDate || {}).map(
-      ([date, amount]) => ({
-        date: new Date(date).toLocaleDateString("en-US", {
-          month: "short",
-          day: "numeric",
+      // Revenue trend data
+      const revenue = await analyticsService.getRevenueData(dateRange);
+      const chartData = Object.entries(revenue.revenueByDate || {}).map(
+        ([date, amount]) => ({
+          date: new Date(date).toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+          }),
+          revenue: amount,
         }),
-        revenue: amount,
-      }),
-    );
-    setRevenueData(chartData);
+      );
+      setRevenueData(chartData);
 
-    // Top products
-    const products = analyticsService.getTopProducts(10);
-    setTopProducts(products);
+      // Top products
+      const products = await analyticsService.getTopProducts(10);
+      setTopProducts(products);
 
-    // Order status distribution
-    const orderStats = ordersService.getOrderStats();
-    const statusData = [
-      { name: "Pending", value: orderStats.pending, color: "#F39C12" },
-      { name: "Processing", value: orderStats.processing, color: "#3498DB" },
-      { name: "Completed", value: orderStats.completed, color: "#27AE60" },
-      { name: "Cancelled", value: orderStats.cancelled, color: "#E74C3C" },
-    ].filter((item) => item.value > 0);
-    setOrderStatusData(statusData);
+      // Order status distribution
+      const orderStats = (await ordersService.getOrderStats()) || {};
+      const statusData = [
+        { name: "Pending", value: orderStats.pending || 0, color: "#F39C12" },
+        {
+          name: "Processing",
+          value: orderStats.processing || 0,
+          color: "#3498DB",
+        },
+        {
+          name: "Completed",
+          value: orderStats.completed || 0,
+          color: "#27AE60",
+        },
+        {
+          name: "Cancelled",
+          value: orderStats.cancelled || 0,
+          color: "#E74C3C",
+        },
+      ].filter((item) => item.value > 0);
+      setOrderStatusData(statusData);
+    } catch (error) {
+      console.error("Analytics load error:", error);
+    }
   }, [dateRange]);
 
   useEffect(() => {

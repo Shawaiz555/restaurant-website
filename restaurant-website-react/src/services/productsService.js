@@ -1,77 +1,155 @@
-import { getAllProducts } from '../store/productsData';
+import apiClient from './apiClient';
 
 class ProductsService {
-  // Check if products have been migrated to localStorage
-  isInitialized() {
-    return localStorage.getItem('productsInitialized') === 'true';
+  // Synchronous method for components that need immediate data (returns empty array, use fetchProducts instead)
+  getProducts(category = null) {
+    console.warn('getProducts() is deprecated. Use fetchProducts() instead for real-time data.');
+    return [];
   }
 
-  // Migrate products from static file to localStorage (one-time)
-  migrateProductsToLocalStorage() {
-    if (!this.isInitialized()) {
-      const staticProducts = getAllProducts();
-      localStorage.setItem('products', JSON.stringify(staticProducts));
-      localStorage.setItem('productsInitialized', 'true');
-      console.log('Products migrated to localStorage');
-      return true;
-    }
-    return false;
-  }
-
-  // Get all products (from localStorage or fallback to static)
-  getProducts() {
+  // Async method for fetching from API
+  async fetchProducts(category = null) {
     try {
-      if (this.isInitialized()) {
-        const products = localStorage.getItem('products');
-        return products ? JSON.parse(products) : [];
-      }
-      // Fallback to static products if not initialized
-      return getAllProducts();
+      const queryParams = category ? `?category=${category}` : '';
+      const response = await apiClient.get(`/products${queryParams}`);
+      return response.products || [];
     } catch (error) {
-      console.error('Error reading products:', error);
-      return getAllProducts();
+      console.error('Get products error:', error);
+      return [];
     }
   }
 
-  // Get single product by ID
+  // Synchronous method for getting product by ID (deprecated, use fetchProductById)
   getProductById(productId) {
-    const products = this.getProducts();
-    return products.find((p) => p.id === productId);
+    console.warn('getProductById() is deprecated. Use fetchProductById() instead for real-time data.');
+    return null;
   }
 
-  // Get products by category
-  getProductsByCategory(category) {
-    const products = this.getProducts();
-    return products.filter((p) => p.category === category);
-  }
-
-  // Get all categories
-  getCategories() {
-    const products = this.getProducts();
-    return [...new Set(products.map((p) => p.category))];
-  }
-
-  // Save products to localStorage
-  saveProducts(products) {
+  // Async method for fetching product from API
+  async fetchProductById(productId) {
     try {
-      localStorage.setItem('products', JSON.stringify(products));
-      localStorage.setItem('productsInitialized', 'true');
-      return true;
+      const response = await apiClient.get(`/products/${productId}`);
+      return response.product;
     } catch (error) {
-      console.error('Error saving products:', error);
-      return false;
+      console.error('Get product error:', error);
+      return null;
     }
   }
 
-  // Generate product ID from name
-  generateProductId(name) {
-    return name
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-+|-+$/g, '');
+  getProductsByCategory(category) {
+    return this.getProducts(category);
   }
 
-  // Validate product data
+  async fetchProductsByCategory(category) {
+    return this.fetchProducts(category);
+  }
+
+  async getCategories() {
+    try {
+      const response = await apiClient.get('/products/categories/list');
+      return response.categories || [];
+    } catch (error) {
+      console.error('Get categories error:', error);
+      return [];
+    }
+  }
+
+  async addProduct(productData) {
+    try {
+      // Handle image upload if it's a base64 string
+      if (productData.image && typeof productData.image === 'string') {
+        if (productData.image.startsWith('data:')) {
+          const imageId = await this._uploadImage(productData.image);
+          if (imageId) {
+            productData.imageId = imageId;
+            delete productData.image;
+          }
+        } else if (productData.image.startsWith('http')) {
+          productData.imageUrl = productData.image;
+          delete productData.image;
+        }
+      }
+
+      const response = await apiClient.post('/products', productData);
+      return {
+        success: true,
+        message: response.message,
+        product: response.product
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: error.message
+      };
+    }
+  }
+
+  async updateProduct(productId, updates) {
+    try {
+      // Handle image upload if it's a base64 string
+      if (updates.image && typeof updates.image === 'string') {
+        if (updates.image.startsWith('data:')) {
+          const imageId = await this._uploadImage(updates.image);
+          if (imageId) {
+            updates.imageId = imageId;
+            delete updates.image;
+          }
+        } else if (updates.image.startsWith('http')) {
+          updates.imageUrl = updates.image;
+          delete updates.image;
+        }
+      }
+
+      const response = await apiClient.put(`/products/${productId}`, updates);
+      return {
+        success: true,
+        message: response.message,
+        product: response.product
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: error.message
+      };
+    }
+  }
+
+  // Private helper for uploading images
+  async _uploadImage(base64Image) {
+    try {
+      const formData = new FormData();
+      const filename = `product-${Date.now()}.png`;
+
+      // Convert base64 to blob
+      const res = await fetch(base64Image);
+      const blob = await res.blob();
+      const file = new File([blob], filename, { type: blob.type });
+
+      formData.append('image', file);
+      const response = await apiClient.uploadFile('/images/upload', formData);
+
+      return response.imageId;
+    } catch (error) {
+      console.error('Image upload failed:', error);
+      return null;
+    }
+  }
+
+  async deleteProduct(productId) {
+    try {
+      const response = await apiClient.delete(`/products/${productId}`);
+      return {
+        success: true,
+        message: response.message
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: error.message
+      };
+    }
+  }
+
   validateProduct(product) {
     const errors = [];
 
@@ -83,127 +161,49 @@ class ProductsService {
       errors.push('Category is required');
     }
 
-    if (!product.image || product.image.trim().length === 0) {
-      errors.push('Image URL is required');
-    }
-
-    if (!product.basePrice || parseFloat(product.basePrice) <= 0) {
-      errors.push('Base price must be a positive number');
+    if (!product.basePrice || isNaN(product.basePrice) || product.basePrice < 0) {
+      errors.push('Valid base price is required');
     }
 
     if (!product.sizes || product.sizes.length === 0) {
       errors.push('At least one size is required');
     }
 
-    if (product.sizes) {
-      product.sizes.forEach((size, index) => {
-        if (!size.name || size.name.trim().length === 0) {
-          errors.push(`Size ${index + 1}: Name is required`);
-        }
-        if (!size.price || parseFloat(size.price) <= 0) {
-          errors.push(`Size ${index + 1}: Price must be a positive number`);
-        }
-      });
-    }
-
-    return {
-      isValid: errors.length === 0,
-      errors,
-    };
+    return errors;
   }
 
-  // Add new product
-  addProduct(productData) {
-    const validation = this.validateProduct(productData);
-    if (!validation.isValid) {
-      return {
-        success: false,
-        message: validation.errors.join(', '),
-        errors: validation.errors,
-      };
-    }
-
-    const products = this.getProducts();
-
-    // Generate ID if not provided
-    const newProduct = {
-      ...productData,
-      id: productData.id || this.generateProductId(productData.name),
-    };
-
-    // Check if product with same ID exists
-    if (products.find((p) => p.id === newProduct.id)) {
-      return {
-        success: false,
-        message: 'A product with this name already exists',
-      };
-    }
-
-    products.push(newProduct);
-    this.saveProducts(products);
-
-    return {
-      success: true,
-      message: 'Product added successfully',
-      product: newProduct,
-    };
+  // Helper method for generating product ID from name
+  generateProductId(name) {
+    return name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
   }
 
-  // Update existing product
-  updateProduct(productId, updates) {
-    const validation = this.validateProduct({ id: productId, ...updates });
-    if (!validation.isValid) {
-      return {
-        success: false,
-        message: validation.errors.join(', '),
-        errors: validation.errors,
-      };
+  getImageUrl(product) {
+    if (!product) return "https://via.placeholder.com/80x80?text=No+Image";
+
+    // Support both direct image string or product object
+    let image = typeof product === "string" ? product : (product.image || product.imageUrl || product.imageId);
+
+    if (!image) return "https://via.placeholder.com/80x80?text=No+Image";
+
+    // Ensure it's a string
+    image = image.toString();
+
+    if (image.startsWith("http") || image.startsWith("data:")) return image;
+
+    // Handle relative paths from public folder or API images
+    const baseURL = process.env.REACT_APP_API_URL || "http://localhost:8000/api";
+    const baseServerURL = baseURL.replace("/api", "");
+
+    if (image.startsWith("/api/images")) {
+      return `${baseServerURL}${image}`;
     }
 
-    const products = this.getProducts();
-    const index = products.findIndex((p) => p.id === productId);
-
-    if (index === -1) {
-      return { success: false, message: 'Product not found' };
+    // Default GridFS path if it's just an ID
+    if (/^[0-9a-fA-F]{24}$/.test(image)) {
+      return `${baseURL}/images/${image}`;
     }
 
-    products[index] = { ...products[index], ...updates };
-    this.saveProducts(products);
-
-    return {
-      success: true,
-      message: 'Product updated successfully',
-      product: products[index],
-    };
-  }
-
-  // Delete product
-  deleteProduct(productId) {
-    const products = this.getProducts();
-    const filtered = products.filter((p) => p.id !== productId);
-
-    if (filtered.length === products.length) {
-      return { success: false, message: 'Product not found' };
-    }
-
-    this.saveProducts(filtered);
-    return { success: true, message: 'Product deleted successfully' };
-  }
-
-  // Duplicate product
-  duplicateProduct(productId) {
-    const product = this.getProductById(productId);
-    if (!product) {
-      return { success: false, message: 'Product not found' };
-    }
-
-    const duplicated = {
-      ...product,
-      id: this.generateProductId(product.name + '-copy'),
-      name: product.name + ' (Copy)',
-    };
-
-    return this.addProduct(duplicated);
+    return image;
   }
 }
 

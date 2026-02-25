@@ -1,7 +1,7 @@
 const Mailjet = require('node-mailjet');
 
-const ADMIN_EMAIL = 'shiningstardeveloper@gmail.com';
-const FROM_EMAIL = process.env.MAILJET_FROM_EMAIL || 'noreply@yourdomain.com';
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'shiningstardeveloper@gmail.com';
+const FROM_EMAIL = process.env.MAILJET_FROM_EMAIL || 'shawaizbutt555@gmail.com';
 const FROM_NAME = process.env.MAILJET_FROM_NAME || 'Restaurant';
 
 const mailjet = Mailjet.apiConnect(

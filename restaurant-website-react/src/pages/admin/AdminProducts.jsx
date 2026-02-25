@@ -42,20 +42,13 @@ const AdminProducts = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
-  const loadProducts = React.useCallback(() => {
-    // Migrate products from static to localStorage if not already done
-    const migrated = productsService.migrateProductsToLocalStorage();
-    if (migrated) {
-      dispatch(
-        showNotification({
-          type: "info",
-          message: "Products migrated to localStorage for editing",
-        }),
-      );
+  const loadProducts = React.useCallback(async () => {
+    try {
+      const allProducts = (await productsService.fetchProducts()) || [];
+      dispatch(setProducts(allProducts));
+    } catch (error) {
+      console.error("Failed to load products:", error);
     }
-
-    const allProducts = productsService.getProducts();
-    dispatch(setProducts(allProducts));
   }, [dispatch]);
 
   useEffect(() => {
@@ -67,22 +60,32 @@ const AdminProducts = () => {
     setShowDeleteConfirm(true);
   };
 
-  const handleDeleteConfirm = () => {
-    const result = productsService.deleteProduct(productToDelete.id);
-    if (result.success) {
-      dispatch(deleteProduct(productToDelete.id));
-      dispatch(
-        showNotification({
-          type: "success",
-          message: "Product deleted successfully",
-        }),
-      );
-      loadProducts(); // Reload to update categories
-    } else {
+  const handleDeleteConfirm = async () => {
+    try {
+      const result = await productsService.deleteProduct(productToDelete.id);
+      if (result.success) {
+        dispatch(deleteProduct(productToDelete.id));
+        dispatch(
+          showNotification({
+            type: "success",
+            message: "Product deleted successfully",
+          }),
+        );
+        loadProducts(); // Reload to update categories
+      } else {
+        dispatch(
+          showNotification({
+            type: "error",
+            message: result.message,
+          }),
+        );
+      }
+    } catch (error) {
+      console.error("Delete product error:", error);
       dispatch(
         showNotification({
           type: "error",
-          message: result.message,
+          message: "Failed to delete product",
         }),
       );
     }
@@ -267,6 +270,12 @@ const AdminProducts = () => {
               <table className="w-full min-w-full table-auto">
                 <thead className="bg-gradient-to-r from-primary/5 via-primary-light/5 to-primary/5 border-b-2 border-primary/20">
                   <tr>
+                    <th className="px-4 lg:px-6 py-4 text-left text-xs font-bold uppercase tracking-wide whitespace-nowrap">
+                      <div className="flex items-center gap-2">
+                        <Package className="w-4 h-4 text-primary" />
+                        <span>ID</span>
+                      </div>
+                    </th>
                     <th className="px-4 lg:px-6 py-4 text-center text-xs font-bold uppercase tracking-wide whitespace-nowrap">
                       <div className="flex items-center justify-center gap-2">
                         <FileImage className="w-4 h-4 text-primary" />
@@ -279,6 +288,7 @@ const AdminProducts = () => {
                         <span>Product Details</span>
                       </div>
                     </th>
+
                     <th className="px-4 lg:px-6 py-4 text-center text-xs font-bold uppercase tracking-wide whitespace-nowrap min-w-[130px]">
                       <div className="flex items-center justify-center gap-2">
                         <Tag className="w-4 h-4 text-primary" />
@@ -314,17 +324,23 @@ const AdminProducts = () => {
                 <tbody className="divide-y divide-gray-200 bg-white">
                   {paginatedProducts.map((product, index) => (
                     <tr
-                      key={product.id}
+                      key={product._id || product.id}
                       className={`${
                         index % 2 === 0 ? "bg-white" : "bg-gray-50/50"
                       } hover:bg-cream-light/60 transition-all duration-200 border-l-4 border-transparent hover:border-primary group`}
                     >
+                      {/* Product ID */}
+                      <td className="px-4 lg:px-6 py-4">
+                        <span className="text-[10px] font-mono text-dark-gray bg-gray-100 px-2 py-1 rounded border border-gray-200 uppercase">
+                          {product.id || product._id || "N/A"}
+                        </span>
+                      </td>
                       {/* Image */}
                       <td className="px-4 lg:px-6 py-4">
                         <div className="flex justify-center">
                           <div className="relative w-20 h-20 rounded-xl overflow-hidden bg-gradient-to-br from-cream-light to-gray-100 shadow-md ring-2 ring-gray-200 group-hover:ring-primary group-hover:shadow-lg transition-all duration-300">
                             <img
-                              src={product.image}
+                              src={productsService.getImageUrl(product)}
                               alt={product.name}
                               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                               onError={(e) => {
@@ -406,7 +422,9 @@ const AdminProducts = () => {
                         <div className="flex items-center justify-center gap-2">
                           <button
                             onClick={() =>
-                              navigate(`/admin/products/${product.id}/edit`)
+                              navigate(
+                                `/admin/products/${product._id || product.id}/edit`,
+                              )
                             }
                             className="px-4 py-1.5 rounded-lg bg-gradient-to-r from-primary to-primary-dark text-white text-xs font-bold hover:from-primary-dark hover:to-primary transition-all shadow-md hover:shadow-lg hover:scale-105 active:scale-95 flex items-center gap-1.5"
                             title="Edit Product"
