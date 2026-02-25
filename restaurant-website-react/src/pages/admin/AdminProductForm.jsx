@@ -190,9 +190,18 @@ const AdminProductForm = () => {
 
   // Load existing categories on mount
   useEffect(() => {
-    const allProducts = productsService.getProducts();
-    const categories = [...new Set(allProducts.map((p) => p.category))].sort();
-    setExistingCategories(categories);
+    const loadCategories = async () => {
+      try {
+        const allProducts = await productsService.fetchProducts();
+        const categories = [
+          ...new Set(allProducts.map((p) => p.category)),
+        ].sort();
+        setExistingCategories(categories);
+      } catch (error) {
+        console.error("Error loading categories:", error);
+      }
+    };
+    loadCategories();
   }, []);
 
   useEffect(() => {
