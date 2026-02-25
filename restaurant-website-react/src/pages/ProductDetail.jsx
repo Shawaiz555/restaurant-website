@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import productsService from "../services/productsService";
-import { addOnsData } from "../store/addOnsData";
 import { useCart } from "../hooks/useCart";
 import Loader from "../components/common/Loader";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
+import { Wine, Cake, PlusCircle } from "lucide-react";
 import "swiper/css";
 import "swiper/css/navigation";
 
@@ -49,11 +49,15 @@ const ProductDetail = () => {
         setProduct(productData);
 
         // Get related products
-        const related = await productsService.fetchProductsByCategory(productData.category);
-        setRelatedProducts(related.filter((p) => (p.id || p._id) !== id).slice(0, 6));
+        const related = await productsService.fetchProductsByCategory(
+          productData.category,
+        );
+        setRelatedProducts(
+          related.filter((p) => (p.id || p._id) !== id).slice(0, 6),
+        );
         setLoading(false);
       } catch (error) {
-        console.error('Error loading product:', error);
+        console.error("Error loading product:", error);
         navigate("/");
       }
     };
@@ -81,8 +85,8 @@ const ProductDetail = () => {
     showExtras: false,
   };
   const addOnsConfig = product.addOnsConfig || defaultAddOnsConfig;
-  console.log('Product addOnsConfig:', product.addOnsConfig);
-  console.log('Final addOnsConfig:', addOnsConfig);
+  console.log("Product addOnsConfig:", product.addOnsConfig);
+  console.log("Final addOnsConfig:", addOnsConfig);
 
   // Convert nutrition info to consistent format
   // Handles both old format {calories: "...", protein: "..."}
@@ -107,9 +111,10 @@ const ProductDetail = () => {
           // If value already includes unit (e.g., "280 kcal"), use as is
           // Otherwise add unit if present
           const valueStr = item.value.toString().trim();
-          nutritionObj[key] = item.unit && !valueStr.includes(item.unit)
-            ? valueStr + " " + item.unit
-            : valueStr;
+          nutritionObj[key] =
+            item.unit && !valueStr.includes(item.unit)
+              ? valueStr + " " + item.unit
+              : valueStr;
         }
       }
     });
@@ -180,10 +185,10 @@ const ProductDetail = () => {
 
   const handleAddToCart = () => {
     addToCart({
-      id: product.id,
+      id: product._id || product.id,
       name: product.name,
       price: calculateTotalPrice(),
-      image: product.image,
+      image: productsService.getImageUrl(product),
       size: selectedSize.name,
       addOns: selectedAddOns,
       spiceLevel: selectedSpiceLevel,
@@ -225,7 +230,8 @@ const ProductDetail = () => {
                     src={productsService.getImageUrl(product)}
                     alt={product.name}
                     onError={(e) => {
-                      e.target.src = "https://via.placeholder.com/600x400?text=No+Image";
+                      e.target.src =
+                        "https://via.placeholder.com/600x400?text=No+Image";
                     }}
                     className="w-full h-64 sm:h-80 lg:h-96 object-cover rounded-2xl"
                   />
@@ -472,93 +478,89 @@ const ProductDetail = () => {
                     </p>
                   </div>
 
-                  {/* Spice Level Selection - Dropdown (Only show if configured) */}
-                  {addOnsConfig.showSpiceLevel && (
-                    <div className="mb-6">
-                      <label className="flex items-center gap-2 font-display text-lg mb-3 text-dark">
-                        Spice Level{" "}
-                        <span className="text-xs text-dark-gray font-normal bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
-                          Optional
-                        </span>
-                      </label>
-                      <div className="relative group">
-                        <select
-                          value={selectedSpiceLevel?.id || ""}
-                          onChange={(e) => {
-                            const spice = addOnsData.spiceLevel.find(
-                              (s) => s.id === e.target.value,
-                            );
-                            setSelectedSpiceLevel(spice || null);
-                          }}
-                          className="w-full px-3 sm:px-5 py-3 sm:py-4 pr-10 sm:pr-12 border-2 border-primary/30 rounded-xl focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all bg-cream-light hover:border-primary/60 hover:bg-cream-light font-display text-sm sm:text-base appearance-none cursor-pointer shadow-sm hover:shadow-md text-dark leading-tight"
-                        >
-                          <option
-                            value=""
-                            className="py-3 sm:py-4 px-2 sm:px-4 bg-cream-light text-dark text-xs sm:text-xs"
-                            style={{
-                              padding: "10px 12px",
-                              backgroundColor: "#FFF8F0",
+                  {/* Spice Level Selection - Dropdown (Only show if configured and has spice levels) */}
+                  {addOnsConfig.showSpiceLevel &&
+                    product.spiceLevels &&
+                    product.spiceLevels.length > 0 && (
+                      <div className="mb-6">
+                        <label className="flex items-center gap-2 font-display text-lg mb-3 text-dark">
+                          Spice Level{" "}
+                          <span className="text-xs text-dark-gray font-normal bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
+                            Optional
+                          </span>
+                        </label>
+                        <div className="relative group">
+                          <select
+                            value={selectedSpiceLevel?.name || ""}
+                            onChange={(e) => {
+                              const spice = product.spiceLevels.find(
+                                (s) => s.name === e.target.value,
+                              );
+                              setSelectedSpiceLevel(spice || null);
                             }}
+                            className="w-full px-3 sm:px-5 py-3 sm:py-4 pr-10 sm:pr-12 border-2 border-primary/30 rounded-xl focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all bg-cream-light hover:border-primary/60 hover:bg-cream-light font-display text-sm sm:text-base appearance-none cursor-pointer shadow-sm hover:shadow-md text-dark leading-tight"
                           >
-                            🔘 No Spice Preference
-                          </option>
-                          {addOnsData.spiceLevel.map((spice) => (
                             <option
-                              key={spice.id}
-                              value={spice.id}
-                              className="py-3 sm:py-4 px-2 sm:px-4 bg-cream-light text-dark text-xs sm:text-base"
+                              value=""
+                              className="py-3 sm:py-4 px-2 sm:px-4 bg-cream-light text-dark text-xs sm:text-xs"
                               style={{
                                 padding: "10px 12px",
                                 backgroundColor: "#FFF8F0",
                               }}
                             >
-                              {spice.icon} {spice.name} • {spice.description}
+                              🔘 No Spice Preference
                             </option>
-                          ))}
-                        </select>
-                        <div className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 pointer-events-none transition-transform group-hover:translate-y-[-45%]">
-                          <svg
-                            className="w-5 h-5 sm:w-6 sm:h-6 text-primary"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2.5}
-                              d="M19 9l-7 7-7-7"
-                            />
-                          </svg>
-                        </div>
-                        {/* Selected indicator - only show when something is selected */}
-                        {selectedSpiceLevel && (
-                          <div className="absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 pointer-events-none">
-                            <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+                            {product.spiceLevels.map((spice, spiceIndex) => (
+                              <option
+                                key={spiceIndex}
+                                value={spice.name}
+                                className="py-3 sm:py-4 px-2 sm:px-4 bg-cream-light text-dark text-xs sm:text-base"
+                                style={{
+                                  padding: "10px 12px",
+                                  backgroundColor: "#FFF8F0",
+                                }}
+                              >
+                                {spice.name} • {spice.description}
+                              </option>
+                            ))}
+                          </select>
+                          <div className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 pointer-events-none transition-transform group-hover:translate-y-[-45%]">
+                            <svg
+                              className="w-5 h-5 sm:w-6 sm:h-6 text-primary"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2.5}
+                                d="M19 9l-7 7-7-7"
+                              />
+                            </svg>
                           </div>
+                        </div>
+                        {/* Helper text */}
+                        {selectedSpiceLevel && (
+                          <p className="mt-2 text-xs text-dark-gray flex items-center gap-1 flex-wrap">
+                            <svg
+                              className="w-3 h-3 flex-shrink-0"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                            <span className="truncate">
+                              Selected: {selectedSpiceLevel?.name}
+                            </span>
+                          </p>
                         )}
                       </div>
-                      {/* Helper text */}
-                      {selectedSpiceLevel && (
-                        <p className="mt-2 text-xs text-dark-gray flex items-center gap-1 flex-wrap">
-                          <svg
-                            className="w-3 h-3 flex-shrink-0"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                          <span className="truncate">
-                            Selected: {selectedSpiceLevel?.name}
-                          </span>
-                        </p>
-                      )}
-                    </div>
-                  )}
+                    )}
 
                   {/* Price Display */}
                   <div className="bg-cream-light rounded-2xl p-4 sm:p-6 mb-6 border-2 border-primary/20">
@@ -748,119 +750,134 @@ const ProductDetail = () => {
                     {/* Drinks Tab */}
                     {activeAddOnTab === "drinks" && addOnsConfig.showDrinks && (
                       <>
-                        {addOnsData.drinks.map((drink) => {
-                          const selectedItem = selectedAddOns.drinks.find(
-                            (d) => d.id === drink.id,
-                          );
-                          const isSelected = !!selectedItem;
-                          const quantity = selectedItem?.quantity || 1;
+                        {(product.drinks || []).length === 0 ? (
+                          <div className="text-center py-12 text-dark-gray">
+                            <Wine className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+                            <p className="text-lg">
+                              No drink options available for this product.
+                            </p>
+                          </div>
+                        ) : (
+                          (product.drinks || []).map((drink, drinkIndex) => {
+                            // Create a unique ID for drinks if not present
+                            const drinkWithId = {
+                              ...drink,
+                              id: drink.id || `drink-${drinkIndex}`,
+                            };
+                            const selectedItem = selectedAddOns.drinks.find(
+                              (d) => d.id === drinkWithId.id,
+                            );
+                            const isSelected = !!selectedItem;
+                            const quantity = selectedItem?.quantity || 1;
 
-                          return (
-                            <div
-                              key={drink.id}
-                              onClick={() => {
-                                if (!isSelected) {
-                                  toggleAddOn("drinks", drink);
-                                }
-                              }}
-                              className={`group relative flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 lg:p-5 border-2 rounded-xl transition-all duration-200 cursor-pointer ${
-                                isSelected
-                                  ? "border-primary bg-gradient-to-br from-primary/5 to-primary/10 shadow-lg ring-2 ring-primary/20"
-                                  : "border-gray-200 hover:border-primary/60 hover:bg-cream-light/50 hover:shadow-md hover:scale-[1.01]"
-                              }`}
-                            >
-                              {/* Top row on mobile, left side on desktop */}
-                              <div className="flex items-center gap-3 sm:gap-4 lg:gap-6 flex-1 min-w-0 mb-2 sm:mb-0">
-                                <div
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    toggleAddOn("drinks", drink);
-                                  }}
-                                  className={`w-5 h-5 sm:w-6 sm:h-6 rounded-lg border-2 flex items-center justify-center transition-all cursor-pointer flex-shrink-0 ${
-                                    isSelected
-                                      ? "bg-primary border-primary scale-110"
-                                      : "border-gray-300 hover:border-primary/60 hover:bg-primary/5"
-                                  }`}
-                                >
-                                  {isSelected && (
-                                    <svg
-                                      viewBox="0 0 16 16"
-                                      fill="white"
-                                      className="w-3 h-3 sm:w-4 sm:h-4"
-                                    >
-                                      <path d="M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z" />
-                                    </svg>
-                                  )}
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                  <div className="font-display text-sm sm:text-base lg:text-lg text-dark truncate">
-                                    {drink.name}
-                                  </div>
-                                  <div className="text-[11px] sm:text-xs lg:text-sm text-dark-gray">
-                                    {drink.description || "350ml"}
-                                  </div>
-                                </div>
-                                <div className="text-primary font-display font-bold text-sm sm:text-base lg:text-lg whitespace-nowrap flex-shrink-0 mr-2 sm:mr-3 lg:mr-4">
-                                  +Rs.
-                                  {(
-                                    drink.price * (isSelected ? quantity : 1)
-                                  ).toFixed(2)}
-                                </div>
-                              </div>
-
-                              {/* Quantity controls and "Add" button */}
-                              <div className="flex items-center justify-end gap-0 flex-shrink-0">
-                                {isSelected ? (
-                                  <div className="flex items-center gap-0.5 sm:gap-1 bg-white rounded-lg sm:rounded-xl border-2 border-primary shadow-md">
-                                    <button
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        if (quantity === 1) {
-                                          toggleAddOn("drinks", drink);
-                                        } else {
-                                          updateAddOnQuantity(
-                                            "drinks",
-                                            drink.id,
-                                            quantity - 1,
-                                          );
-                                        }
-                                      }}
-                                      className="text-primary hover:text-white hover:bg-primary font-bold text-lg sm:text-xl w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 flex items-center justify-center rounded-l-lg transition-all active:scale-95"
-                                    >
-                                      {quantity === 1 ? "✕" : "−"}
-                                    </button>
-                                    <span className="font-display font-bold text-dark min-w-[32px] sm:min-w-[40px] lg:min-w-[48px] text-center text-base sm:text-lg px-1 sm:px-2 lg:px-3">
-                                      {quantity}
-                                    </span>
-                                    <button
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        updateAddOnQuantity(
-                                          "drinks",
-                                          drink.id,
-                                          quantity + 1,
-                                        );
-                                      }}
-                                      className="text-primary hover:text-white hover:bg-primary font-bold text-lg sm:text-xl w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 flex items-center justify-center rounded-r-lg transition-all active:scale-95"
-                                    >
-                                      +
-                                    </button>
-                                  </div>
-                                ) : (
-                                  <button
+                            return (
+                              <div
+                                key={drinkWithId.id}
+                                onClick={() => {
+                                  if (!isSelected) {
+                                    toggleAddOn("drinks", drinkWithId);
+                                  }
+                                }}
+                                className={`group relative flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 lg:p-5 border-2 rounded-xl transition-all duration-200 cursor-pointer ${
+                                  isSelected
+                                    ? "border-primary bg-gradient-to-br from-primary/5 to-primary/10 shadow-lg ring-2 ring-primary/20"
+                                    : "border-gray-200 hover:border-primary/60 hover:bg-cream-light/50 hover:shadow-md hover:scale-[1.01]"
+                                }`}
+                              >
+                                {/* Top row on mobile, left side on desktop */}
+                                <div className="flex items-center gap-3 sm:gap-4 lg:gap-6 flex-1 min-w-0 mb-2 sm:mb-0">
+                                  <div
                                     onClick={(e) => {
                                       e.stopPropagation();
-                                      toggleAddOn("drinks", drink);
+                                      toggleAddOn("drinks", drinkWithId);
                                     }}
-                                    className="px-3 py-1.5 sm:px-4 sm:py-2 lg:px-6 lg:py-2.5 bg-primary/10 hover:bg-primary text-primary hover:text-white rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm lg:text-base transition-all transform hover:scale-105 active:scale-95 border-2 border-primary/20 hover:border-primary"
+                                    className={`w-5 h-5 sm:w-6 sm:h-6 rounded-lg border-2 flex items-center justify-center transition-all cursor-pointer flex-shrink-0 ${
+                                      isSelected
+                                        ? "bg-primary border-primary scale-110"
+                                        : "border-gray-300 hover:border-primary/60 hover:bg-primary/5"
+                                    }`}
                                   >
-                                    Add
-                                  </button>
-                                )}
+                                    {isSelected && (
+                                      <svg
+                                        viewBox="0 0 16 16"
+                                        fill="white"
+                                        className="w-3 h-3 sm:w-4 sm:h-4"
+                                      >
+                                        <path d="M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z" />
+                                      </svg>
+                                    )}
+                                  </div>
+                                  <div className="flex-1 min-w-0">
+                                    <div className="font-display text-sm sm:text-base lg:text-lg text-dark truncate">
+                                      {drinkWithId.name}
+                                    </div>
+                                    <div className="text-[11px] sm:text-xs lg:text-sm text-dark-gray">
+                                      {drinkWithId.description || "350ml"}
+                                    </div>
+                                  </div>
+                                  <div className="text-primary font-display font-bold text-sm sm:text-base lg:text-lg whitespace-nowrap flex-shrink-0 mr-2 sm:mr-3 lg:mr-4">
+                                    +Rs.
+                                    {(
+                                      drinkWithId.price *
+                                      (isSelected ? quantity : 1)
+                                    ).toFixed(2)}
+                                  </div>
+                                </div>
+
+                                {/* Quantity controls and "Add" button */}
+                                <div className="flex items-center justify-end gap-0 flex-shrink-0">
+                                  {isSelected ? (
+                                    <div className="flex items-center gap-0.5 sm:gap-1 bg-white rounded-lg sm:rounded-xl border-2 border-primary shadow-md">
+                                      <button
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          if (quantity === 1) {
+                                            toggleAddOn("drinks", drinkWithId);
+                                          } else {
+                                            updateAddOnQuantity(
+                                              "drinks",
+                                              drinkWithId.id,
+                                              quantity - 1,
+                                            );
+                                          }
+                                        }}
+                                        className="text-primary hover:text-white hover:bg-primary font-bold text-lg sm:text-xl w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 flex items-center justify-center rounded-l-lg transition-all active:scale-95"
+                                      >
+                                        {quantity === 1 ? "✕" : "−"}
+                                      </button>
+                                      <span className="font-display font-bold text-dark min-w-[32px] sm:min-w-[40px] lg:min-w-[48px] text-center text-base sm:text-lg px-1 sm:px-2 lg:px-3">
+                                        {quantity}
+                                      </span>
+                                      <button
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          updateAddOnQuantity(
+                                            "drinks",
+                                            drinkWithId.id,
+                                            quantity + 1,
+                                          );
+                                        }}
+                                        className="text-primary hover:text-white hover:bg-primary font-bold text-lg sm:text-xl w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 flex items-center justify-center rounded-r-lg transition-all active:scale-95"
+                                      >
+                                        +
+                                      </button>
+                                    </div>
+                                  ) : (
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        toggleAddOn("drinks", drink);
+                                      }}
+                                      className="px-3 py-1.5 sm:px-4 sm:py-2 lg:px-6 lg:py-2.5 bg-primary/10 hover:bg-primary text-primary hover:text-white rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm lg:text-base transition-all transform hover:scale-105 active:scale-95 border-2 border-primary/20 hover:border-primary"
+                                    >
+                                      Add
+                                    </button>
+                                  )}
+                                </div>
                               </div>
-                            </div>
-                          );
-                        })}
+                            );
+                          })
+                        )}
                       </>
                     )}
 
@@ -868,22 +885,174 @@ const ProductDetail = () => {
                     {activeAddOnTab === "desserts" &&
                       addOnsConfig.showDesserts && (
                         <>
-                          {addOnsData.desserts.map((dessert) => {
-                            const selectedItem = selectedAddOns.desserts.find(
-                              (d) => d.id === dessert.id,
+                          {(product.desserts || []).length === 0 ? (
+                            <div className="text-center py-12 text-dark-gray">
+                              <Cake className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+                              <p className="text-lg">
+                                No dessert options available for this product.
+                              </p>
+                            </div>
+                          ) : (
+                            (product.desserts || []).map(
+                              (dessert, dessertIndex) => {
+                                const dessertWithId = {
+                                  ...dessert,
+                                  id: dessert.id || `dessert-${dessertIndex}`,
+                                };
+                                const selectedItem =
+                                  selectedAddOns.desserts.find(
+                                    (d) => d.id === dessertWithId.id,
+                                  );
+                                const isSelected = !!selectedItem;
+                                const quantity = selectedItem?.quantity || 1;
+
+                                return (
+                                  <div
+                                    key={dessertWithId.id}
+                                    onClick={() => {
+                                      if (!isSelected) {
+                                        toggleAddOn("desserts", dessertWithId);
+                                      }
+                                    }}
+                                    className={`group relative flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 border-2 rounded-xl transition-all duration-200 cursor-pointer ${
+                                      isSelected
+                                        ? "border-primary bg-gradient-to-br from-primary/5 to-primary/10 shadow-lg ring-2 ring-primary/20"
+                                        : "border-gray-200 hover:border-primary/60 hover:bg-cream-light/50 hover:shadow-md hover:scale-[1.01]"
+                                    }`}
+                                  >
+                                    {/* Checkbox, name, and price in one row */}
+                                    <div className="flex items-center gap-3 sm:gap-4 lg:gap-6 flex-1 min-w-0 mb-2 sm:mb-0">
+                                      <div
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          toggleAddOn(
+                                            "desserts",
+                                            dessertWithId,
+                                          );
+                                        }}
+                                        className={`w-5 h-5 sm:w-6 sm:h-6 rounded-lg border-2 flex items-center justify-center transition-all cursor-pointer flex-shrink-0 ${
+                                          isSelected
+                                            ? "bg-primary border-primary"
+                                            : "border-gray-300 hover:border-primary/60"
+                                        }`}
+                                      >
+                                        {isSelected && (
+                                          <svg
+                                            viewBox="0 0 16 16"
+                                            fill="white"
+                                            className="w-3 h-3 sm:w-4 sm:h-4"
+                                          >
+                                            <path d="M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z" />
+                                          </svg>
+                                        )}
+                                      </div>
+                                      <span className="font-display text-sm sm:text-base lg:text-lg text-dark font-medium flex-1 truncate">
+                                        {dessertWithId.name}
+                                      </span>
+                                      <div className="text-primary font-display font-bold text-sm sm:text-base lg:text-lg whitespace-nowrap flex-shrink-0 mr-2 sm:mr-3 lg:mr-4">
+                                        +Rs.
+                                        {(
+                                          dessertWithId.price *
+                                          (isSelected ? quantity : 1)
+                                        ).toFixed(2)}
+                                      </div>
+                                    </div>
+
+                                    {/* Quantity controls and "Add" button */}
+                                    <div className="flex items-center justify-end gap-0 flex-shrink-0">
+                                      {isSelected ? (
+                                        <div className="flex items-center gap-0.5 sm:gap-1 bg-gradient-to-r from-white to-cream rounded-lg sm:rounded-xl border-2 border-primary/30 shadow-sm">
+                                          <button
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              if (quantity === 1) {
+                                                toggleAddOn(
+                                                  "desserts",
+                                                  dessertWithId,
+                                                );
+                                              } else {
+                                                updateAddOnQuantity(
+                                                  "desserts",
+                                                  dessertWithId.id,
+                                                  quantity - 1,
+                                                );
+                                              }
+                                            }}
+                                            className="text-primary hover:text-white hover:bg-primary font-bold text-lg sm:text-xl w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 flex items-center justify-center rounded-l-lg transition-all active:scale-95"
+                                          >
+                                            {quantity === 1 ? "✕" : "−"}
+                                          </button>
+                                          <span className="font-display font-bold text-dark min-w-[28px] sm:min-w-[32px] lg:min-w-[40px] text-center text-base sm:text-lg bg-white px-1 sm:px-2 lg:px-3">
+                                            {quantity}
+                                          </span>
+                                          <button
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              updateAddOnQuantity(
+                                                "desserts",
+                                                dessertWithId.id,
+                                                quantity + 1,
+                                              );
+                                            }}
+                                            className="text-primary hover:text-white hover:bg-primary font-bold text-lg sm:text-xl w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 flex items-center justify-center rounded-r-lg transition-all active:scale-95"
+                                          >
+                                            +
+                                          </button>
+                                        </div>
+                                      ) : (
+                                        <button
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            toggleAddOn(
+                                              "desserts",
+                                              dessertWithId,
+                                            );
+                                          }}
+                                          className="px-3 py-1.5 sm:px-4 sm:py-2 lg:px-6 lg:py-2.5 bg-primary/10 hover:bg-primary text-primary hover:text-white rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm lg:text-base transition-all transform hover:scale-105 active:scale-95 border-2 border-primary/20 hover:border-primary"
+                                        >
+                                          Add
+                                        </button>
+                                      )}
+                                    </div>
+                                  </div>
+                                );
+                              },
+                            )
+                          )}
+                        </>
+                      )}
+
+                    {/* Extras Tab */}
+                    {activeAddOnTab === "extras" && addOnsConfig.showExtras && (
+                      <>
+                        {(product.extras || []).length === 0 ? (
+                          <div className="text-center py-12 text-dark-gray">
+                            <PlusCircle className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+                            <p className="text-lg">
+                              No extra options available for this product.
+                            </p>
+                          </div>
+                        ) : (
+                          (product.extras || []).map((extra, extraIndex) => {
+                            const extraWithId = {
+                              ...extra,
+                              id: extra.id || `extra-${extraIndex}`,
+                            };
+                            const selectedItem = selectedAddOns.extras.find(
+                              (e) => e.id === extraWithId.id,
                             );
                             const isSelected = !!selectedItem;
                             const quantity = selectedItem?.quantity || 1;
 
                             return (
                               <div
-                                key={dessert.id}
+                                key={extraWithId.id}
                                 onClick={() => {
                                   if (!isSelected) {
-                                    toggleAddOn("desserts", dessert);
+                                    toggleAddOn("extras", extraWithId);
                                   }
                                 }}
-                                className={`group relative flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 border-2 rounded-xl transition-all duration-200 cursor-pointer ${
+                                className={`group relative flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 lg:p-5 border-2 rounded-xl transition-all duration-200 cursor-pointer ${
                                   isSelected
                                     ? "border-primary bg-gradient-to-br from-primary/5 to-primary/10 shadow-lg ring-2 ring-primary/20"
                                     : "border-gray-200 hover:border-primary/60 hover:bg-cream-light/50 hover:shadow-md hover:scale-[1.01]"
@@ -894,7 +1063,7 @@ const ProductDetail = () => {
                                   <div
                                     onClick={(e) => {
                                       e.stopPropagation();
-                                      toggleAddOn("desserts", dessert);
+                                      toggleAddOn("extras", extraWithId);
                                     }}
                                     className={`w-5 h-5 sm:w-6 sm:h-6 rounded-lg border-2 flex items-center justify-center transition-all cursor-pointer flex-shrink-0 ${
                                       isSelected
@@ -913,12 +1082,12 @@ const ProductDetail = () => {
                                     )}
                                   </div>
                                   <span className="font-display text-sm sm:text-base lg:text-lg text-dark font-medium flex-1 truncate">
-                                    {dessert.name}
+                                    {extraWithId.name}
                                   </span>
                                   <div className="text-primary font-display font-bold text-sm sm:text-base lg:text-lg whitespace-nowrap flex-shrink-0 mr-2 sm:mr-3 lg:mr-4">
                                     +Rs.
                                     {(
-                                      dessert.price *
+                                      extraWithId.price *
                                       (isSelected ? quantity : 1)
                                     ).toFixed(2)}
                                   </div>
@@ -932,11 +1101,11 @@ const ProductDetail = () => {
                                         onClick={(e) => {
                                           e.stopPropagation();
                                           if (quantity === 1) {
-                                            toggleAddOn("desserts", dessert);
+                                            toggleAddOn("extras", extraWithId);
                                           } else {
                                             updateAddOnQuantity(
-                                              "desserts",
-                                              dessert.id,
+                                              "extras",
+                                              extraWithId.id,
                                               quantity - 1,
                                             );
                                           }
@@ -945,15 +1114,15 @@ const ProductDetail = () => {
                                       >
                                         {quantity === 1 ? "✕" : "−"}
                                       </button>
-                                      <span className="font-display font-bold text-dark min-w-[28px] sm:min-w-[32px] lg:min-w-[40px] text-center text-base sm:text-lg bg-white px-1 sm:px-2 lg:px-3">
+                                      <span className="font-display font-bold text-dark min-w-[28px] sm:min-w-[32px] text-center text-base sm:text-lg bg-white px-1 sm:px-2">
                                         {quantity}
                                       </span>
                                       <button
                                         onClick={(e) => {
                                           e.stopPropagation();
                                           updateAddOnQuantity(
-                                            "desserts",
-                                            dessert.id,
+                                            "extras",
+                                            extraWithId.id,
                                             quantity + 1,
                                           );
                                         }}
@@ -966,7 +1135,7 @@ const ProductDetail = () => {
                                     <button
                                       onClick={(e) => {
                                         e.stopPropagation();
-                                        toggleAddOn("desserts", dessert);
+                                        toggleAddOn("extras", extraWithId);
                                       }}
                                       className="px-3 py-1.5 sm:px-4 sm:py-2 lg:px-6 lg:py-2.5 bg-primary/10 hover:bg-primary text-primary hover:text-white rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm lg:text-base transition-all transform hover:scale-105 active:scale-95 border-2 border-primary/20 hover:border-primary"
                                     >
@@ -976,121 +1145,8 @@ const ProductDetail = () => {
                                 </div>
                               </div>
                             );
-                          })}
-                        </>
-                      )}
-
-                    {/* Extras Tab */}
-                    {activeAddOnTab === "extras" && addOnsConfig.showExtras && (
-                      <>
-                        {addOnsData.extras.map((extra) => {
-                          const selectedItem = selectedAddOns.extras.find(
-                            (e) => e.id === extra.id,
-                          );
-                          const isSelected = !!selectedItem;
-                          const quantity = selectedItem?.quantity || 1;
-
-                          return (
-                            <div
-                              key={extra.id}
-                              onClick={() => {
-                                if (!isSelected) {
-                                  toggleAddOn("extras", extra);
-                                }
-                              }}
-                              className={`group relative flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 lg:p-5 border-2 rounded-xl transition-all duration-200 cursor-pointer ${
-                                isSelected
-                                  ? "border-primary bg-gradient-to-br from-primary/5 to-primary/10 shadow-lg ring-2 ring-primary/20"
-                                  : "border-gray-200 hover:border-primary/60 hover:bg-cream-light/50 hover:shadow-md hover:scale-[1.01]"
-                              }`}
-                            >
-                              {/* Checkbox, name, and price in one row */}
-                              <div className="flex items-center gap-3 sm:gap-4 lg:gap-6 flex-1 min-w-0 mb-2 sm:mb-0">
-                                <div
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    toggleAddOn("extras", extra);
-                                  }}
-                                  className={`w-5 h-5 sm:w-6 sm:h-6 rounded-lg border-2 flex items-center justify-center transition-all cursor-pointer flex-shrink-0 ${
-                                    isSelected
-                                      ? "bg-primary border-primary"
-                                      : "border-gray-300 hover:border-primary/60"
-                                  }`}
-                                >
-                                  {isSelected && (
-                                    <svg
-                                      viewBox="0 0 16 16"
-                                      fill="white"
-                                      className="w-3 h-3 sm:w-4 sm:h-4"
-                                    >
-                                      <path d="M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z" />
-                                    </svg>
-                                  )}
-                                </div>
-                                <span className="font-display text-sm sm:text-base lg:text-lg text-dark font-medium flex-1 truncate">
-                                  {extra.name}
-                                </span>
-                                <div className="text-primary font-display font-bold text-sm sm:text-base lg:text-lg whitespace-nowrap flex-shrink-0 mr-2 sm:mr-3 lg:mr-4">
-                                  +Rs.
-                                  {(
-                                    extra.price * (isSelected ? quantity : 1)
-                                  ).toFixed(2)}
-                                </div>
-                              </div>
-
-                              {/* Quantity controls and "Add" button */}
-                              <div className="flex items-center justify-end gap-0 flex-shrink-0">
-                                {isSelected ? (
-                                  <div className="flex items-center gap-0.5 sm:gap-1 bg-gradient-to-r from-white to-cream rounded-lg sm:rounded-xl border-2 border-primary/30 shadow-sm">
-                                    <button
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        if (quantity === 1) {
-                                          toggleAddOn("extras", extra);
-                                        } else {
-                                          updateAddOnQuantity(
-                                            "extras",
-                                            extra.id,
-                                            quantity - 1,
-                                          );
-                                        }
-                                      }}
-                                      className="text-primary hover:text-white hover:bg-primary font-bold text-lg sm:text-xl w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 flex items-center justify-center rounded-l-lg transition-all active:scale-95"
-                                    >
-                                      {quantity === 1 ? "✕" : "−"}
-                                    </button>
-                                    <span className="font-display font-bold text-dark min-w-[28px] sm:min-w-[32px] text-center text-base sm:text-lg bg-white px-1 sm:px-2">
-                                      {quantity}
-                                    </span>
-                                    <button
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        updateAddOnQuantity(
-                                          "extras",
-                                          extra.id,
-                                          quantity + 1,
-                                        );
-                                      }}
-                                      className="text-primary hover:text-white hover:bg-primary font-bold text-lg sm:text-xl w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 flex items-center justify-center rounded-r-lg transition-all active:scale-95"
-                                    >
-                                      +
-                                    </button>
-                                  </div>
-                                ) : (
-                                  <button
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      toggleAddOn("extras", extra);
-                                    }}
-                                    className="px-3 py-1.5 sm:px-4 sm:py-2 lg:px-6 lg:py-2.5 bg-primary/10 hover:bg-primary text-primary hover:text-white rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm lg:text-base transition-all transform hover:scale-105 active:scale-95 border-2 border-primary/20 hover:border-primary"
-                                  >
-                                    Add
-                                  </button>
-                                )}
-                              </div>
-                            </div>
-                          );
-                        })}
+                          })
+                        )}
                       </>
                     )}
                   </div>
@@ -1143,7 +1199,9 @@ const ProductDetail = () => {
                     <SwiperSlide key={relatedProduct.id}>
                       <div
                         onClick={() =>
-                          navigate(`/product/${relatedProduct.id || relatedProduct._id}`)
+                          navigate(
+                            `/product/${relatedProduct.id || relatedProduct._id}`,
+                          )
                         }
                         className="bg-white rounded-3xl p-6 hover:shadow-xl transition-all duration-300 cursor-pointer group"
                       >
@@ -1152,7 +1210,8 @@ const ProductDetail = () => {
                             src={productsService.getImageUrl(relatedProduct)}
                             alt={relatedProduct.name}
                             onError={(e) => {
-                              e.target.src = "https://via.placeholder.com/400x300?text=No+Image";
+                              e.target.src =
+                                "https://via.placeholder.com/400x300?text=No+Image";
                             }}
                             className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
                           />

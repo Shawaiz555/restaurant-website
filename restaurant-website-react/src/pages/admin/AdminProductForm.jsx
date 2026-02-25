@@ -30,6 +30,43 @@ import {
   AlertCircle,
 } from "lucide-react";
 
+// Default add-ons data (stored in database for all products)
+const defaultAddOnsData = {
+  drinks: [
+    { name: "Coca Cola (350ml)", price: 3.0, description: "" },
+    { name: "Pepsi (350ml)", price: 3.0, description: "" },
+    { name: "Sprite (350ml)", price: 3.0, description: "" },
+    { name: "Sting (350ml)", price: 3.5, description: "" },
+    { name: "Mirinda (350ml)", price: 3.0, description: "" },
+    { name: "Fresh Orange Juice (1 Glass)", price: 5.0, description: "" },
+    { name: "Mineral Water (350ml)", price: 2.0, description: "" },
+  ],
+  desserts: [
+    { name: "Chocolate Brownie", price: 4.5, description: "" },
+    { name: "Ice Cream Scoop", price: 3.0, description: "" },
+    { name: "Cheesecake Slice", price: 5.5, description: "" },
+    { name: "Tiramisu", price: 6.0, description: "" },
+  ],
+  extras: [
+    { name: "Extra Cheese", price: 2.0, description: "" },
+    { name: "Extra Sauce", price: 1.5, description: "" },
+    { name: "Garlic Bread", price: 3.5, description: "" },
+    { name: "Side Salad", price: 4.0, description: "" },
+  ],
+  spiceLevels: [
+    { name: "No Spice", description: "No heat" },
+    { name: "Mild", description: "Slightly spicy" },
+    { name: "Medium", description: "Moderately spicy" },
+    { name: "Hot", description: "Very spicy" },
+    { name: "Extra Hot", description: "Extremely spicy" },
+  ],
+};
+
+// Helper function to get default add-ons
+const getDefaultAddOns = (type) => {
+  return defaultAddOnsData[type];
+};
+
 const AdminProductForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -57,6 +94,10 @@ const AdminProductForm = () => {
       showDesserts: false,
       showExtras: false,
     },
+    drinks: getDefaultAddOns("drinks"),
+    desserts: getDefaultAddOns("desserts"),
+    extras: getDefaultAddOns("extras"),
+    spiceLevels: getDefaultAddOns("spiceLevels"),
   });
 
   const [errors, setErrors] = useState({});
@@ -106,6 +147,23 @@ const AdminProductForm = () => {
             showDesserts: false,
             showExtras: false,
           },
+          // Use existing add-ons if they exist, otherwise pre-populate with defaults
+          drinks:
+            product.drinks && product.drinks.length > 0
+              ? product.drinks
+              : getDefaultAddOns("drinks"),
+          desserts:
+            product.desserts && product.desserts.length > 0
+              ? product.desserts
+              : getDefaultAddOns("desserts"),
+          extras:
+            product.extras && product.extras.length > 0
+              ? product.extras
+              : getDefaultAddOns("extras"),
+          spiceLevels:
+            product.spiceLevels && product.spiceLevels.length > 0
+              ? product.spiceLevels
+              : getDefaultAddOns("spiceLevels"),
         });
       } else {
         dispatch(
@@ -223,6 +281,30 @@ const AdminProductForm = () => {
       const newIngredients = formData.ingredients.filter((_, i) => i !== index);
       setFormData((prev) => ({ ...prev, ingredients: newIngredients }));
     }
+  };
+
+  // Dynamic Add-ons handlers
+  const handleAddOnChange = (type, index, field, value) => {
+    const newAddOns = [...formData[type]];
+    newAddOns[index][field] = value;
+    setFormData((prev) => ({ ...prev, [type]: newAddOns }));
+  };
+
+  const addAddOn = (type) => {
+    const newItem =
+      type === "spiceLevels"
+        ? { name: "", description: "" }
+        : { name: "", description: "" };
+
+    setFormData((prev) => ({
+      ...prev,
+      [type]: [...prev[type], newItem],
+    }));
+  };
+
+  const removeAddOn = (type, index) => {
+    const newAddOns = formData[type].filter((_, i) => i !== index);
+    setFormData((prev) => ({ ...prev, [type]: newAddOns }));
   };
 
   const handleImageChange = async (e) => {
@@ -347,7 +429,8 @@ const AdminProductForm = () => {
       dispatch(
         showNotification({
           type: "error",
-          message: error.message || "An error occurred while saving the product",
+          message:
+            error.message || "An error occurred while saving the product",
         }),
       );
     } finally {
@@ -965,7 +1048,7 @@ const AdminProductForm = () => {
                 />
                 <div className="flex-1">
                   <p className="text-sm font-bold text-dark flex items-center gap-2">
-                    <Flame className="w-4 h-4 text-orange-500" />
+                    <Flame className="w-4 h-4 text-red-600" />
                     Spice Level
                   </p>
                   <p className="text-xs text-dark-gray">
@@ -1023,6 +1106,468 @@ const AdminProductForm = () => {
               </label>
             </div>
           </div>
+
+          {/* Dynamic Spice Levels */}
+          {formData.addOnsConfig.showSpiceLevel && (
+            <div className="bg-white rounded-xl lg:rounded-2xl p-5 sm:p-6 lg:p-8 shadow-xl border-2 border-gray-100 hover:border-primary/30 transition-all">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-5 sm:mb-6 pb-4 border-b-2 border-gray-100">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-red-500 rounded-xl flex items-center justify-center">
+                    <Flame className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-dark">
+                      Spice Level Options
+                    </h2>
+                    <p className="text-xs text-dark-gray">
+                      Configure available spice levels for this product
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => addAddOn("spiceLevels")}
+                  className="w-full sm:w-auto px-5 py-2.5 rounded-lg bg-red-500 text-white text-sm font-semibold hover:bg-red-600 transition-all shadow-md hover:shadow-lg hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
+                >
+                  <Plus className="w-4 h-4" />
+                  Add Spice Level
+                </button>
+              </div>
+              {formData.spiceLevels.length === 0 ? (
+                <div className="text-center py-8 text-dark-gray">
+                  <Flame className="w-12 h-12 mx-auto mb-3 text-red-500" />
+                  <p className="text-sm">
+                    No spice levels added yet. Click "Add Spice Level" to get
+                    started.
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {formData.spiceLevels.map((spiceLevel, index) => (
+                    <div
+                      key={index}
+                      className="p-4 sm:p-5 bg-gradient-to-br from-orange-50 to-white rounded-xl border-2 border-orange-200 hover:border-orange-400 transition-all shadow-sm hover:shadow-md"
+                    >
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="w-7 h-7 bg-red-500 text-white rounded-lg flex items-center justify-center text-sm font-bold">
+                          {index + 1}
+                        </span>
+                        <p className="font-bold text-dark text-sm">
+                          Spice Level {index + 1}
+                        </p>
+                      </div>
+                      <div className="mb-4">
+                        <label className="block text-sm font-semibold text-dark mb-2">
+                          Level Name
+                        </label>
+                        <input
+                          type="text"
+                          value={spiceLevel.name}
+                          onChange={(e) =>
+                            handleAddOnChange(
+                              "spiceLevels",
+                              index,
+                              "name",
+                              e.target.value,
+                            )
+                          }
+                          className="w-full px-4 py-2.5 rounded-lg text-sm border-2 border-gray-200 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 hover:border-orange-400 bg-white transition-all"
+                          placeholder="e.g., Mild, Hot"
+                        />
+                      </div>
+                      <div className="mt-4 flex flex-col sm:flex-row gap-3">
+                        <input
+                          type="text"
+                          value={spiceLevel.description}
+                          onChange={(e) =>
+                            handleAddOnChange(
+                              "spiceLevels",
+                              index,
+                              "description",
+                              e.target.value,
+                            )
+                          }
+                          className="flex-1 px-4 py-2.5 rounded-lg text-sm border-2 border-gray-200 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 hover:border-orange-400 bg-white transition-all"
+                          placeholder="Description (e.g., Slightly spicy)"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => removeAddOn("spiceLevels", index)}
+                          className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-red-500 to-red-600 text-white text-sm font-semibold hover:from-red-600 hover:to-red-700 transition-all whitespace-nowrap shadow-md hover:shadow-lg hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Dynamic Drinks Add-ons */}
+          {formData.addOnsConfig.showDrinks && (
+            <div className="bg-white rounded-xl lg:rounded-2xl p-5 sm:p-6 lg:p-8 shadow-xl border-2 border-gray-100 hover:border-primary/30 transition-all">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-5 sm:mb-6 pb-4 border-b-2 border-gray-100">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl flex items-center justify-center">
+                    <Wine className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-dark">
+                      Drink Options
+                    </h2>
+                    <p className="text-xs text-dark-gray">
+                      Add available drinks for this product
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => addAddOn("drinks")}
+                  className="w-full sm:w-auto px-5 py-2.5 rounded-lg bg-gradient-to-r from-blue-500 to-blue-600 text-white text-sm font-semibold hover:from-blue-600 hover:to-blue-700 transition-all shadow-md hover:shadow-lg hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
+                >
+                  <Plus className="w-4 h-4" />
+                  Add Drink
+                </button>
+              </div>
+              {formData.drinks.length === 0 ? (
+                <div className="text-center py-8 text-dark-gray">
+                  <Wine className="w-12 h-12 mx-auto mb-3 text-blue-300" />
+                  <p className="text-sm">
+                    No drinks added yet. Click "Add Drink" to get started.
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {formData.drinks.map((drink, index) => (
+                    <div
+                      key={index}
+                      className="p-4 sm:p-5 bg-gradient-to-br from-blue-50 to-white rounded-xl border-2 border-blue-200 hover:border-blue-400 transition-all shadow-sm hover:shadow-md"
+                    >
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="w-7 h-7 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-lg flex items-center justify-center text-sm font-bold">
+                          {index + 1}
+                        </span>
+                        <p className="font-bold text-dark text-sm">
+                          Drink Option {index + 1}
+                        </p>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-semibold text-dark mb-2">
+                            Drink Name
+                          </label>
+                          <input
+                            type="text"
+                            value={drink.name}
+                            onChange={(e) =>
+                              handleAddOnChange(
+                                "drinks",
+                                index,
+                                "name",
+                                e.target.value,
+                              )
+                            }
+                            className="w-full px-4 py-2.5 rounded-lg text-sm border-2 border-gray-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 hover:border-blue-400 bg-white transition-all"
+                            placeholder="e.g., Coke, Sprite"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-semibold text-dark mb-2">
+                            Price (Rs)
+                          </label>
+                          <input
+                            type="number"
+                            value={drink.price}
+                            onChange={(e) =>
+                              handleAddOnChange(
+                                "drinks",
+                                index,
+                                "price",
+                                e.target.value,
+                              )
+                            }
+                            step="0.01"
+                            min="0"
+                            className="w-full px-4 py-2.5 rounded-lg text-sm border-2 border-gray-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 hover:border-blue-400 bg-white transition-all"
+                            placeholder="2.99"
+                          />
+                        </div>
+                      </div>
+                      <div className="mt-4 flex flex-col sm:flex-row gap-3">
+                        <input
+                          type="text"
+                          value={drink.description}
+                          onChange={(e) =>
+                            handleAddOnChange(
+                              "drinks",
+                              index,
+                              "description",
+                              e.target.value,
+                            )
+                          }
+                          className="flex-1 px-4 py-2.5 rounded-lg text-sm border-2 border-gray-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 hover:border-blue-400 bg-white transition-all"
+                          placeholder="Description (optional)"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => removeAddOn("drinks", index)}
+                          className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-red-500 to-red-600 text-white text-sm font-semibold hover:from-red-600 hover:to-red-700 transition-all whitespace-nowrap shadow-md hover:shadow-lg hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Dynamic Desserts Add-ons */}
+          {formData.addOnsConfig.showDesserts && (
+            <div className="bg-white rounded-xl lg:rounded-2xl p-5 sm:p-6 lg:p-8 shadow-xl border-2 border-gray-100 hover:border-primary/30 transition-all">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-5 sm:mb-6 pb-4 border-b-2 border-gray-100">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-pink-100 to-pink-200 rounded-xl flex items-center justify-center">
+                    <Cake className="w-5 h-5 sm:w-6 sm:h-6 text-pink-600" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-dark">
+                      Dessert Options
+                    </h2>
+                    <p className="text-xs text-dark-gray">
+                      Add available desserts for this product
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => addAddOn("desserts")}
+                  className="w-full sm:w-auto px-5 py-2.5 rounded-lg bg-gradient-to-r from-pink-500 to-pink-600 text-white text-sm font-semibold hover:from-pink-600 hover:to-pink-700 transition-all shadow-md hover:shadow-lg hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
+                >
+                  <Plus className="w-4 h-4" />
+                  Add Dessert
+                </button>
+              </div>
+              {formData.desserts.length === 0 ? (
+                <div className="text-center py-8 text-dark-gray">
+                  <Cake className="w-12 h-12 mx-auto mb-3 text-pink-300" />
+                  <p className="text-sm">
+                    No desserts added yet. Click "Add Dessert" to get started.
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {formData.desserts.map((dessert, index) => (
+                    <div
+                      key={index}
+                      className="p-4 sm:p-5 bg-gradient-to-br from-pink-50 to-white rounded-xl border-2 border-pink-200 hover:border-pink-400 transition-all shadow-sm hover:shadow-md"
+                    >
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="w-7 h-7 bg-gradient-to-br from-pink-500 to-pink-600 text-white rounded-lg flex items-center justify-center text-sm font-bold">
+                          {index + 1}
+                        </span>
+                        <p className="font-bold text-dark text-sm">
+                          Dessert Option {index + 1}
+                        </p>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-semibold text-dark mb-2">
+                            Dessert Name
+                          </label>
+                          <input
+                            type="text"
+                            value={dessert.name}
+                            onChange={(e) =>
+                              handleAddOnChange(
+                                "desserts",
+                                index,
+                                "name",
+                                e.target.value,
+                              )
+                            }
+                            className="w-full px-4 py-2.5 rounded-lg text-sm border-2 border-gray-200 focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-500/20 hover:border-pink-400 bg-white transition-all"
+                            placeholder="e.g., Ice Cream, Cake"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-semibold text-dark mb-2">
+                            Price (Rs)
+                          </label>
+                          <input
+                            type="number"
+                            value={dessert.price}
+                            onChange={(e) =>
+                              handleAddOnChange(
+                                "desserts",
+                                index,
+                                "price",
+                                e.target.value,
+                              )
+                            }
+                            step="0.01"
+                            min="0"
+                            className="w-full px-4 py-2.5 rounded-lg text-sm border-2 border-gray-200 focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-500/20 hover:border-pink-400 bg-white transition-all"
+                            placeholder="3.99"
+                          />
+                        </div>
+                      </div>
+                      <div className="mt-4 flex flex-col sm:flex-row gap-3">
+                        <input
+                          type="text"
+                          value={dessert.description}
+                          onChange={(e) =>
+                            handleAddOnChange(
+                              "desserts",
+                              index,
+                              "description",
+                              e.target.value,
+                            )
+                          }
+                          className="flex-1 px-4 py-2.5 rounded-lg text-sm border-2 border-gray-200 focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-500/20 hover:border-pink-400 bg-white transition-all"
+                          placeholder="Description (optional)"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => removeAddOn("desserts", index)}
+                          className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-red-500 to-red-600 text-white text-sm font-semibold hover:from-red-600 hover:to-red-700 transition-all whitespace-nowrap shadow-md hover:shadow-lg hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Dynamic Extras Add-ons */}
+          {formData.addOnsConfig.showExtras && (
+            <div className="bg-white rounded-xl lg:rounded-2xl p-5 sm:p-6 lg:p-8 shadow-xl border-2 border-gray-100 hover:border-primary/30 transition-all">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-5 sm:mb-6 pb-4 border-b-2 border-gray-100">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-green-100 to-green-200 rounded-xl flex items-center justify-center">
+                    <PlusCircle className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-dark">
+                      Extra Options
+                    </h2>
+                    <p className="text-xs text-dark-gray">
+                      Add available extras for this product
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => addAddOn("extras")}
+                  className="w-full sm:w-auto px-5 py-2.5 rounded-lg bg-gradient-to-r from-green-500 to-green-600 text-white text-sm font-semibold hover:from-green-600 hover:to-green-700 transition-all shadow-md hover:shadow-lg hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
+                >
+                  <Plus className="w-4 h-4" />
+                  Add Extra
+                </button>
+              </div>
+              {formData.extras.length === 0 ? (
+                <div className="text-center py-8 text-dark-gray">
+                  <PlusCircle className="w-12 h-12 mx-auto mb-3 text-green-300" />
+                  <p className="text-sm">
+                    No extras added yet. Click "Add Extra" to get started.
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {formData.extras.map((extra, index) => (
+                    <div
+                      key={index}
+                      className="p-4 sm:p-5 bg-gradient-to-br from-green-50 to-white rounded-xl border-2 border-green-200 hover:border-green-400 transition-all shadow-sm hover:shadow-md"
+                    >
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="w-7 h-7 bg-gradient-to-br from-green-500 to-green-600 text-white rounded-lg flex items-center justify-center text-sm font-bold">
+                          {index + 1}
+                        </span>
+                        <p className="font-bold text-dark text-sm">
+                          Extra Option {index + 1}
+                        </p>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-semibold text-dark mb-2">
+                            Extra Name
+                          </label>
+                          <input
+                            type="text"
+                            value={extra.name}
+                            onChange={(e) =>
+                              handleAddOnChange(
+                                "extras",
+                                index,
+                                "name",
+                                e.target.value,
+                              )
+                            }
+                            className="w-full px-4 py-2.5 rounded-lg text-sm border-2 border-gray-200 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20 hover:border-green-400 bg-white transition-all"
+                            placeholder="e.g., Extra Cheese, Bacon"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-semibold text-dark mb-2">
+                            Price (Rs)
+                          </label>
+                          <input
+                            type="number"
+                            value={extra.price}
+                            onChange={(e) =>
+                              handleAddOnChange(
+                                "extras",
+                                index,
+                                "price",
+                                e.target.value,
+                              )
+                            }
+                            step="0.01"
+                            min="0"
+                            className="w-full px-4 py-2.5 rounded-lg text-sm border-2 border-gray-200 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20 hover:border-green-400 bg-white transition-all"
+                            placeholder="1.99"
+                          />
+                        </div>
+                      </div>
+                      <div className="mt-4 flex flex-col sm:flex-row gap-3">
+                        <input
+                          type="text"
+                          value={extra.description}
+                          onChange={(e) =>
+                            handleAddOnChange(
+                              "extras",
+                              index,
+                              "description",
+                              e.target.value,
+                            )
+                          }
+                          className="flex-1 px-4 py-2.5 rounded-lg text-sm border-2 border-gray-200 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20 hover:border-green-400 bg-white transition-all"
+                          placeholder="Description (optional)"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => removeAddOn("extras", index)}
+                          className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-red-500 to-red-600 text-white text-sm font-semibold hover:from-red-600 hover:to-red-700 transition-all whitespace-nowrap shadow-md hover:shadow-lg hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Form Actions */}
           <div className="bg-white rounded-xl lg:rounded-2xl p-5 sm:p-6 lg:p-8 shadow-xl border-2 border-gray-100">

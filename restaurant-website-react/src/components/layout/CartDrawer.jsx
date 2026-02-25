@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { showNotification } from "../../store/slices/notificationSlice";
 import { useCart } from "../../hooks/useCart";
+import productsService from "../../services/productsService";
 
 const CartDrawer = () => {
   const navigate = useNavigate();
@@ -83,7 +84,7 @@ const CartDrawer = () => {
                 >
                   <div className="flex gap-3 mb-3">
                     <img
-                      src={item.image}
+                      src={productsService.getImageUrl(item.image)}
                       alt={item.name}
                       className="w-20 h-20 object-cover rounded-xl flex-shrink-0"
                     />

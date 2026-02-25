@@ -38,8 +38,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "server": "node server/server.js",
-    "migrate:addons": "node server/scripts/migrateProductAddOns.js"
+    "server": "node server/server.js"
   },
   "eslintConfig": {
     "extends": [

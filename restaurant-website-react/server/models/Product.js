@@ -33,8 +33,8 @@ const productSchema = new mongoose.Schema({
     description: { type: String, default: '' }
   }],
   spiceLevels: [{
-    id: String,
-    name: String
+    name: { type: String, required: true },
+    description: { type: String, default: '' }
   }],
   ingredients: [String],
   nutritionInfo: [{
@@ -48,6 +48,22 @@ const productSchema = new mongoose.Schema({
     showDesserts: { type: Boolean, default: false },
     showExtras: { type: Boolean, default: false }
   },
+  // Dynamic add-ons
+  drinks: [{
+    name: { type: String, required: true },
+    price: { type: Number, required: true, min: 0 },
+    description: { type: String, default: '' }
+  }],
+  desserts: [{
+    name: { type: String, required: true },
+    price: { type: Number, required: true, min: 0 },
+    description: { type: String, default: '' }
+  }],
+  extras: [{
+    name: { type: String, required: true },
+    price: { type: Number, required: true, min: 0 },
+    description: { type: String, default: '' }
+  }],
   rating: {
     type: Number,
     default: 4,

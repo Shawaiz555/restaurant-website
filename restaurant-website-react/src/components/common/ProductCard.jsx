@@ -13,7 +13,7 @@ const ProductCard = ({ product }) => {
       id: product._id || product.id,
       name: product.name,
       price: product.basePrice,
-      image: product.imageUrl || product.imageId || product.image,
+      image: productsService.getImageUrl(product),
       size: product.sizes[0]?.name || "Regular",
     });
   };

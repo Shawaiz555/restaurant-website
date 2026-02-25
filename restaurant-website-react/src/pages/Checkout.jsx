@@ -9,6 +9,7 @@ import LocationMap from "../components/common/LocationMap";
 import { ShoppingCart, Loader2, Check, Info, CreditCard } from "lucide-react";
 import ordersService from "../services/ordersService";
 import cartService from "../services/cartService";
+import productsService from "../services/productsService";
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -565,7 +566,7 @@ const Checkout = () => {
                   >
                     <div className="flex gap-3">
                       <img
-                        src={item.image}
+                        src={productsService.getImageUrl(item.image)}
                         alt={item.name}
                         className="w-16 h-16 object-cover rounded-lg flex-shrink-0"
                       />
