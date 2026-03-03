@@ -15,12 +15,12 @@ const AdminLayout = () => {
   };
 
   return (
-    <div className="min-h-screen bg-cream-light">
+    <div className="min-h-screen bg-gray-50">
       {/* Sidebar */}
       <AdminSidebar isOpen={isSidebarOpen} onClose={closeSidebar} />
 
       {/* Main Content Area */}
-      <div className="lg:ml-[240px] min-h-screen flex flex-col">
+      <div className="lg:ml-[270px] transition-all duration-300 min-h-screen flex flex-col">
         {/* Header */}
         <AdminHeader onMenuToggle={toggleSidebar} />
 
@@ -30,7 +30,7 @@ const AdminLayout = () => {
         </main>
 
         {/* Footer */}
-        <footer className="bg-white border-t border-gray-200 py-4 px-6">
+        <footer className="bg-white border-t border-gray-200 py-4 px-6 shrink-0 mt-auto">
           <div className="text-center text-sm text-dark-gray">
             <p>
               © {new Date().getFullYear()} Restaurant Admin Panel. All rights

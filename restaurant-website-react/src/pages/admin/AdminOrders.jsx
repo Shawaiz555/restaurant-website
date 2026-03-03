@@ -182,7 +182,7 @@ const AdminOrders = () => {
             {stats.total}
           </p>
         </div>
-        <div className="bg-gradient-to-br from-yellow-50 to-yellow-100/50 rounded-2xl p-5 shadow-lg border-2 border-yellow-200 hover:shadow-xl hover:border-yellow-300 transition-all duration-300 text-center">
+        <div className="bg-white rounded-2xl p-5 shadow-lg border-2 hover:shadow-xl hover:border-yellow-300 transition-all duration-300 text-center">
           <div className="w-12 h-12 mx-auto bg-white/60 rounded-xl flex items-center justify-center mb-3 shadow-sm">
             <Clock className="w-6 h-6 text-yellow-700" />
           </div>
@@ -193,7 +193,7 @@ const AdminOrders = () => {
             {stats.pending}
           </p>
         </div>
-        <div className="bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-2xl p-5 shadow-lg border-2 border-blue-200 hover:shadow-xl hover:border-blue-300 transition-all duration-300 text-center">
+        <div className="bg-white rounded-2xl p-5 shadow-lg border-2 hover:shadow-xl hover:border-blue-300 transition-all duration-300 text-center">
           <div className="w-12 h-12 mx-auto bg-white/60 rounded-xl flex items-center justify-center mb-3 shadow-sm">
             <RefreshCw className="w-6 h-6 text-blue-700" />
           </div>
@@ -204,7 +204,7 @@ const AdminOrders = () => {
             {stats.processing}
           </p>
         </div>
-        <div className="bg-gradient-to-br from-green-50 to-green-100/50 rounded-2xl p-5 shadow-lg border-2 border-green-200 hover:shadow-xl hover:border-green-300 transition-all duration-300 text-center">
+        <div className="bg-white rounded-2xl p-5 shadow-lg border-2 hover:shadow-xl hover:border-green-300 transition-all duration-300 text-center">
           <div className="w-12 h-12 mx-auto bg-white/60 rounded-xl flex items-center justify-center mb-3 shadow-sm">
             <CheckCircle className="w-6 h-6 text-green-700" />
           </div>
@@ -215,7 +215,7 @@ const AdminOrders = () => {
             {stats.completed}
           </p>
         </div>
-        <div className="bg-gradient-to-br from-red-50 to-red-100/50 rounded-2xl p-5 shadow-lg border-2 border-red-200 hover:shadow-xl hover:border-red-300 transition-all duration-300 text-center">
+        <div className="bg-white rounded-2xl p-5 shadow-lg border-2 hover:shadow-xl hover:border-red-300 transition-all duration-300 text-center">
           <div className="w-12 h-12 mx-auto bg-white/60 rounded-xl flex items-center justify-center mb-3 shadow-sm">
             <XCircle className="w-6 h-6 text-red-700" />
           </div>
