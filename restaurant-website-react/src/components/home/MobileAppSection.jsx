@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 const MobileAppSection = () => {
   return (
@@ -6,7 +6,7 @@ const MobileAppSection = () => {
       <div className="container mx-auto px-6 sm:px-6 lg:px-16">
         <div className="flex flex-col-reverse lg:grid lg:grid-cols-2 gap-12 items-center">
           <div>
-            <h2 className="font-display text-4xl lg:text-5xl mb-6">
+            <h2 className="font-sans font-bold text-4xl lg:text-6xl mb-6">
               Never Feel Hungry! Download Our Mobile App Enjoy Delicious Foods
             </h2>
             <p className="text-dark-gray text-lg mb-8">
@@ -41,7 +41,7 @@ const MobileAppSection = () => {
               <div className="w-74 h-84 bg-white rounded-[3rem] p-3 shadow-2xl">
                 <div className="bg-cream rounded-[2.5rem] overflow-hidden">
                   <div className="bg-primary text-white p-6 text-center">
-                    <h3 className="font-display text-2xl mb-2">
+                    <h3 className="font-sans font-bold text-2xl mb-2">
                       We Serve The Test You Love
                     </h3>
                     <p className="text-sm opacity-90">

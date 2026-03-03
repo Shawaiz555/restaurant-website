@@ -73,7 +73,7 @@ const FAQSection = () => {
               Got Questions?
             </span>
           </div>
-          <h2 className="font-display text-4xl lg:text-5xl text-dark mb-4">
+          <h2 className="font-sans font-bold text-4xl lg:text-5xl text-dark mb-4">
             Frequently Asked Questions
           </h2>
           <p className="text-dark-gray text-lg lg:text-xl max-w-2xl mx-auto">
@@ -164,7 +164,7 @@ const FAQSection = () => {
             <div className="flex justify-center mb-4 text-white">
               <Lightbulb className="w-16 h-16 animate-pulse" />
             </div>
-            <h3 className="font-display text-3xl lg:text-4xl text-white mb-4">
+            <h3 className="font-sans font-bold text-3xl lg:text-4xl text-white mb-4">
               Still Have Questions?
             </h3>
             <p className="text-white/90 text-lg mb-6 max-w-2xl mx-auto">

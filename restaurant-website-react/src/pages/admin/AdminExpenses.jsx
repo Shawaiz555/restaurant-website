@@ -239,7 +239,7 @@ const AdminExpenses = () => {
       <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
           <div>
-            <h1 className="text-2xl lg:text-4xl font-display text-primary mb-2">
+            <h1 className="text-2xl lg:text-4xl font-sans font-bold text-primary mb-2">
               Expense Tracker
             </h1>
             <p className="text-dark-gray">
@@ -276,8 +276,8 @@ const AdminExpenses = () => {
       {/* Summary Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="bg-white rounded-2xl p-5 shadow-lg border-2 border-gray-100 text-center">
-          <div className="w-12 h-12 mx-auto bg-gradient-to-br from-red-100 to-red-200 rounded-xl flex items-center justify-center mb-3">
-            <TrendingDown className="w-6 h-6 text-red-600" />
+          <div className="w-16 h-16 mx-auto bg-gradient-to-br from-primary via-primary-light to-primary/80 rounded-xl flex items-center justify-center mb-3">
+            <TrendingDown className="w-9 h-9 text-white" />
           </div>
           <p className="text-xs text-dark-gray font-semibold uppercase tracking-wide">
             Today
@@ -287,8 +287,8 @@ const AdminExpenses = () => {
           </p>
         </div>
         <div className="bg-white rounded-2xl p-5 shadow-lg border-2 border-gray-100 text-center">
-          <div className="w-12 h-12 mx-auto bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl flex items-center justify-center mb-3">
-            <Calendar className="w-6 h-6 text-blue-600" />
+          <div className="w-16 h-16 mx-auto bg-gradient-to-br from-primary via-primary-light to-primary/80 rounded-xl flex items-center justify-center mb-3">
+            <Calendar className="w-9 h-9 text-white" />
           </div>
           <p className="text-xs text-dark-gray font-semibold uppercase tracking-wide">
             This Week
@@ -298,8 +298,8 @@ const AdminExpenses = () => {
           </p>
         </div>
         <div className="bg-white rounded-2xl p-5 shadow-lg border-2 border-gray-100 text-center">
-          <div className="w-12 h-12 mx-auto bg-gradient-to-br from-green-100 to-green-200 rounded-xl flex items-center justify-center mb-3">
-            <CalendarDays className="w-6 h-6 text-green-600" />
+          <div className="w-16 h-16 mx-auto bg-gradient-to-br from-primary via-primary-light to-primary/80 rounded-xl flex items-center justify-center mb-3">
+            <CalendarDays className="w-9 h-9 text-white" />
           </div>
           <p className="text-xs text-dark-gray font-semibold uppercase tracking-wide">
             This Month
@@ -309,8 +309,8 @@ const AdminExpenses = () => {
           </p>
         </div>
         <div className="bg-white rounded-2xl p-5 shadow-lg border-2 border-gray-100 text-center">
-          <div className="w-12 h-12 mx-auto bg-gradient-to-br from-primary/20 to-primary-light/20 rounded-xl flex items-center justify-center mb-3">
-            <DollarSign className="w-6 h-6 text-primary" />
+          <div className="w-16 h-16 mx-auto bg-gradient-to-br from-primary via-primary-light to-primary/80 rounded-xl flex items-center justify-center mb-3">
+            <DollarSign className="w-9 h-9 text-white" />
           </div>
           <p className="text-xs text-dark-gray font-semibold uppercase tracking-wide">
             All Time
@@ -453,7 +453,7 @@ const AdminExpenses = () => {
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="w-full sm:w-auto px-4 py-2.5 sm:py-2 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-white text-sm sm:text-base min-w-[180px]"
+            className="w-full sm:w-auto px-4 py-2.5 sm:py-2 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-white text-sm sm:text-md min-w-[180px]"
           >
             <option value="All">All Categories</option>
             {categories.map((cat) => (
@@ -557,13 +557,13 @@ const AdminExpenses = () => {
                       <div className="flex gap-2">
                         <button
                           onClick={() => handleEdit(expense)}
-                          className="text-primary bg-primary px-7 py-1 text-white rounded-xl hover:bg-primary/80 text-sm font-semibold transition-colors"
+                          className="text-primary bg-primary px-7 py-1 rounded-xl hover:bg-primary/80 text-sm font-semibold transition-colors"
                         >
                           Edit
                         </button>
                         <button
                           onClick={() => handleDeleteClick(expense)}
-                          className="text-red-600 bg-red-600 px-7 py-1 text-white rounded-xl hover:bg-red-800 text-sm font-semibold transition-colors"
+                          className="text-red-600 bg-red-600 px-7 py-1 rounded-xl hover:bg-red-800 text-sm font-semibold transition-colors"
                         >
                           Delete
                         </button>

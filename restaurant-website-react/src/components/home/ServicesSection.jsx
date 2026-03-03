@@ -75,7 +75,7 @@ const ServicesSection = () => {
                   Our Services
                 </span>
               </div>
-              <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl text-dark leading-tight">
+              <h2 className="font-sans font-bold text-4xl sm:text-5xl lg:text-6xl text-dark leading-tight">
                 We Are More Than Just <br className="hidden sm:block" />
                 <span className="text-primary">Multiple Services</span>
               </h2>

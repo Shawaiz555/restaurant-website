@@ -39,7 +39,7 @@ const TimelineSection = () => {
     <section className="py-20">
       <div className="container mx-auto px-6 sm:px-6 lg:px-16">
         <div className="text-center mb-16">
-          <h2 className="font-display text-5xl text-dark mb-4">Our Journey</h2>
+          <h2 className="font-sans font-bold text-5xl text-dark mb-4">Our Journey</h2>
           <p className="text-dark-gray text-xl">
             Milestones that shaped who we are today
           </p>
@@ -58,7 +58,7 @@ const TimelineSection = () => {
                 <div className="text-primary font-bold text-xl mb-2">
                   {item.year}
                 </div>
-                <h3 className="font-display text-2xl text-dark mb-3">
+                <h3 className="font-sans font-bold text-2xl text-dark mb-3">
                   {item.title}
                 </h3>
                 <p className="text-dark-gray leading-relaxed">

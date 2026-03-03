@@ -113,7 +113,7 @@ const Login = () => {
                   <Utensils className="w-8 h-8" />
                 </div>
                 <div>
-                  <h3 className="font-display text-2xl font-bold">Bites</h3>
+                  <h3 className="font-sans text-2xl font-bold">Bites</h3>
                   <p className="text-sm text-white/80">
                     Delicious Food Delivered
                   </p>
@@ -127,7 +127,7 @@ const Login = () => {
                   Welcome Back
                 </div>
 
-                <h2 className="font-display text-5xl xl:text-6xl font-bold leading-tight">
+                <h2 className="font-sans text-5xl xl:text-6xl font-bold leading-tight">
                   Your Favorite
                   <br />
                   Meals Await!
@@ -175,7 +175,7 @@ const Login = () => {
 
             {/* Header */}
             <div className="text-center mb-8 md:mt-16">
-              <h2 className="font-display text-4xl lg:text-5xl font-bold text-dark mb-3">
+              <h2 className="font-sans text-4xl lg:text-5xl font-bold text-dark mb-3">
                 Login
               </h2>
               <p className="text-lg text-dark-gray">

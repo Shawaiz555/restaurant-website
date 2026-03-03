@@ -160,7 +160,7 @@ const Signup = () => {
                   <Utensils className="w-8 h-8" />
                 </div>
                 <div>
-                  <h3 className="font-display text-2xl font-bold ml-1">
+                  <h3 className="font-sans text-2xl font-bold ml-1">
                     Bites
                   </h3>
                   <p className="text-sm text-white/80 ml-1">
@@ -176,7 +176,7 @@ const Signup = () => {
                   Join Our Community
                 </div>
 
-                <h2 className="font-display text-5xl xl:text-6xl font-bold leading-tight">
+                <h2 className="font-sans text-5xl xl:text-6xl font-bold leading-tight">
                   Start Your
                   <br />
                   Food Journey!
@@ -224,7 +224,7 @@ const Signup = () => {
 
             {/* Header */}
             <div className="text-center mb-6 md:mt-5">
-              <h2 className="font-display text-4xl lg:text-5xl font-bold text-dark mb-3">
+              <h2 className="font-sans text-4xl lg:text-5xl font-bold text-dark mb-3">
                 Sign Up
               </h2>
               <p className="text-lg text-dark-gray">

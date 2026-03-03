@@ -71,7 +71,7 @@ const Footer = () => {
 
             {/* Social Media Links */}
             <div className="mb-4">
-              <h5 className="font-semibold text-dark mb-3">Follow Us</h5>
+              <h5 className="font-bold text-dark mb-3">Follow Us</h5>
               <div className="flex gap-3">
                 {socialLinks.map((social) => (
                   <a
@@ -92,7 +92,9 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div className="py-10">
-            <h4 className="font-display text-xl mb-6 text-dark">Quick Links</h4>
+            <h4 className="font-sans font-bold text-xl mb-6 text-dark">
+              Quick Links
+            </h4>
             <ul className="space-y-3">
               <li>
                 <Link
@@ -139,7 +141,7 @@ const Footer = () => {
 
           {/* Our Services */}
           <div className="py-10">
-            <h4 className="font-display text-xl mb-6 text-dark">
+            <h4 className="font-sans font-bold text-xl mb-6 text-dark">
               Our Services
             </h4>
             <ul className="space-y-3">
@@ -164,7 +166,9 @@ const Footer = () => {
 
           {/* Contact Info */}
           <div className="py-10">
-            <h4 className="font-display text-xl mb-6 text-dark">Contact Us</h4>
+            <h4 className="font-sans font-bold text-xl mb-6 text-dark">
+              Contact Us
+            </h4>
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />

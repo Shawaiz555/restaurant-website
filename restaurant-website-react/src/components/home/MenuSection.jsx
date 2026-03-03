@@ -147,7 +147,7 @@ const MenuSection = () => {
               Special Selection
             </span>
           </div>
-          <h2 className="font-display text-5xl lg:text-6xl text-dark leading-tight">
+          <h2 className="font-sans font-bold text-5xl lg:text-6xl text-dark leading-tight">
             Our Regular <span className="text-primary italic">Menu Pack</span>
           </h2>
           <div className="w-24 h-1.5 bg-primary/20 mx-auto rounded-full mt-4 flex overflow-hidden">

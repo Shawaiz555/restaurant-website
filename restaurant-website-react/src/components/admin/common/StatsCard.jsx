@@ -45,7 +45,7 @@ const StatsCard = ({
       </h3>
 
       {/* Value - Proportional and Readable */}
-      <p className="text-2xl sm:text-3xl font-display text-primary font-bold mb-2 break-words max-w-full">
+      <p className="text-2xl sm:text-3xl font-sans text-primary font-bold mb-2 break-words max-w-full">
         {value}
       </p>
 

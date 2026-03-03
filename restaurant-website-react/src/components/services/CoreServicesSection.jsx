@@ -95,7 +95,7 @@ const CoreServicesSection = () => {
     <section className="py-20">
       <div className="container mx-auto px-6 sm:px-6 lg:px-16">
         <div className="text-center mb-16">
-          <h2 className="font-display text-5xl text-dark mb-4">
+          <h2 className="font-sans font-bold text-5xl text-dark mb-4">
             Core Services
           </h2>
           <p className="text-dark-gray text-xl max-w-2xl mx-auto">
@@ -115,7 +115,7 @@ const CoreServicesSection = () => {
                 <div className="absolute inset-0 bg-black/10"></div>
                 <div className="relative z-10">
                   <service.icon className="w-20 h-20 mx-auto mb-4 text-white" />
-                  <h3 className="font-display text-3xl text-white">
+                  <h3 className="font-sans font-bold text-3xl text-white">
                     {service.title}
                   </h3>
                 </div>

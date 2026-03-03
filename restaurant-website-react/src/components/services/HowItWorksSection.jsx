@@ -39,7 +39,7 @@ const HowItWorksSection = () => {
     <section className="py-20 bg-gradient-to-br from-cream to-cream-light">
       <div className="container mx-auto px-6 sm:px-6 lg:px-16">
         <div className="text-center mb-16">
-          <h2 className="font-display text-5xl text-dark mb-4">How It Works</h2>
+          <h2 className="font-sans font-bold text-5xl text-dark mb-4">How It Works</h2>
           <p className="text-dark-gray text-xl">
             Simple steps to enjoy our delicious food
           </p>
@@ -53,7 +53,7 @@ const HowItWorksSection = () => {
                   {item.step}
                 </div>
                 <item.icon className="w-12 h-12 mx-auto mb-4 text-primary" />
-                <h3 className="font-display text-2xl text-dark mb-3">
+                <h3 className="font-sans font-bold text-2xl text-dark mb-3">
                   {item.title}
                 </h3>
                 <p className="text-dark-gray">{item.description}</p>

@@ -63,7 +63,7 @@ const ServicesHeroSection = () => {
 
           {/* Enhanced Heading */}
           <div className="space-y-3 mb-5">
-            <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl xl:text-8xl text-primary drop-shadow-lg animate-slide-up leading-tight">
+            <h1 className="font-sans font-bold text-5xl sm:text-6xl lg:text-7xl xl:text-8xl text-primary drop-shadow-lg animate-slide-up leading-tight">
               Our Services
             </h1>
 

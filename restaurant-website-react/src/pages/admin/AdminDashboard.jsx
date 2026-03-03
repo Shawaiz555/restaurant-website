@@ -166,7 +166,7 @@ const AdminDashboard = () => {
     <div className="space-y-6">
       {/* Page Header */}
       <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-        <h1 className="text-2xl lg:text-4xl font-display text-primary mb-2">
+        <h1 className="text-2xl lg:text-4xl font-bold font-sans text-primary mb-2">
           Dashboard
         </h1>
         <p className="text-dark-gray">Welcome to your restaurant admin panel</p>
@@ -206,7 +206,9 @@ const AdminDashboard = () => {
 
       {/* Quick Actions */}
       <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-        <h2 className="text-xl font-display text-dark mb-4">Quick Actions</h2>
+        <h2 className="text-xl font-sans font-bold text-dark mb-4">
+          Quick Actions
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <button
             onClick={() => navigate("/admin/products/new")}
@@ -237,7 +239,7 @@ const AdminDashboard = () => {
         {/* Revenue Trend Graph */}
         <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-display text-dark">
+            <h2 className="text-xl font-sans font-bold text-dark">
               Revenue Trend (Last 7 Days)
             </h2>
             <TrendingUp className="w-5 h-5 text-dark-gray" />
@@ -309,7 +311,7 @@ const AdminDashboard = () => {
         {/* Order Status Distribution */}
         <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-display text-dark">
+            <h2 className="text-xl font-sans font-bold text-dark">
               Order Status Distribution
             </h2>
             <BarChart2 className="w-5 h-5 text-dark-gray" />
@@ -436,7 +438,9 @@ const AdminDashboard = () => {
         {/* Recent Orders */}
         <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-display text-dark">Recent Orders</h2>
+            <h2 className="text-xl font-sans font-bold text-dark">
+              Recent Orders
+            </h2>
             <button
               onClick={() => navigate("/admin/orders")}
               className="text-primary hover:text-primary-dark text-sm font-semibold transition-colors"
@@ -481,7 +485,7 @@ const AdminDashboard = () => {
         {/* Top Products */}
         <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-display text-dark">
+            <h2 className="text-xl font-sans font-bold text-dark">
               Top Selling Products
             </h2>
             <button

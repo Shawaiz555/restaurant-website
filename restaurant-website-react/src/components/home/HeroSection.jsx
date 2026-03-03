@@ -54,7 +54,7 @@ const HeroSection = () => {
 
             {/* Enhanced Heading */}
             <div className="space-y-3">
-              <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl xl:text-8xl leading-[1.1] text-primary drop-shadow-lg animate-slide-up">
+              <h1 className="font-sans font-bold text-5xl sm:text-6xl lg:text-7xl xl:text-8xl leading-[1.1] text-primary drop-shadow-lg animate-slide-up">
                 We Serve The
                 <span className="block text-primary-dark mt-1">
                   Taste You Love
@@ -96,7 +96,7 @@ const HeroSection = () => {
             {/* Enhanced Stats with Icons */}
             <div className="mt-8 grid grid-cols-3 gap-4 lg:gap-6 max-w-xl animate-slide-up-delay-4">
               <div className="group text-center p-3 rounded-xl bg-white/50 backdrop-blur-sm border border-primary/20 hover:border-primary/40 transition-all duration-300 hover:scale-105 hover:shadow-xl">
-                <div className="text-primary text-3xl lg:text-4xl font-display mb-1 group-hover:scale-110 transition-transform">
+                <div className="text-primary text-3xl lg:text-4xl font-sans mb-1 group-hover:scale-110 transition-transform">
                   50K+
                 </div>
                 <div className="text-dark-gray text-xs font-semibold">
@@ -105,7 +105,7 @@ const HeroSection = () => {
                 <Users className="w-6 h-6 mx-auto mt-2 text-primary" />
               </div>
               <div className="group text-center p-3 rounded-xl bg-white/50 backdrop-blur-sm border border-primary/20 hover:border-primary/40 transition-all duration-300 hover:scale-105 hover:shadow-xl">
-                <div className="text-primary text-3xl lg:text-4xl font-display mb-1 group-hover:scale-110 transition-transform flex items-center justify-center gap-1">
+                <div className="text-primary text-3xl lg:text-4xl font-sans mb-1 group-hover:scale-110 transition-transform flex items-center justify-center gap-1">
                   4.9
                   <Star className="w-5 h-5 text-yellow-500 fill-current" />
                 </div>
@@ -115,7 +115,7 @@ const HeroSection = () => {
                 <Trophy className="w-6 h-6 mx-auto mt-2 text-primary" />
               </div>
               <div className="group text-center p-3 rounded-xl bg-white/50 backdrop-blur-sm border border-primary/20 hover:border-primary/40 transition-all duration-300 hover:scale-105 hover:shadow-xl">
-                <div className="text-primary text-3xl lg:text-4xl font-display mb-1 group-hover:scale-110 transition-transform">
+                <div className="text-primary text-3xl lg:text-4xl font-sans mb-1 group-hover:scale-110 transition-transform">
                   200+
                 </div>
                 <div className="text-dark-gray text-xs font-semibold">

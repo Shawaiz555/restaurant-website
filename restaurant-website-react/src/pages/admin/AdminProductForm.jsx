@@ -470,8 +470,8 @@ const AdminProductForm = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-cream-light/30 to-gray-50 py-4 sm:py-6 lg:py-8 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mx-auto space-y-4 lg:space-y-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-cream-light/30 to-gray-50 py-4 sm:py-6 sm:px-6">
+      <div className="max-w-6xl space-y-4 lg:space-y-6">
         {/* Page Header */}
         <div className="bg-gradient-to-br from-white to-gray-50/50 rounded-xl lg:rounded-2xl p-5 sm:p-6 lg:p-8 shadow-lg border-2 border-gray-200">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
@@ -522,7 +522,7 @@ const AdminProductForm = () => {
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
               <div>
-                <label className="block text-sm font-bold text-dark mb-2 flex items-center gap-2">
+                <label className="text-sm font-bold text-dark mb-2 flex items-center gap-2">
                   <FileText className="w-4 h-4 text-primary" />
                   Product Name *
                 </label>
@@ -544,7 +544,7 @@ const AdminProductForm = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-dark mb-2 flex items-center gap-2">
+                <label className="text-sm font-bold text-dark mb-2 flex items-center gap-2">
                   <Tag className="w-4 h-4 text-primary" />
                   Category *
                 </label>
@@ -619,7 +619,7 @@ const AdminProductForm = () => {
               </div>
 
               <div className="lg:col-span-2">
-                <label className="block text-sm font-bold text-dark mb-2 flex items-center gap-2">
+                <label className="text-sm font-bold text-dark mb-2 flex items-center gap-2">
                   <FileBadge className="w-4 h-4 text-primary" />
                   Description *
                 </label>
@@ -641,7 +641,7 @@ const AdminProductForm = () => {
               </div>
 
               <div className="lg:col-span-2">
-                <label className="block text-sm font-bold text-dark mb-2 flex items-center gap-2">
+                <label className="text-sm font-bold text-dark mb-2 flex items-center gap-2">
                   <ImageIcon className="w-4 h-4 text-primary" />
                   Product Image *
                 </label>
@@ -680,7 +680,7 @@ const AdminProductForm = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-dark mb-2 flex items-center gap-2">
+                <label className="text-sm font-bold text-dark mb-2 flex items-center gap-2">
                   <DollarSign className="w-4 h-4 text-primary" />
                   Base Price * (Rs)
                 </label>
@@ -704,7 +704,7 @@ const AdminProductForm = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-dark mb-2 flex items-center gap-2">
+                <label className="text-sm font-bold text-dark mb-2 flex items-center gap-2">
                   <Star className="w-4 h-4 text-primary fill-primary" />
                   Rating (1-5)
                 </label>
@@ -724,7 +724,7 @@ const AdminProductForm = () => {
             {/* Image Preview */}
             {formData.image && (
               <div className="mt-6 pt-6 border-t-2 border-gray-100">
-                <label className="block text-sm font-bold text-dark mb-3 flex items-center gap-2">
+                <label className="text-sm font-bold text-dark mb-3 flex items-center gap-2">
                   <Camera className="w-4 h-4 text-primary" />
                   Image Preview
                 </label>

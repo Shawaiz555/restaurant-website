@@ -37,7 +37,7 @@ const ChefsSection = () => {
     <section className="py-16 lg:py-24 bg-white" id="chefs">
       <div className="container mx-auto px-6 sm:px-6 lg:px-16">
         <div className="flex items-center justify-between mb-12">
-          <h2 className="font-display text-4xl lg:text-5xl">Meet Our Chefs</h2>
+          <h2 className="font-sans font-bold text-4xl lg:text-5xl">Meet Our Chefs</h2>
           <div className="flex gap-2">
             <button className="swiper-button-prev-chefs w-12 h-12 rounded-full bg-cream border-2 border-dark/10 flex items-center justify-center hover:bg-primary hover:border-primary hover:text-white transition-all">
               ←
@@ -87,7 +87,7 @@ const ChefsSection = () => {
                     className="w-full h-96 object-cover group-hover:scale-110 transition-transform duration-300"
                   />
                 </div>
-                <h3 className="font-display text-2xl mb-2">{chef.name}</h3>
+                <h3 className="font-sans font-bold text-2xl mb-2">{chef.name}</h3>
               </div>
             </SwiperSlide>
           ))}

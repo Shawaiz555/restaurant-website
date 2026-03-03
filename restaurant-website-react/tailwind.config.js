@@ -21,8 +21,7 @@ module.exports = {
         "orange-dark": "#E89530",
       },
       fontFamily: {
-        display: ["Righteous", "cursive"],
-        body: ["Poppins", "sans-serif"],
+        sans: ["Poppins", "sans-serif"],
       },
     },
   },

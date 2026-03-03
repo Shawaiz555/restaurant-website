@@ -11,7 +11,7 @@ const AboutCTASection = () => {
           </div>
 
           <div className="relative z-10">
-            <h2 className="font-display text-4xl lg:text-5xl text-white mb-6">
+            <h2 className="font-sans font-bold text-4xl lg:text-5xl text-white mb-6">
               Ready to Experience the Difference?
             </h2>
             <p className="text-white/90 text-xl mb-8 max-w-2xl mx-auto">

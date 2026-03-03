@@ -123,7 +123,7 @@ const AdminProducts = () => {
       <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
           <div>
-            <h1 className="text-2xl lg:text-4xl font-display text-primary mb-2">
+            <h1 className="text-2xl lg:text-4xl font-sans font-bold text-primary mb-2">
               Products Management
             </h1>
             <p className="text-dark-gray">Add, edit, and delete menu items</p>
@@ -141,8 +141,8 @@ const AdminProducts = () => {
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="bg-white rounded-2xl p-5 shadow-lg border-2 border-gray-100 hover:shadow-xl hover:border-primary/30 transition-all duration-300 text-center">
-          <div className="w-12 h-12 mx-auto bg-gradient-to-br from-primary/20 to-primary-light/20 rounded-xl flex items-center justify-center mb-3">
-            <Package className="w-6 h-6 text-primary" />
+          <div className="w-16 h-16 mx-auto bg-gradient-to-br from-primary via-primary-light to-primary/80 rounded-xl flex items-center justify-center mb-3">
+            <Package className="w-9 h-9 text-white" />
           </div>
           <p className="text-xs sm:text-sm text-dark-gray mb-2 font-semibold uppercase tracking-wide">
             Total Products
@@ -152,8 +152,8 @@ const AdminProducts = () => {
           </p>
         </div>
         <div className="bg-white rounded-2xl p-5 shadow-lg border-2 border-gray-100 hover:shadow-xl hover:border-primary/30 transition-all duration-300 text-center">
-          <div className="w-12 h-12 mx-auto bg-gradient-to-br from-primary/20 to-primary-light/20 rounded-xl flex items-center justify-center mb-3">
-            <Tag className="w-6 h-6 text-primary" />
+          <div className="w-16 h-16 mx-auto bg-gradient-to-br from-primary via-primary-light to-primary/80 rounded-xl flex items-center justify-center mb-3">
+            <Tag className="w-9 h-9 text-white" />
           </div>
           <p className="text-xs sm:text-sm text-dark-gray mb-2 font-semibold uppercase tracking-wide">
             Categories
@@ -163,8 +163,8 @@ const AdminProducts = () => {
           </p>
         </div>
         <div className="bg-white rounded-2xl p-5 shadow-lg border-2 border-gray-100 hover:shadow-xl hover:border-primary/30 transition-all duration-300 text-center">
-          <div className="w-12 h-12 mx-auto bg-gradient-to-br from-primary/20 to-primary-light/20 rounded-xl flex items-center justify-center mb-3">
-            <Eye className="w-6 h-6 text-primary" />
+          <div className="w-16 h-16 mx-auto bg-gradient-to-br from-primary via-primary-light to-primary/80 rounded-xl flex items-center justify-center mb-3">
+            <Eye className="w-9 h-9 text-white" />
           </div>
           <p className="text-xs sm:text-sm text-dark-gray mb-2 font-semibold uppercase tracking-wide">
             Showing
@@ -174,8 +174,8 @@ const AdminProducts = () => {
           </p>
         </div>
         <div className="bg-white rounded-2xl p-5 shadow-lg border-2 border-gray-100 hover:shadow-xl hover:border-primary/30 transition-all duration-300 text-center">
-          <div className="w-12 h-12 mx-auto bg-gradient-to-br from-primary/20 to-primary-light/20 rounded-xl flex items-center justify-center mb-3">
-            <Filter className="w-6 h-6 text-primary" />
+          <div className="w-16 h-16 mx-auto bg-gradient-to-br from-primary via-primary-light to-primary/80 rounded-xl flex items-center justify-center mb-3">
+            <Filter className="w-9 h-9 text-white" />
           </div>
           <p className="text-xs sm:text-sm text-dark-gray mb-2 font-semibold uppercase tracking-wide">
             Selected Category
@@ -196,7 +196,7 @@ const AdminProducts = () => {
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-white text-sm sm:text-base"
+            className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-white text-sm sm:text-md"
           >
             <option value="All">All Categories</option>
             {categories.map((category) => (

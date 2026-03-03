@@ -102,7 +102,7 @@ const AdminAnalytics = () => {
       <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-lg border border-gray-100">
         <div className="flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-2xl sm:text-4xl font-display text-primary mb-2">
+            <h1 className="text-2xl sm:text-4xl font-sans font-bold text-primary mb-2">
               Analytics
             </h1>
             <p className="text-sm sm:text-base text-dark-gray">
@@ -112,7 +112,7 @@ const AdminAnalytics = () => {
           <select
             value={dateRange}
             onChange={(e) => setDateRange(e.target.value)}
-            className="w-full sm:w-auto px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-white text-sm sm:text-base min-w-[160px]"
+            className="w-full sm:w-auto px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-white text-sm sm:text-md min-w-[160px]"
           >
             <option value="week">Last 7 Days</option>
             <option value="month">Last 30 Days</option>

@@ -45,7 +45,7 @@ const MenuCategoriesSection = ({
                       />
                     </svg>
                   </div>
-                  <h3 className="font-display text-lg text-dark">
+                  <h3 className="font-sans font-bold text-lg text-dark">
                     Browse Categories
                   </h3>
                 </div>
@@ -154,7 +154,7 @@ const MenuCategoriesSection = ({
                       />
                     </svg>
                   </div>
-                  <h2 className="font-display text-xl lg:text-2xl text-dark">
+                  <h2 className="font-sans font-bold text-xl lg:text-2xl text-dark">
                     Categories
                   </h2>
                 </div>
@@ -208,7 +208,7 @@ const MenuCategoriesSection = ({
               <div className="p-4 lg:p-5 bg-gradient-to-br from-cream-light to-white border-t border-gray-200">
                 <div className="grid grid-cols-2 gap-3">
                   <div className="bg-white rounded-xl p-4 text-center border border-gray-100 hover:border-primary/20 transition-all">
-                    <div className="text-3xl lg:text-4xl font-display bg-gradient-to-br from-primary to-primary-dark bg-clip-text text-transparent mb-1">
+                    <div className="text-3xl lg:text-4xl font-sans bg-gradient-to-br from-primary to-primary-dark bg-clip-text text-transparent mb-1">
                       {categories.find((cat) => cat.id === "all")?.count || 0}
                     </div>
                     <div className="text-xs text-dark-gray font-medium">
@@ -216,7 +216,7 @@ const MenuCategoriesSection = ({
                     </div>
                   </div>
                   <div className="bg-white rounded-xl p-4 text-center border border-gray-100 hover:border-primary/20 transition-all">
-                    <div className="text-3xl lg:text-4xl font-display bg-gradient-to-br from-primary to-primary-dark bg-clip-text text-transparent mb-1">
+                    <div className="text-3xl lg:text-4xl font-sans bg-gradient-to-br from-primary to-primary-dark bg-clip-text text-transparent mb-1">
                       {categories.length - 1}
                     </div>
                     <div className="text-xs text-dark-gray font-medium">
@@ -240,7 +240,7 @@ const MenuCategoriesSection = ({
                     })}
                   </div>
                   <div>
-                    <h3 className="font-display text-3xl text-dark mb-2 flex items-center gap-3">
+                    <h3 className="font-sans font-bold text-3xl text-dark mb-2 flex items-center gap-3">
                       {activeCategoryName}
                       <span className="text-sm font-normal bg-primary/10 text-primary px-3 py-1 rounded-full">
                         {filteredProducts.length}{" "}
@@ -341,7 +341,7 @@ const MenuCategoriesSection = ({
                     />
                   </svg>
                 </div>
-                <h3 className="font-display text-4xl text-dark mb-4">
+                <h3 className="font-sans font-bold text-4xl text-dark mb-4">
                   No items found
                 </h3>
                 <p className="text-dark-gray text-lg mb-8 max-w-md mx-auto leading-relaxed">

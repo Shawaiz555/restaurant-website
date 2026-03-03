@@ -12,7 +12,7 @@ const OurStorySection = () => {
             <div className="inline-block bg-primary/10 px-4 py-2 rounded-full">
               <span className="text-primary font-semibold">Est. 2009</span>
             </div>
-            <h2 className="font-display text-5xl text-dark leading-tight">
+            <h2 className="font-sans font-bold text-5xl text-dark leading-tight">
               A Journey of Flavor & Passion
             </h2>
             <div className="space-y-4 text-dark-gray text-lg leading-relaxed">

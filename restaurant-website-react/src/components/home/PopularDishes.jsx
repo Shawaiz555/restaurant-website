@@ -21,7 +21,7 @@ const PopularDishes = () => {
     <section className="py-16 lg:py-24">
       <div className="container mx-auto px-6 sm:px-6 lg:px-16">
         <div className="flex items-center justify-between mb-12">
-          <h2 className="font-display text-4xl lg:text-5xl">Popular Dishes</h2>
+          <h2 className="font-sans font-bold text-4xl lg:text-5xl">Popular Dishes</h2>
           <div className="flex gap-2">
             <button className="swiper-button-prev-custom w-12 h-12 rounded-full bg-white border-2 border-dark/10 flex items-center justify-center hover:bg-primary hover:border-primary hover:text-white transition-all">
               ←

@@ -112,7 +112,7 @@ const AdminHeader = ({ onMenuToggle }) => {
               }`}
             >
               <div className="relative">
-                <div className="w-[38px] h-[38px] rounded-lg bg-gradient-to-br from-primary to-primary-dark shadow-sm shadow-primary/20 flex items-center justify-center text-white font-display tracking-wider text-base transform transition-transform duration-300 group-hover:rotate-6 border border-primary-light/30">
+                <div className="w-[38px] h-[38px] rounded-lg bg-gradient-to-br from-primary to-primary-dark shadow-sm shadow-primary/20 flex items-center justify-center text-white font-sans tracking-wider text-base transform transition-transform duration-300 group-hover:rotate-6 border border-primary-light/30">
                   {currentUser?.name?.charAt(0)?.toUpperCase() || "A"}
                 </div>
                 <div
@@ -144,7 +144,7 @@ const AdminHeader = ({ onMenuToggle }) => {
 
                   <div className="flex items-center gap-3 relative z-10">
                     <div className="relative shrink-0">
-                      <div className="w-[46px] h-[46px] rounded-xl bg-gradient-to-br from-primary to-primary-dark shadow-md shadow-primary/20 flex items-center justify-center text-white font-display text-lg tracking-wider transform group-hover:rotate-6 transition-transform duration-300 border border-primary-light/30">
+                      <div className="w-[46px] h-[46px] rounded-xl bg-gradient-to-br from-primary to-primary-dark shadow-md shadow-primary/20 flex items-center justify-center text-white font-sans text-lg tracking-wider transform group-hover:rotate-6 transition-transform duration-300 border border-primary-light/30">
                         {currentUser?.name?.charAt(0)?.toUpperCase() || "A"}
                       </div>
                       <div
@@ -167,7 +167,7 @@ const AdminHeader = ({ onMenuToggle }) => {
                 <div className="space-y-1">
                   <button
                     onClick={handleLogout}
-                    className="w-full flex items-center gap-3 px-2 py-2.5 rounded-xl text-[14px] font-semibold text-red-500 hover:bg-red-50 hover:text-red-600 transition-all duration-200 group"
+                    className="w-full flex items-center justify-center gap-3 px-2 py-2.5 rounded-xl text-[14px] font-semibold text-red-500 hover:bg-red-50 hover:text-red-600 transition-all duration-200 group"
                   >
                     <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-red-50/50 text-red-500 group-hover:bg-white group-hover:shadow-sm group-hover:text-red-600 transition-all border border-transparent group-hover:border-red-100">
                       <LogOut className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />

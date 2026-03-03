@@ -163,7 +163,7 @@ const AdminOrders = () => {
     <div className="space-y-6">
       {/* Page Header */}
       <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-        <h1 className="text-2xl lg:text-4xl font-display text-primary mb-2">
+        <h1 className="text-2xl lg:text-4xl font-sans font-bold text-primary mb-2">
           Orders Management
         </h1>
         <p className="text-dark-gray">View and manage all customer orders</p>
@@ -172,8 +172,8 @@ const AdminOrders = () => {
       {/* Stats Row */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         <div className="bg-white rounded-2xl p-5 shadow-lg border-2 border-gray-100 hover:shadow-xl hover:border-primary/30 transition-all duration-300 text-center">
-          <div className="w-12 h-12 mx-auto bg-gradient-to-br from-primary/20 to-primary-light/20 rounded-xl flex items-center justify-center mb-3">
-            <Package className="w-6 h-6 text-primary" />
+          <div className="w-16 h-16 mx-auto bg-gradient-to-br from-primary via-primary-light to-primary/80 rounded-xl flex items-center justify-center mb-3">
+            <Package className="w-9 h-9 text-white" />
           </div>
           <p className="text-xs sm:text-sm text-dark-gray mb-2 font-semibold uppercase tracking-wide">
             Total Orders
@@ -182,47 +182,47 @@ const AdminOrders = () => {
             {stats.total}
           </p>
         </div>
-        <div className="bg-white rounded-2xl p-5 shadow-lg border-2 hover:shadow-xl hover:border-yellow-300 transition-all duration-300 text-center">
-          <div className="w-12 h-12 mx-auto bg-white/60 rounded-xl flex items-center justify-center mb-3 shadow-sm">
-            <Clock className="w-6 h-6 text-yellow-700" />
+        <div className="bg-white rounded-2xl p-5 shadow-lg border-2 hover:shadow-xl hover:border-primary/30 transition-all duration-300 text-center">
+          <div className="w-16 h-16 mx-auto bg-gradient-to-br from-primary via-primary-light to-primary/80 rounded-xl flex items-center justify-center mb-3 shadow-sm">
+            <Clock className="w-9 h-9 text-white" />
           </div>
-          <p className="text-xs sm:text-sm text-yellow-900 mb-2 font-semibold uppercase tracking-wide">
+          <p className="text-xs sm:text-sm text-dark-gray mb-2 font-semibold uppercase tracking-wide">
             Pending
           </p>
-          <p className="text-2xl sm:text-3xl font-bold text-yellow-800">
+          <p className="text-2xl sm:text-3xl font-bold text-primary">
             {stats.pending}
           </p>
         </div>
-        <div className="bg-white rounded-2xl p-5 shadow-lg border-2 hover:shadow-xl hover:border-blue-300 transition-all duration-300 text-center">
-          <div className="w-12 h-12 mx-auto bg-white/60 rounded-xl flex items-center justify-center mb-3 shadow-sm">
-            <RefreshCw className="w-6 h-6 text-blue-700" />
+        <div className="bg-white rounded-2xl p-5 shadow-lg border-2 hover:shadow-xl hover:border-primary/30 transition-all duration-300 text-center">
+          <div className="w-16 h-16 mx-auto bg-gradient-to-br from-primary via-primary-light to-primary/80 rounded-xl flex items-center justify-center mb-3 shadow-sm">
+            <RefreshCw className="w-9 h-9 text-white" />
           </div>
-          <p className="text-xs sm:text-sm text-blue-900 mb-2 font-semibold uppercase tracking-wide">
+          <p className="text-xs sm:text-sm text-dark-gray mb-2 font-semibold uppercase tracking-wide">
             Processing
           </p>
-          <p className="text-2xl sm:text-3xl font-bold text-blue-800">
+          <p className="text-2xl sm:text-3xl font-bold text-primary">
             {stats.processing}
           </p>
         </div>
-        <div className="bg-white rounded-2xl p-5 shadow-lg border-2 hover:shadow-xl hover:border-green-300 transition-all duration-300 text-center">
-          <div className="w-12 h-12 mx-auto bg-white/60 rounded-xl flex items-center justify-center mb-3 shadow-sm">
-            <CheckCircle className="w-6 h-6 text-green-700" />
+        <div className="bg-white rounded-2xl p-5 shadow-lg border-2 hover:shadow-xl hover:border-primary/30 transition-all duration-300 text-center">
+          <div className="w-16 h-16 mx-auto bg-gradient-to-br from-primary via-primary-light to-primary/80 rounded-xl flex items-center justify-center mb-3 shadow-sm">
+            <CheckCircle className="w-9 h-9 text-white" />
           </div>
-          <p className="text-xs sm:text-sm text-green-900 mb-2 font-semibold uppercase tracking-wide">
+          <p className="text-xs sm:text-sm text-dark-gray mb-2 font-semibold uppercase tracking-wide">
             Completed
           </p>
-          <p className="text-2xl sm:text-3xl font-bold text-green-800">
+          <p className="text-2xl sm:text-3xl font-bold text-primary">
             {stats.completed}
           </p>
         </div>
-        <div className="bg-white rounded-2xl p-5 shadow-lg border-2 hover:shadow-xl hover:border-red-300 transition-all duration-300 text-center">
-          <div className="w-12 h-12 mx-auto bg-white/60 rounded-xl flex items-center justify-center mb-3 shadow-sm">
-            <XCircle className="w-6 h-6 text-red-700" />
+        <div className="bg-white rounded-2xl p-5 shadow-lg border-2 hover:shadow-xl hover:border-primary/30 transition-all duration-300 text-center">
+          <div className="w-16 h-16 mx-auto bg-gradient-to-br from-primary via-primary-light to-primary/80 rounded-xl flex items-center justify-center mb-3 shadow-sm">
+            <XCircle className="w-9 h-9 text-white" />
           </div>
-          <p className="text-xs sm:text-sm text-red-900 mb-2 font-semibold uppercase tracking-wide">
+          <p className="text-xs sm:text-sm text-dark-gray mb-2 font-semibold uppercase tracking-wide">
             Cancelled
           </p>
-          <p className="text-2xl sm:text-3xl font-bold text-red-800">
+          <p className="text-2xl sm:text-3xl font-bold text-primary">
             {stats.cancelled}
           </p>
         </div>
@@ -233,7 +233,7 @@ const AdminOrders = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
           {/* Search */}
           <SearchBar
-            placeholder="Search by Order ID, Name, or Email..."
+            placeholder="Search by Order Id, Name, or Email..."
             onSearch={handleSearch}
           />
 
@@ -241,7 +241,7 @@ const AdminOrders = () => {
           <select
             value={filters.status}
             onChange={(e) => handleFilterChange("status", e.target.value)}
-            className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-white text-sm sm:text-base"
+            className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-white text-sm sm:text-md"
           >
             <option value="All">All Status</option>
             <option value="Pending">Pending</option>
@@ -254,7 +254,7 @@ const AdminOrders = () => {
           <select
             value={filters.userType}
             onChange={(e) => handleFilterChange("userType", e.target.value)}
-            className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-white text-sm sm:text-base"
+            className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-white text-sm sm:text-md"
           >
             <option value="All">All Customers</option>
             <option value="Guest">Guest Orders</option>

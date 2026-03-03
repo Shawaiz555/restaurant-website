@@ -240,7 +240,7 @@ const ProductDetail = () => {
                 {/* Nutrition Info - Professional Design */}
                 {nutritionInfo && (
                   <div className="rounded-3xl p-3 lg:p-5">
-                    <h3 className="font-display text-2xl lg:text-3xl mb-4">
+                    <h3 className="font-sans font-bold text-2xl lg:text-3xl mb-4">
                       Nutrition Information
                     </h3>
                     <div className="bg-cream-light border-2 border-gray-200 rounded-2xl p-6 py-3 shadow-sm">
@@ -263,7 +263,7 @@ const ProductDetail = () => {
                                   />
                                 </svg>
                               </div>
-                              <span className="font-display text-md lg:text-lg text-dark">
+                              <span className="font-sans text-md lg:text-lg text-dark">
                                 Calories
                               </span>
                             </div>
@@ -291,7 +291,7 @@ const ProductDetail = () => {
                                   />
                                 </svg>
                               </div>
-                              <span className="font-display text-md lg:text-lg text-dark">
+                              <span className="font-sans text-md lg:text-lg text-dark">
                                 Protein
                               </span>
                             </div>
@@ -319,7 +319,7 @@ const ProductDetail = () => {
                                   />
                                 </svg>
                               </div>
-                              <span className="font-display text-md lg:text-lg text-dark">
+                              <span className="font-sans text-md lg:text-lg text-dark">
                                 Carbs
                               </span>
                             </div>
@@ -347,7 +347,7 @@ const ProductDetail = () => {
                                   />
                                 </svg>
                               </div>
-                              <span className="font-display text-md lg:text-lg text-dark">
+                              <span className="font-sans text-md lg:text-lg text-dark">
                                 Fat
                               </span>
                             </div>
@@ -369,7 +369,7 @@ const ProductDetail = () => {
                   <p className="text-primary font-medium mb-2">
                     {product.category}
                   </p>
-                  <h1 className="font-display text-4xl lg:text-5xl mb-4">
+                  <h1 className="font-sans font-bold text-4xl lg:text-5xl mb-4">
                     {product.name}
                   </h1>
 
@@ -392,7 +392,7 @@ const ProductDetail = () => {
 
                 {/* Description */}
                 <div>
-                  <h3 className="font-display text-2xl mb-4">Description</h3>
+                  <h3 className="font-sans font-bold text-2xl mb-4">Description</h3>
                   <p className="text-dark-gray leading-relaxed">
                     {product.description}
                   </p>
@@ -400,7 +400,7 @@ const ProductDetail = () => {
 
                 {/* Ingredients */}
                 <div>
-                  <h3 className="font-display text-2xl mb-4">Ingredients</h3>
+                  <h3 className="font-sans font-bold text-2xl mb-4">Ingredients</h3>
                   <div className="flex flex-wrap gap-2">
                     {product.ingredients.map((ingredient, idx) => (
                       <span
@@ -417,7 +417,7 @@ const ProductDetail = () => {
                 <div className="rounded-3xl p-6 lg:p-8 bg-cream-light border border-gray-200 shadow-xl">
                   {/* Size Selection - Dropdown */}
                   <div className="mb-6">
-                    <label className="flex items-center gap-2 font-display text-lg mb-3 text-dark">
+                    <label className="flex items-center gap-2 font-sans text-lg mb-3 text-dark">
                       Select Size{" "}
                     </label>
                     <div className="relative group">
@@ -426,7 +426,7 @@ const ProductDetail = () => {
                         onChange={(e) =>
                           setSelectedSizeIndex(Number(e.target.value))
                         }
-                        className="w-full px-3 sm:px-5 py-3 sm:py-4 pr-10 sm:pr-12 border-2 border-primary/30 rounded-xl focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all bg-cream-light hover:border-primary/60 hover:bg-cream-light font-display text-sm sm:text-base appearance-none cursor-pointer shadow-sm hover:shadow-md text-dark leading-tight"
+                        className="w-full px-3 sm:px-5 py-3 sm:py-4 pr-10 sm:pr-12 border-2 border-primary/30 rounded-xl focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all bg-cream-light hover:border-primary/60 hover:bg-cream-light font-sans text-sm sm:text-base appearance-none cursor-pointer shadow-sm hover:shadow-md text-dark leading-tight"
                       >
                         {product.sizes.map((size, index) => (
                           <option
@@ -483,7 +483,7 @@ const ProductDetail = () => {
                     product.spiceLevels &&
                     product.spiceLevels.length > 0 && (
                       <div className="mb-6">
-                        <label className="flex items-center gap-2 font-display text-lg mb-3 text-dark">
+                        <label className="flex items-center gap-2 font-sans text-lg mb-3 text-dark">
                           Spice Level{" "}
                           <span className="text-xs text-dark-gray font-normal bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
                             Optional
@@ -498,7 +498,7 @@ const ProductDetail = () => {
                               );
                               setSelectedSpiceLevel(spice || null);
                             }}
-                            className="w-full px-3 sm:px-5 py-3 sm:py-4 pr-10 sm:pr-12 border-2 border-primary/30 rounded-xl focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all bg-cream-light hover:border-primary/60 hover:bg-cream-light font-display text-sm sm:text-base appearance-none cursor-pointer shadow-sm hover:shadow-md text-dark leading-tight"
+                            className="w-full px-3 sm:px-5 py-3 sm:py-4 pr-10 sm:pr-12 border-2 border-primary/30 rounded-xl focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all bg-cream-light hover:border-primary/60 hover:bg-cream-light font-sans text-sm sm:text-base appearance-none cursor-pointer shadow-sm hover:shadow-md text-dark leading-tight"
                           >
                             <option
                               value=""
@@ -591,7 +591,7 @@ const ProductDetail = () => {
                         </div>
                       </div>
                       <div className="text-right flex-shrink-0">
-                        <span className="font-display text-lg sm:text-2xl text-primary font-bold">
+                        <span className="font-sans text-lg sm:text-2xl text-primary font-bold">
                           Rs.{calculateTotalPrice().toFixed(2)}
                         </span>
                       </div>
@@ -601,7 +601,7 @@ const ProductDetail = () => {
                   {/* Add to Cart Button */}
                   <button
                     onClick={handleAddToCart}
-                    className="w-full bg-gradient-to-r from-primary to-primary-dark hover:from-primary-dark hover:to-primary text-white py-5 px-6 rounded-2xl font-display text-md sm:text-lg transition-all shadow-xl hover:shadow-2xl transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3 group"
+                    className="w-full bg-gradient-to-r from-primary to-primary-dark hover:from-primary-dark hover:to-primary text-white py-5 px-6 rounded-2xl font-sans text-md sm:text-lg transition-all shadow-xl hover:shadow-2xl transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3 group"
                   >
                     <svg
                       className="w-6 h-6 transition-transform group-hover:scale-110"
@@ -657,7 +657,7 @@ const ProductDetail = () => {
                         />
                       </svg>
                     </div>
-                    <h2 className="font-display text-3xl lg:text-5xl text-dark">
+                    <h2 className="font-sans font-bold text-3xl lg:text-5xl text-dark">
                       Customize Your Order
                     </h2>
                   </div>
@@ -670,7 +670,7 @@ const ProductDetail = () => {
                     {addOnsConfig.showDrinks && (
                       <button
                         onClick={() => setActiveAddOnTab("drinks")}
-                        className={`py-2 sm:py-3 lg:py-4 px-3 sm:px-4 md:px-6 lg:px-8 font-display text-sm sm:text-base md:text-lg lg:text-xl transition-all relative rounded-t-xl whitespace-nowrap flex-shrink-0 ${
+                        className={`py-2 sm:py-3 lg:py-4 px-3 sm:px-4 md:px-6 lg:px-8 font-sans text-sm sm:text-base md:text-lg lg:text-xl transition-all relative rounded-t-xl whitespace-nowrap flex-shrink-0 ${
                           activeAddOnTab === "drinks"
                             ? "text-primary font-semibold bg-cream-light"
                             : "text-dark-gray hover:text-dark hover:bg-cream-light/50"
@@ -696,7 +696,7 @@ const ProductDetail = () => {
                     {addOnsConfig.showDesserts && (
                       <button
                         onClick={() => setActiveAddOnTab("desserts")}
-                        className={`py-2 sm:py-3 lg:py-4 px-3 sm:px-4 md:px-6 lg:px-8 font-display text-sm sm:text-base md:text-lg lg:text-xl transition-all relative rounded-t-xl whitespace-nowrap flex-shrink-0 ${
+                        className={`py-2 sm:py-3 lg:py-4 px-3 sm:px-4 md:px-6 lg:px-8 font-sans text-sm sm:text-base md:text-lg lg:text-xl transition-all relative rounded-t-xl whitespace-nowrap flex-shrink-0 ${
                           activeAddOnTab === "desserts"
                             ? "text-primary font-semibold bg-cream-light"
                             : "text-dark-gray hover:text-dark hover:bg-cream-light/50"
@@ -721,7 +721,7 @@ const ProductDetail = () => {
                     {addOnsConfig.showExtras && (
                       <button
                         onClick={() => setActiveAddOnTab("extras")}
-                        className={`py-2 sm:py-3 lg:py-4 px-3 sm:px-4 md:px-6 lg:px-8 font-display text-sm sm:text-base md:text-lg lg:text-xl transition-all relative rounded-t-xl whitespace-nowrap flex-shrink-0 ${
+                        className={`py-2 sm:py-3 lg:py-4 px-3 sm:px-4 md:px-6 lg:px-8 font-sans text-sm sm:text-base md:text-lg lg:text-xl transition-all relative rounded-t-xl whitespace-nowrap flex-shrink-0 ${
                           activeAddOnTab === "extras"
                             ? "text-primary font-semibold bg-cream-light"
                             : "text-dark-gray hover:text-dark hover:bg-cream-light/50"
@@ -808,14 +808,14 @@ const ProductDetail = () => {
                                     )}
                                   </div>
                                   <div className="flex-1 min-w-0">
-                                    <div className="font-display text-sm sm:text-base lg:text-lg text-dark truncate">
+                                    <div className="font-sans text-sm sm:text-base lg:text-lg text-dark truncate">
                                       {drinkWithId.name}
                                     </div>
                                     <div className="text-[11px] sm:text-xs lg:text-sm text-dark-gray">
                                       {drinkWithId.description || "350ml"}
                                     </div>
                                   </div>
-                                  <div className="text-primary font-display font-bold text-sm sm:text-base lg:text-lg whitespace-nowrap flex-shrink-0 mr-2 sm:mr-3 lg:mr-4">
+                                  <div className="text-primary font-sans font-bold text-sm sm:text-base lg:text-lg whitespace-nowrap flex-shrink-0 mr-2 sm:mr-3 lg:mr-4">
                                     +Rs.
                                     {(
                                       drinkWithId.price *
@@ -845,7 +845,7 @@ const ProductDetail = () => {
                                       >
                                         {quantity === 1 ? "✕" : "−"}
                                       </button>
-                                      <span className="font-display font-bold text-dark min-w-[32px] sm:min-w-[40px] lg:min-w-[48px] text-center text-base sm:text-lg px-1 sm:px-2 lg:px-3">
+                                      <span className="font-sans font-bold text-dark min-w-[32px] sm:min-w-[40px] lg:min-w-[48px] text-center text-base sm:text-lg px-1 sm:px-2 lg:px-3">
                                         {quantity}
                                       </span>
                                       <button
@@ -946,10 +946,10 @@ const ProductDetail = () => {
                                           </svg>
                                         )}
                                       </div>
-                                      <span className="font-display text-sm sm:text-base lg:text-lg text-dark font-medium flex-1 truncate">
+                                      <span className="font-sans text-sm sm:text-base lg:text-lg text-dark font-medium flex-1 truncate">
                                         {dessertWithId.name}
                                       </span>
-                                      <div className="text-primary font-display font-bold text-sm sm:text-base lg:text-lg whitespace-nowrap flex-shrink-0 mr-2 sm:mr-3 lg:mr-4">
+                                      <div className="text-primary font-sans font-bold text-sm sm:text-base lg:text-lg whitespace-nowrap flex-shrink-0 mr-2 sm:mr-3 lg:mr-4">
                                         +Rs.
                                         {(
                                           dessertWithId.price *
@@ -982,7 +982,7 @@ const ProductDetail = () => {
                                           >
                                             {quantity === 1 ? "✕" : "−"}
                                           </button>
-                                          <span className="font-display font-bold text-dark min-w-[28px] sm:min-w-[32px] lg:min-w-[40px] text-center text-base sm:text-lg bg-white px-1 sm:px-2 lg:px-3">
+                                          <span className="font-sans font-bold text-dark min-w-[28px] sm:min-w-[32px] lg:min-w-[40px] text-center text-base sm:text-lg bg-white px-1 sm:px-2 lg:px-3">
                                             {quantity}
                                           </span>
                                           <button
@@ -1081,10 +1081,10 @@ const ProductDetail = () => {
                                       </svg>
                                     )}
                                   </div>
-                                  <span className="font-display text-sm sm:text-base lg:text-lg text-dark font-medium flex-1 truncate">
+                                  <span className="font-sans text-sm sm:text-base lg:text-lg text-dark font-medium flex-1 truncate">
                                     {extraWithId.name}
                                   </span>
-                                  <div className="text-primary font-display font-bold text-sm sm:text-base lg:text-lg whitespace-nowrap flex-shrink-0 mr-2 sm:mr-3 lg:mr-4">
+                                  <div className="text-primary font-sans font-bold text-sm sm:text-base lg:text-lg whitespace-nowrap flex-shrink-0 mr-2 sm:mr-3 lg:mr-4">
                                     +Rs.
                                     {(
                                       extraWithId.price *
@@ -1114,7 +1114,7 @@ const ProductDetail = () => {
                                       >
                                         {quantity === 1 ? "✕" : "−"}
                                       </button>
-                                      <span className="font-display font-bold text-dark min-w-[28px] sm:min-w-[32px] text-center text-base sm:text-lg bg-white px-1 sm:px-2">
+                                      <span className="font-sans font-bold text-dark min-w-[28px] sm:min-w-[32px] text-center text-base sm:text-lg bg-white px-1 sm:px-2">
                                         {quantity}
                                       </span>
                                       <button
@@ -1158,7 +1158,7 @@ const ProductDetail = () => {
             {relatedProducts.length > 0 && (
               <div className="mt-20 px-4 lg:px-6">
                 <div className="flex items-center justify-between mb-12">
-                  <h2 className="font-display text-4xl lg:text-5xl">
+                  <h2 className="font-sans font-bold text-4xl lg:text-5xl">
                     Related Products
                   </h2>
                   <div className="flex gap-2">
@@ -1216,7 +1216,7 @@ const ProductDetail = () => {
                             className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
                           />
                         </div>
-                        <h3 className="font-display text-xl mb-2 text-center">
+                        <h3 className="font-sans font-bold text-xl mb-2 text-center">
                           {relatedProduct.name}
                         </h3>
                         <div className="flex justify-center gap-1 mb-2">
@@ -1234,7 +1234,7 @@ const ProductDetail = () => {
                           ))}
                         </div>
                         <div className="text-center">
-                          <span className="font-display text-2xl text-dark">
+                          <span className="font-sans text-2xl text-dark">
                             Rs.{relatedProduct.basePrice.toFixed(2)}
                           </span>
                         </div>

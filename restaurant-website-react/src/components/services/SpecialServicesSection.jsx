@@ -33,7 +33,7 @@ const SpecialServicesSection = () => {
     <section className="py-20">
       <div className="container mx-auto px-6 sm:px-6 lg:px-16">
         <div className="text-center mb-16">
-          <h2 className="font-display text-5xl text-dark mb-4">
+          <h2 className="font-sans font-bold text-5xl text-dark mb-4">
             Special Services
           </h2>
           <p className="text-dark-gray text-xl">
@@ -56,7 +56,7 @@ const SpecialServicesSection = () => {
 
               <div className="absolute inset-0 p-8 flex flex-col justify-end">
                 <service.icon className="w-16 h-16 mb-4 text-white" />
-                <h3 className="font-display text-3xl text-white mb-3">
+                <h3 className="font-sans font-bold text-3xl text-white mb-3">
                   {service.title}
                 </h3>
                 <p className="text-white/90 text-lg mb-4">

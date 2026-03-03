@@ -33,7 +33,7 @@ const ProductCard = ({ product }) => {
           }}
         />
       </div>
-      <h3 className="font-display text-xl mb-2 text-center">{product.name}</h3>
+      <h3 className="font-sans font-bold text-xl mb-2 text-center">{product.name}</h3>
       <div className="flex justify-center gap-1 mb-2">
         {Array.from({ length: 5 }).map((_, i) => (
           <span
@@ -48,7 +48,7 @@ const ProductCard = ({ product }) => {
         {product.description}
       </p>
       <div className="flex items-center justify-between">
-        <span className="font-display text-2xl text-dark">
+        <span className="font-sans text-2xl text-dark">
           Rs.{product.basePrice.toFixed(2)}
         </span>
         <button

@@ -36,7 +36,7 @@ const TeamSection = () => {
     <section className="py-20 bg-gradient-to-br from-white via-cream-light to-white">
       <div className="container mx-auto px-6 sm:px-6 lg:px-16">
         <div className="text-center mb-16">
-          <h2 className="font-display text-5xl text-dark mb-4">
+          <h2 className="font-sans font-bold text-5xl text-dark mb-4">
             Meet Our Culinary Team
           </h2>
           <p className="text-dark-gray text-xl max-w-2xl mx-auto">
@@ -60,7 +60,7 @@ const TeamSection = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
               </div>
               <div className="p-6 text-center">
-                <h3 className="font-display text-2xl text-dark mb-2">
+                <h3 className="font-sans font-bold text-2xl text-dark mb-2">
                   {member.name}
                 </h3>
                 <div className="text-primary font-semibold mb-3">

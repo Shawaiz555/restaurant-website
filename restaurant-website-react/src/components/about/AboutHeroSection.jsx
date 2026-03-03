@@ -45,7 +45,7 @@ const AboutHeroSection = () => {
 
           {/* Enhanced Heading */}
           <div className="space-y-3 mb-5">
-            <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl xl:text-8xl text-primary drop-shadow-lg animate-slide-up leading-tight">
+            <h1 className="font-sans font-bold text-5xl sm:text-6xl lg:text-7xl xl:text-8xl text-primary drop-shadow-lg animate-slide-up leading-tight">
               About Bites Restaurant
             </h1>
 
@@ -66,7 +66,7 @@ const AboutHeroSection = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6 max-w-5xl mx-auto mb-10 animate-slide-up-delay-3">
             <div className="group bg-white/70 backdrop-blur-sm rounded-2xl p-5 lg:p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 border-2 border-primary/20 hover:border-primary/40 text-center">
               <Trophy className="w-10 h-10 mx-auto mb-3 text-primary group-hover:scale-110 transition-transform" />
-              <div className="text-primary font-display text-3xl lg:text-4xl font-bold mb-1">
+              <div className="text-primary font-sans text-3xl lg:text-4xl font-bold mb-1">
                 15+
               </div>
               <div className="text-dark-gray text-sm font-semibold">
@@ -76,7 +76,7 @@ const AboutHeroSection = () => {
 
             <div className="group bg-white/70 backdrop-blur-sm rounded-2xl p-5 lg:p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 border-2 border-primary/20 hover:border-primary/40 text-center">
               <Users className="w-10 h-10 mx-auto mb-3 text-primary group-hover:scale-110 transition-transform" />
-              <div className="text-primary font-display text-3xl lg:text-4xl font-bold mb-1">
+              <div className="text-primary font-sans text-3xl lg:text-4xl font-bold mb-1">
                 50K+
               </div>
               <div className="text-dark-gray text-sm font-semibold">
@@ -86,7 +86,7 @@ const AboutHeroSection = () => {
 
             <div className="group bg-white/70 backdrop-blur-sm rounded-2xl p-5 lg:p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 border-2 border-primary/20 hover:border-primary/40 text-center">
               <Star className="w-10 h-10 mx-auto mb-3 text-primary group-hover:scale-110 transition-transform fill-current" />
-              <div className="text-primary font-display text-3xl lg:text-4xl font-bold mb-1">
+              <div className="text-primary font-sans text-3xl lg:text-4xl font-bold mb-1">
                 4.9
               </div>
               <div className="text-dark-gray text-sm font-semibold">
@@ -96,7 +96,7 @@ const AboutHeroSection = () => {
 
             <div className="group bg-white/70 backdrop-blur-sm rounded-2xl p-5 lg:p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 border-2 border-primary/20 hover:border-primary/40 text-center">
               <Utensils className="w-10 h-10 mx-auto mb-3 text-primary group-hover:scale-110 transition-transform" />
-              <div className="text-primary font-display text-3xl lg:text-4xl font-bold mb-1">
+              <div className="text-primary font-sans text-3xl lg:text-4xl font-bold mb-1">
                 200+
               </div>
               <div className="text-dark-gray text-sm font-semibold">

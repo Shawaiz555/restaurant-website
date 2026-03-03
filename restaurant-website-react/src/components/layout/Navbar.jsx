@@ -141,7 +141,7 @@ const Navbar = () => {
                               )}
                             </div>
                             <div className="flex-1 min-w-0">
-                              <p className="font-display text-lg text-primary-dark tracking-wide truncate">
+                              <p className="font-sans text-lg text-primary-dark tracking-wide truncate">
                                 {currentUser?.name}
                               </p>
                               <p className="text-sm text-primary-dark truncate">
@@ -208,7 +208,7 @@ const Navbar = () => {
                           <div className="w-16 h-16 mx-auto mb-3 rounded-full flex items-center justify-center shadow-lg">
                             <p className="text-3xl">👤</p>
                           </div>
-                          <h3 className="font-display text-xl text-dark mb-1">
+                          <h3 className="font-sans font-bold text-xl text-dark mb-1">
                             Welcome!
                           </h3>
                           <p className="text-sm text-dark-gray px-4">

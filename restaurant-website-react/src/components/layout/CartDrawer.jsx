@@ -50,7 +50,7 @@ const CartDrawer = () => {
       >
         {/* Header */}
         <div className="p-5 border-b border-gray-200 flex items-center justify-between bg-cream-light">
-          <h2 className="font-display text-2xl text-dark flex items-center gap-2">
+          <h2 className="font-sans font-bold text-2xl text-dark flex items-center gap-2">
             <span>🛒</span>
             <span>Your Cart</span>
             <span className="text-lg text-primary">({itemCount})</span>
@@ -68,7 +68,7 @@ const CartDrawer = () => {
           {items.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center">
               <div className="text-6xl mb-4">🛒</div>
-              <h3 className="font-display text-xl text-dark mb-2">
+              <h3 className="font-sans font-bold text-xl text-dark mb-2">
                 Your cart is empty
               </h3>
               <p className="text-dark-gray text-sm">
@@ -89,7 +89,7 @@ const CartDrawer = () => {
                       className="w-20 h-20 object-cover rounded-xl flex-shrink-0"
                     />
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-display text-base text-dark mb-1 truncate">
+                      <h4 className="font-sans text-base text-dark mb-1 truncate">
                         {item.name}
                       </h4>
                       {item.size && (
@@ -176,7 +176,7 @@ const CartDrawer = () => {
                       </button>
                     </div>
                     <div className="text-right">
-                      <p className="font-display text-lg text-dark">
+                      <p className="font-sans text-lg text-dark">
                         Rs.{(item.price * item.quantity).toFixed(2)}
                       </p>
                     </div>
@@ -192,19 +192,19 @@ const CartDrawer = () => {
           <div className="border-t border-gray-200 bg-cream-light p-6">
             <div className="flex justify-between items-center mb-3">
               <span className="text-dark-gray font-medium">Subtotal</span>
-              <span className="font-display text-xl text-dark">
+              <span className="font-sans text-xl text-dark">
                 Rs.{total.toFixed(2)}
               </span>
             </div>
             <div className="flex justify-between items-center mb-6 pt-3 border-t border-gray-300">
-              <span className="font-display text-lg text-dark">Total</span>
-              <span className="font-display text-2xl text-primary">
+              <span className="font-sans text-lg text-dark">Total</span>
+              <span className="font-sans text-2xl text-primary">
                 Rs.{total.toFixed(2)}
               </span>
             </div>
             <button
               onClick={handleCheckout}
-              className="w-full bg-gradient-to-r from-primary to-primary-dark hover:from-primary-dark hover:to-primary text-white py-4 rounded-2xl font-display text-lg transition-all shadow-xl hover:shadow-2xl hover:scale-105 flex items-center justify-center gap-2"
+              className="w-full bg-gradient-to-r from-primary to-primary-dark hover:from-primary-dark hover:to-primary text-white py-4 rounded-2xl font-sans text-lg transition-all shadow-xl hover:shadow-2xl hover:scale-105 flex items-center justify-center gap-2"
             >
               <span>Proceed to Checkout</span>
               <span className="text-xl">→</span>

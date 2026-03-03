@@ -43,7 +43,7 @@ const MenuHeroSection = ({ searchTerm, setSearchTerm, setActiveCategory }) => {
 
           {/* Enhanced Heading */}
           <div className="space-y-3 mb-5">
-            <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl xl:text-8xl text-primary drop-shadow-lg animate-slide-up leading-tight">
+            <h1 className="font-sans font-bold text-5xl sm:text-6xl lg:text-7xl xl:text-8xl text-primary drop-shadow-lg animate-slide-up leading-tight">
               Our Complete Menu
             </h1>
 
@@ -114,7 +114,7 @@ const MenuHeroSection = ({ searchTerm, setSearchTerm, setActiveCategory }) => {
           {/* Stats Pills */}
           <div className="mt-8 flex flex-wrap justify-center gap-4 animate-slide-up-delay-4">
             <div className="bg-white/60 backdrop-blur-sm px-5 py-2.5 rounded-xl border border-primary/20 shadow-lg">
-              <span className="text-primary font-display text-2xl font-bold">
+              <span className="text-primary font-sans text-2xl font-bold">
                 200+
               </span>
               <span className="text-dark-gray text-sm font-semibold ml-2">
@@ -122,7 +122,7 @@ const MenuHeroSection = ({ searchTerm, setSearchTerm, setActiveCategory }) => {
               </span>
             </div>
             <div className="bg-white/60 backdrop-blur-sm px-5 py-2.5 rounded-xl border border-primary/20 shadow-lg">
-              <span className="text-primary font-display text-2xl font-bold">
+              <span className="text-primary font-sans text-2xl font-bold">
                 8
               </span>
               <span className="text-dark-gray text-sm font-semibold ml-2">
@@ -131,7 +131,7 @@ const MenuHeroSection = ({ searchTerm, setSearchTerm, setActiveCategory }) => {
             </div>
             <div className="bg-white/60 backdrop-blur-sm px-5 py-2.5 rounded-xl border border-primary/20 shadow-lg flex items-center">
               <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
-              <span className="text-primary font-display text-2xl font-bold ml-1">
+              <span className="text-primary font-sans text-2xl font-bold ml-1">
                 4.9
               </span>
               <span className="text-dark-gray text-sm font-semibold ml-2">

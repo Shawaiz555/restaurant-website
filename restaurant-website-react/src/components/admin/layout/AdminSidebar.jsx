@@ -55,13 +55,13 @@ const AdminSidebar = ({ isOpen, onClose }) => {
                 <img
                   src="/assets/images/BitesLogo.png"
                   alt="logo"
-                  className="w-42 h-25 object-contain drop-shadow-sm transition-all duration-300 group-hover:drop-shadow-md"
+                  className="w-40 h-20 lg:w-[200px] lg:h-[120px] object-contain drop-shadow-sm transition-all duration-300 group-hover:drop-shadow-md"
                 />
               </div>
             </div>
             {/* Title */}
             <div className="mt-3 text-center">
-              <h1 className="text-2xl font-display text-dark tracking-wide">
+              <h1 className="text-2xl font-sans text-dark tracking-wide">
                 Admin<span className="text-primary font-bold">Panel</span>
               </h1>
               <p className="text-[10px] text-dark-gray mt-1 uppercase tracking-[0.2em] font-bold flex items-center justify-center gap-2">
@@ -84,7 +84,7 @@ const AdminSidebar = ({ isOpen, onClose }) => {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 overflow-y-auto px-4 py-6 scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent">
+        <nav className="flex-1 overflow-y-auto px-4 py-6 scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent border-t-2 border-gray-200">
           <div className="space-y-2.5">
             {navItems.map((item) => (
               <Link
