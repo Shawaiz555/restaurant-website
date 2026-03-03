@@ -5,7 +5,7 @@ import { logout } from "../../store/slices/authSlice";
 import { toggleCart } from "../../store/slices/cartSlice";
 import { showNotification } from "../../store/slices/notificationSlice";
 import Loader from "../common/Loader";
-import { Package, Settings, LogOut, X } from "lucide-react";
+import { Settings, LogOut, X, CalendarCheck } from "lucide-react";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -98,6 +98,15 @@ const Navbar = () => {
 
             {/* Right Side */}
             <div className="flex items-center gap-4">
+              <div className="hidden lg:block">
+                <Link
+                  to="/reservations"
+                  className="flex items-center gap-1.5 bg-gradient-to-r from-primary to-primary-dark text-white px-4 py-2 rounded-xl font-semibold hover:shadow-lg hover:shadow-primary/30 transition-all hover:scale-105 text-sm"
+                >
+                  <CalendarCheck className="w-4 h-4" />
+                  Reserve a Table
+                </Link>
+              </div>
               {/* Profile Icon */}
               <div className="relative" ref={profileDropdownRef}>
                 <button
@@ -153,19 +162,23 @@ const Navbar = () => {
 
                         {/* Menu Items */}
                         <div className="py-2 max-h-[50vh] sm:max-h-none overflow-y-auto">
-                          <button className="w-full text-left px-5 py-3 sm:py-3 text-dark hover:bg-gradient-to-r hover:from-cream-light hover:to-cream transition-all flex items-center gap-3 group active:bg-cream">
+                          <Link
+                            to="/my-reservations"
+                            onClick={() => setShowProfileDropdown(false)}
+                            className="w-full text-left px-5 py-3 sm:py-3 text-dark hover:bg-gradient-to-r hover:from-cream-light hover:to-cream transition-all flex items-center gap-3 group active:bg-cream"
+                          >
                             <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all flex-shrink-0">
-                              <Package className="w-5 h-5 text-primary group-hover:text-white" />
+                              <CalendarCheck className="w-5 h-5 text-primary group-hover:text-white" />
                             </div>
                             <div className="flex-1 min-w-0">
                               <div className="font-semibold text-sm">
-                                My Orders
+                                My Reservations
                               </div>
                               <div className="text-xs text-dark-gray truncate">
-                                Track your orders
+                                View your bookings
                               </div>
                             </div>
-                          </button>
+                          </Link>
 
                           <button className="w-full text-left px-5 py-3 sm:py-3 text-dark hover:bg-gradient-to-r hover:from-cream-light hover:to-cream transition-all flex items-center gap-3 group active:bg-cream">
                             <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all flex-shrink-0">
@@ -332,6 +345,14 @@ const Navbar = () => {
             className="text-dark hover:text-primary transition-colors font-medium text-lg text-left"
           >
             Services
+          </Link>
+          <Link
+            to="/reservations"
+            onClick={() => setShowMobileMenu(false)}
+            className="flex items-center gap-2 bg-gradient-to-r from-primary to-primary-dark text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg transition-all text-base w-full justify-center"
+          >
+            <CalendarCheck className="w-5 h-5" />
+            Reserve a Table
           </Link>
         </div>
       </div>

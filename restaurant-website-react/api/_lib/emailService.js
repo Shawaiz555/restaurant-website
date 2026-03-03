@@ -425,4 +425,249 @@ const sendOrderEmails = async (order) => {
   return { customerEmailSent, adminEmailSent };
 };
 
-module.exports = { sendOrderEmails, sendCustomerEmail, sendAdminEmail };
+// ─── Reservation Email Templates ───────────────────────────────────────────
+
+// Convert "HH:MM" (24-hour) → "H:MM AM/PM" for display in emails
+const formatReservationTime = (t) => {
+  if (!t) return t;
+  const [h, m] = t.split(':');
+  const hour = parseInt(h, 10);
+  return `${hour % 12 || 12}:${m} ${hour >= 12 ? 'PM' : 'AM'}`;
+};
+
+const getReservationCustomerEmailTemplate = (reservation) => `
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Reservation Confirmation</title>
+    </head>
+    <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f9fafb;">
+      <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f9fafb; padding: 20px;">
+        <tr>
+          <td align="center">
+            <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+              <tr>
+                <td style="background: linear-gradient(135deg, #E67E22 0%, #D35400 100%); padding: 40px 30px; text-align: center;">
+                  <h1 style="margin: 0; color: #ffffff; font-size: 32px; font-weight: bold;">Reservation Confirmed!</h1>
+                  <p style="margin: 10px 0 0 0; color: #ffffff; font-size: 16px;">Your table has been reserved</p>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding: 30px 30px 20px 30px; text-align: center; background-color: #FFFBF5;">
+                  <p style="margin: 0; color: #6b7280; font-size: 14px;">Reservation ID</p>
+                  <h2 style="margin: 5px 0 15px 0; color: #E67E22; font-size: 24px; font-weight: bold;">${reservation.reservationId}</h2>
+                  <div style="display: inline-block; background-color: #d1fae5; color: #065f46; padding: 8px 20px; border-radius: 20px; font-weight: bold; font-size: 14px;">
+                    ${reservation.status}
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding: 20px 30px;">
+                  <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 20px; border-bottom: 2px solid #E67E22; padding-bottom: 10px;">Reservation Details</h3>
+                  <table width="100%" cellpadding="0" cellspacing="0">
+                    <tr><td style="padding: 8px 0;">
+                      <p style="margin: 0; color: #6b7280; font-size: 14px;">Date</p>
+                      <p style="margin: 3px 0 0 0; color: #1f2937; font-size: 16px; font-weight: 600;">${reservation.reservationDate}</p>
+                    </td></tr>
+                    <tr><td style="padding: 8px 0;">
+                      <p style="margin: 0; color: #6b7280; font-size: 14px;">Time</p>
+                      <p style="margin: 3px 0 0 0; color: #1f2937; font-size: 16px; font-weight: 600;">${formatReservationTime(reservation.reservationTime)}</p>
+                    </td></tr>
+                    <tr><td style="padding: 8px 0;">
+                      <p style="margin: 0; color: #6b7280; font-size: 14px;">Party Size</p>
+                      <p style="margin: 3px 0 0 0; color: #1f2937; font-size: 16px; font-weight: 600;">${reservation.partySize} ${reservation.partySize === 1 ? 'Guest' : 'Guests'}</p>
+                    </td></tr>
+                    <tr><td style="padding: 8px 0;">
+                      <p style="margin: 0; color: #6b7280; font-size: 14px;">Table</p>
+                      <p style="margin: 3px 0 0 0; color: #1f2937; font-size: 16px; font-weight: 600;">Table #${reservation.tableNumber} — ${reservation.tableName} (${reservation.tableLocation})</p>
+                    </td></tr>
+                    ${reservation.specialRequests ? `
+                    <tr><td style="padding: 8px 0;">
+                      <p style="margin: 0; color: #6b7280; font-size: 14px;">Special Requests</p>
+                      <p style="margin: 3px 0 0 0; color: #1f2937; font-size: 16px; font-style: italic;">${reservation.specialRequests}</p>
+                    </td></tr>` : ''}
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding: 20px 30px;">
+                  <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 20px; border-bottom: 2px solid #E67E22; padding-bottom: 10px;">Your Information</h3>
+                  <table width="100%" cellpadding="0" cellspacing="0">
+                    <tr><td style="padding: 8px 0;">
+                      <p style="margin: 0; color: #6b7280; font-size: 14px;">Name</p>
+                      <p style="margin: 3px 0 0 0; color: #1f2937; font-size: 16px; font-weight: 600;">${reservation.fullName}</p>
+                    </td></tr>
+                    <tr><td style="padding: 8px 0;">
+                      <p style="margin: 0; color: #6b7280; font-size: 14px;">Phone</p>
+                      <p style="margin: 3px 0 0 0; color: #1f2937; font-size: 16px; font-weight: 600;">${reservation.phone}</p>
+                    </td></tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding: 30px; text-align: center; background-color: #f9fafb; border-top: 1px solid #e5e7eb;">
+                  <p style="margin: 0 0 10px 0; color: #6b7280; font-size: 14px;">We look forward to seeing you! Please arrive a few minutes early.</p>
+                  <p style="margin: 0; color: #9ca3af; font-size: 12px;">If you need to cancel or modify, please contact us as soon as possible.</p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </body>
+  </html>
+`;
+
+const getReservationAdminEmailTemplate = (reservation) => `
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>New Reservation</title>
+    </head>
+    <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f9fafb;">
+      <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f9fafb; padding: 20px;">
+        <tr>
+          <td align="center">
+            <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+              <tr>
+                <td style="background: linear-gradient(135deg, #E67E22 0%, #D35400 100%); padding: 40px 30px; text-align: center;">
+                  <h1 style="margin: 0; color: #ffffff; font-size: 32px; font-weight: bold;">New Reservation!</h1>
+                  <p style="margin: 10px 0 0 0; color: #ffffff; font-size: 16px;">Action Required — Confirm Reservation</p>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding: 20px 30px; background-color: #FFFBF5; border-left: 4px solid #E67E22;">
+                  <p style="margin: 0; color: #D35400; font-size: 16px; font-weight: bold;">🗓️ New table reservation requires confirmation!</p>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding: 30px 30px 20px 30px; text-align: center; background-color: #FFFBF5;">
+                  <p style="margin: 0; color: #6b7280; font-size: 14px;">Reservation ID</p>
+                  <h2 style="margin: 5px 0 15px 0; color: #E67E22; font-size: 24px; font-weight: bold;">${reservation.reservationId}</h2>
+                  <p style="margin: 0; color: #6b7280; font-size: 14px;">Booked At</p>
+                  <p style="margin: 5px 0 0 0; color: #1f2937; font-size: 16px; font-weight: 600;">${new Date().toLocaleString()}</p>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding: 20px 30px;">
+                  <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 20px; border-bottom: 2px solid #E67E22; padding-bottom: 10px;">Reservation Details</h3>
+                  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f9fafb; border-radius: 8px; padding: 15px;">
+                    <tr><td style="padding: 8px 0;">
+                      <p style="margin: 0; color: #6b7280; font-size: 14px;">Date & Time</p>
+                      <p style="margin: 3px 0 0 0; color: #E67E22; font-size: 18px; font-weight: bold;">${reservation.reservationDate} at ${formatReservationTime(reservation.reservationTime)}</p>
+                    </td></tr>
+                    <tr><td style="padding: 8px 0;">
+                      <p style="margin: 0; color: #6b7280; font-size: 14px;">Table</p>
+                      <p style="margin: 3px 0 0 0; color: #1f2937; font-size: 16px; font-weight: 600;">Table #${reservation.tableNumber} — ${reservation.tableName} (${reservation.tableLocation})</p>
+                    </td></tr>
+                    <tr><td style="padding: 8px 0;">
+                      <p style="margin: 0; color: #6b7280; font-size: 14px;">Party Size</p>
+                      <p style="margin: 3px 0 0 0; color: #1f2937; font-size: 16px; font-weight: 600;">${reservation.partySize} ${reservation.partySize === 1 ? 'Guest' : 'Guests'}</p>
+                    </td></tr>
+                    ${reservation.specialRequests ? `
+                    <tr><td style="padding: 8px 0;">
+                      <p style="margin: 0; color: #6b7280; font-size: 14px;">Special Requests</p>
+                      <p style="margin: 3px 0 0 0; color: #E67E22; font-size: 14px; font-style: italic;">${reservation.specialRequests}</p>
+                    </td></tr>` : ''}
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding: 20px 30px;">
+                  <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 20px; border-bottom: 2px solid #E67E22; padding-bottom: 10px;">Customer Information</h3>
+                  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f9fafb; border-radius: 8px; padding: 15px;">
+                    <tr><td style="padding: 8px 0;">
+                      <p style="margin: 0; color: #6b7280; font-size: 14px;">Name</p>
+                      <p style="margin: 3px 0 0 0; color: #1f2937; font-size: 16px; font-weight: 600;">${reservation.fullName}</p>
+                    </td></tr>
+                    <tr><td style="padding: 8px 0;">
+                      <p style="margin: 0; color: #6b7280; font-size: 14px;">Email</p>
+                      <p style="margin: 3px 0 0 0; color: #1f2937; font-size: 16px; font-weight: 600;">${reservation.email}</p>
+                    </td></tr>
+                    <tr><td style="padding: 8px 0;">
+                      <p style="margin: 0; color: #6b7280; font-size: 14px;">Phone (Call for confirmation)</p>
+                      <p style="margin: 3px 0 0 0; color: #E67E22; font-size: 18px; font-weight: bold;">${reservation.phone}</p>
+                    </td></tr>
+                    ${reservation.isGuestReservation ? `
+                    <tr><td style="padding: 8px 0;">
+                      <p style="margin: 0; color: #6b7280; font-size: 14px;">Guest Type</p>
+                      <p style="margin: 3px 0 0 0; color: #1f2937; font-size: 16px;">Walk-in / Guest</p>
+                    </td></tr>` : ''}
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding: 20px 30px; background-color: #fffbeb;">
+                  <h3 style="margin: 0 0 15px 0; color: #92400e; font-size: 18px;">Action Items:</h3>
+                  <ul style="margin: 0; padding-left: 20px; color: #78350f; font-size: 14px; line-height: 1.8;">
+                    <li>Call customer at ${reservation.phone} to confirm reservation</li>
+                    <li>Mark Table #${reservation.tableNumber} as Reserved for ${reservation.reservationDate} at ${formatReservationTime(reservation.reservationTime)}</li>
+                    <li>Prepare table setup for ${reservation.partySize} guests</li>
+                    <li>Update reservation status in admin panel</li>
+                  </ul>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding: 30px; text-align: center; background-color: #f9fafb; border-top: 1px solid #e5e7eb;">
+                  <p style="margin: 0; color: #6b7280; font-size: 14px; font-weight: bold;">Restaurant Management System</p>
+                  <p style="margin: 10px 0 0 0; color: #9ca3af; font-size: 12px;">This is an automated notification for new reservations</p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </body>
+  </html>
+`;
+
+const sendReservationEmails = async (reservation) => {
+  let customerEmailSent = false;
+  let adminEmailSent = false;
+
+  // Send customer confirmation email
+  try {
+    const request = mailjet.post('send', { version: 'v3.1' }).request({
+      Messages: [
+        {
+          From: { Email: FROM_EMAIL, Name: FROM_NAME },
+          To: [{ Email: reservation.email, Name: reservation.fullName }],
+          Subject: `Reservation Confirmed — ${reservation.reservationId}`,
+          HTMLPart: getReservationCustomerEmailTemplate(reservation),
+        },
+      ],
+    });
+    await request;
+    customerEmailSent = true;
+    console.log('Reservation customer email sent to:', reservation.email);
+  } catch (err) {
+    console.error('Error sending reservation customer email:', err);
+  }
+
+  // Send admin notification email
+  try {
+    const request = mailjet.post('send', { version: 'v3.1' }).request({
+      Messages: [
+        {
+          From: { Email: FROM_EMAIL, Name: 'Restaurant Reservation System' },
+          To: [{ Email: ADMIN_EMAIL, Name: 'Restaurant Admin' }],
+          Subject: `🗓️ New Reservation — ${reservation.reservationId} — ${reservation.reservationDate} at ${formatReservationTime(reservation.reservationTime)}`,
+          HTMLPart: getReservationAdminEmailTemplate(reservation),
+        },
+      ],
+    });
+    await request;
+    adminEmailSent = true;
+    console.log('Reservation admin email sent to:', ADMIN_EMAIL);
+  } catch (err) {
+    console.error('Error sending reservation admin email:', err);
+  }
+
+  return { customerEmailSent, adminEmailSent };
+};
+
+module.exports = { sendOrderEmails, sendCustomerEmail, sendAdminEmail, sendReservationEmails };

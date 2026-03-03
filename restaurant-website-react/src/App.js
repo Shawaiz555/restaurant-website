@@ -27,6 +27,13 @@ import AdminProducts from './pages/admin/AdminProducts';
 import AdminProductForm from './pages/admin/AdminProductForm';
 import AdminExpenses from './pages/admin/AdminExpenses';
 import AdminAnalytics from './pages/admin/AdminAnalytics';
+import AdminTables from './pages/admin/AdminTables';
+import AdminTableForm from './pages/admin/AdminTableForm';
+import AdminReservations from './pages/admin/AdminReservations';
+
+// User Pages
+import Reservations from './pages/Reservations';
+import MyReservations from './pages/MyReservations';
 
 // Component to handle cart initialization
 function AppContent() {
@@ -78,6 +85,10 @@ function AppContent() {
           <Route path="products" element={<AdminProducts />} />
           <Route path="products/new" element={<AdminProductForm />} />
           <Route path="products/:id/edit" element={<AdminProductForm />} />
+          <Route path="tables" element={<AdminTables />} />
+          <Route path="tables/new" element={<AdminTableForm />} />
+          <Route path="tables/:id/edit" element={<AdminTableForm />} />
+          <Route path="reservations" element={<AdminReservations />} />
           <Route path="expenses" element={<AdminExpenses />} />
           <Route path="analytics" element={<AdminAnalytics />} />
         </Route>
@@ -99,6 +110,8 @@ function AppContent() {
                   <Route path="/login" element={<Login />} />
                   <Route path="/signup" element={<Signup />} />
                   <Route path="/checkout" element={<Checkout />} />
+                  <Route path="/reservations" element={<Reservations />} />
+                  <Route path="/my-reservations" element={<MyReservations />} />
                 </Routes>
               </div>
               <Footer />

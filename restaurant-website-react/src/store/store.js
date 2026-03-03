@@ -5,6 +5,8 @@ import notificationReducer from './slices/notificationSlice';
 import ordersReducer from './slices/ordersSlice';
 import productsReducer from './slices/productsSlice';
 import expensesReducer from './slices/expensesSlice';
+import tablesReducer from './slices/tablesSlice';
+import reservationsReducer from './slices/reservationsSlice';
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +16,8 @@ export const store = configureStore({
     orders: ordersReducer,
     products: productsReducer,
     expenses: expensesReducer,
+    tables: tablesReducer,
+    reservations: reservationsReducer,
   },
 });
 
