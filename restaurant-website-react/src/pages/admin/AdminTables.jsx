@@ -119,23 +119,24 @@ const AdminTables = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl lg:text-3xl font-sans font-bold text-dark">
-            Table Management
-          </h1>
-          <p className="text-dark-gray text-sm mt-1">
-            Manage restaurant tables, capacity, and availability
-          </p>
+      <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl lg:text-4xl font-sans font-bold text-primary mb-2">
+              Table Management
+            </h1>
+            <p className="text-dark-gray text-sm mt-1">
+              Manage restaurant tables, capacity, and availability
+            </p>
+          </div>
+          <button
+            onClick={() => navigate("/admin/tables/new")}
+            className="flex items-center gap-2 bg-gradient-to-r from-primary to-primary-dark text-white px-5 py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-primary/30 transition-all hover:scale-[1.02] active:scale-[0.98]"
+          >
+            <Plus className="w-5 h-5" />
+            Add Table
+          </button>
         </div>
-        <button
-          onClick={() => navigate("/admin/tables/new")}
-          className="flex items-center gap-2 bg-gradient-to-r from-primary to-primary-dark text-white px-5 py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-primary/30 transition-all hover:scale-[1.02] active:scale-[0.98]"
-        >
-          <Plus className="w-5 h-5" />
-          Add Table
-        </button>
       </div>
 
       {/* Stats Cards */}

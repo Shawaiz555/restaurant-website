@@ -165,24 +165,27 @@ const AdminReservations = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl lg:text-3xl font-sans font-bold text-dark">
-            Reservations
-          </h1>
-          <p className="text-dark-gray text-sm mt-1">
-            Manage and track all table reservations
-          </p>
+      <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl lg:text-4xl font-sans font-bold text-primary mb-2">
+              Reservations
+            </h1>
+            <p className="text-dark-gray text-sm mt-1">
+              Manage and track all table reservations
+            </p>
+          </div>
+          <button
+            onClick={loadReservations}
+            disabled={isLoading}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl border-2 border-gray-200 text-dark-gray hover:border-primary hover:text-primary transition-all text-sm font-medium"
+          >
+            <RefreshCw
+              className={`w-4 h-4 ${isLoading ? "animate-spin" : ""}`}
+            />
+            Refresh
+          </button>
         </div>
-        <button
-          onClick={loadReservations}
-          disabled={isLoading}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl border-2 border-gray-200 text-dark-gray hover:border-primary hover:text-primary transition-all text-sm font-medium"
-        >
-          <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin" : ""}`} />
-          Refresh
-        </button>
       </div>
 
       {/* Stats Cards */}

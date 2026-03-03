@@ -186,24 +186,30 @@ const AdminTableForm = () => {
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
-      {/* Header */}
-      <div className="flex items-center gap-4 w-full">
-        <div className="shadow-lg flex items-center justify-between w-full px-5 py-5 rounded-2xl">
-          <div>
-            <h1 className="text-2xl lg:text-4xl font-sans font-bold text-primary">
-              {isEdit ? "Edit Table" : "Add New Table"}
-            </h1>
-            <p className="text-dark-gray text-sm lg:text-md">
-              {isEdit
-                ? "Update table information"
-                : "Create a new table for reservations"}
-            </p>
+      {/* Page Header */}
+      <div className="bg-gradient-to-br from-white to-gray-50/50 rounded-xl lg:rounded-2xl p-5 sm:p-6 lg:p-8 shadow-lg border-2 border-gray-200">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 bg-gradient-to-br from-primary to-primary-dark rounded-xl flex items-center justify-center shadow-md">
+              <TableIcon className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-2xl lg:text-3xl font-bold text-primary">
+                {isEdit ? "Edit Table" : "Add New Table"}
+              </h1>
+              <p className="text-sm text-dark-gray">
+                {isEdit
+                  ? "Update table names, capacity and location details"
+                  : "Fill in the details to create a new restaurant table"}
+              </p>
+            </div>
           </div>
           <button
             onClick={() => navigate("/admin/tables")}
-            className="w-10 h-10 rounded-xl border-2 border-gray-200 flex items-center justify-center text-dark-gray hover:border-primary hover:text-primary transition-all"
+            className="px-6 py-3 rounded-xl text-sm font-semibold bg-gradient-to-r from-primary to-primary-dark text-white hover:from-primary-dark hover:to-primary transition-all shadow-md hover:shadow-lg hover:scale-105 active:scale-95 whitespace-nowrap flex items-center gap-2"
           >
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeft className="w-4 h-4" />
+            Back to Tables
           </button>
         </div>
       </div>
