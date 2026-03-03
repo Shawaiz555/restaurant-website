@@ -136,21 +136,23 @@ const HeroSection = () => {
             {/* Main Content Container */}
             <div className="relative w-full max-w-5xl mx-auto">
               {/* Food Image with Enhanced Effects */}
-              <div className="relative z-10 px-4 md:px-6 lg:px-8">
-                {/* Glow effect behind image */}
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-primary-light/30 rounded-full blur-2xl transform scale-105"></div>
+              <div className="relative z-10 flex justify-center w-full px-4 sm:px-6 lg:px-8">
+                <div className="relative w-full max-w-[280px] sm:max-w-[360px] md:max-w-[420px] lg:max-w-[500px] xl:max-w-[600px] aspect-square">
+                  {/* Glow effect behind image */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-primary-light/30 rounded-full blur-2xl transform scale-105"></div>
 
-                <img
-                  src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&h=800&fit=crop&q=80"
-                  alt="Delicious gourmet food platter"
-                  className="relative w-full max-w-md lg:max-w-lg xl:max-w-xl mx-auto rounded-full drop-shadow-[0_35px_35px_rgba(230,126,34,0.4)] hover:drop-shadow-[0_45px_45px_rgba(230,126,34,0.5)] transition-all duration-500 hover:scale-105"
-                  style={{ animation: "floating 4s ease-in-out infinite" }}
-                />
+                  <img
+                    src="assets/images/HeroMainImage.jpg"
+                    alt="Delicious gourmet food platter"
+                    className="relative w-full h-full object-cover rounded-full drop-shadow-[0_35px_35px_rgba(230,126,34,0.4)] hover:drop-shadow-[0_45px_45px_rgba(230,126,34,0.5)] transition-all duration-500 hover:scale-105"
+                    style={{ animation: "floating 4s ease-in-out infinite" }}
+                  />
 
-                {/* Decorative dots around image */}
-                <div className="absolute top-0 right-0 w-4 h-4 bg-primary rounded-full animate-ping"></div>
-                <div className="absolute bottom-10 left-10 w-3 h-3 bg-primary-light rounded-full animate-pulse"></div>
-                <div className="absolute top-1/2 left-0 w-5 h-5 bg-primary-dark rounded-full animate-bounce-slow"></div>
+                  {/* Decorative dots around image */}
+                  <div className="absolute -top-2 -right-2 md:top-2 md:right-2 w-4 h-4 bg-primary rounded-full animate-ping"></div>
+                  <div className="absolute bottom-[5%] left-[5%] md:bottom-[10%] md:left-[10%] w-3 h-3 bg-primary-light rounded-full animate-pulse z-20"></div>
+                  <div className="absolute top-1/2 -left-2 md:-left-4 w-5 h-5 bg-primary-dark rounded-full animate-bounce-slow z-20"></div>
+                </div>
               </div>
 
               {/* Enhanced Category Badges - Desktop */}
