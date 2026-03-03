@@ -105,7 +105,7 @@ const Signup = () => {
           name: formData.name,
           email: formData.email,
           password: formData.password,
-        })
+        }),
       );
 
       if (registerUser.fulfilled.match(resultAction)) {
@@ -148,7 +148,7 @@ const Signup = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-cream-light to-amber-50 flex items-center justify-center p-4 pt-24 pb-12">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-cream-light to-amber-50 flex items-center justify-center p-4 pt-32 pb-16">
       <div className="relative w-full max-w-7xl">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 bg-white rounded-3xl shadow-2xl overflow-hidden">
           {/* Left Side - Decorative */}

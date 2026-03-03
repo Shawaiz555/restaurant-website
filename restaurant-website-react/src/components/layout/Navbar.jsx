@@ -5,7 +5,7 @@ import { logout } from "../../store/slices/authSlice";
 import { toggleCart } from "../../store/slices/cartSlice";
 import { showNotification } from "../../store/slices/notificationSlice";
 import Loader from "../common/Loader";
-import { UserCircle, Package, Settings, LogOut, X } from "lucide-react";
+import { Package, Settings, LogOut, X } from "lucide-react";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -111,11 +111,11 @@ const Navbar = () => {
                   {isAuthenticated ? (
                     <div className="w-full h-full rounded-full bg-white/20 flex items-center justify-center text-white text-lg font-bold">
                       {currentUser?.name?.charAt(0).toUpperCase() || (
-                        <UserCircle className="w-6 h-6" />
+                        <p className="text-xl">👤</p>
                       )}
                     </div>
                   ) : (
-                    <UserCircle className="w-6 h-6 text-primary" />
+                    <p className="text-xl">👤</p>
                   )}
                   {isAuthenticated && (
                     <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
@@ -137,7 +137,7 @@ const Navbar = () => {
                           <div className="relative flex items-center gap-3">
                             <div className="w-14 h-14 rounded-full text-primary-dark backdrop-blur-sm border-2 border-white/50 flex items-center justify-center text-3xl font-bold shadow-lg">
                               {currentUser?.name?.charAt(0).toUpperCase() || (
-                                <UserCircle className="w-7 h-7" />
+                                <p className="text-3xl">👤</p>
                               )}
                             </div>
                             <div className="flex-1 min-w-0">
@@ -205,8 +205,8 @@ const Navbar = () => {
                       <div className="p-4 pb-6 sm:pb-4">
                         {/* Guest Header */}
                         <div className="text-center mb-4 py-6 bg-cream rounded-xl">
-                          <div className="w-14 h-14 mx-auto mb-3 rounded-full bg-primary/10 flex items-center justify-center shadow-lg">
-                            <UserCircle className="w-9 h-9 text-primary" />
+                          <div className="w-16 h-16 mx-auto mb-3 rounded-full flex items-center justify-center shadow-lg">
+                            <p className="text-3xl">👤</p>
                           </div>
                           <h3 className="font-display text-xl text-dark mb-1">
                             Welcome!

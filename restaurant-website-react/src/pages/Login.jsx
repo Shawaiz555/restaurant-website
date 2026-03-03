@@ -40,7 +40,7 @@ const Login = () => {
     try {
       // Use Redux thunk for login
       const resultAction = await dispatch(
-        loginUser({ email: formData.email, password: formData.password })
+        loginUser({ email: formData.email, password: formData.password }),
       );
 
       if (loginUser.fulfilled.match(resultAction)) {
@@ -101,7 +101,7 @@ const Login = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-cream-light to-amber-50 flex items-center justify-center p-4 pt-24 pb-12">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-cream-light to-amber-50 flex items-center justify-center p-4 pt-32 pb-16">
       <div className="relative w-full max-w-7xl">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 bg-white rounded-3xl shadow-2xl overflow-hidden">
           {/* Left Side - Decorative */}
