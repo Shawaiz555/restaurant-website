@@ -187,22 +187,24 @@ const AdminTableForm = () => {
   return (
     <div className="max-w-5xl mx-auto space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-4">
-        <button
-          onClick={() => navigate("/admin/tables")}
-          className="w-10 h-10 rounded-xl border-2 border-gray-200 flex items-center justify-center text-dark-gray hover:border-primary hover:text-primary transition-all"
-        >
-          <ArrowLeft className="w-5 h-5" />
-        </button>
-        <div>
-          <h1 className="text-2xl font-sans font-bold text-dark">
-            {isEdit ? "Edit Table" : "Add New Table"}
-          </h1>
-          <p className="text-dark-gray text-sm">
-            {isEdit
-              ? "Update table information"
-              : "Create a new table for reservations"}
-          </p>
+      <div className="flex items-center gap-4 w-full">
+        <div className="shadow-lg flex items-center justify-between w-full px-5 py-5 rounded-2xl">
+          <div>
+            <h1 className="text-2xl lg:text-4xl font-sans font-bold text-primary">
+              {isEdit ? "Edit Table" : "Add New Table"}
+            </h1>
+            <p className="text-dark-gray text-sm lg:text-md">
+              {isEdit
+                ? "Update table information"
+                : "Create a new table for reservations"}
+            </p>
+          </div>
+          <button
+            onClick={() => navigate("/admin/tables")}
+            className="w-10 h-10 rounded-xl border-2 border-gray-200 flex items-center justify-center text-dark-gray hover:border-primary hover:text-primary transition-all"
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </button>
         </div>
       </div>
 
@@ -223,7 +225,7 @@ const AdminTableForm = () => {
             <h3 className="font-sans font-bold text-dark text-lg">
               {formData.name || "Table Name"}
             </h3>
-            <div className="flex items-center gap-2 mt-1">
+            <div className="flex flex-col lg:flex-row items-center gap-2 mt-1">
               <span className="text-xs text-dark-gray bg-gray-100 px-2 py-0.5 rounded-md">
                 {formData.location}
               </span>
@@ -251,7 +253,7 @@ const AdminTableForm = () => {
         onSubmit={handleSubmit}
         className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
       >
-        <div className="p-6 space-y-5">
+        <div className="lg:p-6 p-3 space-y-5">
           {/* Row: Table Number + Name */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             {/* Table Number */}
@@ -464,18 +466,18 @@ const AdminTableForm = () => {
         </div>
 
         {/* Form Actions */}
-        <div className="border-t border-gray-100 px-6 py-5 bg-gray-50 flex items-center justify-between gap-4">
+        <div className="border-t border-gray-100 px-6 py-5 bg-gray-50 flex flex-col lg:flex-row items-center justify-between gap-4">
           <button
             type="button"
             onClick={() => navigate("/admin/tables")}
-            className="px-6 py-3 rounded-xl border-2 border-gray-200 text-dark-gray font-semibold hover:border-gray-300 hover:bg-white transition-all"
+            className="w-full lg:w-auto px-6 py-3 rounded-xl border-2 border-gray-200 text-dark-gray font-semibold hover:border-gray-300 hover:bg-white transition-all"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={isLoading}
-            className="flex items-center gap-2 bg-gradient-to-r from-primary to-primary-dark text-white px-8 py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-primary/30 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed disabled:scale-100"
+            className="w-full lg:w-auto flex items-center justify-center gap-2 bg-gradient-to-r from-primary to-primary-dark text-white px-8 py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-primary/30 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed disabled:scale-100"
           >
             {isLoading ? (
               <>
