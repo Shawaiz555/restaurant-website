@@ -1,6 +1,38 @@
 const Deal = require('../models/Deal');
 const Product = require('../models/Product');
 
+// Helper: resolve missing imageUrl for deal items from Product collection.
+// Re-fetches from Product whenever imageUrl is blank (empty string or falsy).
+const resolveItemImages = async (deal) => {
+  const plain = deal.toObject();
+
+  await Promise.all(
+    plain.items.map(async (item, i) => {
+      // Skip if a usable imageUrl is already stored
+      if (item.imageUrl && item.imageUrl.trim() !== '') return;
+
+      const productId = plain.items[i].productId;
+      if (!productId) return;
+
+      try {
+        const product = await Product.findById(productId).select('imageUrl imageId').lean();
+        if (!product) return;
+
+        if (product.imageUrl && product.imageUrl.trim() !== '') {
+          plain.items[i].imageUrl = product.imageUrl;
+        } else if (product.imageId) {
+          plain.items[i].imageUrl = `/api/images/${product.imageId.toString()}`;
+          plain.items[i].imageId = product.imageId;
+        }
+      } catch {
+        // silently skip unresolvable items
+      }
+    })
+  );
+
+  return plain;
+};
+
 // @desc    Get deals (public: active+date-valid only; admin: ?all=true for all)
 // @route   GET /api/deals
 const getDeals = async (req, res) => {
@@ -16,11 +48,12 @@ const getDeals = async (req, res) => {
     }
 
     const deals = await Deal.find(filter).sort({ createdAt: -1 });
+    const resolvedDeals = await Promise.all(deals.map(resolveItemImages));
 
     res.json({
       success: true,
-      deals,
-      total: deals.length,
+      deals: resolvedDeals,
+      total: resolvedDeals.length,
     });
   } catch (error) {
     console.error('Get deals error:', error);
@@ -36,7 +69,8 @@ const getDealById = async (req, res) => {
     if (!deal) {
       return res.status(404).json({ success: false, message: 'Deal not found' });
     }
-    res.json({ success: true, deal });
+    const resolved = await resolveItemImages(deal);
+    res.json({ success: true, deal: resolved });
   } catch (error) {
     console.error('Get deal error:', error);
     res.status(500).json({ success: false, message: 'Failed to fetch deal' });
@@ -51,10 +85,13 @@ const enrichItems = async (items) => {
       if (!product) {
         throw new Error(`Product not found: ${item.productId}`);
       }
+      // Prefer external imageUrl; fall back to GridFS API path via imageId
+      const imageUrl = product.imageUrl || (product.imageId ? `/api/images/${product.imageId}` : '');
       return {
         productId: product._id,
         name: product.name,
-        imageUrl: product.imageUrl || '',
+        imageUrl,
+        imageId: product.imageId || null,
         category: product.category || '',
         quantity: item.quantity && Number(item.quantity) >= 1 ? Number(item.quantity) : 1,
       };

@@ -16,6 +16,10 @@ const dealItemSchema = new mongoose.Schema(
       type: String,
       default: '',
     },
+    imageId: {
+      type: mongoose.Schema.Types.ObjectId,
+      default: null,
+    },
     category: {
       type: String,
       default: '',

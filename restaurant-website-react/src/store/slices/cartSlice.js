@@ -118,6 +118,30 @@ const cartSlice = createSlice({
       }
       saveCart(state.items, userId);
     },
+    addDealToCart: (state, action) => {
+      const { deal, userId } = action.payload;
+      // Each deal gets its own cart entry keyed by dealId; adding again increments qty
+      const cartItemId = `deal__${deal._id}`;
+      const existingItem = state.items.find(item => item.cartItemId === cartItemId);
+
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        state.items.push({
+          id: deal._id,
+          cartItemId,
+          name: deal.title,
+          price: deal.price,
+          quantity: 1,
+          image: null, // deals use a gift-box placeholder; GridFS images can't be embedded
+          isDeal: true,
+          dealId: deal._id,
+          dealTitle: deal.title,
+          dealItems: deal.items || [],
+        });
+      }
+      saveCart(state.items, userId);
+    },
     removeFromCart: (state, action) => {
       const { cartItemId, userId } = action.payload;
       state.items = state.items.filter(item => item.cartItemId !== cartItemId);
@@ -185,5 +209,5 @@ const cartSlice = createSlice({
   },
 });
 
-export const { loadCart, addToCart, removeFromCart, updateQuantity, clearCart, toggleCart, openCart, closeCart, setCartItems } = cartSlice.actions;
+export const { loadCart, addToCart, addDealToCart, removeFromCart, updateQuantity, clearCart, toggleCart, openCart, closeCart, setCartItems } = cartSlice.actions;
 export default cartSlice.reducer;

@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import dealsService from "../services/dealsService";
 import DealsHeroSection from "../components/deals/DealsHeroSection";
+import { addDealToCart, openCart } from "../store/slices/cartSlice";
+import { showNotification } from "../store/slices/notificationSlice";
+import { useAuth } from "../hooks/useAuth";
+import productsService from "../services/productsService";
 import { Package, ArrowRight, Clock, CheckCircle2 } from "lucide-react";
 
-const DealCard = ({ deal }) => {
+const DealCard = ({ deal, onClaim }) => {
   const formatPrice = (price) => {
     return `Rs. ${Number(price).toFixed(0)}`;
   };
@@ -46,9 +51,9 @@ const DealCard = ({ deal }) => {
                   "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)",
               }}
             >
-              {item.imageUrl ? (
+              {(item.imageUrl || item.imageId) ? (
                 <img
-                  src={item.imageUrl}
+                  src={productsService.getImageUrl(item.imageUrl || item.imageId)}
                   alt={item.name}
                   className="w-full h-full object-cover group-hover:rotate-6 transition-transform duration-500"
                   onError={(e) => {
@@ -152,7 +157,10 @@ const DealCard = ({ deal }) => {
             </div>
           </div>
 
-          <button className="w-full flex items-center justify-center gap-2 bg-dark hover:bg-primary text-white font-bold py-4 rounded-2xl transition-all duration-300 group/btn shadow-lg hover:shadow-primary/30">
+          <button
+            onClick={() => onClaim(deal)}
+            className="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary-dark text-white font-bold py-4 rounded-2xl transition-all duration-300 group/btn shadow-lg hover:shadow-primary/30"
+          >
             <span>Claim This Deal</span>
             <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
           </button>
@@ -163,9 +171,17 @@ const DealCard = ({ deal }) => {
 };
 
 const Deals = () => {
+  const dispatch = useDispatch();
+  const { userId } = useAuth();
   const [deals, setDeals] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const handleClaimDeal = (deal) => {
+    dispatch(addDealToCart({ deal, userId }));
+    dispatch(showNotification({ message: `${deal.title} added to cart!`, type: "success" }));
+    dispatch(openCart());
+  };
 
   useEffect(() => {
     setIsLoading(true);
@@ -256,7 +272,7 @@ const Deals = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
               {deals.map((deal) => (
-                <DealCard key={deal._id} deal={deal} />
+                <DealCard key={deal._id} deal={deal} onClaim={handleClaimDeal} />
               ))}
             </div>
           </>

@@ -6,7 +6,7 @@ import { useAuth } from "../hooks/useAuth";
 import { showNotification } from "../store/slices/notificationSlice";
 import { clearServerCart } from "../store/slices/cartSlice";
 import LocationMap from "../components/common/LocationMap";
-import { ShoppingCart, Loader2, Check, Info, CreditCard } from "lucide-react";
+import { ShoppingCart, Loader2, Check, Info, CreditCard, Tag } from "lucide-react";
 import ordersService from "../services/ordersService";
 import cartService from "../services/cartService";
 import productsService from "../services/productsService";
@@ -559,138 +559,195 @@ const Checkout = () => {
 
               {/* Cart Items */}
               <div className="space-y-4 mb-6 max-h-96 overflow-y-auto">
-                {items.map((item, index) => (
-                  <div
-                    key={`${item.id}-${item.size}-${index}`}
-                    className="bg-cream-light rounded-xl p-3 border border-gray-200"
-                  >
-                    <div className="flex gap-3">
-                      <img
-                        src={productsService.getImageUrl(item.image)}
-                        alt={item.name}
-                        className="w-16 h-16 object-cover rounded-lg flex-shrink-0"
-                      />
-                      <div className="flex-1 min-w-0">
-                        <h4 className="font-semibold text-sm text-dark truncate">
-                          {item.name}
-                        </h4>
-                        {item.size && (
-                          <p className="text-xs text-dark-gray">
-                            Size: {item.size}
-                          </p>
-                        )}
-                        <div className="flex items-center justify-between mt-1">
-                          <p className="text-xs text-dark-gray">
-                            Qty: {item.quantity}
-                          </p>
-                          <p className="text-sm font-semibold text-primary">
-                            Rs.{(item.price * item.quantity).toFixed(2)}
-                          </p>
+                {items.map((item, index) =>
+                  item.isDeal ? (
+                    /* Deal item */
+                    <div
+                      key={item.cartItemId}
+                      className="bg-primary/5 rounded-xl p-3 border border-primary/20"
+                    >
+                      <div className="flex gap-3">
+                        <div className="w-16 h-16 rounded-lg flex-shrink-0 bg-primary/10 flex items-center justify-center">
+                          <Tag className="w-7 h-7 text-primary" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-1.5 mb-0.5">
+                            <span className="text-[10px] font-black uppercase tracking-wider text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                              Deal
+                            </span>
+                          </div>
+                          <h4 className="font-semibold text-sm text-dark truncate">
+                            {item.name}
+                          </h4>
+                          <div className="flex items-center justify-between mt-1">
+                            <p className="text-xs text-dark-gray">
+                              Qty: {item.quantity}
+                            </p>
+                            <p className="text-sm font-semibold text-primary">
+                              Rs.{(item.price * item.quantity).toFixed(2)}
+                            </p>
+                          </div>
                         </div>
                       </div>
-                    </div>
-
-                    {/* Add-ons Details */}
-                    {item.addOns &&
-                      (item.addOns.drinks?.length > 0 ||
-                        item.addOns.desserts?.length > 0 ||
-                        item.addOns.extras?.length > 0 ||
-                        item.spiceLevel) && (
-                        <div className="mt-3 pt-3 border-t border-gray-300 space-y-2">
-                          <p className="text-xs font-semibold text-dark-gray mb-2">
-                            Customizations:
+                      {item.dealItems?.length > 0 && (
+                        <div className="mt-2 pt-2 border-t border-primary/10">
+                          <p className="text-xs font-semibold text-dark-gray mb-1">
+                            Includes:
                           </p>
-
-                          {/* Spice Level */}
-                          {item.spiceLevel && (
-                            <div className="flex items-center gap-2">
-                              <span className="text-xs text-dark-gray">
-                                • Spice Level:
+                          <div className="flex flex-wrap gap-1">
+                            {item.dealItems.map((di, idx) => (
+                              <span
+                                key={idx}
+                                className="text-[11px] bg-white border border-primary/10 text-primary-dark font-medium px-2 py-0.5 rounded-lg"
+                              >
+                                {(di.quantity || 1) > 1 && (
+                                  <span className="text-primary font-bold mr-0.5">
+                                    {di.quantity}×
+                                  </span>
+                                )}
+                                {di.name}
                               </span>
-                              <span className="text-xs font-medium text-dark">
-                                {item.spiceLevel?.name || item.spiceLevel}
-                              </span>
-                            </div>
-                          )}
-
-                          {/* Drinks */}
-                          {item.addOns.drinks?.length > 0 && (
-                            <div className="space-y-1">
-                              <span className="text-xs font-medium text-dark-gray">
-                                Drinks:
-                              </span>
-                              {item.addOns.drinks.map((drink, idx) => (
-                                <div
-                                  key={idx}
-                                  className="flex items-center justify-between pl-2"
-                                >
-                                  <span className="text-xs text-dark">
-                                    • {drink.name}{" "}
-                                    {drink.quantity > 1 && `x${drink.quantity}`}
-                                  </span>
-                                  <span className="text-xs text-primary font-medium">
-                                    +Rs.
-                                    {(drink.price * drink.quantity).toFixed(2)}
-                                  </span>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-
-                          {/* Desserts */}
-                          {item.addOns.desserts?.length > 0 && (
-                            <div className="space-y-1">
-                              <span className="text-xs font-medium text-dark-gray">
-                                Desserts:
-                              </span>
-                              {item.addOns.desserts.map((dessert, idx) => (
-                                <div
-                                  key={idx}
-                                  className="flex items-center justify-between pl-2"
-                                >
-                                  <span className="text-xs text-dark">
-                                    • {dessert.name}{" "}
-                                    {dessert.quantity > 1 &&
-                                      `x${dessert.quantity}`}
-                                  </span>
-                                  <span className="text-xs text-primary font-medium">
-                                    +Rs.
-                                    {(dessert.price * dessert.quantity).toFixed(
-                                      2,
-                                    )}
-                                  </span>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-
-                          {/* Extras */}
-                          {item.addOns.extras?.length > 0 && (
-                            <div className="space-y-1">
-                              <span className="text-xs font-medium text-dark-gray">
-                                Extras:
-                              </span>
-                              {item.addOns.extras.map((extra, idx) => (
-                                <div
-                                  key={idx}
-                                  className="flex items-center justify-between pl-2"
-                                >
-                                  <span className="text-xs text-dark">
-                                    • {extra.name}{" "}
-                                    {extra.quantity > 1 && `x${extra.quantity}`}
-                                  </span>
-                                  <span className="text-xs text-primary font-medium">
-                                    +Rs.
-                                    {(extra.price * extra.quantity).toFixed(2)}
-                                  </span>
-                                </div>
-                              ))}
-                            </div>
-                          )}
+                            ))}
+                          </div>
                         </div>
                       )}
-                  </div>
-                ))}
+                    </div>
+                  ) : (
+                    /* Regular item */
+                    <div
+                      key={`${item.id}-${item.size}-${index}`}
+                      className="bg-cream-light rounded-xl p-3 border border-gray-200"
+                    >
+                      <div className="flex gap-3">
+                        <img
+                          src={productsService.getImageUrl(item.image)}
+                          alt={item.name}
+                          className="w-16 h-16 object-cover rounded-lg flex-shrink-0"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-semibold text-sm text-dark truncate">
+                            {item.name}
+                          </h4>
+                          {item.size && (
+                            <p className="text-xs text-dark-gray">
+                              Size: {item.size}
+                            </p>
+                          )}
+                          <div className="flex items-center justify-between mt-1">
+                            <p className="text-xs text-dark-gray">
+                              Qty: {item.quantity}
+                            </p>
+                            <p className="text-sm font-semibold text-primary">
+                              Rs.{(item.price * item.quantity).toFixed(2)}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Add-ons Details */}
+                      {item.addOns &&
+                        (item.addOns.drinks?.length > 0 ||
+                          item.addOns.desserts?.length > 0 ||
+                          item.addOns.extras?.length > 0 ||
+                          item.spiceLevel) && (
+                          <div className="mt-3 pt-3 border-t border-gray-300 space-y-2">
+                            <p className="text-xs font-semibold text-dark-gray mb-2">
+                              Customizations:
+                            </p>
+
+                            {item.spiceLevel && (
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs text-dark-gray">
+                                  • Spice Level:
+                                </span>
+                                <span className="text-xs font-medium text-dark">
+                                  {item.spiceLevel?.name || item.spiceLevel}
+                                </span>
+                              </div>
+                            )}
+
+                            {item.addOns.drinks?.length > 0 && (
+                              <div className="space-y-1">
+                                <span className="text-xs font-medium text-dark-gray">
+                                  Drinks:
+                                </span>
+                                {item.addOns.drinks.map((drink, idx) => (
+                                  <div
+                                    key={idx}
+                                    className="flex items-center justify-between pl-2"
+                                  >
+                                    <span className="text-xs text-dark">
+                                      • {drink.name}{" "}
+                                      {drink.quantity > 1 &&
+                                        `x${drink.quantity}`}
+                                    </span>
+                                    <span className="text-xs text-primary font-medium">
+                                      +Rs.
+                                      {(drink.price * drink.quantity).toFixed(
+                                        2,
+                                      )}
+                                    </span>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+
+                            {item.addOns.desserts?.length > 0 && (
+                              <div className="space-y-1">
+                                <span className="text-xs font-medium text-dark-gray">
+                                  Desserts:
+                                </span>
+                                {item.addOns.desserts.map((dessert, idx) => (
+                                  <div
+                                    key={idx}
+                                    className="flex items-center justify-between pl-2"
+                                  >
+                                    <span className="text-xs text-dark">
+                                      • {dessert.name}{" "}
+                                      {dessert.quantity > 1 &&
+                                        `x${dessert.quantity}`}
+                                    </span>
+                                    <span className="text-xs text-primary font-medium">
+                                      +Rs.
+                                      {(
+                                        dessert.price * dessert.quantity
+                                      ).toFixed(2)}
+                                    </span>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+
+                            {item.addOns.extras?.length > 0 && (
+                              <div className="space-y-1">
+                                <span className="text-xs font-medium text-dark-gray">
+                                  Extras:
+                                </span>
+                                {item.addOns.extras.map((extra, idx) => (
+                                  <div
+                                    key={idx}
+                                    className="flex items-center justify-between pl-2"
+                                  >
+                                    <span className="text-xs text-dark">
+                                      • {extra.name}{" "}
+                                      {extra.quantity > 1 &&
+                                        `x${extra.quantity}`}
+                                    </span>
+                                    <span className="text-xs text-primary font-medium">
+                                      +Rs.
+                                      {(extra.price * extra.quantity).toFixed(
+                                        2,
+                                      )}
+                                    </span>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                    </div>
+                  )
+                )}
               </div>
 
               {/* Price Breakdown */}

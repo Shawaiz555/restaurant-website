@@ -39,7 +39,17 @@ const orderSchema = new mongoose.Schema({
     spiceLevel: {
       id: String,
       name: String
-    }
+    },
+    // Deal-specific fields (only present when isDeal is true)
+    isDeal: { type: Boolean, default: false },
+    dealId: String,
+    dealTitle: String,
+    dealItems: [{
+      name: String,
+      imageUrl: String,
+      category: String,
+      quantity: { type: Number, default: 1 }
+    }]
   }],
   subtotal: { type: Number, required: true },
   deliveryFee: { type: Number, default: 50 },

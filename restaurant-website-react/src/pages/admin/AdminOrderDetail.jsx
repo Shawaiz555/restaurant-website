@@ -25,6 +25,7 @@ import {
   FileText,
   ClipboardList,
   ChevronDown,
+  Tag,
 } from "lucide-react";
 
 const STATUS_OPTIONS = ["Pending", "Processing", "Completed", "Cancelled"];
@@ -368,7 +369,11 @@ const AdminOrderDetail = () => {
           {order.items?.map((item, index) => (
             <div
               key={index}
-              className="bg-gradient-to-r from-cream-light to-cream rounded-2xl p-5 border border-primary/10 hover:border-primary/20 hover:shadow-md transition-all"
+              className={`rounded-2xl p-5 border hover:shadow-md transition-all ${
+                item.isDeal
+                  ? "bg-gradient-to-r from-primary/5 to-primary/10 border-primary/20 hover:border-primary/30"
+                  : "bg-gradient-to-r from-cream-light to-cream border-primary/10 hover:border-primary/20"
+              }`}
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
@@ -380,68 +385,100 @@ const AdminOrderDetail = () => {
                       </span>
                     </div>
                     <p className="font-bold text-dark">{item.name}</p>
+                    {item.isDeal && (
+                      <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-full">
+                        <Tag className="w-3 h-3" />
+                        Deal
+                      </span>
+                    )}
                   </div>
 
-                  {/* Item details */}
-                  <div className="ml-9 space-y-1.5">
-                    {item.size && (
-                      <p className="text-xs text-dark-gray">
-                        <span className="font-semibold text-dark">Size:</span>{" "}
-                        {item.size}
+                  {/* Deal items breakdown */}
+                  {item.isDeal && item.dealItems?.length > 0 && (
+                    <div className="ml-9 mb-2">
+                      <p className="text-xs font-semibold text-dark-gray mb-1.5">
+                        Package includes:
                       </p>
-                    )}
-                    {item.spiceLevel && (
-                      <p className="text-xs text-dark-gray">
-                        <span className="font-semibold text-dark">
-                          Spice Level:
-                        </span>{" "}
-                        {item.spiceLevel.name}
-                      </p>
-                    )}
-                    {item.addOns && (
-                      <div className="space-y-1 mt-1 pt-1 border-t border-primary/10">
-                        {item.addOns.drinks?.length > 0 && (
-                          <p className="flex items-start gap-1.5 text-xs text-dark-gray">
-                            <Coffee className="w-3.5 h-3.5 text-amber-500 flex-shrink-0 mt-0.5" />
-                            <span>
-                              <span className="font-semibold text-dark">
-                                Drinks:
-                              </span>{" "}
-                              {item.addOns.drinks
-                                .map((d) => `${d.name} ×${d.quantity}`)
-                                .join(", ")}
-                            </span>
-                          </p>
-                        )}
-                        {item.addOns.desserts?.length > 0 && (
-                          <p className="flex items-start gap-1.5 text-xs text-dark-gray">
-                            <Cake className="w-3.5 h-3.5 text-pink-400 flex-shrink-0 mt-0.5" />
-                            <span>
-                              <span className="font-semibold text-dark">
-                                Desserts:
-                              </span>{" "}
-                              {item.addOns.desserts
-                                .map((d) => `${d.name} ×${d.quantity}`)
-                                .join(", ")}
-                            </span>
-                          </p>
-                        )}
-                        {item.addOns.extras?.length > 0 && (
-                          <p className="flex items-start gap-1.5 text-xs text-dark-gray">
-                            <Plus className="w-3.5 h-3.5 text-green-500 flex-shrink-0 mt-0.5" />
-                            <span>
-                              <span className="font-semibold text-dark">
-                                Extras:
-                              </span>{" "}
-                              {item.addOns.extras
-                                .map((e) => `${e.name} ×${e.quantity}`)
-                                .join(", ")}
-                            </span>
-                          </p>
-                        )}
+                      <div className="flex flex-wrap gap-1.5">
+                        {item.dealItems.map((di, idx) => (
+                          <span
+                            key={idx}
+                            className="text-[11px] bg-white border border-primary/15 text-primary-dark font-medium px-2.5 py-0.5 rounded-lg"
+                          >
+                            {(di.quantity || 1) > 1 && (
+                              <span className="text-primary font-bold mr-0.5">
+                                {di.quantity}×
+                              </span>
+                            )}
+                            {di.name}
+                          </span>
+                        ))}
                       </div>
-                    )}
-                  </div>
+                    </div>
+                  )}
+
+                  {/* Regular item details */}
+                  {!item.isDeal && (
+                    <div className="ml-9 space-y-1.5">
+                      {item.size && (
+                        <p className="text-xs text-dark-gray">
+                          <span className="font-semibold text-dark">Size:</span>{" "}
+                          {item.size}
+                        </p>
+                      )}
+                      {item.spiceLevel && (
+                        <p className="text-xs text-dark-gray">
+                          <span className="font-semibold text-dark">
+                            Spice Level:
+                          </span>{" "}
+                          {item.spiceLevel.name}
+                        </p>
+                      )}
+                      {item.addOns && (
+                        <div className="space-y-1 mt-1 pt-1 border-t border-primary/10">
+                          {item.addOns.drinks?.length > 0 && (
+                            <p className="flex items-start gap-1.5 text-xs text-dark-gray">
+                              <Coffee className="w-3.5 h-3.5 text-amber-500 flex-shrink-0 mt-0.5" />
+                              <span>
+                                <span className="font-semibold text-dark">
+                                  Drinks:
+                                </span>{" "}
+                                {item.addOns.drinks
+                                  .map((d) => `${d.name} ×${d.quantity}`)
+                                  .join(", ")}
+                              </span>
+                            </p>
+                          )}
+                          {item.addOns.desserts?.length > 0 && (
+                            <p className="flex items-start gap-1.5 text-xs text-dark-gray">
+                              <Cake className="w-3.5 h-3.5 text-pink-400 flex-shrink-0 mt-0.5" />
+                              <span>
+                                <span className="font-semibold text-dark">
+                                  Desserts:
+                                </span>{" "}
+                                {item.addOns.desserts
+                                  .map((d) => `${d.name} ×${d.quantity}`)
+                                  .join(", ")}
+                              </span>
+                            </p>
+                          )}
+                          {item.addOns.extras?.length > 0 && (
+                            <p className="flex items-start gap-1.5 text-xs text-dark-gray">
+                              <Plus className="w-3.5 h-3.5 text-green-500 flex-shrink-0 mt-0.5" />
+                              <span>
+                                <span className="font-semibold text-dark">
+                                  Extras:
+                                </span>{" "}
+                                {item.addOns.extras
+                                  .map((e) => `${e.name} ×${e.quantity}`)
+                                  .join(", ")}
+                              </span>
+                            </p>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
 
                 {/* Price + Qty */}

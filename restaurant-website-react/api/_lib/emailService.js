@@ -9,22 +9,63 @@ const mailjet = Mailjet.apiConnect(
   process.env.MAILJET_SECRET_KEY
 );
 
+const getAbsoluteImageUrl = (imagePath) => {
+  if (!imagePath) return null;
+  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) return imagePath;
+  const baseUrl = process.env.BASE_URL || 'http://localhost:8000';
+  return `${baseUrl}${imagePath.startsWith('/') ? '' : '/'}${imagePath}`;
+};
+
 const formatOrderItems = (items) => {
   return items
     .map((item) => {
-      // Ensure image URL is absolute
-      const getAbsoluteImageUrl = (imagePath) => {
-        if (!imagePath) return 'https://via.placeholder.com/100x100?text=No+Image';
-        if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
-          return imagePath;
-        }
-        // Convert relative path to absolute URL
-        // Assumes your app runs on localhost:3000 or you can use your domain
-        const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
-        return `${baseUrl}${imagePath.startsWith('/') ? '' : '/'}${imagePath}`;
-      };
+      if (item.isDeal) {
+        // ── Deal item ──────────────────────────────────────────────
+        const packageItems = (item.dealItems || [])
+          .map((di) => {
+            const qty = (di.quantity || 1) > 1 ? `<strong style="color:#E67E22;">${di.quantity}&times;</strong> ` : '';
+            return `<span style="display:inline-block; background:#fff7ed; border:1px solid #fed7aa; color:#9a3412; font-size:12px; font-weight:600; padding:3px 10px; border-radius:20px; margin:2px 3px 2px 0;">${qty}${di.name}</span>`;
+          })
+          .join('');
 
-      const imageUrl = getAbsoluteImageUrl(item.image);
+        // Deal images are GridFS (localhost-only), always use the gift-box placeholder
+        const dealImageUrl = null;
+
+        return `
+        <tr>
+          <td style="padding: 15px; border-bottom: 1px solid #e5e7eb; background-color: #fffbf5;">
+            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td width="100" valign="top" style="padding-right: 20px;">
+                  ${dealImageUrl
+                    ? `<img src="${dealImageUrl}" alt="${item.name}" width="100" height="100" style="width:100px; height:100px; object-fit:cover; border-radius:12px; display:block; border:none;" />`
+                    : `<table width="100" height="100" cellpadding="0" cellspacing="0" border="0" style="background:#fed7aa; border-radius:12px; width:100px; height:100px;"><tr><td align="center" valign="middle" style="color:#9a3412; font-size:32px; text-align:center;">&#127873;</td></tr></table>`
+                  }
+                </td>
+                <td valign="top">
+                  <div style="display:inline-block; background:#E67E22; color:#fff; font-size:10px; font-weight:800; letter-spacing:1px; text-transform:uppercase; padding:3px 10px; border-radius:20px; margin-bottom:6px;">Deal</div>
+                  <h4 style="margin: 0 0 6px 0; color: #1f2937; font-size: 16px; font-weight: 700;">${item.name}</h4>
+                  <p style="margin: 0 0 8px 0; color: #6b7280; font-size: 14px;">Quantity: ${item.quantity}</p>
+                  <p style="margin: 0; color: #E67E22; font-weight: bold; font-size: 16px;">Rs.${(item.price * item.quantity).toFixed(2)}</p>
+                </td>
+              </tr>
+              ${packageItems ? `
+              <tr>
+                <td colspan="2" style="padding-top: 10px;">
+                  <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #fed7aa;">
+                    <p style="margin: 0 0 8px 0; color: #6b7280; font-size: 13px; font-weight: 600;">Package Includes:</p>
+                    <div>${packageItems}</div>
+                  </div>
+                </td>
+              </tr>` : ''}
+            </table>
+          </td>
+        </tr>
+        `;
+      }
+
+      // ── Regular item ───────────────────────────────────────────
+      const imageUrl = getAbsoluteImageUrl(item.image) || 'https://via.placeholder.com/100x100?text=No+Image';
 
       let itemText = `
         <tr>

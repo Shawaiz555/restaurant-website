@@ -83,11 +83,17 @@ const CartDrawer = () => {
                   className="bg-cream-light rounded-2xl p-4"
                 >
                   <div className="flex gap-3 mb-3">
-                    <img
-                      src={productsService.getImageUrl(item.image)}
-                      alt={item.name}
-                      className="w-20 h-20 object-cover rounded-xl flex-shrink-0"
-                    />
+                    {item.isDeal ? (
+                      <div className="w-20 h-20 rounded-xl flex-shrink-0 bg-gradient-to-br from-orange-100 to-amber-50 flex items-center justify-center text-3xl border border-orange-100">
+                        🎁
+                      </div>
+                    ) : (
+                      <img
+                        src={productsService.getImageUrl(item.image)}
+                        alt={item.name}
+                        className="w-20 h-20 object-cover rounded-xl flex-shrink-0"
+                      />
+                    )}
                     <div className="flex-1 min-w-0">
                       <h4 className="font-sans text-base text-dark mb-1 truncate">
                         {item.name}
