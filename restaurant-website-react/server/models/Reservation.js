@@ -14,11 +14,17 @@ const reservationSchema = new mongoose.Schema(
       default: null,
       index: true,
     },
+    // Primary table (first selected table — kept for backward compatibility)
     tableId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Table',
-      required: [true, 'Table is required'],
+      required: false,
     },
+    // All selected tables (supports multi-table reservations)
+    tableIds: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Table',
+    }],
     fullName: {
       type: String,
       required: [true, 'Full name is required'],

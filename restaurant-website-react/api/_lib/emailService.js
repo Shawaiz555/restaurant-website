@@ -521,8 +521,8 @@ const getReservationCustomerEmailTemplate = (reservation) => `
                       <p style="margin: 3px 0 0 0; color: #1f2937; font-size: 16px; font-weight: 600;">${reservation.partySize} ${reservation.partySize === 1 ? 'Guest' : 'Guests'}</p>
                     </td></tr>
                     <tr><td style="padding: 8px 0;">
-                      <p style="margin: 0; color: #6b7280; font-size: 14px;">Table</p>
-                      <p style="margin: 3px 0 0 0; color: #1f2937; font-size: 16px; font-weight: 600;">Table #${reservation.tableNumber} — ${reservation.tableName} (${reservation.tableLocation})</p>
+                      <p style="margin: 0; color: #6b7280; font-size: 14px;">${reservation.tables && reservation.tables.length > 1 ? 'Tables' : 'Table'}</p>
+                      <p style="margin: 3px 0 0 0; color: #1f2937; font-size: 16px; font-weight: 600;">${reservation.tables && reservation.tables.length > 1 ? reservation.tables.map(t => `Table #${t.tableNumber} — ${t.name} (${t.location})`).join('<br>') : `Table #${reservation.tableNumber} — ${reservation.tableName} (${reservation.tableLocation})`}</p>
                     </td></tr>
                     ${reservation.specialRequests ? `
                     <tr><td style="padding: 8px 0;">
@@ -634,8 +634,8 @@ const getReservationAdminEmailTemplate = (reservation) => `
                       <p style="margin: 3px 0 0 0; color: #E67E22; font-size: 18px; font-weight: bold;">${reservation.reservationDate} at ${formatReservationTime(reservation.reservationTime)}</p>
                     </td></tr>
                     <tr><td style="padding: 8px 0;">
-                      <p style="margin: 0; color: #6b7280; font-size: 14px;">Table</p>
-                      <p style="margin: 3px 0 0 0; color: #1f2937; font-size: 16px; font-weight: 600;">Table #${reservation.tableNumber} — ${reservation.tableName} (${reservation.tableLocation})</p>
+                      <p style="margin: 0; color: #6b7280; font-size: 14px;">${reservation.tables && reservation.tables.length > 1 ? 'Tables' : 'Table'}</p>
+                      <p style="margin: 3px 0 0 0; color: #1f2937; font-size: 16px; font-weight: 600;">${reservation.tables && reservation.tables.length > 1 ? reservation.tables.map(t => `Table #${t.tableNumber} — ${t.name} (${t.location})`).join('<br>') : `Table #${reservation.tableNumber} — ${reservation.tableName} (${reservation.tableLocation})`}</p>
                     </td></tr>
                     <tr><td style="padding: 8px 0;">
                       <p style="margin: 0; color: #6b7280; font-size: 14px;">Party Size</p>
@@ -709,7 +709,7 @@ const getReservationAdminEmailTemplate = (reservation) => `
                   <h3 style="margin: 0 0 15px 0; color: #92400e; font-size: 18px;">Action Items:</h3>
                   <ul style="margin: 0; padding-left: 20px; color: #78350f; font-size: 14px; line-height: 1.8;">
                     <li>Call customer at ${reservation.phone} to confirm reservation</li>
-                    <li>Mark Table #${reservation.tableNumber} as Reserved for ${reservation.reservationDate} at ${formatReservationTime(reservation.reservationTime)}</li>
+                    <li>Mark ${reservation.tables && reservation.tables.length > 1 ? reservation.tables.map(t => `Table #${t.tableNumber}`).join(', ') : `Table #${reservation.tableNumber}`} as Reserved for ${reservation.reservationDate} at ${formatReservationTime(reservation.reservationTime)}</li>
                     <li>Prepare table setup for ${reservation.partySize} guests</li>
                     <li>Update reservation status in admin panel</li>
                   </ul>

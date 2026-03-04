@@ -134,7 +134,7 @@ const MyReservations = () => {
   const ReservationCard = ({ res }) => {
     const isExpanded = expandedId === res._id;
     const StatusIcon = STATUS_ICONS[res.status] || Clock;
-    const tableInfo = res.tableId;
+    const tables = res.tableIds?.length > 0 ? res.tableIds : (res.tableId ? [res.tableId] : []);
     const canCancel = !["Cancelled", "Completed"].includes(res.status);
 
     return (
@@ -199,13 +199,15 @@ const MyReservations = () => {
                     {res.partySize} {res.partySize === 1 ? "guest" : "guests"}
                   </span>
                 </div>
-                {tableInfo && (
-                  <div className="flex items-center gap-1.5 mt-1 text-sm text-dark">
-                    <TableIcon className="w-3.5 h-3.5 text-primary flex-shrink-0" />
-                    Table #{tableInfo.tableNumber} — {tableInfo.name}
-                    <span className="text-xs text-dark-gray">
-                      ({tableInfo.location})
-                    </span>
+                {tables.length > 0 && (
+                  <div className="mt-1 space-y-0.5">
+                    {tables.map((t) => (
+                      <div key={t._id} className="flex items-center gap-1.5 text-sm text-dark">
+                        <TableIcon className="w-3.5 h-3.5 text-primary flex-shrink-0" />
+                        Table #{t.tableNumber} — {t.name}
+                        <span className="text-xs text-dark-gray">({t.location})</span>
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>

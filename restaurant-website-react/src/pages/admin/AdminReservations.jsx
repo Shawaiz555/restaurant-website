@@ -291,7 +291,7 @@ const AdminReservations = () => {
                 </thead>
                 <tbody className="divide-y divide-gray-50">
                   {paginatedReservations.map((res) => {
-                    const tableInfo = res.tableId;
+                    const tables = res.tableIds?.length > 0 ? res.tableIds : (res.tableId ? [res.tableId] : []);
 
                     return (
                       <tr
@@ -340,21 +340,19 @@ const AdminReservations = () => {
 
                         {/* Table */}
                         <td className="px-5 py-4 hidden lg:table-cell">
-                          {tableInfo ? (
-                            <div className="flex items-center gap-1.5">
-                              <div className="w-7 h-7 bg-primary/10 rounded-lg flex items-center justify-center">
-                                <span className="text-xs font-bold text-primary">
-                                  #{tableInfo.tableNumber}
-                                </span>
-                              </div>
-                              <div>
-                                <p className="text-sm font-medium text-dark">
-                                  {tableInfo.name}
-                                </p>
-                                <p className="text-xs text-dark-gray">
-                                  {tableInfo.location}
-                                </p>
-                              </div>
+                          {tables.length > 0 ? (
+                            <div className="space-y-1.5">
+                              {tables.map((t) => (
+                                <div key={t._id} className="flex items-center gap-1.5">
+                                  <div className="w-7 h-7 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <span className="text-xs font-bold text-primary">#{t.tableNumber}</span>
+                                  </div>
+                                  <div>
+                                    <p className="text-sm font-medium text-dark">{t.name}</p>
+                                    <p className="text-xs text-dark-gray">{t.location}</p>
+                                  </div>
+                                </div>
+                              ))}
                             </div>
                           ) : (
                             <span className="text-xs text-dark-gray">—</span>

@@ -26,7 +26,8 @@ const generateReservationId = () => {
 const createReservation = async (req, res) => {
   try {
     const {
-      tableId,
+      tableId,      // legacy single-table field (kept for backward compat)
+      tableIds,     // new multi-table field (preferred)
       fullName,
       email,
       phone,
@@ -37,11 +38,19 @@ const createReservation = async (req, res) => {
       guestDetails,
     } = req.body;
 
+    // Resolve the list of table IDs — accept either tableIds[] or legacy tableId
+    let resolvedTableIds = [];
+    if (Array.isArray(tableIds) && tableIds.length > 0) {
+      resolvedTableIds = tableIds;
+    } else if (tableId) {
+      resolvedTableIds = [tableId];
+    }
+
     // Validate required fields
-    if (!tableId || !fullName || !email || !phone || !reservationDate || !reservationTime || !partySize) {
+    if (resolvedTableIds.length === 0 || !fullName || !email || !phone || !reservationDate || !reservationTime || !partySize) {
       return res.status(400).json({
         success: false,
-        message: 'Table, name, email, phone, date, time, and party size are required',
+        message: 'Table(s), name, email, phone, date, time, and party size are required',
       });
     }
 
@@ -51,20 +60,23 @@ const createReservation = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Please provide a valid email address' });
     }
 
-    // Validate the table exists and is active
-    const table = await Table.findById(tableId);
-    if (!table) {
-      return res.status(404).json({ success: false, message: 'Selected table not found' });
+    // Validate all tables exist and are active
+    const tables = await Table.find({ _id: { $in: resolvedTableIds } });
+    if (tables.length !== resolvedTableIds.length) {
+      return res.status(404).json({ success: false, message: 'One or more selected tables were not found' });
     }
-    if (!table.isActive || table.status === 'Maintenance') {
-      return res.status(400).json({ success: false, message: 'This table is not available' });
+    for (const t of tables) {
+      if (!t.isActive || t.status === 'Maintenance') {
+        return res.status(400).json({ success: false, message: `Table #${t.tableNumber} is not available` });
+      }
     }
 
-    // Check table capacity
-    if (parseInt(partySize, 10) > table.capacity) {
+    // Check combined capacity >= party size
+    const combinedCapacity = tables.reduce((sum, t) => sum + t.capacity, 0);
+    if (parseInt(partySize, 10) > combinedCapacity) {
       return res.status(400).json({
         success: false,
-        message: `Party size exceeds table capacity (max ${table.capacity})`,
+        message: `Party size exceeds combined table capacity (max ${combinedCapacity} for selected tables)`,
       });
     }
 
@@ -72,10 +84,10 @@ const createReservation = async (req, res) => {
     let sanitizedGuestDetails = { hasGuestList: false, guests: [] };
     if (guestDetails && guestDetails.hasGuestList) {
       const guests = Array.isArray(guestDetails.guests) ? guestDetails.guests : [];
-      if (guests.length > table.capacity) {
+      if (guests.length > combinedCapacity) {
         return res.status(400).json({
           success: false,
-          message: `Cannot add more guests than table capacity (max ${table.capacity})`,
+          message: `Cannot add more guests than combined table capacity (max ${combinedCapacity})`,
         });
       }
       for (const g of guests) {
@@ -92,19 +104,29 @@ const createReservation = async (req, res) => {
       };
     }
 
-    // Check for conflicting reservations on same table, date, time
-    const conflict = await Reservation.findOne({
-      tableId,
-      reservationDate,
-      reservationTime,
-      status: { $in: ['Pending', 'Confirmed'] },
-    });
-
-    if (conflict) {
-      return res.status(409).json({
-        success: false,
-        message: 'This table is already reserved for the selected date and time',
+    // Check for conflicts on each table at same date+time
+    for (const tid of resolvedTableIds) {
+      const conflict = await Reservation.findOne({
+        tableIds: tid,
+        reservationDate,
+        reservationTime,
+        status: { $in: ['Pending', 'Confirmed'] },
       });
+      // Also check legacy single-tableId reservations
+      const legacyConflict = !conflict && await Reservation.findOne({
+        tableId: tid,
+        tableIds: { $size: 0 },
+        reservationDate,
+        reservationTime,
+        status: { $in: ['Pending', 'Confirmed'] },
+      });
+      if (conflict || legacyConflict) {
+        const conflictTable = tables.find((t) => t._id.toString() === tid.toString());
+        return res.status(409).json({
+          success: false,
+          message: `Table #${conflictTable?.tableNumber || ''} is already reserved for the selected date and time`,
+        });
+      }
     }
 
     // Determine if guest or user reservation
@@ -112,11 +134,14 @@ const createReservation = async (req, res) => {
     const userId = req.user ? req.user._id : null;
 
     const reservationId = generateReservationId();
+    // Use first table as the legacy tableId field
+    const primaryTableId = resolvedTableIds[0];
 
     const reservation = await Reservation.create({
       reservationId,
       userId,
-      tableId,
+      tableId: primaryTableId,
+      tableIds: resolvedTableIds,
       fullName: fullName.trim(),
       email: email.trim().toLowerCase(),
       phone: phone.trim(),
@@ -130,10 +155,11 @@ const createReservation = async (req, res) => {
       statusHistory: [{ status: 'Pending', timestamp: new Date(), note: 'Reservation created' }],
     });
 
-    // Update table status to Reserved
-    await syncTableStatus(tableId);
+    // Sync status for all reserved tables
+    await Promise.all(resolvedTableIds.map((tid) => syncTableStatus(tid)));
 
-    // Send confirmation emails (non-blocking)
+    // Build table info for email
+    const primaryTable = tables.find((t) => t._id.toString() === primaryTableId.toString());
     const emailPayload = {
       reservationId,
       fullName: reservation.fullName,
@@ -144,9 +170,12 @@ const createReservation = async (req, res) => {
       partySize: reservation.partySize,
       specialRequests: reservation.specialRequests,
       status: reservation.status,
-      tableNumber: table.tableNumber,
-      tableName: table.name,
-      tableLocation: table.location,
+      // Legacy single-table fields (backward compat)
+      tableNumber: primaryTable.tableNumber,
+      tableName: primaryTable.name,
+      tableLocation: primaryTable.location,
+      // Multi-table array for new email templates
+      tables: tables.map((t) => ({ tableNumber: t.tableNumber, name: t.name, location: t.location })),
       isGuestReservation,
       guestDetails: reservation.guestDetails,
     };
@@ -159,10 +188,9 @@ const createReservation = async (req, res) => {
     }
 
     // Populate table info for the response
-    const populatedReservation = await Reservation.findById(reservation._id).populate(
-      'tableId',
-      'tableNumber name capacity location'
-    );
+    const populatedReservation = await Reservation.findById(reservation._id)
+      .populate('tableId', 'tableNumber name capacity location')
+      .populate('tableIds', 'tableNumber name capacity location');
 
     res.status(201).json({
       success: true,
@@ -197,6 +225,7 @@ const getReservations = async (req, res) => {
 
     const reservations = await Reservation.find(filter)
       .populate('tableId', 'tableNumber name capacity location')
+      .populate('tableIds', 'tableNumber name capacity location')
       .sort({ reservationDate: -1, reservationTime: -1, createdAt: -1 })
       .limit(parseInt(limit, 10))
       .skip((parseInt(page, 10) - 1) * parseInt(limit, 10));
@@ -245,6 +274,7 @@ const getMyReservations = async (req, res) => {
   try {
     const reservations = await Reservation.find({ userId: req.user._id })
       .populate('tableId', 'tableNumber name capacity location')
+      .populate('tableIds', 'tableNumber name capacity location')
       .sort({ reservationDate: -1, reservationTime: -1 });
 
     res.json({ success: true, reservations });
@@ -258,10 +288,9 @@ const getMyReservations = async (req, res) => {
 // @route   GET /api/reservations/:id
 const getReservationById = async (req, res) => {
   try {
-    const reservation = await Reservation.findById(req.params.id).populate(
-      'tableId',
-      'tableNumber name capacity location'
-    );
+    const reservation = await Reservation.findById(req.params.id)
+      .populate('tableId', 'tableNumber name capacity location')
+      .populate('tableIds', 'tableNumber name capacity location');
     if (!reservation) {
       return res.status(404).json({ success: false, message: 'Reservation not found' });
     }
@@ -300,13 +329,15 @@ const updateReservationStatus = async (req, res) => {
 
     await reservation.save();
 
-    // Sync table status based on remaining active reservations
-    await syncTableStatus(reservation.tableId);
+    // Sync all table statuses
+    const allTableIds = reservation.tableIds?.length > 0
+      ? reservation.tableIds
+      : [reservation.tableId];
+    await Promise.all(allTableIds.map((tid) => syncTableStatus(tid)));
 
-    const updatedReservation = await Reservation.findById(req.params.id).populate(
-      'tableId',
-      'tableNumber name capacity location'
-    );
+    const updatedReservation = await Reservation.findById(req.params.id)
+      .populate('tableId', 'tableNumber name capacity location')
+      .populate('tableIds', 'tableNumber name capacity location');
 
     res.json({
       success: true,
@@ -339,7 +370,9 @@ const cancelMyReservation = async (req, res) => {
       });
     }
 
-    const tableId = reservation.tableId;
+    const allTableIds = reservation.tableIds?.length > 0
+      ? reservation.tableIds
+      : [reservation.tableId];
 
     reservation.status = 'Cancelled';
     reservation.statusHistory.push({
@@ -350,8 +383,8 @@ const cancelMyReservation = async (req, res) => {
 
     await reservation.save();
 
-    // Sync table status — may free it back to Available
-    await syncTableStatus(tableId);
+    // Sync all reserved tables — may free them back to Available
+    await Promise.all(allTableIds.map((tid) => syncTableStatus(tid)));
 
     res.json({
       success: true,
@@ -373,12 +406,14 @@ const deleteReservation = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Reservation not found' });
     }
 
-    const tableId = reservation.tableId;
+    const allTableIds = reservation.tableIds?.length > 0
+      ? reservation.tableIds
+      : [reservation.tableId];
 
     await Reservation.findByIdAndDelete(req.params.id);
 
-    // Sync table status after deletion
-    await syncTableStatus(tableId);
+    // Sync all table statuses after deletion
+    await Promise.all(allTableIds.map((tid) => syncTableStatus(tid)));
 
     res.json({ success: true, message: 'Reservation deleted successfully' });
   } catch (error) {
