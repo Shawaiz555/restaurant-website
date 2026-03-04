@@ -10,6 +10,7 @@ const {
   updateReservationStatus,
   cancelMyReservation,
   deleteReservation,
+  getBookedTimes,
 } = require('../controllers/reservationController');
 
 // Public route — guests and users can create reservations
@@ -36,6 +37,9 @@ const optionalAuth = async (req, res, next) => {
 };
 
 router.post('/', optionalAuth, createReservation);
+
+// Public route — get booked time slots for a date
+router.get('/booked-times', getBookedTimes);
 
 // Protected user routes
 router.get('/my', protect, getMyReservations);

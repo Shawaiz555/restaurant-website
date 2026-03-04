@@ -87,6 +87,10 @@ const Reservations = () => {
   const [availableTables, setAvailableTables] = useState([]);
   const [selectedTables, setSelectedTables] = useState([]);
   const [loadingTables, setLoadingTables] = useState(false);
+
+  // Booked times for the selected date
+  const [bookedTimes, setBookedTimes] = useState([]);
+  const [loadingBookedTimes, setLoadingBookedTimes] = useState(false);
   // Step 3
   const [formData, setFormData] = useState({
     fullName: currentUser?.name || "",
@@ -119,6 +123,22 @@ const Reservations = () => {
       }));
     }
   }, [currentUser]);
+
+  // Fetch booked times whenever the date changes
+  useEffect(() => {
+    if (!selectedDate) {
+      setBookedTimes([]);
+      return;
+    }
+    setLoadingBookedTimes(true);
+    reservationsService.getBookedTimes(selectedDate).then((times) => {
+      setBookedTimes(times);
+      // If the currently selected time just became booked, clear it
+      if (selectedTime && times.includes(selectedTime)) {
+        setSelectedTime("");
+      }
+    }).finally(() => setLoadingBookedTimes(false));
+  }, [selectedDate]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchAvailableTables = useCallback(async () => {
     if (!selectedDate || !selectedTime) return;
@@ -469,19 +489,31 @@ const Reservations = () => {
                     <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 gap-2 sm:gap-3">
                       {TIME_SLOTS.filter(
                         (t) => parseInt(t.split(":")[0]) < 17,
-                      ).map((t) => (
-                        <button
-                          key={t}
-                          onClick={() => setSelectedTime(t)}
-                          className={`py-2.5 sm:py-3 px-1 sm:px-2 rounded-xl sm:rounded-2xl text-[10px] sm:text-xs font-bold transition-all border-2 ${
-                            selectedTime === t
-                              ? "bg-primary border-primary text-white shadow-lg shadow-primary/20 scale-105"
-                              : "border-gray-50 bg-gray-50 text-dark-gray/60 hover:border-primary/30 hover:bg-white hover:text-primary"
-                          }`}
-                        >
-                          {formatTimeDisplay(t)}
-                        </button>
-                      ))}
+                      ).map((t) => {
+                        const isBooked = bookedTimes.includes(t);
+                        return (
+                          <button
+                            key={t}
+                            onClick={() => !isBooked && setSelectedTime(t)}
+                            disabled={isBooked || loadingBookedTimes}
+                            title={isBooked ? "Fully booked" : undefined}
+                            className={`py-2.5 sm:py-3 px-1 sm:px-2 rounded-xl sm:rounded-2xl text-[10px] sm:text-xs font-bold transition-all border-2 relative ${
+                              isBooked
+                                ? "border-gray-100 bg-gray-100 text-gray-300 cursor-not-allowed line-through"
+                                : selectedTime === t
+                                  ? "bg-primary border-primary text-white shadow-lg shadow-primary/20 scale-105"
+                                  : "border-gray-50 bg-gray-50 text-dark-gray/60 hover:border-primary/30 hover:bg-white hover:text-primary"
+                            }`}
+                          >
+                            {formatTimeDisplay(t)}
+                            {isBooked && (
+                              <span className="absolute -top-1.5 -right-1 text-[8px] font-bold bg-red-100 text-red-400 rounded-full px-1 leading-tight hidden sm:block">
+                                Full
+                              </span>
+                            )}
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
 
@@ -495,19 +527,31 @@ const Reservations = () => {
                     <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 gap-2 sm:gap-3">
                       {TIME_SLOTS.filter(
                         (t) => parseInt(t.split(":")[0]) >= 17,
-                      ).map((t) => (
-                        <button
-                          key={t}
-                          onClick={() => setSelectedTime(t)}
-                          className={`py-2.5 sm:py-3 px-1 sm:px-2 rounded-xl sm:rounded-2xl text-[10px] sm:text-xs font-bold transition-all border-2 ${
-                            selectedTime === t
-                              ? "bg-primary border-primary text-white shadow-lg shadow-primary/20 scale-105"
-                              : "border-gray-50 bg-gray-50 text-dark-gray/60 hover:border-primary/30 hover:bg-white hover:text-primary"
-                          }`}
-                        >
-                          {formatTimeDisplay(t)}
-                        </button>
-                      ))}
+                      ).map((t) => {
+                        const isBooked = bookedTimes.includes(t);
+                        return (
+                          <button
+                            key={t}
+                            onClick={() => !isBooked && setSelectedTime(t)}
+                            disabled={isBooked || loadingBookedTimes}
+                            title={isBooked ? "Fully booked" : undefined}
+                            className={`py-2.5 sm:py-3 px-1 sm:px-2 rounded-xl sm:rounded-2xl text-[10px] sm:text-xs font-bold transition-all border-2 relative ${
+                              isBooked
+                                ? "border-gray-100 bg-gray-100 text-gray-300 cursor-not-allowed line-through"
+                                : selectedTime === t
+                                  ? "bg-primary border-primary text-white shadow-lg shadow-primary/20 scale-105"
+                                  : "border-gray-50 bg-gray-50 text-dark-gray/60 hover:border-primary/30 hover:bg-white hover:text-primary"
+                            }`}
+                          >
+                            {formatTimeDisplay(t)}
+                            {isBooked && (
+                              <span className="absolute -top-1.5 -right-1 text-[8px] font-bold bg-red-100 text-red-400 rounded-full px-1 leading-tight hidden sm:block">
+                                Full
+                              </span>
+                            )}
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
                 </div>

@@ -178,9 +178,16 @@ const getAvailableTables = async (req, res) => {
       reservationDate: date,
       reservationTime: time,
       status: { $in: ['Pending', 'Confirmed'] },
-    }).select('tableId');
+    }).select('tableId tableIds');
 
-    const reservedTableIds = conflictingReservations.map((r) => r.tableId.toString());
+    const reservedTableIds = [];
+    for (const r of conflictingReservations) {
+      if (Array.isArray(r.tableIds) && r.tableIds.length > 0) {
+        r.tableIds.forEach((id) => reservedTableIds.push(id.toString()));
+      } else if (r.tableId) {
+        reservedTableIds.push(r.tableId.toString());
+      }
+    }
 
     // Build filter for available tables
     const filter = {

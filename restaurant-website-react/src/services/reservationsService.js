@@ -73,6 +73,16 @@ class ReservationsService {
     }
   }
 
+  async getBookedTimes(date) {
+    try {
+      const response = await apiClient.get(`/reservations/booked-times?date=${date}`);
+      return response.bookedTimes || [];
+    } catch (error) {
+      console.error('Get booked times error:', error);
+      return [];
+    }
+  }
+
   async deleteReservation(id) {
     try {
       const response = await apiClient.delete(`/reservations/${id}`);

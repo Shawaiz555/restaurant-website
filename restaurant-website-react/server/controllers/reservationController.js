@@ -422,6 +422,53 @@ const deleteReservation = async (req, res) => {
   }
 };
 
+// @desc    Get booked time slots for a specific date (public)
+// @route   GET /api/reservations/booked-times?date=
+const getBookedTimes = async (req, res) => {
+  try {
+    const { date } = req.query;
+    if (!date) {
+      return res.status(400).json({ success: false, message: 'Date is required' });
+    }
+
+    // Get total number of active tables
+    const totalActiveTables = await Table.countDocuments({ isActive: true, status: { $ne: 'Maintenance' } });
+
+    if (totalActiveTables === 0) {
+      return res.json({ success: true, bookedTimes: [] });
+    }
+
+    // For each time slot, count how many distinct tables are reserved
+    const reservations = await Reservation.find({
+      reservationDate: date,
+      status: { $in: ['Pending', 'Confirmed'] },
+    }).select('reservationTime tableId tableIds');
+
+    // Build a map: time -> Set of reserved table IDs
+    const timeToReservedTables = {};
+    for (const r of reservations) {
+      const time = r.reservationTime;
+      if (!timeToReservedTables[time]) timeToReservedTables[time] = new Set();
+      // Check tableIds array (multi-table) and legacy tableId
+      if (Array.isArray(r.tableIds) && r.tableIds.length > 0) {
+        r.tableIds.forEach((id) => timeToReservedTables[time].add(id.toString()));
+      } else if (r.tableId) {
+        timeToReservedTables[time].add(r.tableId.toString());
+      }
+    }
+
+    // A time slot is "fully booked" when all active tables are reserved at that time
+    const bookedTimes = Object.entries(timeToReservedTables)
+      .filter(([, tableSet]) => tableSet.size >= totalActiveTables)
+      .map(([time]) => time);
+
+    res.json({ success: true, bookedTimes });
+  } catch (error) {
+    console.error('Get booked times error:', error);
+    res.status(500).json({ success: false, message: 'Failed to fetch booked times' });
+  }
+};
+
 module.exports = {
   createReservation,
   getReservations,
@@ -431,4 +478,5 @@ module.exports = {
   updateReservationStatus,
   cancelMyReservation,
   deleteReservation,
+  getBookedTimes,
 };
