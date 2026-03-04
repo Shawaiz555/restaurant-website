@@ -148,6 +148,7 @@ const createReservation = async (req, res) => {
       tableName: table.name,
       tableLocation: table.location,
       isGuestReservation,
+      guestDetails: reservation.guestDetails,
     };
 
     let emailStatus = { customerEmailSent: false, adminEmailSent: false };

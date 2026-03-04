@@ -502,8 +502,14 @@ const getReservationCustomerEmailTemplate = (reservation) => `
                         <table width="100%" cellpadding="0" cellspacing="0">
                           <tr>
                             <td width="32" valign="middle" style="padding-right: 12px;">
-                              <div style="width: 28px; height: 28px; background: linear-gradient(135deg, #E67E22, #D35400); border-radius: 50%; display: flex; align-items: center; justify-content: center; text-align: center; line-height: 28px;">
-                                <span style="color: #ffffff; font-size: 13px; font-weight: bold;">${i + 1}</span>
+                              <div style="width: 28px; height: 28px; background-color: #E67E22; border-radius: 14px; text-align: center; display: inline-block; vertical-align: middle;">
+                                <table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0">
+                                  <tr>
+                                    <td align="center" valign="middle" style="color: #ffffff; font-size: 13px; font-weight: bold; line-height: 28px; text-align: center;">
+                                      ${i + 1}
+                                    </td>
+                                  </tr>
+                                </table>
                               </div>
                             </td>
                             <td valign="middle">
@@ -613,9 +619,14 @@ const getReservationAdminEmailTemplate = (reservation) => `
                         <table width="100%" cellpadding="0" cellspacing="0">
                           <tr>
                             <td width="32" valign="middle" style="padding-right: 12px;">
-                              <div style="width: 28px; height: 28px; background: linear-gradient(135deg, #E67E22, #D35400); border-radius: 50%; display: flex; align-items: center; justify-content: center; text-align: center; line-height: 28px;">
-                                <span style="color: #ffffff; font-size: 13px; font-weight: bold;">${i + 1}</span>
-                              </div>
+                              <!-- Number Circle -->
+                              <table width="28" height="28" cellpadding="0" cellspacing="0" style="border-collapse: separate; background: #E67E22; border-radius: 50%; width: 28px; height: 28px;">
+                                <tr>
+                                  <td align="center" valign="middle" style="color: #ffffff; font-size: 13px; font-weight: bold; line-height: 1; mso-line-height-rule: exactly;">
+                                    ${i + 1}
+                                  </td>
+                                </tr>
+                              </table>
                             </td>
                             <td valign="middle">
                               <p style="margin: 0; color: #1f2937; font-size: 15px; font-weight: 600;">${guest.name}</p>

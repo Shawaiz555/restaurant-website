@@ -205,7 +205,8 @@ const Reservations = () => {
     return Object.keys(errors).length === 0;
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    if (e) e.preventDefault();
     if (!validateStep3()) return;
     if (!validateGuestList()) return;
     setSubmitting(true);
@@ -233,6 +234,7 @@ const Reservations = () => {
       if (result.success) {
         setConfirmedReservation(result.reservation);
         setStep(4);
+        setSubmitting(false);
         dispatch(
           showNotification({
             type: "success",
@@ -240,17 +242,17 @@ const Reservations = () => {
           }),
         );
       } else {
+        setSubmitting(false);
         dispatch(showNotification({ type: "error", message: result.message }));
       }
     } catch {
+      setSubmitting(false);
       dispatch(
         showNotification({
           type: "error",
           message: "Failed to place reservation. Please try again.",
         }),
       );
-    } finally {
-      setSubmitting(false);
     }
   };
 
@@ -258,13 +260,20 @@ const Reservations = () => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     if (formErrors[name]) setFormErrors((prev) => ({ ...prev, [name]: "" }));
+
+    // Sync first guest name with lead booker name
+    if (name === "fullName" && hasGuestList) {
+      setGuestList((prev) =>
+        prev.map((g, i) => (i === 0 ? { ...g, name: value } : g)),
+      );
+    }
   };
 
   // Guest list helpers
   const handleToggleGuestList = (enabled) => {
     setHasGuestList(enabled);
-    if (enabled && guestList.length === 0) {
-      setGuestList([{ name: "", note: "" }]);
+    if (enabled && (guestList.length === 0 || !guestList[0].name)) {
+      setGuestList([{ name: formData.fullName, note: "" }]);
     }
   };
 
@@ -281,9 +290,12 @@ const Reservations = () => {
   };
 
   const handleRemoveGuest = (index) => {
+    if (index === 0) return; // Cannot remove host
     setGuestList((prev) => {
       const updated = prev.filter((_, i) => i !== index);
-      return updated.length === 0 ? [{ name: "", note: "" }] : updated;
+      return updated.length === 0
+        ? [{ name: formData.fullName, note: "" }]
+        : updated;
     });
   };
 
@@ -329,8 +341,8 @@ const Reservations = () => {
       <div ref={topRef} className="max-w-4xl mx-auto relative z-10">
         {/* Page Header */}
         <div className="text-center pb-12 pt-28">
-          <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-[1.5rem] sm:rounded-[2rem] shadow-xl shadow-black/5 mb-4 sm:mb-6 border border-gray-50 group">
-            <CalendarCheck className="w-8 h-8 sm:w-10 sm:h-10 text-primary group-hover:scale-110 transition-transform duration-500" />
+          <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-primary rounded-[1.5rem] sm:rounded-[2rem] shadow-xl shadow-black/5 mb-4 sm:mb-6 border border-gray-50 group">
+            <CalendarCheck className="w-8 h-8 sm:w-10 sm:h-10 text-white group-hover:scale-110 transition-transform duration-500" />
           </div>
           <h1 className="text-2xl sm:text-3xl lg:text-5xl font-bold text-dark mb-3 sm:mb-4 tracking-tight px-4">
             Book Your <span className="text-primary">Experience</span>
@@ -988,8 +1000,13 @@ const Reservations = () => {
                           className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm relative group/guest transition-all"
                         >
                           <div className="flex items-center justify-between mb-3">
-                            <span className="text-md font-bold text-primary">
+                            <span className="text-md font-bold text-primary flex items-center gap-2">
                               Guest #{index + 1}
+                              {index === 0 && (
+                                <span className="text-[8px] px-2 py-0.5 bg-primary/10 text-primary rounded-full uppercase tracking-tighter">
+                                  Host / Booker
+                                </span>
+                              )}
                             </span>
                             {guestList.length > 1 && (
                               <button
@@ -1008,8 +1025,13 @@ const Reservations = () => {
                               onChange={(e) =>
                                 handleGuestChange(index, "name", e.target.value)
                               }
+                              disabled={index === 0}
                               placeholder="Full Name *"
-                              className="w-full px-4 py-3 rounded-lg border border-gray-100 bg-gray-50 focus:bg-white focus:border-primary focus:outline-none transition-all text-xs font-medium"
+                              className={`w-full px-4 py-3 rounded-lg border border-gray-100 bg-gray-50 focus:bg-white focus:border-primary focus:outline-none transition-all text-xs font-medium ${
+                                index === 0
+                                  ? "opacity-60 cursor-not-allowed"
+                                  : ""
+                              }`}
                             />
                             <input
                               type="text"
@@ -1071,163 +1093,259 @@ const Reservations = () => {
           </div>
         )}
 
-        {/* ─── STEP 4: Confirmation ─── */}
+        {/* ─── STEP 4: Confirmation Summary ─── */}
         {step === 4 && confirmedReservation && (
-          <div className="animate-in fade-in zoom-in-95 duration-700">
-            {/* Success Animation Card (Lighter) */}
+          <div className="animate-in fade-in slide-in-from-bottom-5 duration-700">
+            {/* Success Header */}
             <div className="bg-white rounded-[2rem] sm:rounded-[3rem] p-8 sm:p-12 text-center shadow-2xl shadow-black/[0.03] border border-gray-100 mb-8 sm:mb-10 relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-primary/20 via-primary to-primary/20" />
+              <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-success/20 via-success to-success/20" />
               <div className="relative z-10">
                 <div className="w-20 h-20 sm:w-24 sm:h-24 bg-green-50 rounded-[1.5rem] sm:rounded-[2.5rem] flex items-center justify-center mx-auto mb-6 sm:mb-8 border border-green-100">
                   <CheckCircle className="w-10 h-10 sm:w-12 sm:h-12 text-green-500" />
                 </div>
                 <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-dark mb-3 sm:mb-4">
-                  Reservation Confirmed!
+                  Booking Confirmed!
                 </h2>
                 <p className="text-dark-gray text-sm sm:text-base font-medium max-w-sm mx-auto opacity-70">
-                  We've sent a confirmation email to{" "}
-                  <span className="text-primary font-bold">
-                    {confirmedReservation.email}
-                  </span>
-                  .
+                  Step 4: Reservation Summary & Receipt
                 </p>
               </div>
             </div>
 
-            {/* Digital Ticket (Lighter & Cleaner) */}
-            <div className="max-w-md mx-auto">
-              <div className="bg-white rounded-t-[1.5rem] sm:rounded-t-[2.5rem] border-x border-t border-gray-100 shadow-xl shadow-black/[0.02]">
-                <div className="p-6 sm:p-10">
-                  <div className="flex justify-between items-start mb-8 sm:mb-10">
-                    <div className="flex items-center gap-2 sm:gap-3">
-                      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg shadow-primary/20">
-                        <TableIcon className="w-4 h-4 sm:w-5 sm:h-5" />
-                      </div>
-                      <span className="text-[10px] sm:text-xs font-bold text-dark-gray/40 uppercase tracking-widest">
-                        Digital Ticket
-                      </span>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-[9px] sm:text-[10px] font-bold text-dark-gray/30 uppercase tracking-tighter">
-                        Booking ID
-                      </p>
-                      <p className="text-xs sm:text-sm font-bold text-dark tabular-nums">
-                        #
-                        {confirmedReservation._id?.slice(-8).toUpperCase() ||
-                          "NEW"}
-                      </p>
-                    </div>
-                  </div>
+            {/* Comprehensive Reservation Summary Form */}
+            <div className="bg-white rounded-[1.5rem] sm:rounded-[2.5rem] shadow-2xl shadow-black/[0.03] border border-gray-100 overflow-hidden mb-12">
+              <div className="bg-cream px-6 sm:px-10 py-6 sm:py-8 border-b border-gray-50 flex items-center justify-between">
+                <div>
+                  <h3 className="text-xl sm:text-2xl font-bold text-dark">
+                    Reservation Details
+                  </h3>
+                  <p className="text-dark-gray/60 text-[10px] sm:text-xs font-bold uppercase tracking-widest mt-1">
+                    Booking ID: #
+                    {confirmedReservation.reservationId ||
+                      confirmedReservation._id?.slice(-8).toUpperCase()}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 bg-green-100 text-green-700 px-4 py-2 rounded-full font-bold text-[10px] uppercase tracking-wider">
+                  <CheckCircle className="w-4 h-4" />
+                  CONFIRMED
+                </div>
+              </div>
 
-                  <div className="space-y-6 sm:space-y-8">
-                    <div className="grid grid-cols-2 gap-6 sm:gap-8">
+              <div className="p-6 sm:p-10 space-y-10">
+                {/* Information Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12">
+                  {/* Guest Information */}
+                  <div className="space-y-6">
+                    <h4 className="text-xs font-black text-primary uppercase tracking-[0.2em] flex items-center gap-2">
+                      <User className="w-4 h-4" />
+                      Guest Information
+                    </h4>
+                    <div className="space-y-4">
                       <div>
-                        <p className="text-[9px] sm:text-[10px] font-bold text-dark-gray/30 uppercase tracking-widest mb-1.5 sm:mb-2">
-                          Guest Name
+                        <p className="text-[10px] font-bold text-dark-gray/40 uppercase tracking-widest mb-1">
+                          Full Name
                         </p>
-                        <p className="text-sm sm:text-base font-bold text-dark">
+                        <p className="text-base font-bold text-dark">
                           {confirmedReservation.fullName}
                         </p>
                       </div>
-                      <div>
-                        <p className="text-[9px] sm:text-[10px] font-bold text-dark-gray/30 uppercase tracking-widest mb-1.5 sm:mb-2">
-                          Party Size
-                        </p>
-                        <p className="text-sm sm:text-base font-bold text-dark">
-                          {confirmedReservation.partySize} Guests
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-6 sm:gap-8">
-                      <div>
-                        <p className="text-[9px] sm:text-[10px] font-bold text-dark-gray/30 uppercase tracking-widest mb-1.5 sm:mb-2">
-                          Date
-                        </p>
-                        <p className="text-sm sm:text-base font-bold text-dark">
-                          {reservationsService.formatDate(
-                            confirmedReservation.reservationDate,
-                          )}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-[9px] sm:text-[10px] font-bold text-dark-gray/30 uppercase tracking-widest mb-1.5 sm:mb-2">
-                          Time
-                        </p>
-                        <p className="text-sm sm:text-base font-bold text-dark">
-                          {formatTimeDisplay(
-                            confirmedReservation.reservationTime,
-                          )}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="bg-gray-50/50 rounded-2xl p-4 sm:p-5 border border-gray-100">
-                      <div className="flex items-center justify-between">
+                      <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <p className="text-[9px] sm:text-[10px] font-bold text-dark-gray/40 uppercase tracking-widest mb-1">
-                            Seating Area
+                          <p className="text-[10px] font-bold text-dark-gray/40 uppercase tracking-widest mb-1">
+                            Email Address
                           </p>
-                          <p className="text-sm sm:text-base font-bold text-primary">
-                            {confirmedReservation.tableId?.location ||
-                              confirmedReservation.table?.location ||
-                              "Main Hall"}
+                          <p className="text-sm font-semibold text-dark truncate">
+                            {confirmedReservation.email}
                           </p>
                         </div>
-                        <div className="text-right">
-                          <p className="text-[9px] sm:text-[10px] font-bold text-dark-gray/40 uppercase tracking-widest mb-1">
-                            Table No.
+                        <div>
+                          <p className="text-[10px] font-bold text-dark-gray/40 uppercase tracking-widest mb-1">
+                            Phone Number
                           </p>
-                          <p className="text-xl sm:text-2xl font-bold text-dark tracking-tighter">
+                          <p className="text-sm font-semibold text-dark">
+                            {confirmedReservation.phone}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Visit Details */}
+                  <div className="space-y-6">
+                    <h4 className="text-xs font-black text-primary uppercase tracking-[0.2em] flex items-center gap-2">
+                      <CalendarCheck className="w-4 h-4" />
+                      Visit Details
+                    </h4>
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <p className="text-[10px] font-bold text-dark-gray/40 uppercase tracking-widest mb-1">
+                            Reservation Date
+                          </p>
+                          <p className="text-sm font-bold text-dark">
+                            {reservationsService.formatDate(
+                              confirmedReservation.reservationDate,
+                            )}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-bold text-dark-gray/40 uppercase tracking-widest mb-1">
+                            Time Slot
+                          </p>
+                          <div className="flex items-center gap-2">
+                            <Clock className="w-4 h-4 text-primary" />
+                            <p className="text-sm font-bold text-dark">
+                              {formatTimeDisplay(
+                                confirmedReservation.reservationTime,
+                              )}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <p className="text-[10px] font-bold text-dark-gray/40 uppercase tracking-widest mb-1">
+                            Table Number
+                          </p>
+                          <p className="text-base font-bold text-primary">
                             #
                             {confirmedReservation.tableId?.tableNumber ||
-                              confirmedReservation.table?.tableNumber ||
-                              selectedTable?.tableNumber}
+                              confirmedReservation.tableNumber}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-bold text-dark-gray/40 uppercase tracking-widest mb-1">
+                            Party Size
+                          </p>
+                          <p className="text-base font-bold text-dark">
+                            {confirmedReservation.partySize} Guests
                           </p>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
+
+                <div className="h-px bg-gray-100 w-full" />
+
+                {/* Additional Info */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12">
+                  {/* Table & Location */}
+                  <div className="space-y-4">
+                    <h4 className="text-xs font-black text-primary uppercase tracking-[0.2em] flex items-center gap-2">
+                      <TableIcon className="w-4 h-4" />
+                      Seating Plan
+                    </h4>
+                    <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+                      <p className="text-[10px] font-bold text-dark-gray/40 uppercase tracking-widest mb-2">
+                        Location & View
+                      </p>
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center text-primary shadow-sm border border-gray-50 flex-shrink-0">
+                          <TableIcon className="w-6 h-6" />
+                        </div>
+                        <div>
+                          <p className="text-base font-bold text-dark">
+                            {confirmedReservation.tableId?.name ||
+                              confirmedReservation.tableName}
+                          </p>
+                          <p className="text-xs font-medium text-dark-gray">
+                            {confirmedReservation.tableId?.location ||
+                              confirmedReservation.tableLocation}{" "}
+                            Seating
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Special Requests */}
+                  <div className="space-y-4">
+                    <h4 className="text-xs font-black text-primary uppercase tracking-[0.2em] flex items-center gap-2">
+                      <MessageSquare className="w-4 h-4" />
+                      Special Requests
+                    </h4>
+                    <div
+                      className={`rounded-2xl p-6 border ${confirmedReservation.specialRequests ? "bg-primary/5 border-primary/10" : "bg-gray-50 border-gray-100"}`}
+                    >
+                      <p className="text-sm font-medium text-dark leading-relaxed italic">
+                        {confirmedReservation.specialRequests ||
+                          "No special requests provided for this visit."}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Guest List Section */}
+                {confirmedReservation.guestDetails?.hasGuestList &&
+                  confirmedReservation.guestDetails?.guests?.length > 0 && (
+                    <div className="mt-8 space-y-6">
+                      <h4 className="text-xs font-black text-primary uppercase tracking-[0.2em] flex items-center gap-2">
+                        <Users className="w-4 h-4" />
+                        Guest List (
+                        {confirmedReservation.guestDetails.guests.length})
+                      </h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {confirmedReservation.guestDetails.guests.map(
+                          (guest, idx) => (
+                            <div
+                              key={idx}
+                              className="bg-gray-50/50 rounded-2xl p-4 border border-gray-100 flex items-center gap-4"
+                            >
+                              <div className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs flex-shrink-0 shadow-md">
+                                {idx + 1}
+                              </div>
+                              <div className="min-w-0">
+                                <p className="text-sm font-bold text-dark truncate">
+                                  {guest.name}
+                                </p>
+                                {guest.note && (
+                                  <p className="text-[10px] font-medium text-dark-gray truncate italic">
+                                    {guest.note}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          ),
+                        )}
+                      </div>
+                    </div>
+                  )}
               </div>
 
-              {/* Ticket Footer (Jagged Edge) */}
-              <div className="relative h-4 w-full">
-                <div
-                  className="absolute inset-x-0 top-0 h-4 bg-white"
-                  style={{
-                    maskImage:
-                      "radial-gradient(circle at 50% -50%, transparent 8px, black 8px)",
-                    maskRepeat: "repeat-x",
-                    maskSize: "24px 16px",
-                  }}
-                />
-              </div>
-
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mt-8 sm:mt-12 px-4 shadow-xl">
+              {/* Actions Footer */}
+              <div className="bg-gray-50 px-6 sm:px-10 py-8 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-center gap-4">
                 <button
                   onClick={() => {
                     setConfirmedReservation(null);
                     setStep(1);
                     setSelectedTable(null);
+                    setFormData({
+                      fullName: currentUser?.name || "",
+                      email: currentUser?.email || "",
+                      phone: "",
+                      specialRequests: "",
+                    });
+                    setGuestList([{ name: "", note: "" }]);
+                    setHasGuestList(false);
                   }}
-                  className="w-full sm:w-auto flex items-center justify-center gap-2 bg-white text-dark border-2 border-gray-100 px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl sm:rounded-2xl font-bold text-[10px] sm:text-xs uppercase tracking-widest hover:border-primary/30 hover:text-primary transition-all hover:shadow-lg"
+                  className="w-full sm:w-auto flex items-center justify-center gap-2 bg-white text-dark border-2 border-gray-200 px-8 py-4 rounded-2xl font-bold text-[10px] sm:text-xs uppercase tracking-widest hover:border-primary/30 hover:text-primary transition-all hover:shadow-lg"
                 >
-                  Book Another Table
+                  Make Another Booking
                 </button>
                 {isAuthenticated ? (
                   <button
                     onClick={() => navigate("/my-reservations")}
-                    className="w-full sm:w-auto flex items-center justify-center gap-2 bg-primary text-white px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl sm:rounded-2xl font-bold text-[10px] sm:text-xs uppercase tracking-widest hover:bg-primary-dark transition-all shadow-xl shadow-primary/20"
+                    className="w-full sm:w-auto flex items-center justify-center gap-2 bg-primary text-white px-10 py-4 rounded-2xl font-bold text-[10px] sm:text-xs uppercase tracking-widest hover:bg-primary-dark transition-all shadow-xl shadow-primary/20"
                   >
                     View My Bookings
                   </button>
                 ) : (
                   <button
                     onClick={() => navigate("/")}
-                    className="w-full sm:w-auto flex items-center justify-center gap-2 bg-dark text-white px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl sm:rounded-2xl font-bold text-[10px] sm:text-xs uppercase tracking-widest hover:bg-black transition-all shadow-xl"
+                    className="w-full sm:w-auto flex items-center justify-center gap-2 bg-primary text-white px-10 py-4 rounded-2xl font-bold text-[10px] sm:text-xs uppercase tracking-widest hover:bg-primary-dark transition-all shadow-xl"
                   >
-                    Return Home
+                    Return to Home
                   </button>
                 )}
               </div>
