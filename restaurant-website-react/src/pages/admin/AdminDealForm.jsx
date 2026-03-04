@@ -123,7 +123,7 @@ const AdminDealForm = () => {
     const newItem = {
       productId: product._id,
       name: product.name,
-      imageUrl: product.imageUrl || "",
+      imageUrl: productsService.getImageUrl(product),
       category: product.category || "",
       quantity: 1,
     };
@@ -353,7 +353,7 @@ const AdminDealForm = () => {
                       >
                         {item.imageUrl ? (
                           <img
-                            src={item.imageUrl}
+                            src={productsService.getImageUrl(item)}
                             alt={item.name}
                             className="w-full h-full object-cover"
                             onError={(e) => {
@@ -582,9 +582,11 @@ const AdminDealForm = () => {
                             >
                               {/* Product image */}
                               <div className="w-10 h-10 rounded-lg overflow-hidden bg-cream flex-shrink-0">
-                                {product.imageUrl ? (
+                                {product.imageUrl ||
+                                product.image ||
+                                product.imageId ? (
                                   <img
-                                    src={product.imageUrl}
+                                    src={productsService.getImageUrl(product)}
                                     alt={product.name}
                                     className="w-full h-full object-cover"
                                     onError={(e) => {
@@ -665,7 +667,7 @@ const AdminDealForm = () => {
                     <div className="w-10 h-10 rounded-lg overflow-hidden bg-cream flex-shrink-0">
                       {item.imageUrl ? (
                         <img
-                          src={item.imageUrl}
+                          src={productsService.getImageUrl(item)}
                           alt={item.name}
                           className="w-full h-full object-cover"
                           onError={(e) => {
