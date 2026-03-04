@@ -15,6 +15,7 @@ const expenseRoutes = require('./routes/expenseRoutes');
 const imageRoutes = require('./routes/imageRoutes');
 const tableRoutes = require('./routes/tableRoutes');
 const reservationRoutes = require('./routes/reservationRoutes');
+const dealRoutes = require('./routes/dealRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -40,6 +41,7 @@ app.use('/api/expenses', expenseRoutes);
 app.use('/api/images', imageRoutes);
 app.use('/api/tables', tableRoutes);
 app.use('/api/reservations', reservationRoutes);
+app.use('/api/deals', dealRoutes);
 
 // Legacy email endpoints (keep for backward compatibility)
 app.post('/api/emails/customer', async (req, res) => {

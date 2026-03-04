@@ -18,10 +18,10 @@ import {
   TableIcon,
   UserCheck,
   UserX,
-  RefreshCw,
   FileText,
   ChevronDown,
   UserPlus,
+  User,
 } from "lucide-react";
 
 const STATUS_OPTIONS = ["Pending", "Confirmed", "Cancelled", "Completed"];
@@ -113,9 +113,7 @@ const AdminReservationDetail = () => {
           }),
         );
       } else {
-        dispatch(
-          showNotification({ type: "error", message: result.message }),
-        );
+        dispatch(showNotification({ type: "error", message: result.message }));
       }
     } catch {
       dispatch(
@@ -301,7 +299,9 @@ const AdminReservationDetail = () => {
                 <span
                   className={`inline-block text-xs font-bold px-2.5 py-1 rounded-full ${res.isGuestReservation ? "bg-orange-100 text-orange-700" : "bg-primary/10 text-primary"}`}
                 >
-                  {res.isGuestReservation ? "Walk-in / Guest" : "Registered User"}
+                  {res.isGuestReservation
+                    ? "Walk-in / Guest"
+                    : "Registered User"}
                 </span>
               </div>
             </div>
@@ -320,7 +320,9 @@ const AdminReservationDetail = () => {
             <div className="flex items-start gap-3 bg-gray-50 rounded-xl p-3.5">
               <Calendar className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
               <div>
-                <p className="text-xs text-dark-gray font-semibold mb-0.5">Date</p>
+                <p className="text-xs text-dark-gray font-semibold mb-0.5">
+                  Date
+                </p>
                 <p className="text-sm font-medium text-dark">
                   {formatDate(res.reservationDate)}
                 </p>
@@ -329,7 +331,9 @@ const AdminReservationDetail = () => {
             <div className="flex items-start gap-3 bg-gray-50 rounded-xl p-3.5">
               <Clock className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
               <div>
-                <p className="text-xs text-dark-gray font-semibold mb-0.5">Time</p>
+                <p className="text-xs text-dark-gray font-semibold mb-0.5">
+                  Time
+                </p>
                 <p className="text-sm font-medium text-dark">
                   {formatTime(res.reservationTime)}
                 </p>
@@ -342,8 +346,7 @@ const AdminReservationDetail = () => {
                   Party Size
                 </p>
                 <p className="text-sm font-medium text-dark">
-                  {res.partySize}{" "}
-                  {res.partySize === 1 ? "Guest" : "Guests"}
+                  {res.partySize} {res.partySize === 1 ? "Guest" : "Guests"}
                 </p>
               </div>
             </div>
@@ -467,25 +470,32 @@ const AdminReservationDetail = () => {
               {guestDetails.guests.map((guest, index) => (
                 <div
                   key={index}
-                  className="bg-gradient-to-r from-cream-light to-cream rounded-2xl p-4 border border-primary/10 hover:border-primary/20 hover:shadow-md transition-all"
+                  className="group bg-white rounded-2xl p-4 border border-gray-100 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 relative overflow-hidden"
                 >
+                  <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-primary to-primary-dark opacity-0 group-hover:opacity-100 transition-opacity" />
                   <div className="flex items-start gap-3">
-                    <div className="w-9 h-9 bg-gradient-to-br from-primary to-primary-dark rounded-xl flex items-center justify-center shadow-sm flex-shrink-0">
-                      <span className="text-white text-sm font-bold">
-                        {index + 1}
-                      </span>
+                    <div className="w-10 h-10 bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                      <User className="w-5 h-5 text-primary" />
                     </div>
-                    <div className="min-w-0">
-                      <p className="font-semibold text-dark text-sm truncate">
-                        {guest.name}
-                      </p>
-                      {guest.note ? (
-                        <p className="text-xs text-dark-gray mt-1 italic leading-relaxed">
-                          {guest.note}
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center justify-between gap-2">
+                        <p className="font-bold text-dark text-sm truncate">
+                          {guest.name}
                         </p>
+                        <span className="text-[10px] font-bold text-primary/40 group-hover:text-primary transition-colors">
+                          #{String(index + 1).padStart(2, "0")}
+                        </span>
+                      </div>
+                      {guest.note ? (
+                        <div className="mt-2 p-2.5 bg-gray-50 rounded-lg border border-gray-100 group-hover:bg-primary/5 group-hover:border-primary/10 transition-colors">
+                          <p className="text-xs text-dark-gray leading-relaxed">
+                            <MessageSquare className="w-3 h-3 inline-block mr-1 text-primary/40" />
+                            {guest.note}
+                          </p>
+                        </div>
                       ) : (
-                        <p className="text-xs text-dark-gray/60 mt-1 italic">
-                          No note
+                        <p className="text-[10px] text-dark-gray/40 mt-1 uppercase tracking-wider font-semibold">
+                          No additional note
                         </p>
                       )}
                     </div>
@@ -494,16 +504,20 @@ const AdminReservationDetail = () => {
               ))}
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center py-10 text-center">
-              <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mb-4">
-                <UserPlus className="w-8 h-8 text-dark-gray/40" />
+            <div className="flex flex-col items-center justify-center py-12 px-4 text-center bg-gray-50/50 rounded-2xl border border-dashed border-gray-200">
+              <div className="w-20 h-20 bg-white rounded-3xl flex items-center justify-center mb-4 shadow-sm relative">
+                <Users className="w-10 h-10 text-gray-300" />
+                <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-red-50 rounded-full flex items-center justify-center border-2 border-white">
+                  <UserX className="w-4 h-4 text-red-400" />
+                </div>
               </div>
-              <p className="font-semibold text-dark mb-1">
-                No guest details provided
-              </p>
-              <p className="text-sm text-dark-gray max-w-sm">
-                The customer did not add individual guest names for this
-                reservation.
+              <h3 className="font-bold text-dark text-lg mb-1">
+                No Guest Names Listed
+              </h3>
+              <p className="text-sm text-dark-gray max-w-sm mx-auto leading-relaxed">
+                This reservation was made without providing individual guest
+                names. You can still manage the booking normally using the
+                primary contact information.
               </p>
             </div>
           )}

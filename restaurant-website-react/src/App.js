@@ -32,10 +32,13 @@ import AdminTableForm from './pages/admin/AdminTableForm';
 import AdminReservations from './pages/admin/AdminReservations';
 import AdminReservationDetail from './pages/admin/AdminReservationDetail';
 import AdminOrderDetail from './pages/admin/AdminOrderDetail';
+import AdminDeals from './pages/admin/AdminDeals';
+import AdminDealForm from './pages/admin/AdminDealForm';
 
 // User Pages
 import Reservations from './pages/Reservations';
 import MyReservations from './pages/MyReservations';
+import Deals from './pages/Deals';
 
 // Component to handle cart initialization
 function AppContent() {
@@ -93,6 +96,9 @@ function AppContent() {
           <Route path="tables/:id/edit" element={<AdminTableForm />} />
           <Route path="reservations" element={<AdminReservations />} />
           <Route path="reservations/:id" element={<AdminReservationDetail />} />
+          <Route path="deals" element={<AdminDeals />} />
+          <Route path="deals/new" element={<AdminDealForm />} />
+          <Route path="deals/:id/edit" element={<AdminDealForm />} />
           <Route path="expenses" element={<AdminExpenses />} />
           <Route path="analytics" element={<AdminAnalytics />} />
         </Route>
@@ -116,6 +122,7 @@ function AppContent() {
                   <Route path="/checkout" element={<Checkout />} />
                   <Route path="/reservations" element={<Reservations />} />
                   <Route path="/my-reservations" element={<MyReservations />} />
+                  <Route path="/deals" element={<Deals />} />
                 </Routes>
               </div>
               <Footer />

@@ -185,7 +185,7 @@ const AdminTableForm = () => {
     LOCATION_COLORS[formData.location] || "from-primary to-primary-dark";
 
   return (
-    <div className="max-w-5xl mx-auto space-y-6">
+    <div className="max-w-6xl mx-auto space-y-6">
       {/* Page Header */}
       <div className="bg-gradient-to-br from-white to-gray-50/50 rounded-xl lg:rounded-2xl p-5 sm:p-6 lg:p-8 shadow-lg border-2 border-gray-200">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-4">

@@ -94,6 +94,12 @@ const Navbar = () => {
               >
                 Services
               </Link>
+              <Link
+                to="/deals"
+                className="text-dark hover:text-primary transition-colors font-medium"
+              >
+                Deals
+              </Link>
             </div>
 
             {/* Right Side */}
@@ -345,6 +351,13 @@ const Navbar = () => {
             className="text-dark hover:text-primary transition-colors font-medium text-lg text-left"
           >
             Services
+          </Link>
+          <Link
+            to="/deals"
+            onClick={() => setShowMobileMenu(false)}
+            className="text-dark hover:text-primary transition-colors font-medium text-lg text-left"
+          >
+            Deals
           </Link>
           <Link
             to="/reservations"

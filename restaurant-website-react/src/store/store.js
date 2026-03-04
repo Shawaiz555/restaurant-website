@@ -7,6 +7,7 @@ import productsReducer from './slices/productsSlice';
 import expensesReducer from './slices/expensesSlice';
 import tablesReducer from './slices/tablesSlice';
 import reservationsReducer from './slices/reservationsSlice';
+import dealsReducer from './slices/dealsSlice';
 
 export const store = configureStore({
   reducer: {
@@ -18,6 +19,7 @@ export const store = configureStore({
     expenses: expensesReducer,
     tables: tablesReducer,
     reservations: reservationsReducer,
+    deals: dealsReducer,
   },
 });
 

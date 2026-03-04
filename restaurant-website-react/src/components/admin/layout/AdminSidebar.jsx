@@ -8,6 +8,7 @@ import {
   TrendingUp,
   TableIcon,
   CalendarCheck,
+  Tag,
   X,
 } from "lucide-react";
 
@@ -20,6 +21,7 @@ const AdminSidebar = ({ isOpen, onClose }) => {
     { path: "/admin/products", icon: Pizza, label: "Products" },
     { path: "/admin/tables", icon: TableIcon, label: "Tables" },
     { path: "/admin/reservations", icon: CalendarCheck, label: "Reservations" },
+    { path: "/admin/deals", icon: Tag, label: "Deals" },
     { path: "/admin/expenses", icon: DollarSign, label: "Expenses" },
     { path: "/admin/analytics", icon: TrendingUp, label: "Analytics" },
   ];
