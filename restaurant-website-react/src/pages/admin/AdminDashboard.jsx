@@ -13,6 +13,7 @@ import ordersService from "../../services/ordersService";
 import productsService from "../../services/productsService";
 import expensesService from "../../services/expensesService";
 import analyticsService from "../../services/analyticsService";
+import reservationsService from "../../services/reservationsService";
 import {
   DollarSign,
   ShoppingBag,
@@ -26,6 +27,7 @@ import {
   RefreshCw,
   CheckCircle,
   XCircle,
+  CalendarCheck,
 } from "lucide-react";
 
 const AdminDashboard = () => {
@@ -37,6 +39,8 @@ const AdminDashboard = () => {
     pendingOrders: 0,
     products: 0,
     expenses: 0,
+    reservations: 0,
+    pendingReservations: 0,
   });
   const [recentOrders, setRecentOrders] = useState([]);
   const [topProducts, setTopProducts] = useState([]);
@@ -64,14 +68,16 @@ const AdminDashboard = () => {
       const orderStats = (await analyticsService.getOrderStats()) || {}; // Ensure orderStats is an object
       const totalRevenue = ordersService.getTotalRevenue(orders); // Synchronous helper
       const expenseSummary = await expensesService.getSummary();
+      const reservationStats = await reservationsService.getReservationStats().catch(() => ({}));
 
       setStats({
         revenue: totalRevenue,
-        orders: orderStats.total || 0, // Add fallback
-        pendingOrders: orderStats.pending || 0, // Add fallback
+        orders: orderStats.total || 0,
+        pendingOrders: orderStats.pending || 0,
         products: productsArray.length,
-        expenses:
-          expenseSummary?.thisMonth?.total || expenseSummary?.total || 0,
+        expenses: expenseSummary?.thisMonth?.total || expenseSummary?.total || 0,
+        reservations: reservationStats.total || 0,
+        pendingReservations: reservationStats.pending || 0,
       });
 
       // Get recent orders
@@ -173,7 +179,7 @@ const AdminDashboard = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6">
         <StatsCard
           icon={DollarSign}
           label="Total Revenue"
@@ -201,6 +207,16 @@ const AdminDashboard = () => {
           label="Monthly Expenses"
           value={formatCurrency(stats.expenses)}
           onClick={() => navigate("/admin/expenses")}
+        />
+        <StatsCard
+          icon={CalendarCheck}
+          label="Total Reservations"
+          value={stats.reservations}
+          change={
+            stats.pendingReservations > 0 ? `${stats.pendingReservations} pending` : null
+          }
+          trend={stats.pendingReservations > 0 ? "up" : "neutral"}
+          onClick={() => navigate("/admin/reservations")}
         />
       </div>
 

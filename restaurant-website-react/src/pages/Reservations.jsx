@@ -140,7 +140,7 @@ const Reservations = () => {
     } finally {
       setLoadingTables(false);
     }
-  }, [selectedDate, selectedTime, partySize, dispatch]);
+  }, [selectedDate, selectedTime, dispatch]);
 
   // Step 1 validation
   const validateStep1 = () => {
@@ -325,7 +325,9 @@ const Reservations = () => {
   };
 
   // Multi-table selection helpers (computed from state)
-  const needsMultiSelect = availableTables.length > 0 && availableTables.every((t) => t.capacity < partySize);
+  const needsMultiSelect =
+    availableTables.length > 0 &&
+    availableTables.every((t) => t.capacity < partySize);
   const combinedCapacity = selectedTables.reduce((s, t) => s + t.capacity, 0);
 
   const handleTableClick = (table) => {
@@ -643,22 +645,38 @@ const Reservations = () => {
                           <Users className="w-4 h-4 text-amber-600" />
                         </div>
                         <div>
-                          <p className="text-sm font-bold text-amber-800">Party of {partySize} — Multiple Tables Needed</p>
-                          <p className="text-xs text-amber-700 mt-0.5">No single table fits your group. Select multiple tables until the combined capacity meets your party size.</p>
+                          <p className="text-sm font-bold text-amber-800">
+                            Party of {partySize} — Multiple Tables Needed
+                          </p>
+                          <p className="text-xs text-amber-700 mt-0.5">
+                            No single table fits your group. Select multiple
+                            tables until the combined capacity meets your party
+                            size.
+                          </p>
                         </div>
                       </div>
                       {/* Capacity progress bar */}
                       <div className="space-y-1.5">
                         <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest">
-                          <span className="text-amber-700">Combined Capacity</span>
-                          <span className={combinedCapacity >= partySize ? "text-green-600" : "text-amber-700"}>
+                          <span className="text-amber-700">
+                            Combined Capacity
+                          </span>
+                          <span
+                            className={
+                              combinedCapacity >= partySize
+                                ? "text-green-600"
+                                : "text-amber-700"
+                            }
+                          >
                             {combinedCapacity} / {partySize} seats
                           </span>
                         </div>
                         <div className="h-2 bg-amber-100 rounded-full overflow-hidden">
                           <div
                             className={`h-full rounded-full transition-all duration-500 ${combinedCapacity >= partySize ? "bg-green-500" : "bg-amber-400"}`}
-                            style={{ width: `${Math.min(100, (combinedCapacity / partySize) * 100)}%` }}
+                            style={{
+                              width: `${Math.min(100, (combinedCapacity / partySize) * 100)}%`,
+                            }}
                           />
                         </div>
                       </div>
@@ -672,47 +690,66 @@ const Reservations = () => {
                       Available Areas
                     </div>
                     <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-primary" /> Your Selection
+                      <div className="w-2 h-2 rounded-full bg-primary" /> Your
+                      Selection
                     </div>
                     <div className="flex items-center gap-2">
                       <TableIcon className="w-3 h-3 opacity-40" />{" "}
-                      {needsMultiSelect ? "Select Multiple" : "Select to Confirm"}
+                      {needsMultiSelect
+                        ? "Select Multiple"
+                        : "Select to Confirm"}
                     </div>
                   </div>
 
                   {/* Group tables by location */}
                   <div className="space-y-8 sm:space-y-10">
                     {["Indoor", "Outdoor", "VIP", "Bar"].map((loc) => {
-                      const locationTables = availableTables.filter((t) => t.location === loc);
+                      const locationTables = availableTables.filter(
+                        (t) => t.location === loc,
+                      );
                       if (locationTables.length === 0) return null;
                       const style = LOCATION_STYLES[loc] || {
-                        badge: "bg-gray-100 text-gray-700 border border-gray-200",
+                        badge:
+                          "bg-gray-100 text-gray-700 border border-gray-200",
                         dot: "bg-gray-500",
                       };
                       return (
                         <div key={loc} className="relative">
                           <div className="flex items-center gap-3 sm:gap-4 mb-5 sm:mb-6">
                             <h3 className="text-base sm:text-lg font-bold text-dark flex items-center gap-2">
-                              <span className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full ${style.dot} animate-pulse`} />
+                              <span
+                                className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full ${style.dot} animate-pulse`}
+                              />
                               {loc} Area
                             </h3>
                             <div className="h-px flex-1 bg-gradient-to-r from-gray-200 to-transparent" />
-                            <span className={`text-[9px] sm:text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-full font-bold ${style.badge}`}>
+                            <span
+                              className={`text-[9px] sm:text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-full font-bold ${style.badge}`}
+                            >
                               {locationTables.length} Available
                             </span>
                           </div>
 
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                             {locationTables.map((table) => {
-                              const isSelected = selectedTables.some((t) => t._id === table._id);
-                              const isDisabled = needsMultiSelect && !isSelected && combinedCapacity >= partySize;
+                              const isSelected = selectedTables.some(
+                                (t) => t._id === table._id,
+                              );
+                              const isDisabled =
+                                needsMultiSelect &&
+                                !isSelected &&
+                                combinedCapacity >= partySize;
                               return (
                                 <button
                                   key={table._id}
                                   onClick={() => handleTableClick(table)}
                                   disabled={isDisabled}
                                   className={`group relative text-left rounded-2xl sm:rounded-3xl transition-all duration-300 ${
-                                    isDisabled ? "opacity-40 cursor-not-allowed" : isSelected ? "ring-4 ring-primary/10 scale-[1.02]" : "hover:scale-[1.01]"
+                                    isDisabled
+                                      ? "opacity-40 cursor-not-allowed"
+                                      : isSelected
+                                        ? "ring-4 ring-primary/10 scale-[1.02]"
+                                        : "hover:scale-[1.01]"
                                   }`}
                                 >
                                   <div
@@ -720,14 +757,16 @@ const Reservations = () => {
                                       isSelected
                                         ? "bg-white border-primary shadow-xl shadow-primary/10"
                                         : isDisabled
-                                        ? "bg-gray-50 border-transparent"
-                                        : "bg-gray-50 border-transparent hover:bg-white hover:border-primary/20 hover:shadow-lg"
+                                          ? "bg-gray-50 border-transparent"
+                                          : "bg-gray-50 border-transparent hover:bg-white hover:border-primary/20 hover:shadow-lg"
                                     }`}
                                   >
                                     {/* Selection Icon */}
                                     <div
                                       className={`absolute top-4 right-4 w-6 h-6 rounded-full flex items-center justify-center transition-all ${
-                                        isSelected ? "bg-primary text-white scale-110" : "bg-gray-200 text-transparent scale-0"
+                                        isSelected
+                                          ? "bg-primary text-white scale-110"
+                                          : "bg-gray-200 text-transparent scale-0"
                                       }`}
                                     >
                                       <CheckCircle className="w-4 h-4" />
@@ -741,8 +780,12 @@ const Reservations = () => {
                                             : "bg-white text-dark-gray shadow-sm group-hover:bg-primary/5 group-hover:text-primary"
                                         }`}
                                       >
-                                        <span className="text-[8px] sm:text-[10px] font-bold opacity-60 uppercase mb-0.5">No.</span>
-                                        <span className="text-base sm:text-xl font-bold">#{table.tableNumber}</span>
+                                        <span className="text-[8px] sm:text-[10px] font-bold opacity-60 uppercase mb-0.5">
+                                          No.
+                                        </span>
+                                        <span className="text-base sm:text-xl font-bold">
+                                          #{table.tableNumber}
+                                        </span>
                                       </div>
 
                                       <div className="flex-1 min-w-0">
@@ -786,15 +829,25 @@ const Reservations = () => {
                   ← Back to Selection
                 </button>
                 <button
-                  disabled={needsMultiSelect ? combinedCapacity < partySize : selectedTables.length === 0}
+                  disabled={
+                    needsMultiSelect
+                      ? combinedCapacity < partySize
+                      : selectedTables.length === 0
+                  }
                   onClick={() => setStep(3)}
                   className={`w-full sm:w-auto flex items-center justify-center gap-3 px-8 sm:px-10 py-4 sm:py-5 rounded-xl sm:rounded-2xl font-bold uppercase tracking-widest text-[10px] sm:text-xs transition-all shadow-xl ${
-                    (needsMultiSelect ? combinedCapacity >= partySize : selectedTables.length > 0)
+                    (
+                      needsMultiSelect
+                        ? combinedCapacity >= partySize
+                        : selectedTables.length > 0
+                    )
                       ? "bg-primary text-white shadow-xl shadow-primary/20 hover:bg-primary-dark hover:-translate-y-0.5"
                       : "bg-gray-100 text-gray-300 cursor-not-allowed"
                   }`}
                 >
-                  {selectedTables.length > 1 ? `Book ${selectedTables.length} Tables` : "Book This Table"}
+                  {selectedTables.length > 1
+                    ? `Book ${selectedTables.length} Tables`
+                    : "Book This Table"}
                   <ChevronRight className="w-5 h-5" />
                 </button>
               </div>
@@ -826,19 +879,25 @@ const Reservations = () => {
                     </div>
                     <div>
                       <p className="text-[8px] font-bold text-dark-gray/40 uppercase tracking-widest">
-                        {selectedTables.length > 1 ? "Selected Tables" : "Selected Table"}
+                        {selectedTables.length > 1
+                          ? "Selected Tables"
+                          : "Selected Table"}
                       </p>
                       {selectedTables.length > 1 ? (
                         <div className="space-y-0.5">
                           {selectedTables.map((t) => (
-                            <p key={t._id} className="text-sm font-bold text-dark">
+                            <p
+                              key={t._id}
+                              className="text-sm font-bold text-dark"
+                            >
                               Table #{t.tableNumber} ({t.location})
                             </p>
                           ))}
                         </div>
                       ) : (
                         <p className="text-sm font-bold text-dark">
-                          Table #{selectedTables[0]?.tableNumber} ({selectedTables[0]?.location})
+                          Table #{selectedTables[0]?.tableNumber} (
+                          {selectedTables[0]?.location})
                         </p>
                       )}
                     </div>
@@ -1250,12 +1309,14 @@ const Reservations = () => {
                       <div className="grid grid-cols-2 gap-4">
                         <div>
                           <p className="text-[10px] font-bold text-dark-gray/40 uppercase tracking-widest mb-1">
-                            {confirmedReservation.tableIds?.length > 1 ? "Tables" : "Table Number"}
+                            {selectedTables.length > 1
+                              ? "Tables"
+                              : "Table Number"}
                           </p>
                           <p className="text-base font-bold text-primary">
-                            {confirmedReservation.tableIds?.length > 1
-                              ? confirmedReservation.tableIds.map((t) => `#${t.tableNumber}`).join(", ")
-                              : `#${confirmedReservation.tableId?.tableNumber || confirmedReservation.tableNumber}`}
+                            {selectedTables
+                              .map((t) => `#${t.tableNumber}`)
+                              .join(", ")}
                           </p>
                         </div>
                         <div>
@@ -1283,37 +1344,40 @@ const Reservations = () => {
                     </h4>
                     <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100">
                       <p className="text-[10px] font-bold text-dark-gray/40 uppercase tracking-widest mb-3">
-                        {confirmedReservation.tableIds?.length > 1 ? "Tables & Locations" : "Location & View"}
+                        {selectedTables.length > 1
+                          ? "Tables & Locations"
+                          : "Location & View"}
                       </p>
-                      {confirmedReservation.tableIds?.length > 1 ? (
-                        <div className="space-y-3">
-                          {confirmedReservation.tableIds.map((t) => (
-                            <div key={t._id} className="flex items-center gap-3">
-                              <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-primary shadow-sm border border-gray-50 flex-shrink-0">
-                                <TableIcon className="w-5 h-5" />
-                              </div>
-                              <div>
-                                <p className="text-sm font-bold text-dark">{t.name}</p>
-                                <p className="text-xs font-medium text-dark-gray">{t.location} Seating · {t.capacity} seats</p>
-                              </div>
+                      <div className="space-y-3">
+                        {selectedTables.map((t) => (
+                          <div key={t._id} className="flex items-center gap-3">
+                            <div
+                              className={`rounded-xl bg-white flex items-center justify-center text-primary shadow-sm border border-gray-50 flex-shrink-0 ${selectedTables.length > 1 ? "w-10 h-10" : "w-12 h-12"}`}
+                            >
+                              <TableIcon
+                                className={
+                                  selectedTables.length > 1
+                                    ? "w-5 h-5"
+                                    : "w-6 h-6"
+                                }
+                              />
                             </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center text-primary shadow-sm border border-gray-50 flex-shrink-0">
-                            <TableIcon className="w-6 h-6" />
+                            <div>
+                              <p
+                                className={`font-bold text-dark ${selectedTables.length > 1 ? "text-sm" : "text-base"}`}
+                              >
+                                {t.name}
+                              </p>
+                              <p className="text-xs font-medium text-dark-gray">
+                                {t.location} Seating
+                                {selectedTables.length > 1
+                                  ? ` · ${t.capacity} seats`
+                                  : ""}
+                              </p>
+                            </div>
                           </div>
-                          <div>
-                            <p className="text-base font-bold text-dark">
-                              {confirmedReservation.tableId?.name || confirmedReservation.tableName}
-                            </p>
-                            <p className="text-xs font-medium text-dark-gray">
-                              {confirmedReservation.tableId?.location || confirmedReservation.tableLocation} Seating
-                            </p>
-                          </div>
-                        </div>
-                      )}
+                        ))}
+                      </div>
                     </div>
                   </div>
 

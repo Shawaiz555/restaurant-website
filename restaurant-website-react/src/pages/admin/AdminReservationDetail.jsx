@@ -159,7 +159,7 @@ const AdminReservationDetail = () => {
   }
 
   const res = reservation;
-  const tableInfo = res.tableId;
+  const tables = res.tableIds?.length > 0 ? res.tableIds : (res.tableId ? [res.tableId] : []);
   const barClass = STATUS_BAR[res.status] || "from-gray-400 to-gray-500";
   const guestDetails = res.guestDetails;
   const hasGuests =
@@ -375,29 +375,29 @@ const AdminReservationDetail = () => {
             </div>
             <h2 className="font-bold text-dark">Table Details</h2>
           </div>
-          {tableInfo ? (
+          {tables.length > 0 ? (
             <div className="space-y-3">
-              <div className="flex items-center gap-4 bg-gradient-to-r from-cream-light to-cream rounded-2xl p-4 border border-primary/10">
-                <div className="w-14 h-14 bg-gradient-to-br from-primary to-primary-dark rounded-2xl flex items-center justify-center shadow-md shadow-primary/20 flex-shrink-0">
-                  <span className="text-white font-bold text-lg">
-                    #{tableInfo.tableNumber}
-                  </span>
-                </div>
-                <div>
-                  <p className="font-bold text-dark text-base">
-                    {tableInfo.name}
-                  </p>
-                  <div className="flex items-center gap-1 text-sm text-dark-gray mt-0.5">
-                    <MapPin className="w-3.5 h-3.5 text-primary" />
-                    {tableInfo.location}
+              {tables.map((t) => (
+                <div key={t._id} className="flex items-center gap-4 bg-gradient-to-r from-cream-light to-cream rounded-2xl p-4 border border-primary/10">
+                  <div className="w-14 h-14 bg-gradient-to-br from-primary to-primary-dark rounded-2xl flex items-center justify-center shadow-md shadow-primary/20 flex-shrink-0">
+                    <span className="text-white font-bold text-lg">
+                      #{t.tableNumber}
+                    </span>
                   </div>
-                  {tableInfo.capacity && (
-                    <p className="text-xs text-dark-gray mt-1">
-                      Up to {tableInfo.capacity} seats
-                    </p>
-                  )}
+                  <div>
+                    <p className="font-bold text-dark text-base">{t.name}</p>
+                    <div className="flex items-center gap-1 text-sm text-dark-gray mt-0.5">
+                      <MapPin className="w-3.5 h-3.5 text-primary" />
+                      {t.location}
+                    </div>
+                    {t.capacity && (
+                      <p className="text-xs text-dark-gray mt-1">
+                        Up to {t.capacity} seats
+                      </p>
+                    )}
+                  </div>
                 </div>
-              </div>
+              ))}
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center py-8 text-center">
