@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import {
   setReservations,
   updateReservationStatus,
@@ -25,16 +26,10 @@ import {
   ChevronsLeft,
   ChevronsRight,
   Calendar,
-  Phone,
-  Mail,
-  MapPin,
   RefreshCw,
   UserCheck,
   UserX,
-  TableIcon,
-  MessageSquare,
-  X,
-  Hash,
+  ClipboardList,
 } from "lucide-react";
 
 const STATUS_OPTIONS = ["Pending", "Confirmed", "Cancelled", "Completed"];
@@ -46,22 +41,15 @@ const STATUS_STYLES = {
   Completed: "bg-blue-100 text-blue-800 border border-blue-200",
 };
 
-const STATUS_BAR = {
-  Pending: "bg-yellow-400",
-  Confirmed: "bg-green-500",
-  Cancelled: "bg-red-400",
-  Completed: "bg-blue-500",
-};
-
 const AdminReservations = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const reservations = useSelector(selectFilteredReservations);
   const stats = useSelector(selectReservationStats);
   const filters = useSelector(selectReservationsFilters);
 
   const [reservationToDelete, setReservationToDelete] = useState(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [expandedId, setExpandedId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
   const [isLoading, setIsLoading] = useState(false);
@@ -90,7 +78,6 @@ const AdminReservations = () => {
 
   useEffect(() => {
     setCurrentPage(1);
-    setExpandedId(null);
   }, [filters.status, filters.date, filters.search]);
 
   const handleStatusChange = async (reservationId, newStatus) => {
@@ -128,7 +115,6 @@ const AdminReservations = () => {
       );
       if (result.success) {
         dispatch(deleteReservation(reservationToDelete._id));
-        if (expandedId === reservationToDelete._id) setExpandedId(null);
         dispatch(
           showNotification({
             type: "success",
@@ -159,10 +145,6 @@ const AdminReservations = () => {
     startIndex + itemsPerPage,
   );
 
-  // Expanded reservation object (from full list so it survives pagination)
-  const expandedReservation =
-    reservations.find((r) => r._id === expandedId) || null;
-
   return (
     <div className="space-y-6">
       <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
@@ -189,7 +171,7 @@ const AdminReservations = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-6 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-6 gap-2">
         <StatsCard icon={CalendarCheck} label="Total" value={stats.total} />
         <StatsCard icon={Clock} label="Pending" value={stats.pending} />
         <StatsCard
@@ -309,15 +291,14 @@ const AdminReservations = () => {
                 </thead>
                 <tbody className="divide-y divide-gray-50">
                   {paginatedReservations.map((res) => {
-                    const isExpanded = expandedId === res._id;
                     const tableInfo = res.tableId;
 
                     return (
                       <tr
                         key={res._id}
-                        className={`transition-colors cursor-pointer ${isExpanded ? "bg-primary/5 border-l-4 border-l-primary" : "hover:bg-cream-light/30"}`}
+                        className="transition-colors cursor-pointer hover:bg-cream-light/30"
                         onClick={() =>
-                          setExpandedId(isExpanded ? null : res._id)
+                          navigate(`/admin/reservations/${res._id}`)
                         }
                       >
                         {/* Reservation Info */}
@@ -400,7 +381,7 @@ const AdminReservations = () => {
                                 handleStatusChange(res._id, e.target.value)
                               }
                               disabled={updatingId === res._id}
-                              className={`pl-2 pr-6 py-1.5 rounded-lg text-xs font-semibold border cursor-pointer appearance-none transition-all focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:opacity-60 disabled:cursor-not-allowed ${STATUS_STYLES[res.status] || "bg-gray-100 text-gray-800 border-gray-200"}`}
+                              className={`w-full pl-2 pr-6 py-1.5 rounded-lg text-xs font-semibold border cursor-pointer appearance-none transition-all focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:opacity-60 disabled:cursor-not-allowed ${STATUS_STYLES[res.status] || "bg-gray-100 text-gray-800 border-gray-200"}`}
                             >
                               {STATUS_OPTIONS.map((s) => (
                                 <option key={s} value={s}>
@@ -419,18 +400,19 @@ const AdminReservations = () => {
                         >
                           <div className="flex items-center justify-end gap-2">
                             <button
-                              onClick={() =>
-                                setExpandedId(isExpanded ? null : res._id)
-                              }
-                              className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${isExpanded ? "bg-primary text-white" : "bg-gray-100 text-dark-gray hover:bg-primary/10 hover:text-primary"}`}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                navigate(`/admin/reservations/${res._id}`);
+                              }}
+                              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all text-xs font-semibold border border-primary/20 hover:border-primary"
                               title="View details"
                             >
-                              <ChevronDown
-                                className={`w-4 h-4 transition-transform ${isExpanded ? "rotate-180" : ""}`}
-                              />
+                              <ClipboardList className="w-3.5 h-3.5" />
+                              Details
                             </button>
                             <button
-                              onClick={() => {
+                              onClick={(e) => {
+                                e.stopPropagation();
                                 setReservationToDelete(res);
                                 setShowDeleteConfirm(true);
                               }}
@@ -448,221 +430,6 @@ const AdminReservations = () => {
               </table>
             </div>
           </div>
-
-          {/* ── Expanded Detail Panel — below the table ── */}
-          {expandedReservation &&
-            (() => {
-              const res = expandedReservation;
-              const tableInfo = res.tableId;
-              return (
-                <div className="bg-white rounded-2xl shadow-md border border-primary/20 overflow-hidden">
-                  {/* Panel Header */}
-                  <div
-                    className={`h-1.5 w-full ${STATUS_BAR[res.status] || "bg-gray-300"}`}
-                  />
-                  <div className="px-6 py-5 border-b border-gray-100 flex items-start justify-between gap-4">
-                    <div className="flex items-center gap-4">
-                      <div
-                        className={`w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 ${res.isGuestReservation ? "bg-orange-100" : "bg-primary/10"}`}
-                      >
-                        {res.isGuestReservation ? (
-                          <UserX className="w-6 h-6 text-orange-500" />
-                        ) : (
-                          <UserCheck className="w-6 h-6 text-primary" />
-                        )}
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-3 flex-wrap">
-                          <h2 className="text-lg font-sans font-bold text-dark">
-                            {res.fullName}
-                          </h2>
-                          <span
-                            className={`inline-flex items-center px-2.5 py-0.5 rounded-lg text-xs font-semibold ${STATUS_STYLES[res.status]}`}
-                          >
-                            {res.status}
-                          </span>
-                          <span
-                            className={`inline-flex items-center px-2.5 py-0.5 rounded-lg text-xs font-medium ${res.isGuestReservation ? "bg-orange-100 text-orange-700" : "bg-primary/10 text-primary"}`}
-                          >
-                            {res.isGuestReservation
-                              ? "Guest"
-                              : "Registered User"}
-                          </span>
-                        </div>
-                        <p className="text-sm font-mono text-dark-gray mt-0.5">
-                          {res.reservationId}
-                        </p>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => setExpandedId(null)}
-                      className="w-9 h-9 rounded-xl border-2 border-gray-200 flex items-center justify-center text-dark-gray hover:border-red-300 hover:text-red-500 transition-all flex-shrink-0"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  </div>
-
-                  {/* Detail Grid */}
-                  <div className="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                    {/* Date & Time */}
-                    <div className="bg-gray-50 rounded-2xl p-4 space-y-3">
-                      <p className="text-xs font-semibold text-dark-gray uppercase tracking-wider flex items-center gap-1.5">
-                        <Calendar className="w-3.5 h-3.5 text-primary" />
-                        Date & Time
-                      </p>
-                      <div>
-                        <p className="text-base font-bold text-dark">
-                          {reservationsService.formatDate(res.reservationDate)}
-                        </p>
-                        <p className="text-sm text-dark-gray mt-0.5">
-                          {reservationsService.formatTime(res.reservationTime)}
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-2 text-sm text-dark">
-                        <Users className="w-4 h-4 text-primary flex-shrink-0" />
-                        <span className="font-semibold">{res.partySize}</span>
-                        <span className="text-dark-gray">
-                          {res.partySize === 1 ? "guest" : "guests"}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Table Info */}
-                    <div className="bg-gray-50 rounded-2xl p-4 space-y-3">
-                      <p className="text-xs font-semibold text-dark-gray uppercase tracking-wider flex items-center gap-1.5">
-                        <TableIcon className="w-3.5 h-3.5 text-primary" />
-                        Table
-                      </p>
-                      {tableInfo ? (
-                        <>
-                          <div className="flex items-center gap-3">
-                            <div className="w-11 h-11 bg-gradient-to-br from-primary to-primary-dark rounded-xl flex items-center justify-center shadow-sm flex-shrink-0">
-                              <span className="text-white text-sm font-bold">
-                                #{tableInfo.tableNumber}
-                              </span>
-                            </div>
-                            <div>
-                              <p className="font-bold text-dark">
-                                {tableInfo.name}
-                              </p>
-                              <div className="flex items-center gap-1 text-xs text-dark-gray mt-0.5">
-                                <MapPin className="w-3 h-3 text-primary" />
-                                {tableInfo.location}
-                              </div>
-                            </div>
-                          </div>
-                          {tableInfo.capacity && (
-                            <p className="text-xs text-dark-gray flex items-center gap-1">
-                              <Hash className="w-3 h-3" />
-                              Up to {tableInfo.capacity} seats
-                            </p>
-                          )}
-                        </>
-                      ) : (
-                        <p className="text-sm text-dark-gray">
-                          No table assigned
-                        </p>
-                      )}
-                    </div>
-
-                    {/* Contact */}
-                    <div className="bg-gray-50 rounded-2xl p-4 space-y-3">
-                      <p className="text-xs font-semibold text-dark-gray uppercase tracking-wider flex items-center gap-1.5">
-                        <Phone className="w-3.5 h-3.5 text-primary" />
-                        Contact
-                      </p>
-                      <div className="space-y-2">
-                        <a
-                          href={`mailto:${res.email}`}
-                          className="flex items-center gap-2 text-sm text-dark hover:text-primary transition-colors group"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <Mail className="w-4 h-4 text-primary flex-shrink-0" />
-                          <span className="truncate group-hover:underline">
-                            {res.email}
-                          </span>
-                        </a>
-                        <a
-                          href={`tel:${res.phone}`}
-                          className="flex items-center gap-2 text-sm text-dark hover:text-primary transition-colors group"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <Phone className="w-4 h-4 text-primary flex-shrink-0" />
-                          <span className="group-hover:underline">
-                            {res.phone}
-                          </span>
-                        </a>
-                      </div>
-                    </div>
-
-                    {/* Special Requests */}
-                    <div className="bg-gray-50 rounded-2xl p-4 space-y-3">
-                      <p className="text-xs font-semibold text-dark-gray uppercase tracking-wider flex items-center gap-1.5">
-                        <MessageSquare className="w-3.5 h-3.5 text-primary" />
-                        Special Requests
-                      </p>
-                      {res.specialRequests ? (
-                        <p className="text-sm text-dark italic leading-relaxed">
-                          "{res.specialRequests}"
-                        </p>
-                      ) : (
-                        <p className="text-sm text-dark-gray">
-                          No special requests
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Panel Footer */}
-                  <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                    <p className="text-xs text-dark-gray">
-                      Booked on{" "}
-                      <span className="font-medium text-dark">
-                        {new Date(res.createdAt).toLocaleDateString("en-US", {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        })}
-                      </span>
-                    </p>
-                    <div className="flex items-center gap-3">
-                      <div className="flex items-center gap-2">
-                        <label className="text-xs font-semibold text-dark-gray">
-                          Update Status:
-                        </label>
-                        <div className="relative">
-                          <select
-                            value={res.status}
-                            onChange={(e) =>
-                              handleStatusChange(res._id, e.target.value)
-                            }
-                            disabled={updatingId === res._id}
-                            className={`pl-3 pr-7 py-2 rounded-xl text-xs font-semibold border-2 cursor-pointer appearance-none transition-all focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:opacity-60 disabled:cursor-not-allowed ${STATUS_STYLES[res.status]}`}
-                          >
-                            {STATUS_OPTIONS.map((s) => (
-                              <option key={s} value={s}>
-                                {s}
-                              </option>
-                            ))}
-                          </select>
-                          <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 pointer-events-none opacity-60" />
-                        </div>
-                      </div>
-                      <button
-                        onClick={() => {
-                          setReservationToDelete(res);
-                          setShowDeleteConfirm(true);
-                        }}
-                        className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all text-xs font-semibold border border-red-100 hover:border-red-500"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              );
-            })()}
         </>
       )}
 

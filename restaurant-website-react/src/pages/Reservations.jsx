@@ -19,6 +19,9 @@ import {
   Loader2,
   TableIcon,
   CalendarCheck,
+  UserPlus,
+  Trash2,
+  Plus,
 } from "lucide-react";
 
 // Available time slots
@@ -95,6 +98,10 @@ const Reservations = () => {
     specialRequests: "",
   });
   const [formErrors, setFormErrors] = useState({});
+
+  // Guest details (optional, inside Step 3)
+  const [hasGuestList, setHasGuestList] = useState(false);
+  const [guestList, setGuestList] = useState([{ name: "", note: "" }]);
 
   // Step 4
   const [submitting, setSubmitting] = useState(false);
@@ -212,6 +219,7 @@ const Reservations = () => {
 
   const handleSubmit = async () => {
     if (!validateStep3()) return;
+    if (!validateGuestList()) return;
     setSubmitting(true);
     try {
       const result = await reservationsService.createReservation({
@@ -223,6 +231,15 @@ const Reservations = () => {
         reservationTime: selectedTime,
         partySize,
         specialRequests: formData.specialRequests.trim(),
+        guestDetails: {
+          hasGuestList,
+          guests: hasGuestList
+            ? guestList.map((g) => ({
+                name: g.name.trim(),
+                note: g.note.trim(),
+              }))
+            : [],
+        },
       });
 
       if (result.success) {
@@ -253,6 +270,58 @@ const Reservations = () => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     if (formErrors[name]) setFormErrors((prev) => ({ ...prev, [name]: "" }));
+  };
+
+  // Guest list helpers
+  const handleToggleGuestList = (enabled) => {
+    setHasGuestList(enabled);
+    if (enabled && guestList.length === 0) {
+      setGuestList([{ name: "", note: "" }]);
+    }
+  };
+
+  const handleGuestChange = (index, field, value) => {
+    setGuestList((prev) =>
+      prev.map((g, i) => (i === index ? { ...g, [field]: value } : g)),
+    );
+  };
+
+  const handleAddGuest = () => {
+    if (guestList.length < partySize) {
+      setGuestList((prev) => [...prev, { name: "", note: "" }]);
+    }
+  };
+
+  const handleRemoveGuest = (index) => {
+    setGuestList((prev) => {
+      const updated = prev.filter((_, i) => i !== index);
+      return updated.length === 0 ? [{ name: "", note: "" }] : updated;
+    });
+  };
+
+  const validateGuestList = () => {
+    if (!hasGuestList) return true;
+    for (let i = 0; i < guestList.length; i++) {
+      if (!guestList[i].name.trim()) {
+        dispatch(
+          showNotification({
+            type: "error",
+            message: `Guest ${i + 1} name is required`,
+          }),
+        );
+        return false;
+      }
+    }
+    if (guestList.length > partySize) {
+      dispatch(
+        showNotification({
+          type: "error",
+          message: `Cannot add more guests than party size (${partySize})`,
+        }),
+      );
+      return false;
+    }
+    return true;
   };
 
   // Step indicator
@@ -755,6 +824,115 @@ const Reservations = () => {
                   />
                 </div>
               </div>
+
+              {/* Guest Details (Optional) */}
+              <div className="space-y-4 border-2 border-dashed border-gray-200 rounded-2xl p-5">
+                <div className="flex items-start gap-3">
+                  <div className="w-9 h-9 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <UserPlus className="w-5 h-5 text-primary" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-semibold text-dark text-sm">
+                      Add Guest Names{" "}
+                      <span className="text-dark-gray font-normal">
+                        (optional)
+                      </span>
+                    </p>
+                    <p className="text-xs text-dark-gray mt-0.5">
+                      Would you like to add names for your guests? You can add
+                      up to {partySize}{" "}
+                      {partySize === 1 ? "guest" : "guests"}.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Toggle buttons */}
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => handleToggleGuestList(true)}
+                    className={`flex-1 py-2.5 rounded-xl border-2 text-sm font-semibold transition-all ${
+                      hasGuestList
+                        ? "bg-primary text-white border-primary shadow-md shadow-primary/20"
+                        : "border-gray-200 text-dark-gray hover:border-primary/50 hover:text-primary"
+                    }`}
+                  >
+                    Yes, add guest names
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleToggleGuestList(false)}
+                    className={`flex-1 py-2.5 rounded-xl border-2 text-sm font-semibold transition-all ${
+                      !hasGuestList
+                        ? "bg-gray-100 text-dark border-gray-300"
+                        : "border-gray-200 text-dark-gray hover:border-gray-300 hover:bg-gray-50"
+                    }`}
+                  >
+                    No, skip this
+                  </button>
+                </div>
+
+                {/* Guest list form */}
+                {hasGuestList && (
+                  <div className="space-y-3 pt-1">
+                    <p className="text-xs font-semibold text-dark-gray uppercase tracking-wider">
+                      Guest Details ({guestList.length}/{partySize} added)
+                    </p>
+                    {guestList.map((guest, index) => (
+                      <div
+                        key={index}
+                        className="bg-gray-50 rounded-xl p-4 space-y-3 relative"
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-semibold text-primary">
+                            Guest {index + 1}
+                          </span>
+                          {guestList.length > 1 && (
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveGuest(index)}
+                              className="w-6 h-6 rounded-lg flex items-center justify-center text-red-400 hover:bg-red-100 hover:text-red-600 transition-all"
+                              title="Remove guest"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          )}
+                        </div>
+                        <input
+                          type="text"
+                          value={guest.name}
+                          onChange={(e) =>
+                            handleGuestChange(index, "name", e.target.value)
+                          }
+                          placeholder="Guest name *"
+                          maxLength={80}
+                          className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all text-dark text-sm placeholder:text-gray-400"
+                        />
+                        <input
+                          type="text"
+                          value={guest.note}
+                          onChange={(e) =>
+                            handleGuestChange(index, "note", e.target.value)
+                          }
+                          placeholder="Any note (e.g. dietary requirement) — optional"
+                          maxLength={120}
+                          className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all text-dark text-sm placeholder:text-gray-400"
+                        />
+                      </div>
+                    ))}
+                    {guestList.length < partySize && (
+                      <button
+                        type="button"
+                        onClick={handleAddGuest}
+                        className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border-2 border-dashed border-primary/40 text-primary text-sm font-semibold hover:border-primary hover:bg-cream-light transition-all"
+                      >
+                        <Plus className="w-4 h-4" />
+                        Add Another Guest
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
 
             <div className="border-t border-gray-100 px-8 py-5 bg-gray-50 flex items-center justify-between gap-4">
@@ -906,6 +1084,8 @@ const Reservations = () => {
                     phone: "",
                     specialRequests: "",
                   });
+                  setHasGuestList(false);
+                  setGuestList([{ name: "", note: "" }]);
                   setConfirmedReservation(null);
                 }}
                 className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 rounded-xl border-2 border-gray-200 text-dark-gray font-semibold hover:border-primary hover:text-primary transition-all"

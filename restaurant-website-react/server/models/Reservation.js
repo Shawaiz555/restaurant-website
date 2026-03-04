@@ -64,6 +64,15 @@ const reservationSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    guestDetails: {
+      hasGuestList: { type: Boolean, default: false },
+      guests: [
+        {
+          name: { type: String, required: true, trim: true },
+          note: { type: String, trim: true, default: '' },
+        },
+      ],
+    },
     statusHistory: [
       {
         status: String,

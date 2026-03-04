@@ -43,6 +43,16 @@ class ReservationsService {
     }
   }
 
+  async getReservationById(id) {
+    try {
+      const response = await apiClient.get(`/reservations/${id}`);
+      return { success: true, reservation: response.reservation };
+    } catch (error) {
+      console.error('Get reservation by id error:', error);
+      return { success: false, message: error.message };
+    }
+  }
+
   async updateReservationStatus(id, status, note = '') {
     try {
       const response = await apiClient.put(`/reservations/${id}/status`, { status, note });

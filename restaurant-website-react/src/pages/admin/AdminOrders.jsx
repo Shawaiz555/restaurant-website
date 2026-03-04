@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import StatusBadge from "../../components/admin/common/StatusBadge";
+import { useNavigate } from "react-router-dom";
 import SearchBar from "../../components/admin/common/SearchBar";
 import ConfirmModal from "../../components/admin/common/ConfirmModal";
 import {
@@ -29,34 +29,23 @@ import {
   Calendar,
   Settings,
   ClipboardList,
-  MapPin,
-  CreditCard,
-  Utensils,
-  Coffee,
-  Cake,
-  Plus,
-  Star,
   FileText,
   ChevronsLeft,
   ChevronsRight,
   Trash2,
-  X,
 } from "lucide-react";
 
 const AdminOrders = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const orders = useSelector(selectFilteredOrders);
   const stats = useSelector(selectOrderStats);
   const filters = useSelector((state) => state.orders.filters);
 
-  const [selectedOrder, setSelectedOrder] = useState(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [orderToDelete, setOrderToDelete] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-
-  // Ref for order details section
-  const orderDetailsRef = useRef(null);
 
   const loadOrders = React.useCallback(async () => {
     const allOrders = await ordersService.getOrders();
@@ -71,12 +60,6 @@ const AdminOrders = () => {
     const result = await ordersService.updateOrderStatus(id, newStatus);
     if (result.success) {
       dispatch(updateOrderStatus({ orderId: id, status: newStatus }));
-
-      // Update selected order if it's the one being modified
-      if (selectedOrder && selectedOrder._id === id) {
-        setSelectedOrder((prev) => ({ ...prev, status: newStatus }));
-      }
-
       dispatch(
         showNotification({
           type: "success",
@@ -102,11 +85,6 @@ const AdminOrders = () => {
     const result = await ordersService.deleteOrder(orderToDelete._id);
     if (result.success) {
       dispatch(deleteOrder(orderToDelete._id));
-
-      // Clear selection if the deleted order was selected
-      if (selectedOrder && selectedOrder._id === orderToDelete._id) {
-        setSelectedOrder(null);
-      }
 
       dispatch(
         showNotification({
@@ -147,16 +125,6 @@ const AdminOrders = () => {
 
   const formatCurrency = (amount) => {
     return `Rs ${parseFloat(amount || 0).toFixed(2)}`;
-  };
-
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
   };
 
   return (
@@ -383,27 +351,7 @@ const AdminOrders = () => {
                       className={`${
                         index % 2 === 0 ? "bg-white" : "bg-gray-50/50"
                       } hover:bg-cream-light/60 transition-all duration-200 cursor-pointer border-l-4 border-transparent hover:border-primary group`}
-                      onClick={() => {
-                        const newSelectedOrder =
-                          selectedOrder?._id === order._id ? null : order;
-                        setSelectedOrder(newSelectedOrder);
-
-                        // Scroll to order details if order is selected
-                        if (newSelectedOrder) {
-                          setTimeout(() => {
-                            if (orderDetailsRef.current) {
-                              const element = orderDetailsRef.current;
-                              const elementTop = element.offsetTop;
-                              const offset = 80; // Offset for better visibility (accounts for any fixed headers)
-
-                              window.scrollTo({
-                                top: elementTop - offset,
-                                behavior: "smooth",
-                              });
-                            }
-                          }, 150);
-                        }
-                      }}
+                      onClick={() => navigate(`/admin/orders/${order._id}`)}
                     >
                       <td className="px-4 lg:px-6 py-4 whitespace-nowrap">
                         <div className="flex flex-col items-center gap-1">
@@ -486,17 +434,30 @@ const AdminOrders = () => {
                         </div>
                       </td>
                       <td className="px-4 lg:px-6 py-4 text-center">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDeleteClick(order);
-                          }}
-                          className="px-4 py-1.5 rounded-lg bg-gradient-to-r from-red-500 to-red-600 text-white text-xs font-bold hover:from-red-600 hover:to-red-700 transition-all shadow-md hover:shadow-lg hover:scale-105 active:scale-95 flex items-center gap-1.5"
-                          title="Delete Product"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                          Delete
-                        </button>
+                        <div className="flex items-center justify-center gap-2">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              navigate(`/admin/orders/${order._id}`);
+                            }}
+                            className="px-3 py-1.5 rounded-lg bg-primary/10 text-primary border border-primary/20 hover:bg-primary hover:text-white transition-all text-xs font-bold hover:shadow-md hover:scale-105 active:scale-95 flex items-center gap-1.5"
+                            title="View Details"
+                          >
+                            <ClipboardList className="w-3.5 h-3.5" />
+                            Details
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteClick(order);
+                            }}
+                            className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-red-500 to-red-600 text-white text-xs font-bold hover:from-red-600 hover:to-red-700 transition-all shadow-md hover:shadow-lg hover:scale-105 active:scale-95 flex items-center gap-1.5"
+                            title="Delete Order"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                            Delete
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -625,295 +586,6 @@ const AdminOrders = () => {
           </>
         )}
       </div>
-
-      {/* Order Details Panel */}
-      {selectedOrder && (
-        <div
-          ref={orderDetailsRef}
-          className="bg-gradient-to-br from-white via-cream-light/30 to-white rounded-2xl p-6 lg:p-8 shadow-2xl border-2 border-primary/10"
-        >
-          {/* Header */}
-          <div className="flex items-center justify-between mb-6 pb-4 border-b-2 border-primary/20">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-gradient-to-br from-primary to-primary-dark rounded-xl flex items-center justify-center shadow-lg">
-                <ClipboardList className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h2 className="text-2xl font-bold text-primary">
-                  Order Details
-                </h2>
-                <p className="text-xs text-dark-gray">
-                  Complete order information
-                </p>
-              </div>
-            </div>
-            <button
-              onClick={() => setSelectedOrder(null)}
-              className="w-10 h-10 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 hover:text-red-700 transition-all flex items-center justify-center font-bold shadow-md hover:shadow-lg hover:scale-110 active:scale-95"
-              title="Close"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Customer Info */}
-            <div className="bg-gradient-to-br from-primary/5 to-primary-light/10 rounded-xl p-5 border-2 border-primary/20 shadow-lg">
-              <div className="flex items-center gap-2 mb-4">
-                <User className="w-5 h-5 text-primary" />
-                <h3 className="font-bold text-dark text-base">
-                  Customer Information
-                </h3>
-              </div>
-              <div className="space-y-3">
-                <div className="flex items-start gap-2 bg-white/80 rounded-lg p-2.5 border border-gray-100">
-                  <User className="w-4 h-4 text-dark-gray flex-shrink-0 mt-0.5" />
-                  <div className="flex-1">
-                    <p className="text-xs text-dark-gray font-semibold">Name</p>
-                    <p className="text-sm font-bold text-dark">
-                      {selectedOrder.customerInfo?.name ||
-                        selectedOrder.customerInfo?.fullName ||
-                        "N/A"}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-2 bg-white/80 rounded-lg p-2.5 border border-gray-100">
-                  <Mail className="w-4 h-4 text-dark-gray flex-shrink-0 mt-0.5" />
-                  <div className="flex-1">
-                    <p className="text-xs text-dark-gray font-semibold">
-                      Email
-                    </p>
-                    <p className="text-sm font-medium text-dark break-all">
-                      {selectedOrder.customerInfo?.email || "N/A"}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-2 bg-white/80 rounded-lg p-2.5 border border-gray-100">
-                  <Phone className="w-4 h-4 text-dark-gray flex-shrink-0 mt-0.5" />
-                  <div className="flex-1">
-                    <p className="text-xs text-dark-gray font-semibold">
-                      Phone
-                    </p>
-                    <p className="text-sm font-medium text-dark">
-                      {selectedOrder.customerInfo?.phone || "N/A"}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-2 bg-white/80 rounded-lg p-2.5 border border-gray-100">
-                  <MapPin className="w-4 h-4 text-dark-gray flex-shrink-0 mt-0.5" />
-                  <div className="flex-1">
-                    <p className="text-xs text-dark-gray font-semibold">
-                      Address
-                    </p>
-                    <p className="text-sm font-medium text-dark">
-                      {selectedOrder.customerInfo?.address || "N/A"}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-2 bg-white/80 rounded-lg p-2.5 border border-gray-100">
-                  {selectedOrder.isGuestOrder ? (
-                    <User className="w-4 h-4 text-dark-gray flex-shrink-0 mt-0.5" />
-                  ) : (
-                    <Star className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
-                  )}
-                  <div className="flex-1">
-                    <p className="text-xs text-dark-gray font-semibold">
-                      Customer Type
-                    </p>
-                    <span
-                      className={`inline-block text-xs font-bold px-2.5 py-1 rounded-full mt-1 ${
-                        selectedOrder.isGuestOrder
-                          ? "bg-gray-200 text-gray-700"
-                          : "bg-primary/20 text-primary"
-                      }`}
-                    >
-                      {selectedOrder.isGuestOrder
-                        ? "Guest Order"
-                        : "Registered User"}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Order Info */}
-            <div className="bg-gradient-to-br from-primary/5 to-primary-light/10 rounded-xl p-5 border-2 border-primary/20 shadow-lg">
-              <div className="flex items-center gap-2 mb-4">
-                <Package className="w-5 h-5 text-primary" />
-                <h3 className="font-bold text-dark text-base">
-                  Order Information
-                </h3>
-              </div>
-              <div className="space-y-3">
-                <div className="flex items-start gap-2 bg-white/80 rounded-lg p-2.5 border border-gray-100">
-                  <Hash className="w-4 h-4 text-dark-gray flex-shrink-0 mt-0.5" />
-                  <div className="flex-1">
-                    <p className="text-xs text-dark-gray font-semibold">
-                      Order ID
-                    </p>
-                    <p className="text-[10px] font-mono font-bold text-dark break-all">
-                      {selectedOrder.orderId}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-2 bg-white/80 rounded-lg p-2.5 border border-gray-100">
-                  <RefreshCw className="w-4 h-4 text-dark-gray flex-shrink-0 mt-0.5" />
-                  <div className="flex-1">
-                    <p className="text-xs text-dark-gray font-semibold">
-                      Status
-                    </p>
-                    <div className="mt-1">
-                      <StatusBadge status={selectedOrder.status} />
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-start gap-2 bg-white/80 rounded-lg p-2.5 border border-gray-100">
-                  <CreditCard className="w-4 h-4 text-dark-gray flex-shrink-0 mt-0.5" />
-                  <div className="flex-1">
-                    <p className="text-xs text-dark-gray font-semibold">
-                      Payment Method
-                    </p>
-                    <p className="text-sm font-bold text-dark">
-                      {selectedOrder.paymentMethod}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-2 bg-white/80 rounded-lg p-2.5 border border-gray-100">
-                  <Calendar className="w-4 h-4 text-dark-gray flex-shrink-0 mt-0.5" />
-                  <div className="flex-1">
-                    <p className="text-xs text-dark-gray font-semibold">
-                      Order Date
-                    </p>
-                    <p className="text-sm font-medium text-dark">
-                      {formatDate(selectedOrder.orderDate)}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Order Items */}
-          <div className="mt-6">
-            <div className="flex items-center gap-2 mb-4">
-              <Utensils className="w-5 h-5 text-primary" />
-              <h3 className="font-bold text-dark text-base">Order Items</h3>
-            </div>
-            <div className="space-y-3">
-              {selectedOrder.items?.map((item, index) => (
-                <div
-                  key={index}
-                  className="bg-gradient-to-r from-cream-light to-cream rounded-xl p-4 border-2 border-primary/20 shadow-md hover:shadow-lg transition-shadow"
-                >
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="w-6 h-6 bg-primary text-white rounded-full flex items-center justify-center text-xs font-bold">
-                          {index + 1}
-                        </span>
-                        <p className="font-bold text-dark text-sm">
-                          {item.name}
-                        </p>
-                      </div>
-                      <div className="space-y-1 ml-8">
-                        <p className="text-xs text-dark-gray">
-                          <span className="font-semibold">Size:</span>{" "}
-                          {item.size}
-                        </p>
-                        {item.spiceLevel && (
-                          <p className="text-xs text-dark-gray">
-                            <span className="font-semibold">Spice Level:</span>{" "}
-                            {item.spiceLevel.name}
-                          </p>
-                        )}
-                        {item.addOns && (
-                          <div className="text-xs text-dark-gray space-y-0.5 mt-2">
-                            {item.addOns.drinks?.length > 0 && (
-                              <p className="flex items-start gap-1">
-                                <Coffee className="w-3.5 h-3.5 text-dark-gray flex-shrink-0 mt-0.5" />
-                                <span className="font-semibold">Drinks:</span>
-                                <span>
-                                  {item.addOns.drinks
-                                    .map((d) => `${d.name} (×${d.quantity})`)
-                                    .join(", ")}
-                                </span>
-                              </p>
-                            )}
-                            {item.addOns.desserts?.length > 0 && (
-                              <p className="flex items-start gap-1">
-                                <Cake className="w-3.5 h-3.5 text-dark-gray flex-shrink-0 mt-0.5" />
-                                <span className="font-semibold">Desserts:</span>
-                                <span>
-                                  {item.addOns.desserts
-                                    .map((d) => `${d.name} (×${d.quantity})`)
-                                    .join(", ")}
-                                </span>
-                              </p>
-                            )}
-                            {item.addOns.extras?.length > 0 && (
-                              <p className="flex items-start gap-1">
-                                <Plus className="w-3.5 h-3.5 text-dark-gray flex-shrink-0 mt-0.5" />
-                                <span className="font-semibold">Extras:</span>
-                                <span>
-                                  {item.addOns.extras
-                                    .map((e) => `${e.name} (×${e.quantity})`)
-                                    .join(", ")}
-                                </span>
-                              </p>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-bold text-primary text-base">
-                        {formatCurrency(item.price)}
-                      </p>
-                      <p className="text-xs text-dark-gray bg-white px-2 py-1 rounded-full mt-1 inline-block">
-                        Qty: {item.quantity}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Order Summary */}
-          <div className="mt-6 bg-gradient-to-br from-primary/5 to-primary-light/10 rounded-xl p-5 border-2 border-primary/20 shadow-lg">
-            <div className="flex items-center gap-2 mb-4">
-              <DollarSign className="w-5 h-5 text-primary" />
-              <h3 className="font-bold text-dark text-base">Order Summary</h3>
-            </div>
-            <div className="space-y-3">
-              <div className="flex justify-between items-center bg-white/80 rounded-lg p-2.5 border border-gray-100">
-                <span className="text-sm text-dark-gray font-semibold">
-                  Subtotal:
-                </span>
-                <span className="text-sm font-bold text-dark">
-                  {formatCurrency(selectedOrder.subtotal)}
-                </span>
-              </div>
-              <div className="flex justify-between items-center bg-white/80 rounded-lg p-2.5 border border-gray-100">
-                <span className="text-sm text-dark-gray font-semibold">
-                  Delivery Fee:
-                </span>
-                <span className="text-sm font-bold text-dark">
-                  {formatCurrency(selectedOrder.deliveryFee)}
-                </span>
-              </div>
-              <div className="flex justify-between items-center bg-gradient-to-r from-primary/20 to-primary-light/20 rounded-lg p-3 border-2 border-primary/30 mt-2">
-                <span className="text-base font-bold text-dark">
-                  Total Amount:
-                </span>
-                <span className="text-lg font-bold text-primary">
-                  {formatCurrency(selectedOrder.total)}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Delete Confirmation Modal */}
       <ConfirmModal

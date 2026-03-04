@@ -30,6 +30,8 @@ import AdminAnalytics from './pages/admin/AdminAnalytics';
 import AdminTables from './pages/admin/AdminTables';
 import AdminTableForm from './pages/admin/AdminTableForm';
 import AdminReservations from './pages/admin/AdminReservations';
+import AdminReservationDetail from './pages/admin/AdminReservationDetail';
+import AdminOrderDetail from './pages/admin/AdminOrderDetail';
 
 // User Pages
 import Reservations from './pages/Reservations';
@@ -82,6 +84,7 @@ function AppContent() {
           <Route index element={<AdminDashboard />} />
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="orders" element={<AdminOrders />} />
+          <Route path="orders/:id" element={<AdminOrderDetail />} />
           <Route path="products" element={<AdminProducts />} />
           <Route path="products/new" element={<AdminProductForm />} />
           <Route path="products/:id/edit" element={<AdminProductForm />} />
@@ -89,6 +92,7 @@ function AppContent() {
           <Route path="tables/new" element={<AdminTableForm />} />
           <Route path="tables/:id/edit" element={<AdminTableForm />} />
           <Route path="reservations" element={<AdminReservations />} />
+          <Route path="reservations/:id" element={<AdminReservationDetail />} />
           <Route path="expenses" element={<AdminExpenses />} />
           <Route path="analytics" element={<AdminAnalytics />} />
         </Route>

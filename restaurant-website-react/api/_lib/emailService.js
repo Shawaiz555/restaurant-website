@@ -491,6 +491,32 @@ const getReservationCustomerEmailTemplate = (reservation) => `
                   </table>
                 </td>
               </tr>
+              ${reservation.guestDetails && reservation.guestDetails.hasGuestList && reservation.guestDetails.guests && reservation.guestDetails.guests.length > 0 ? `
+              <tr>
+                <td style="padding: 20px 30px;">
+                  <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 20px; border-bottom: 2px solid #E67E22; padding-bottom: 10px;">Guest List (${reservation.guestDetails.guests.length} ${reservation.guestDetails.guests.length === 1 ? 'Guest' : 'Guests'})</h3>
+                  <table width="100%" cellpadding="0" cellspacing="0" style="border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;">
+                    ${reservation.guestDetails.guests.map((guest, i) => `
+                    <tr>
+                      <td style="padding: 12px 15px; border-bottom: 1px solid #f3f4f6; background-color: ${i % 2 === 0 ? '#ffffff' : '#f9fafb'};">
+                        <table width="100%" cellpadding="0" cellspacing="0">
+                          <tr>
+                            <td width="32" valign="middle" style="padding-right: 12px;">
+                              <div style="width: 28px; height: 28px; background: linear-gradient(135deg, #E67E22, #D35400); border-radius: 50%; display: flex; align-items: center; justify-content: center; text-align: center; line-height: 28px;">
+                                <span style="color: #ffffff; font-size: 13px; font-weight: bold;">${i + 1}</span>
+                              </div>
+                            </td>
+                            <td valign="middle">
+                              <p style="margin: 0; color: #1f2937; font-size: 15px; font-weight: 600;">${guest.name}</p>
+                              ${guest.note ? `<p style="margin: 3px 0 0 0; color: #6b7280; font-size: 13px; font-style: italic;">${guest.note}</p>` : ''}
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>`).join('')}
+                  </table>
+                </td>
+              </tr>` : ''}
               <tr>
                 <td style="padding: 20px 30px;">
                   <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 20px; border-bottom: 2px solid #E67E22; padding-bottom: 10px;">Your Information</h3>
@@ -576,6 +602,32 @@ const getReservationAdminEmailTemplate = (reservation) => `
                   </table>
                 </td>
               </tr>
+              ${reservation.guestDetails && reservation.guestDetails.hasGuestList && reservation.guestDetails.guests && reservation.guestDetails.guests.length > 0 ? `
+              <tr>
+                <td style="padding: 20px 30px;">
+                  <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 20px; border-bottom: 2px solid #E67E22; padding-bottom: 10px;">Guest List (${reservation.guestDetails.guests.length} ${reservation.guestDetails.guests.length === 1 ? 'Guest' : 'Guests'})</h3>
+                  <table width="100%" cellpadding="0" cellspacing="0" style="border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;">
+                    ${reservation.guestDetails.guests.map((guest, i) => `
+                    <tr>
+                      <td style="padding: 12px 15px; border-bottom: 1px solid #f3f4f6; background-color: ${i % 2 === 0 ? '#ffffff' : '#f9fafb'};">
+                        <table width="100%" cellpadding="0" cellspacing="0">
+                          <tr>
+                            <td width="32" valign="middle" style="padding-right: 12px;">
+                              <div style="width: 28px; height: 28px; background: linear-gradient(135deg, #E67E22, #D35400); border-radius: 50%; display: flex; align-items: center; justify-content: center; text-align: center; line-height: 28px;">
+                                <span style="color: #ffffff; font-size: 13px; font-weight: bold;">${i + 1}</span>
+                              </div>
+                            </td>
+                            <td valign="middle">
+                              <p style="margin: 0; color: #1f2937; font-size: 15px; font-weight: 600;">${guest.name}</p>
+                              ${guest.note ? `<p style="margin: 3px 0 0 0; color: #6b7280; font-size: 13px; font-style: italic;">${guest.note}</p>` : ''}
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>`).join('')}
+                  </table>
+                </td>
+              </tr>` : ''}
               <tr>
                 <td style="padding: 20px 30px;">
                   <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 20px; border-bottom: 2px solid #E67E22; padding-bottom: 10px;">Customer Information</h3>

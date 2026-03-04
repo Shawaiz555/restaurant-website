@@ -34,6 +34,7 @@ const createReservation = async (req, res) => {
       reservationTime,
       partySize,
       specialRequests,
+      guestDetails,
     } = req.body;
 
     // Validate required fields
@@ -65,6 +66,30 @@ const createReservation = async (req, res) => {
         success: false,
         message: `Party size exceeds table capacity (max ${table.capacity})`,
       });
+    }
+
+    // Validate guest details if provided
+    let sanitizedGuestDetails = { hasGuestList: false, guests: [] };
+    if (guestDetails && guestDetails.hasGuestList) {
+      const guests = Array.isArray(guestDetails.guests) ? guestDetails.guests : [];
+      if (guests.length > table.capacity) {
+        return res.status(400).json({
+          success: false,
+          message: `Cannot add more guests than table capacity (max ${table.capacity})`,
+        });
+      }
+      for (const g of guests) {
+        if (!g.name || !g.name.trim()) {
+          return res.status(400).json({ success: false, message: 'Each guest must have a name' });
+        }
+      }
+      sanitizedGuestDetails = {
+        hasGuestList: true,
+        guests: guests.map((g) => ({
+          name: g.name.trim(),
+          note: g.note ? g.note.trim() : '',
+        })),
+      };
     }
 
     // Check for conflicting reservations on same table, date, time
@@ -101,6 +126,7 @@ const createReservation = async (req, res) => {
       specialRequests: specialRequests ? specialRequests.trim() : '',
       status: 'Pending',
       isGuestReservation,
+      guestDetails: sanitizedGuestDetails,
       statusHistory: [{ status: 'Pending', timestamp: new Date(), note: 'Reservation created' }],
     });
 
