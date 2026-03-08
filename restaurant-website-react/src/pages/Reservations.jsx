@@ -350,6 +350,63 @@ const Reservations = () => {
     availableTables.every((t) => t.capacity < partySize);
   const combinedCapacity = selectedTables.reduce((s, t) => s + t.capacity, 0);
 
+  // Smart table filtering:
+  // 1. Exact match → only show tables with capacity === partySize
+  // 2. No exact match, single table can fit → show only the nearest (min capacity >= partySize)
+  // 3. Multi-select → show only tables with capacity <= remaining seats needed
+  const filteredTables = (() => {
+    if (!availableTables.length) return [];
+
+    if (!needsMultiSelect) {
+      // Check for exact match first
+      const exactMatches = availableTables.filter(
+        (t) => t.capacity === partySize,
+      );
+      if (exactMatches.length > 0) return exactMatches;
+
+      // No exact match — find minimum capacity that fits
+      const fittingTables = availableTables.filter(
+        (t) => t.capacity >= partySize,
+      );
+      if (fittingTables.length === 0) return availableTables;
+      const minFit = Math.min(...fittingTables.map((t) => t.capacity));
+      return fittingTables.filter((t) => t.capacity === minFit);
+    }
+
+    // Multi-select: only show tables that can contribute to remaining seats
+    const remaining = partySize - combinedCapacity;
+
+    const alreadySelected = availableTables.filter((t) =>
+      selectedTables.some((s) => s._id === t._id),
+    );
+
+    // Capacity met — only show already-selected tables so user can deselect if needed
+    if (remaining <= 0) return alreadySelected;
+
+    const contributing = availableTables.filter(
+      (t) => t.capacity <= remaining && !selectedTables.some((s) => s._id === t._id),
+    );
+
+    if (contributing.length === 0) {
+      // No table fits exactly — show smallest available unselected tables
+      const unselected = availableTables.filter(
+        (t) => !selectedTables.some((s) => s._id === t._id),
+      );
+      const minCap = unselected.length
+        ? Math.min(...unselected.map((t) => t.capacity))
+        : null;
+      const nearest = minCap
+        ? unselected.filter((t) => t.capacity === minCap)
+        : [];
+      return [...alreadySelected, ...nearest];
+    }
+
+    // Show tables with the largest capacity that still fits remaining (greedy best fit)
+    const maxContributing = Math.max(...contributing.map((t) => t.capacity));
+    const bestFit = contributing.filter((t) => t.capacity === maxContributing);
+    return [...alreadySelected, ...bestFit];
+  })();
+
   const handleTableClick = (table) => {
     if (needsMultiSelect) {
       setSelectedTables((prev) => {
@@ -748,7 +805,7 @@ const Reservations = () => {
                   {/* Group tables by location */}
                   <div className="space-y-8 sm:space-y-10">
                     {["Indoor", "Outdoor", "VIP", "Bar"].map((loc) => {
-                      const locationTables = availableTables.filter(
+                      const locationTables = filteredTables.filter(
                         (t) => t.location === loc,
                       );
                       if (locationTables.length === 0) return null;
