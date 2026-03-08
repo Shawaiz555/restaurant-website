@@ -1,5 +1,5 @@
 import React from "react";
-import { Tag, Star, Gift, Zap, TrendingDown } from "lucide-react";
+import { Tag, Star, Gift, Zap, TrendingUp } from "lucide-react";
 
 const DealsHeroSection = ({ deals, isLoading, error }) => {
   return (
@@ -76,7 +76,7 @@ const DealsHeroSection = ({ deals, isLoading, error }) => {
               </div>
 
               <div className="group bg-white/70 backdrop-blur-sm rounded-2xl p-5 lg:p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 border-2 border-primary/20 hover:border-primary/40 text-center">
-                <TrendingDown className="w-10 h-10 mx-auto mb-3 text-primary group-hover:scale-110 transition-transform" />
+                <TrendingUp className="w-10 h-10 mx-auto mb-3 text-primary group-hover:scale-110 transition-transform" />
                 <div className="text-primary font-sans text-3xl lg:text-4xl font-bold mb-1 font-numeric">
                   <span className="text-xl mr-1">Rs.</span>
                   {Math.min(...deals.map((d) => d.price || 0))}

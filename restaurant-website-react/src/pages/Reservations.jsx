@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { showNotification } from "../store/slices/notificationSlice";
@@ -131,13 +131,16 @@ const Reservations = () => {
       return;
     }
     setLoadingBookedTimes(true);
-    reservationsService.getBookedTimes(selectedDate).then((times) => {
-      setBookedTimes(times);
-      // If the currently selected time just became booked, clear it
-      if (selectedTime && times.includes(selectedTime)) {
-        setSelectedTime("");
-      }
-    }).finally(() => setLoadingBookedTimes(false));
+    reservationsService
+      .getBookedTimes(selectedDate)
+      .then((times) => {
+        setBookedTimes(times);
+        // If the currently selected time just became booked, clear it
+        if (selectedTime && times.includes(selectedTime)) {
+          setSelectedTime("");
+        }
+      })
+      .finally(() => setLoadingBookedTimes(false));
   }, [selectedDate]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchAvailableTables = useCallback(async () => {
@@ -350,11 +353,14 @@ const Reservations = () => {
     availableTables.every((t) => t.capacity < partySize);
   const combinedCapacity = selectedTables.reduce((s, t) => s + t.capacity, 0);
 
+  // Ref for smooth scrolling when a table is selected in multi-select mode
+  const tableGridRef = useRef(null);
+
   // Smart table filtering:
   // 1. Exact match → only show tables with capacity === partySize
   // 2. No exact match, single table can fit → show only the nearest (min capacity >= partySize)
-  // 3. Multi-select → show only tables with capacity <= remaining seats needed
-  const filteredTables = (() => {
+  // 3. Multi-select → show the best primary table AND all tables needed for remaining seats upfront
+  const filteredTables = useMemo(() => {
     if (!availableTables.length) return [];
 
     if (!needsMultiSelect) {
@@ -373,39 +379,49 @@ const Reservations = () => {
       return fittingTables.filter((t) => t.capacity === minFit);
     }
 
-    // Multi-select: only show tables that can contribute to remaining seats
-    const remaining = partySize - combinedCapacity;
-
+    // Multi-select mode:
+    // Greedily compute the full recommended set of tables needed to cover remaining seats,
+    // and show ALL of them upfront so the user sees the complete picture immediately.
     const alreadySelected = availableTables.filter((t) =>
       selectedTables.some((s) => s._id === t._id),
     );
 
+    const remaining = partySize - combinedCapacity;
+
     // Capacity met — only show already-selected tables so user can deselect if needed
     if (remaining <= 0) return alreadySelected;
 
-    const contributing = availableTables.filter(
-      (t) => t.capacity <= remaining && !selectedTables.some((s) => s._id === t._id),
-    );
+    const unselected = availableTables
+      .filter((t) => !selectedTables.some((s) => s._id === t._id))
+      .sort((a, b) => b.capacity - a.capacity); // largest first
 
-    if (contributing.length === 0) {
-      // No table fits exactly — show smallest available unselected tables
-      const unselected = availableTables.filter(
-        (t) => !selectedTables.some((s) => s._id === t._id),
-      );
-      const minCap = unselected.length
-        ? Math.min(...unselected.map((t) => t.capacity))
-        : null;
-      const nearest = minCap
-        ? unselected.filter((t) => t.capacity === minCap)
-        : [];
-      return [...alreadySelected, ...nearest];
+    // Greedily pick tables until remaining seats are covered, collect ALL picked IDs
+    const recommendedIds = new Set();
+    let seatsLeft = remaining;
+
+    for (const table of unselected) {
+      if (seatsLeft <= 0) break;
+      if (table.capacity <= seatsLeft) {
+        recommendedIds.add(table._id);
+        seatsLeft -= table.capacity;
+      }
     }
 
-    // Show tables with the largest capacity that still fits remaining (greedy best fit)
-    const maxContributing = Math.max(...contributing.map((t) => t.capacity));
-    const bestFit = contributing.filter((t) => t.capacity === maxContributing);
-    return [...alreadySelected, ...bestFit];
-  })();
+    // If seats still not covered (no exact fit possible), add the smallest available as fallback
+    if (seatsLeft > 0) {
+      const fallback = unselected.find((t) => !recommendedIds.has(t._id));
+      if (fallback) recommendedIds.add(fallback._id);
+    }
+
+    const recommended = unselected.filter((t) => recommendedIds.has(t._id));
+    return [...alreadySelected, ...recommended];
+  }, [availableTables, selectedTables, needsMultiSelect, partySize, combinedCapacity]);
+
+  // Smooth scroll to newly selected table area when a table is picked in multi-select mode
+  useEffect(() => {
+    if (!needsMultiSelect || selectedTables.length === 0) return;
+    tableGridRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }, [selectedTables.length, needsMultiSelect]);
 
   const handleTableClick = (table) => {
     if (needsMultiSelect) {
@@ -501,18 +517,18 @@ const Reservations = () => {
         {/* ─── STEP 1: Date, Time, Party Size ─── */}
         {step === 1 && (
           <div className="bg-white rounded-[1.5rem] sm:rounded-[2.5rem] shadow-2xl shadow-black/[0.03] border border-gray-100 overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-500">
-            <div className="bg-cream px-6 sm:px-10 py-6 sm:py-8 border-b border-gray-50 relative overflow-hidden">
+            <div className="bg-primary px-6 sm:px-10 py-6 sm:py-8 border-b border-gray-50 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-full bg-primary/5 -skew-x-12 translate-x-10" />
-              <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-dark relative z-10">
+              <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white relative z-10">
                 Plan Your Visit
               </h2>
-              <p className="text-dark-gray/60 text-[10px] sm:text-xs font-bold uppercase tracking-widest mt-1 relative z-10">
+              <p className="text-white text-[10px] sm:text-xs font-bold uppercase tracking-widest mt-1 relative z-10">
                 Step 1: Date, Time & Group Size
               </p>
             </div>
             <div className="p-6 sm:p-10 space-y-8 sm:space-y-10">
               {/* Date */}
-              <div className="space-y-3">
+              <div className="space-y-3 border-2 border-gray-100 rounded-2xl p-4">
                 <label className="block text-dark font-bold text-[10px] sm:text-xs tracking-wide uppercase px-1">
                   <Calendar className="w-4 h-4 inline mr-2 text-primary" />
                   Select Date
@@ -529,13 +545,13 @@ const Reservations = () => {
               </div>
 
               {/* Time Slots */}
-              <div className="space-y-4">
+              <div className="space-y-4 border-2 border-gray-100 rounded-2xl p-4">
                 <label className="block text-dark font-bold text-[10px] sm:text-xs tracking-wide uppercase px-1">
                   <Clock className="w-4 h-4 inline mr-2 text-primary" />
                   Select Time Slot
                 </label>
 
-                <div className="space-y-6">
+                <div className="space-y-6 border-2 border-gray-100 rounded-2xl p-4">
                   {/* Lunch Slots */}
                   <div>
                     <h3 className="text-[10px] font-bold text-dark-gray/40 mb-3 flex items-center gap-2">
@@ -615,7 +631,7 @@ const Reservations = () => {
               </div>
 
               {/* Party Size */}
-              <div className="space-y-4">
+              <div className="space-y-4 border-2 border-gray-100 rounded-2xl p-4">
                 <label className="block text-dark font-bold text-[10px] sm:text-xs tracking-wide uppercase px-1">
                   <Users className="w-4 h-4 inline mr-2 text-primary" />
                   Group Size
@@ -684,21 +700,21 @@ const Reservations = () => {
         {/* ─── STEP 2: Table Selection ─── */}
         {step === 2 && (
           <div className="bg-white rounded-[1.5rem] sm:rounded-[2.5rem] shadow-2xl shadow-black/[0.03] border border-gray-100 overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-500">
-            <div className="bg-cream px-6 sm:px-10 py-6 sm:py-8 border-b border-gray-50 relative overflow-hidden">
+            <div className="bg-primary px-6 sm:px-10 py-6 sm:py-8 border-b border-gray-50 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-full bg-primary/5 -skew-x-12 translate-x-10" />
-              <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-dark relative z-10">
+              <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white relative z-10">
                 Choose Your Table
               </h2>
-              <div className="flex flex-wrap gap-2 sm:gap-4 mt-2 sm:mt-3 relative z-10 text-dark-gray/60 text-[9px] sm:text-[10px] font-bold uppercase tracking-widest">
-                <span className="flex items-center gap-1.5 bg-white px-2 sm:px-3 py-1 sm:py-1.5 rounded-full border border-gray-100">
+              <div className="flex flex-wrap gap-2 sm:gap-4 mt-2 sm:mt-3 relative z-10 text-white text-[9px] sm:text-[10px] font-bold uppercase tracking-widest">
+                <span className="flex items-center gap-1.5 bg-white text-primary px-2 sm:px-3 py-1 sm:py-1.5 rounded-full border border-gray-100">
                   <Calendar className="w-3 h-3 text-primary" />
                   {reservationsService.formatDate(selectedDate)}
                 </span>
-                <span className="flex items-center gap-1.5 bg-white px-2 sm:px-3 py-1 sm:py-1.5 rounded-full border border-gray-100">
+                <span className="flex items-center gap-1.5 bg-white text-primary px-2 sm:px-3 py-1 sm:py-1.5 rounded-full border border-gray-100">
                   <Clock className="w-3 h-3 text-primary" />
                   {formatTimeDisplay(selectedTime)}
                 </span>
-                <span className="flex items-center gap-1.5 bg-white px-2 sm:px-3 py-1 sm:py-1.5 rounded-full border border-gray-100">
+                <span className="flex items-center gap-1.5 bg-white text-primary px-2 sm:px-3 py-1 sm:py-1.5 rounded-full border border-gray-100">
                   <Users className="w-3 h-3 text-primary" />
                   {partySize} Guests
                 </span>
@@ -803,7 +819,7 @@ const Reservations = () => {
                   </div>
 
                   {/* Group tables by location */}
-                  <div className="space-y-8 sm:space-y-10">
+                  <div ref={tableGridRef} className="space-y-8 sm:space-y-10">
                     {["Indoor", "Outdoor", "VIP", "Bar"].map((loc) => {
                       const locationTables = filteredTables.filter(
                         (t) => t.location === loc,
@@ -957,15 +973,14 @@ const Reservations = () => {
         )}
 
         {/* ─── STEP 3: Contact Details ─── */}
-        {/* ─── STEP 3: Contact Details ─── */}
         {step === 3 && (
           <div className="bg-white rounded-[1.5rem] sm:rounded-[2.5rem] shadow-2xl shadow-black/[0.03] border border-gray-100 overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-500">
-            <div className="bg-cream px-6 sm:px-10 py-6 sm:py-8 border-b border-gray-50 relative overflow-hidden">
+            <div className="bg-primary px-6 sm:px-10 py-6 sm:py-8 border-b border-gray-50 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-full bg-primary/5 -skew-x-12 translate-x-10" />
-              <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-dark relative z-10">
+              <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white relative z-10">
                 Contact Details
               </h2>
-              <p className="text-dark-gray/60 text-[10px] sm:text-xs font-bold uppercase tracking-widest mt-1 relative z-10">
+              <p className="text-white text-[10px] sm:text-xs font-bold uppercase tracking-widest mt-1 relative z-10">
                 Step 3: Secure Your Reservation
               </p>
             </div>
@@ -973,13 +988,13 @@ const Reservations = () => {
             <div className="p-6 sm:p-10">
               <form onSubmit={handleSubmit} className="space-y-8 sm:space-y-10">
                 {/* Summary Banner */}
-                <div className="bg-gray-50/50 rounded-2xl sm:rounded-3xl p-4 sm:p-6 border-2 border-dashed border-gray-100 flex flex-wrap gap-4 sm:gap-8 justify-center sm:justify-start">
+                <div className="bg-gray-50/50 rounded-2xl sm:rounded-3xl p-4 sm:p-6 border border-gray-200 flex flex-wrap gap-4 sm:gap-8 justify-center sm:justify-start">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-primary shadow-sm border border-gray-50">
+                    <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-dark shadow-sm border border-gray-100">
                       <TableIcon className="w-5 h-5" />
                     </div>
                     <div>
-                      <p className="text-[8px] font-bold text-dark-gray/40 uppercase tracking-widest">
+                      <p className="text-[14px] font-bold text-dark uppercase tracking-wide mb-0.5">
                         {selectedTables.length > 1
                           ? "Selected Tables"
                           : "Selected Table"}
@@ -989,7 +1004,7 @@ const Reservations = () => {
                           {selectedTables.map((t) => (
                             <p
                               key={t._id}
-                              className="text-sm font-bold text-dark"
+                              className="text-xs font-semibold text-dark-gray"
                             >
                               Table #{t.tableNumber} ({t.location})
                             </p>
@@ -1005,14 +1020,14 @@ const Reservations = () => {
                   </div>
                   <div className="w-px h-10 bg-gray-100 hidden sm:block" />
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-primary shadow-sm border border-gray-50">
+                    <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-dark shadow-sm border border-gray-50">
                       <Calendar className="w-5 h-5" />
                     </div>
                     <div>
-                      <p className="text-[8px] font-bold text-dark-gray/40 uppercase tracking-widest">
+                      <p className="text-[14px] font-bold text-dark uppercase tracking-wide">
                         Date & Time
                       </p>
-                      <p className="text-sm font-bold text-dark uppercase">
+                      <p className="text-xs font-semibold text-dark-gray">
                         {reservationsService.formatDate(selectedDate)} at{" "}
                         {formatTimeDisplay(selectedTime)}
                       </p>
@@ -1021,9 +1036,9 @@ const Reservations = () => {
                 </div>
 
                 {!isAuthenticated && (
-                  <div className="bg-primary/5 border border-primary/10 rounded-2xl p-4 sm:p-6 flex flex-col sm:flex-row items-center sm:items-start gap-4 text-center sm:text-left">
-                    <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm border border-primary/10">
-                      <User className="w-6 h-6 text-primary" />
+                  <div className="bg-white border border-gray-200 rounded-2xl p-4 sm:p-6 flex flex-col sm:flex-row items-center sm:items-start gap-4 text-center sm:text-left">
+                    <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm border border-gray-200">
+                      <User className="w-6 h-6 text-dark" />
                     </div>
                     <div>
                       <h4 className="font-bold text-dark text-base">
@@ -1043,7 +1058,7 @@ const Reservations = () => {
                   </div>
                 )}
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 border border-gray-200 rounded-2xl p-4">
                   {/* Name */}
                   <div className="space-y-3">
                     <label className="block text-dark font-bold text-[10px] sm:text-xs tracking-wide uppercase px-1">
@@ -1155,10 +1170,10 @@ const Reservations = () => {
                 </div>
 
                 {/* Guest Details Section */}
-                <div className="overflow-hidden rounded-2xl sm:rounded-3xl border-2 border-gray-50 bg-gray-50/50">
-                  <div className="p-5 sm:p-8 bg-white flex flex-col sm:flex-row items-center gap-6 justify-between border-b border-gray-50">
+                <div className="overflow-hidden rounded-2xl sm:rounded-3xl border border-gray-200 bg-gray-50/50">
+                  <div className="p-5 sm:p-8 bg-white flex flex-col sm:flex-row items-center gap-6 justify-between border-b border-gray-200">
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-primary/5 rounded-xl flex items-center justify-center text-primary shadow-sm">
+                      <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-dark border border-gray-200 shadow-sm">
                         <UserPlus className="w-6 h-6" />
                       </div>
                       <div>
@@ -1202,13 +1217,13 @@ const Reservations = () => {
                       {guestList.map((guest, index) => (
                         <div
                           key={index}
-                          className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm relative group/guest transition-all"
+                          className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm relative group/guest transition-all"
                         >
                           <div className="flex items-center justify-between mb-3">
-                            <span className="text-md font-bold text-primary flex items-center gap-2">
+                            <span className="text-sm font-bold text-dark flex items-center gap-2">
                               Guest #{index + 1}
                               {index === 0 && (
-                                <span className="text-[8px] px-2 py-0.5 bg-primary/10 text-primary rounded-full uppercase tracking-tighter">
+                                <span className="text-[8px] px-2 py-0.5 bg-white text-dark border border-gray-200 rounded-full uppercase tracking-tighter">
                                   Host / Booker
                                 </span>
                               )}
@@ -1232,7 +1247,7 @@ const Reservations = () => {
                               }
                               disabled={index === 0}
                               placeholder="Full Name *"
-                              className={`w-full px-4 py-3 rounded-lg border border-gray-100 bg-gray-50 focus:bg-white focus:border-primary focus:outline-none transition-all text-xs font-medium ${
+                              className={`w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 focus:bg-white focus:border-primary focus:outline-none transition-all text-xs font-medium ${
                                 index === 0
                                   ? "opacity-60 cursor-not-allowed"
                                   : ""
@@ -1302,7 +1317,7 @@ const Reservations = () => {
         {step === 4 && confirmedReservation && (
           <div className="animate-in fade-in slide-in-from-bottom-5 duration-700">
             {/* Success Header */}
-            <div className="bg-white rounded-[2rem] sm:rounded-[3rem] p-8 sm:p-12 text-center shadow-2xl shadow-black/[0.03] border border-gray-100 mb-8 sm:mb-10 relative overflow-hidden">
+            <div className="bg-white rounded-[2rem] sm:rounded-[3rem] p-8 py-6 sm:p-12 sm:py-6 text-center shadow-2xl shadow-black/[0.03] border border-gray-100 mb-8 sm:mb-10 relative overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-success/20 via-success to-success/20" />
               <div className="relative z-10">
                 <div className="w-20 h-20 sm:w-24 sm:h-24 bg-green-50 rounded-[1.5rem] sm:rounded-[2.5rem] flex items-center justify-center mx-auto mb-6 sm:mb-8 border border-green-100">
@@ -1319,29 +1334,29 @@ const Reservations = () => {
 
             {/* Comprehensive Reservation Summary Form */}
             <div className="bg-white rounded-[1.5rem] sm:rounded-[2.5rem] shadow-2xl shadow-black/[0.03] border border-gray-100 overflow-hidden mb-12">
-              <div className="bg-cream px-6 sm:px-10 py-6 sm:py-8 border-b border-gray-50 flex items-center justify-between">
+              <div className="bg-primary px-6 sm:px-10 py-6 sm:py-8 border-b border-gray-50 flex items-center justify-between">
                 <div>
-                  <h3 className="text-xl sm:text-2xl font-bold text-dark">
+                  <h3 className="text-xl sm:text-2xl font-bold text-white">
                     Reservation Details
                   </h3>
-                  <p className="text-dark-gray/60 text-[10px] sm:text-xs font-bold uppercase tracking-widest mt-1">
+                  <p className="text-white text-[10px] sm:text-xs font-bold uppercase tracking-widest mt-1">
                     Booking ID: #
                     {confirmedReservation.reservationId ||
                       confirmedReservation._id?.slice(-8).toUpperCase()}
                   </p>
                 </div>
-                <div className="flex items-center gap-2 bg-green-100 text-green-700 px-4 py-2 rounded-full font-bold text-[10px] uppercase tracking-wider">
-                  <CheckCircle className="w-4 h-4" />
+                <div className="flex items-center gap-2 bg-green-500 text-white px-4 py-2 rounded-full font-bold text-[11px] uppercase tracking-wider">
+                  <CheckCircle className="w-5 h-5" />
                   CONFIRMED
                 </div>
               </div>
 
-              <div className="p-6 sm:p-10 space-y-10">
+              <div className="p-4 sm:p-6 sm:py-8 space-y-6">
                 {/* Information Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12">
                   {/* Guest Information */}
-                  <div className="space-y-6">
-                    <h4 className="text-xs font-black text-primary uppercase tracking-[0.2em] flex items-center gap-2">
+                  <div className="space-y-6 border border-gray-200 p-4 rounded-2xl">
+                    <h4 className="text-xs font-black text-dark uppercase tracking-[0.2em] flex items-center gap-2">
                       <User className="w-4 h-4" />
                       Guest Information
                     </h4>
@@ -1350,7 +1365,7 @@ const Reservations = () => {
                         <p className="text-[10px] font-bold text-dark-gray/40 uppercase tracking-widest mb-1">
                           Full Name
                         </p>
-                        <p className="text-base font-bold text-dark">
+                        <p className="text-sm font-semibold text-dark">
                           {confirmedReservation.fullName}
                         </p>
                       </div>
@@ -1376,8 +1391,8 @@ const Reservations = () => {
                   </div>
 
                   {/* Visit Details */}
-                  <div className="space-y-6">
-                    <h4 className="text-xs font-black text-primary uppercase tracking-[0.2em] flex items-center gap-2">
+                  <div className="space-y-6 border border-gray-200 p-4 rounded-2xl">
+                    <h4 className="text-xs font-black text-dark uppercase tracking-[0.2em] flex items-center gap-2">
                       <CalendarCheck className="w-4 h-4" />
                       Visit Details
                     </h4>
@@ -1387,7 +1402,7 @@ const Reservations = () => {
                           <p className="text-[10px] font-bold text-dark-gray/40 uppercase tracking-widest mb-1">
                             Reservation Date
                           </p>
-                          <p className="text-sm font-bold text-dark">
+                          <p className="text-sm font-semibold text-dark">
                             {reservationsService.formatDate(
                               confirmedReservation.reservationDate,
                             )}
@@ -1398,8 +1413,8 @@ const Reservations = () => {
                             Time Slot
                           </p>
                           <div className="flex items-center gap-2">
-                            <Clock className="w-4 h-4 text-primary" />
-                            <p className="text-sm font-bold text-dark">
+                            <Clock className="w-4 h-4 text-dark" />
+                            <p className="text-sm font-semibold text-dark">
                               {formatTimeDisplay(
                                 confirmedReservation.reservationTime,
                               )}
@@ -1414,7 +1429,7 @@ const Reservations = () => {
                               ? "Tables"
                               : "Table Number"}
                           </p>
-                          <p className="text-base font-bold text-primary">
+                          <p className="text-sm font-semibold text-dark">
                             {selectedTables
                               .map((t) => `#${t.tableNumber}`)
                               .join(", ")}
@@ -1424,7 +1439,7 @@ const Reservations = () => {
                           <p className="text-[10px] font-bold text-dark-gray/40 uppercase tracking-widest mb-1">
                             Party Size
                           </p>
-                          <p className="text-base font-bold text-dark">
+                          <p className="text-sm font-semibold text-dark">
                             {confirmedReservation.partySize} Guests
                           </p>
                         </div>
@@ -1438,8 +1453,8 @@ const Reservations = () => {
                 {/* Additional Info */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12">
                   {/* Table & Location */}
-                  <div className="space-y-4">
-                    <h4 className="text-xs font-black text-primary uppercase tracking-[0.2em] flex items-center gap-2">
+                  <div className="space-y-4 border border-gray-200 p-4 rounded-2xl">
+                    <h4 className="text-xs font-black text-dark uppercase tracking-[0.2em] flex items-center gap-2">
                       <TableIcon className="w-4 h-4" />
                       Seating Plan
                     </h4>
@@ -1453,7 +1468,7 @@ const Reservations = () => {
                         {selectedTables.map((t) => (
                           <div key={t._id} className="flex items-center gap-3">
                             <div
-                              className={`rounded-xl bg-white flex items-center justify-center text-primary shadow-sm border border-gray-50 flex-shrink-0 ${selectedTables.length > 1 ? "w-10 h-10" : "w-12 h-12"}`}
+                              className={`rounded-xl bg-white flex items-center justify-center text-dark shadow-sm border border-gray-50 flex-shrink-0 ${selectedTables.length > 1 ? "w-10 h-10" : "w-12 h-12"}`}
                             >
                               <TableIcon
                                 className={
@@ -1483,8 +1498,8 @@ const Reservations = () => {
                   </div>
 
                   {/* Special Requests */}
-                  <div className="space-y-4">
-                    <h4 className="text-xs font-black text-primary uppercase tracking-[0.2em] flex items-center gap-2">
+                  <div className="space-y-4 border border-gray-200 p-4 rounded-2xl">
+                    <h4 className="text-xs font-black text-dark uppercase tracking-[0.2em] flex items-center gap-2">
                       <MessageSquare className="w-4 h-4" />
                       Special Requests
                     </h4>
@@ -1502,8 +1517,8 @@ const Reservations = () => {
                 {/* Guest List Section */}
                 {confirmedReservation.guestDetails?.hasGuestList &&
                   confirmedReservation.guestDetails?.guests?.length > 0 && (
-                    <div className="mt-8 space-y-6">
-                      <h4 className="text-xs font-black text-primary uppercase tracking-[0.2em] flex items-center gap-2">
+                    <div className="mt-8 space-y-6 border border-gray-200 p-4 rounded-2xl">
+                      <h4 className="text-xs font-black text-dark uppercase tracking-[0.2em] flex items-center gap-2">
                         <Users className="w-4 h-4" />
                         Guest List (
                         {confirmedReservation.guestDetails.guests.length})

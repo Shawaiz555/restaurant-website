@@ -18,6 +18,7 @@ import {
   ShoppingCart,
   Tag,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 /* ─────────────────────────────────────────────────────
    Size classification
@@ -277,55 +278,8 @@ const LgCard = ({ deal, onClaim }) => {
   const items = deal.items || [];
 
   return (
-    <div className="group relative bg-white rounded-2xl border border-cream-dark hover:border-primary/40 shadow-md hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col sm:flex-row">
-      {/* Left orange panel */}
-      <div className="relative sm:w-64 lg:w-2/5 flex-shrink-0 bg-gradient-to-br from-primary to-primary-dark flex flex-col items-center justify-center p-8 overflow-hidden">
-        {/* Background decoration */}
-        <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full bg-white/10" />
-        <div className="absolute -bottom-8 -left-8 w-28 h-28 rounded-full bg-white/10" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full bg-white/5" />
-
-        {/* Badge */}
-        <div className="absolute top-4 left-4">
-          <span className="inline-flex items-center gap-1 bg-white/20 text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full border border-white/30">
-            <Flame className="w-2.5 h-2.5" />
-            Featured
-          </span>
-        </div>
-
-        {/* Item images grid */}
-        <div className="relative z-10 flex flex-wrap gap-2 justify-center max-w-[160px]">
-          {items.slice(0, 6).map((item, idx) => (
-            <div
-              key={idx}
-              className="group-hover:scale-105 transition-transform duration-500"
-              style={{ transitionDelay: `${idx * 60}ms` }}
-            >
-              <ItemImage
-                item={item}
-                className="w-14 h-14 border-2 border-white/50 shadow-lg"
-              />
-            </div>
-          ))}
-          {items.length > 6 && (
-            <div className="w-14 h-14 rounded-xl flex items-center justify-center bg-white/20 text-white font-black text-sm border-2 border-white/50">
-              +{items.length - 6}
-            </div>
-          )}
-        </div>
-
-        {/* Price */}
-        <div className="relative z-10 mt-5 text-center">
-          <p className="text-white/60 text-[10px] font-black uppercase tracking-widest">
-            Deal Price
-          </p>
-          <p className="text-white font-black text-4xl leading-none">
-            {formatPrice(deal.price)}
-          </p>
-        </div>
-      </div>
-
-      {/* Right content */}
+    <div className="group relative bg-white rounded-2xl border border-cream-dark hover:border-primary/40 shadow-md hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col-reverse sm:flex-row">
+      {/* Left content */}
       <div className="flex flex-col flex-1 p-6 sm:p-8 gap-4">
         <div className="flex items-start justify-between gap-4">
           <div>
@@ -382,6 +336,52 @@ const LgCard = ({ deal, onClaim }) => {
             Claim This Deal
             <ArrowRight className="w-5 h-5" />
           </button>
+        </div>
+      </div>
+      {/* Right orange panel */}
+      <div className="relative sm:w-64 lg:w-2/5 flex-shrink-0 bg-gradient-to-br from-primary to-primary-dark flex flex-col items-center justify-center p-8 overflow-hidden">
+        {/* Background decoration */}
+        <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full bg-white/10" />
+        <div className="absolute -bottom-8 -left-8 w-28 h-28 rounded-full bg-white/10" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full bg-white/5" />
+
+        {/* Badge */}
+        <div className="absolute top-4 left-4">
+          <span className="inline-flex items-center gap-1 bg-white/20 text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full border border-white/30">
+            <Flame className="w-2.5 h-2.5" />
+            Featured
+          </span>
+        </div>
+
+        {/* Item images grid */}
+        <div className="relative z-10 flex flex-wrap gap-2 justify-center max-w-[160px]">
+          {items.slice(0, 6).map((item, idx) => (
+            <div
+              key={idx}
+              className="group-hover:scale-105 transition-transform duration-500"
+              style={{ transitionDelay: `${idx * 60}ms` }}
+            >
+              <ItemImage
+                item={item}
+                className="w-14 h-14 border-2 border-white/50 shadow-lg"
+              />
+            </div>
+          ))}
+          {items.length > 6 && (
+            <div className="w-14 h-14 rounded-xl flex items-center justify-center bg-white/20 text-white font-black text-sm border-2 border-white/50">
+              +{items.length - 6}
+            </div>
+          )}
+        </div>
+
+        {/* Price */}
+        <div className="relative z-10 mt-5 text-center">
+          <p className="text-white/60 text-[10px] font-black uppercase tracking-widest">
+            Deal Price
+          </p>
+          <p className="text-white font-black text-4xl leading-none">
+            {formatPrice(deal.price)}
+          </p>
         </div>
       </div>
     </div>
@@ -507,10 +507,20 @@ const DealCard = ({ deal, onClaim }) => {
 
 /* ── Grid for a single size-type group (all cards same height) ── */
 const DealsGrid = ({ deals, onClaim, sizeType }) => {
-  const isSmall = sizeType === "sm" || sizeType === "md";
+  const isSmall = sizeType === "sm";
+  const isMedium = sizeType === "md";
   if (isSmall) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 lg:gap-6 items-stretch">
+        {deals.map((deal) => (
+          <DealCard key={deal._id} deal={deal} onClaim={onClaim} />
+        ))}
+      </div>
+    );
+  }
+  if (isMedium) {
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6 items-stretch">
         {deals.map((deal) => (
           <DealCard key={deal._id} deal={deal} onClaim={onClaim} />
         ))}
@@ -615,12 +625,12 @@ const Deals = () => {
             <p className="text-dark-gray max-w-md text-lg">
               Our chefs are cooking up something special. Check back soon!
             </p>
-            <a
-              href="/menu"
+            <Link
+              to="/menu"
               className="inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-xl font-semibold hover:bg-primary-dark transition-all hover:scale-105 mt-2"
             >
               Browse Our Menu
-            </a>
+            </Link>
           </div>
         )}
 
@@ -628,12 +638,12 @@ const Deals = () => {
         {!isLoading && !error && deals.length > 0 && (
           <div className="space-y-10">
             {/* Header + type filter tabs */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b-2 border-primary/20 pb-6">
               <div>
-                <h2 className="text-2xl lg:text-4xl font-bold text-dark">
+                <h2 className="text-4xl lg:text-5xl font-bold text-primary">
                   Today's Deals
                 </h2>
-                <p className="text-dark-gray/60 text-sm mt-0.5">
+                <p className="text-dark-gray/60 text-sm mt-3">
                   {deals.length} deal{deals.length !== 1 ? "s" : ""} available
                   {typeGroups.length > 1 && ` · ${typeGroups.length} types`}
                 </p>
@@ -641,7 +651,7 @@ const Deals = () => {
 
               {/* Type tabs */}
               {typeGroups.length > 1 && (
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2 border border-primary/20 rounded-xl p-3">
                   <button
                     onClick={() => setActiveType("all")}
                     className={`inline-flex items-center gap-1.5 text-xs font-bold px-4 py-2 rounded-xl border transition-all duration-200 ${
@@ -685,13 +695,13 @@ const Deals = () => {
                       <div className="flex items-center gap-3 mb-6">
                         <div className="flex items-center gap-2 flex-shrink-0">
                           <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                            <Icon className="w-4 h-4 text-primary" />
+                            <Icon className="w-5 h-5 text-primary" />
                           </div>
                           <div>
-                            <h3 className="text-base font-bold text-dark leading-none">
+                            <h3 className="text-lg font-bold text-dark leading-none">
                               {g.label}
                             </h3>
-                            <p className="text-[10px] text-dark-gray/50 mt-0.5">
+                            <p className="text-xs text-dark-gray/50 mt-0.5">
                               {g.desc}
                             </p>
                           </div>
