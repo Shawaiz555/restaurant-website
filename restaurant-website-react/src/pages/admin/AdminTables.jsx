@@ -123,7 +123,7 @@ const AdminTables = () => {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl lg:text-4xl font-sans font-bold text-primary mb-2">
-              Table Management
+              Tables Management
             </h1>
             <p className="text-dark-gray text-sm mt-1">
               Manage restaurant tables, capacity, and availability

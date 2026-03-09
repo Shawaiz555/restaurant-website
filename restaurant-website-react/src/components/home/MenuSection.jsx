@@ -156,7 +156,7 @@ const MenuSection = () => {
         </div>
 
         {/* Category Filter */}
-        <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 justify-center gap-4 mb-5">
+        <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 justify-center gap-4 mb-5">
           {allCategories.map((category) => (
             <button
               key={category.id}

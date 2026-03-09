@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useCallback, useRef, useMemo } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  useMemo,
+} from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { showNotification } from "../store/slices/notificationSlice";
@@ -415,12 +421,21 @@ const Reservations = () => {
 
     const recommended = unselected.filter((t) => recommendedIds.has(t._id));
     return [...alreadySelected, ...recommended];
-  }, [availableTables, selectedTables, needsMultiSelect, partySize, combinedCapacity]);
+  }, [
+    availableTables,
+    selectedTables,
+    needsMultiSelect,
+    partySize,
+    combinedCapacity,
+  ]);
 
   // Smooth scroll to newly selected table area when a table is picked in multi-select mode
   useEffect(() => {
     if (!needsMultiSelect || selectedTables.length === 0) return;
-    tableGridRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    tableGridRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+    });
   }, [selectedTables.length, needsMultiSelect]);
 
   const handleTableClick = (table) => {
@@ -519,10 +534,10 @@ const Reservations = () => {
           <div className="bg-white rounded-[1.5rem] sm:rounded-[2.5rem] shadow-2xl shadow-black/[0.03] border border-gray-100 overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-500">
             <div className="bg-primary px-6 sm:px-10 py-6 sm:py-8 border-b border-gray-50 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-full bg-primary/5 -skew-x-12 translate-x-10" />
-              <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white relative z-10">
+              <h2 className="text-xl sm:text-2xl lg:text-4xl font-bold text-white text-center relative z-10">
                 Plan Your Visit
               </h2>
-              <p className="text-white text-[10px] sm:text-xs font-bold uppercase tracking-widest mt-1 relative z-10">
+              <p className="text-white text-[10px] sm:text-xs text-center font-bold uppercase tracking-widest mt-1 relative z-10">
                 Step 1: Date, Time & Group Size
               </p>
             </div>
@@ -702,10 +717,10 @@ const Reservations = () => {
           <div className="bg-white rounded-[1.5rem] sm:rounded-[2.5rem] shadow-2xl shadow-black/[0.03] border border-gray-100 overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-500">
             <div className="bg-primary px-6 sm:px-10 py-6 sm:py-8 border-b border-gray-50 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-full bg-primary/5 -skew-x-12 translate-x-10" />
-              <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white relative z-10">
+              <h2 className="text-xl sm:text-2xl lg:text-4xl text-center font-bold text-white relative z-10">
                 Choose Your Table
               </h2>
-              <div className="flex flex-wrap gap-2 sm:gap-4 mt-2 sm:mt-3 relative z-10 text-white text-[9px] sm:text-[10px] font-bold uppercase tracking-widest">
+              <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mt-2 sm:mt-3 relative z-10 text-white text-[9px] sm:text-[10px] font-bold uppercase tracking-widest">
                 <span className="flex items-center gap-1.5 bg-white text-primary px-2 sm:px-3 py-1 sm:py-1.5 rounded-full border border-gray-100">
                   <Calendar className="w-3 h-3 text-primary" />
                   {reservationsService.formatDate(selectedDate)}
@@ -977,10 +992,10 @@ const Reservations = () => {
           <div className="bg-white rounded-[1.5rem] sm:rounded-[2.5rem] shadow-2xl shadow-black/[0.03] border border-gray-100 overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-500">
             <div className="bg-primary px-6 sm:px-10 py-6 sm:py-8 border-b border-gray-50 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-full bg-primary/5 -skew-x-12 translate-x-10" />
-              <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white relative z-10">
+              <h2 className="text-xl sm:text-2xl lg:text-4xl text-center font-bold text-white relative z-10">
                 Contact Details
               </h2>
-              <p className="text-white text-[10px] sm:text-xs font-bold uppercase tracking-widest mt-1 relative z-10">
+              <p className="text-white text-[10px] text-center sm:text-xs font-bold uppercase tracking-widest mt-1 relative z-10">
                 Step 3: Secure Your Reservation
               </p>
             </div>

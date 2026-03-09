@@ -12,22 +12,21 @@ const OurStorySection = () => {
             <div className="inline-block bg-primary/10 px-4 py-2 rounded-full">
               <span className="text-primary font-semibold">Est. 2009</span>
             </div>
-            <h2 className="font-sans font-bold text-5xl text-dark leading-tight">
+            <h2 className="font-sans font-bold text-4xl lg:text-6xl text-dark leading-tight">
               A Journey of Flavor & Passion
             </h2>
             <div className="space-y-4 text-dark-gray text-lg leading-relaxed">
               <p>
                 What started as a humble family kitchen has blossomed into a
-                beloved culinary destination. Our journey began with a
-                simple mission: to create memorable dining experiences
-                through exceptional food, warm hospitality, and genuine
-                care.
+                beloved culinary destination. Our journey began with a simple
+                mission: to create memorable dining experiences through
+                exceptional food, warm hospitality, and genuine care.
               </p>
               <p>
                 Over 15 years, we've grown from serving our neighborhood to
                 delighting customers across the region. Every dish we create
-                honors our roots while embracing innovation, ensuring each
-                bite is an adventure in taste.
+                honors our roots while embracing innovation, ensuring each bite
+                is an adventure in taste.
               </p>
               <p>
                 Today, we're proud to be more than just a restaurant—we're a

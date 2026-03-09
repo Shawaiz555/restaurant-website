@@ -48,7 +48,9 @@ const AdminDeals = () => {
       dispatch(setDeals(allDeals));
     } catch (error) {
       console.error("Failed to load deals:", error);
-      dispatch(showNotification({ type: "error", message: "Failed to load deals" }));
+      dispatch(
+        showNotification({ type: "error", message: "Failed to load deals" }),
+      );
     } finally {
       setIsLoading(false);
     }
@@ -73,12 +75,19 @@ const AdminDeals = () => {
       const result = await dealsService.deleteDeal(dealToDelete._id);
       if (result.success) {
         dispatch(deleteDeal(dealToDelete._id));
-        dispatch(showNotification({ type: "success", message: "Deal deleted successfully" }));
+        dispatch(
+          showNotification({
+            type: "success",
+            message: "Deal deleted successfully",
+          }),
+        );
       } else {
         dispatch(showNotification({ type: "error", message: result.message }));
       }
     } catch {
-      dispatch(showNotification({ type: "error", message: "Failed to delete deal" }));
+      dispatch(
+        showNotification({ type: "error", message: "Failed to delete deal" }),
+      );
     } finally {
       setShowDeleteConfirm(false);
       setDealToDelete(null);
@@ -96,13 +105,15 @@ const AdminDeals = () => {
           showNotification({
             type: "success",
             message: `Deal ${result.deal.isActive ? "activated" : "deactivated"} successfully`,
-          })
+          }),
         );
       } else {
         dispatch(showNotification({ type: "error", message: result.message }));
       }
     } catch {
-      dispatch(showNotification({ type: "error", message: "Failed to toggle deal" }));
+      dispatch(
+        showNotification({ type: "error", message: "Failed to toggle deal" }),
+      );
     } finally {
       setTogglingId(null);
     }
@@ -128,7 +139,7 @@ const AdminDeals = () => {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl lg:text-4xl font-sans font-bold text-primary mb-2">
-              Deal Management
+              Deals Management
             </h1>
             <p className="text-dark-gray text-sm mt-1">
               Create and manage special meal deals for your customers
@@ -174,12 +185,15 @@ const AdminDeals = () => {
         </div>
         <div className="flex items-center justify-between mt-3">
           <p className="text-sm text-dark-gray">
-            Showing <span className="font-semibold text-dark">{deals.length}</span>{" "}
-            deal{deals.length !== 1 ? "s" : ""}
+            Showing{" "}
+            <span className="font-semibold text-dark">{deals.length}</span> deal
+            {deals.length !== 1 ? "s" : ""}
           </p>
           {(filters.status !== "All" || filters.search) && (
             <button
-              onClick={() => dispatch(setFilters({ status: "All", search: "" }))}
+              onClick={() =>
+                dispatch(setFilters({ status: "All", search: "" }))
+              }
               className="text-sm text-primary hover:text-primary-dark font-medium transition-colors"
             >
               Clear filters
@@ -201,7 +215,9 @@ const AdminDeals = () => {
           <div className="w-20 h-20 bg-cream rounded-full flex items-center justify-center mx-auto mb-4">
             <Tag className="w-10 h-10 text-primary/60" />
           </div>
-          <h3 className="text-xl font-sans font-bold text-dark mb-2">No deals found</h3>
+          <h3 className="text-xl font-sans font-bold text-dark mb-2">
+            No deals found
+          </h3>
           <p className="text-dark-gray mb-6">
             {filters.search || filters.status !== "All"
               ? "Try adjusting your filters"
@@ -243,7 +259,10 @@ const AdminDeals = () => {
               </thead>
               <tbody className="divide-y divide-gray-50">
                 {paginatedDeals.map((deal) => (
-                  <tr key={deal._id} className="hover:bg-gray-50/50 transition-colors group">
+                  <tr
+                    key={deal._id}
+                    className="hover:bg-gray-50/50 transition-colors group"
+                  >
                     {/* Deal title + item count */}
                     <td className="px-6 py-4">
                       <div className="flex items-start gap-3">
@@ -261,7 +280,8 @@ const AdminDeals = () => {
                           )}
                           <span className="inline-flex items-center gap-1 mt-1 text-xs text-dark-gray bg-gray-100 px-2 py-0.5 rounded-full">
                             <Package className="w-3 h-3" />
-                            {deal.items?.length || 0} item{deal.items?.length !== 1 ? "s" : ""}
+                            {deal.items?.length || 0} item
+                            {deal.items?.length !== 1 ? "s" : ""}
                           </span>
                         </div>
                       </div>
@@ -315,8 +335,12 @@ const AdminDeals = () => {
                     <td className="px-6 py-4">
                       {deal.startDate || deal.endDate ? (
                         <div className="text-xs text-dark-gray space-y-0.5">
-                          {deal.startDate && <p>From: {formatDate(deal.startDate)}</p>}
-                          {deal.endDate && <p>Until: {formatDate(deal.endDate)}</p>}
+                          {deal.startDate && (
+                            <p>From: {formatDate(deal.startDate)}</p>
+                          )}
+                          {deal.endDate && (
+                            <p>Until: {formatDate(deal.endDate)}</p>
+                          )}
                         </div>
                       ) : (
                         <span className="text-xs text-green-600 font-medium bg-green-50 px-2 py-1 rounded-full border border-green-100">
@@ -333,7 +357,11 @@ const AdminDeals = () => {
                         className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus:outline-none ${
                           deal.isActive ? "bg-primary" : "bg-gray-300"
                         } disabled:opacity-60 disabled:cursor-not-allowed`}
-                        title={deal.isActive ? "Click to deactivate" : "Click to activate"}
+                        title={
+                          deal.isActive
+                            ? "Click to deactivate"
+                            : "Click to activate"
+                        }
                       >
                         <span
                           className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-sm transition-transform duration-200 ${
@@ -347,7 +375,9 @@ const AdminDeals = () => {
                     <td className="px-6 py-4">
                       <div className="flex items-center justify-end gap-2">
                         <button
-                          onClick={() => navigate(`/admin/deals/${deal._id}/edit`)}
+                          onClick={() =>
+                            navigate(`/admin/deals/${deal._id}/edit`)
+                          }
                           className="p-2 text-dark-gray hover:text-primary hover:bg-primary/10 rounded-lg transition-all"
                           title="Edit deal"
                         >
@@ -384,7 +414,9 @@ const AdminDeals = () => {
                   <ChevronsLeft className="w-4 h-4" />
                 </button>
                 <button
-                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                  onClick={() =>
+                    setCurrentPage((p) => Math.min(totalPages, p + 1))
+                  }
                   disabled={currentPage === totalPages}
                   className="p-2 rounded-lg border border-gray-200 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
                 >

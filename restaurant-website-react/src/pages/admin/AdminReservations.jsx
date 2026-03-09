@@ -151,7 +151,7 @@ const AdminReservations = () => {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl lg:text-4xl font-sans font-bold text-primary mb-2">
-              Reservations
+              Reservations Management
             </h1>
             <p className="text-dark-gray text-sm mt-1">
               Manage and track all table reservations
@@ -291,7 +291,12 @@ const AdminReservations = () => {
                 </thead>
                 <tbody className="divide-y divide-gray-50">
                   {paginatedReservations.map((res) => {
-                    const tables = res.tableIds?.length > 0 ? res.tableIds : (res.tableId ? [res.tableId] : []);
+                    const tables =
+                      res.tableIds?.length > 0
+                        ? res.tableIds
+                        : res.tableId
+                          ? [res.tableId]
+                          : [];
 
                     return (
                       <tr
@@ -343,13 +348,22 @@ const AdminReservations = () => {
                           {tables.length > 0 ? (
                             <div className="space-y-1.5">
                               {tables.map((t) => (
-                                <div key={t._id} className="flex items-center gap-1.5">
+                                <div
+                                  key={t._id}
+                                  className="flex items-center gap-1.5"
+                                >
                                   <div className="w-7 h-7 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                                    <span className="text-xs font-bold text-primary">#{t.tableNumber}</span>
+                                    <span className="text-xs font-bold text-primary">
+                                      #{t.tableNumber}
+                                    </span>
                                   </div>
                                   <div>
-                                    <p className="text-sm font-medium text-dark">{t.name}</p>
-                                    <p className="text-xs text-dark-gray">{t.location}</p>
+                                    <p className="text-sm font-medium text-dark">
+                                      {t.name}
+                                    </p>
+                                    <p className="text-xs text-dark-gray">
+                                      {t.location}
+                                    </p>
                                   </div>
                                 </div>
                               ))}

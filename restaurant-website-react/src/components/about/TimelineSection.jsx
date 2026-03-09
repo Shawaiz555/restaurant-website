@@ -39,13 +39,15 @@ const TimelineSection = () => {
     <section className="py-20">
       <div className="container mx-auto px-6 sm:px-6 lg:px-16">
         <div className="text-center mb-16">
-          <h2 className="font-sans font-bold text-5xl text-dark mb-4">Our Journey</h2>
+          <h2 className="font-sans font-bold text-5xl text-dark mb-4">
+            Our Journey
+          </h2>
           <p className="text-dark-gray text-xl">
             Milestones that shaped who we are today
           </p>
         </div>
 
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           {timeline.map((item, index) => (
             <div
               key={index}

@@ -651,7 +651,7 @@ const Deals = () => {
 
               {/* Type tabs */}
               {typeGroups.length > 1 && (
-                <div className="flex flex-wrap gap-2 border border-primary/20 rounded-xl p-3">
+                <div className="flex flex-wrap gap-2 border border-primary/40 rounded-xl p-3">
                   <button
                     onClick={() => setActiveType("all")}
                     className={`inline-flex items-center gap-1.5 text-xs font-bold px-4 py-2 rounded-xl border transition-all duration-200 ${

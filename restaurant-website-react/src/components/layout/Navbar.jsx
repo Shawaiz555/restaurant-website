@@ -107,7 +107,7 @@ const Navbar = () => {
               <div className="hidden lg:block">
                 <Link
                   to="/reservations"
-                  className="flex items-center gap-1.5 bg-gradient-to-r from-primary to-primary-dark text-white px-4 py-2 rounded-xl font-semibold hover:shadow-lg hover:shadow-primary/30 transition-all hover:scale-105 text-sm"
+                  className="flex items-center gap-1.5 bg-gradient-to-r from-primary to-primary-dark text-white px-4 py-2 rounded-xl font-semibold hover:shadow-lg hover:shadow-primary/30 transition-all hover:scale-95 text-sm"
                 >
                   <CalendarCheck className="w-4 h-4" />
                   Reserve a Table
@@ -121,7 +121,7 @@ const Navbar = () => {
                     isAuthenticated
                       ? "bg-gradient-to-br from-primary to-primary-dark"
                       : "bg-white border-2 border-gray-200"
-                  } w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-md hover:shadow-xl relative`}
+                  } w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-md hover:scale-95 relative`}
                 >
                   {isAuthenticated ? (
                     <div className="w-full h-full rounded-full bg-white/20 flex items-center justify-center text-white text-lg font-bold">
@@ -265,7 +265,7 @@ const Navbar = () => {
               {/* Cart Button */}
               <button
                 onClick={() => dispatch(toggleCart())}
-                className="relative w-10 h-10 rounded-full border-2 border-dark/10 flex items-center justify-center hover:bg-primary hover:border-primary hover:text-white transition-all text-dark"
+                className="relative w-10 h-10 rounded-full border-2 border-dark/10 flex items-center justify-center hover:scale-95 transition-all text-dark"
               >
                 <span>🛒</span>
                 {cartItemCount > 0 && (
