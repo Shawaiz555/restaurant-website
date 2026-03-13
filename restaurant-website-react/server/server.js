@@ -16,6 +16,11 @@ const imageRoutes = require('./routes/imageRoutes');
 const tableRoutes = require('./routes/tableRoutes');
 const reservationRoutes = require('./routes/reservationRoutes');
 const dealRoutes = require('./routes/dealRoutes');
+const ingredientRoutes = require('./routes/ingredientRoutes');
+const supplierRoutes = require('./routes/supplierRoutes');
+const purchaseRoutes = require('./routes/purchaseRoutes');
+const recipeRoutes = require('./routes/recipeRoutes');
+const wastageRoutes = require('./routes/wastageRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -42,6 +47,11 @@ app.use('/api/images', imageRoutes);
 app.use('/api/tables', tableRoutes);
 app.use('/api/reservations', reservationRoutes);
 app.use('/api/deals', dealRoutes);
+app.use('/api/ingredients', ingredientRoutes);
+app.use('/api/suppliers', supplierRoutes);
+app.use('/api/purchases', purchaseRoutes);
+app.use('/api/recipes', recipeRoutes);
+app.use('/api/wastage', wastageRoutes);
 
 // Legacy email endpoints (keep for backward compatibility)
 app.post('/api/emails/customer', async (req, res) => {

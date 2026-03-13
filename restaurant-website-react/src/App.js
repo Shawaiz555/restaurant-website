@@ -34,6 +34,12 @@ import AdminReservationDetail from './pages/admin/AdminReservationDetail';
 import AdminOrderDetail from './pages/admin/AdminOrderDetail';
 import AdminDeals from './pages/admin/AdminDeals';
 import AdminDealForm from './pages/admin/AdminDealForm';
+import AdminIngredients from './pages/admin/AdminIngredients';
+import AdminSuppliers from './pages/admin/AdminSuppliers';
+import AdminPurchases from './pages/admin/AdminPurchases';
+import AdminRecipes from './pages/admin/AdminRecipes';
+import AdminWastage from './pages/admin/AdminWastage';
+import AdminStockReports from './pages/admin/AdminStockReports';
 
 // User Pages
 import Reservations from './pages/Reservations';
@@ -101,6 +107,12 @@ function AppContent() {
           <Route path="deals/:id/edit" element={<AdminDealForm />} />
           <Route path="expenses" element={<AdminExpenses />} />
           <Route path="analytics" element={<AdminAnalytics />} />
+          <Route path="ingredients" element={<AdminIngredients />} />
+          <Route path="suppliers" element={<AdminSuppliers />} />
+          <Route path="purchases" element={<AdminPurchases />} />
+          <Route path="recipes" element={<AdminRecipes />} />
+          <Route path="wastage" element={<AdminWastage />} />
+          <Route path="stock-reports" element={<AdminStockReports />} />
         </Route>
 
         {/* Public Routes - Using standard layout */}

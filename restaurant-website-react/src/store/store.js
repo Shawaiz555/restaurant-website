@@ -8,6 +8,11 @@ import expensesReducer from './slices/expensesSlice';
 import tablesReducer from './slices/tablesSlice';
 import reservationsReducer from './slices/reservationsSlice';
 import dealsReducer from './slices/dealsSlice';
+import ingredientsReducer from './slices/ingredientsSlice';
+import suppliersReducer from './slices/suppliersSlice';
+import purchasesReducer from './slices/purchasesSlice';
+import recipesReducer from './slices/recipesSlice';
+import wastageReducer from './slices/wastageSlice';
 
 export const store = configureStore({
   reducer: {
@@ -20,6 +25,11 @@ export const store = configureStore({
     tables: tablesReducer,
     reservations: reservationsReducer,
     deals: dealsReducer,
+    ingredients: ingredientsReducer,
+    suppliers: suppliersReducer,
+    purchases: purchasesReducer,
+    recipes: recipesReducer,
+    wastage: wastageReducer,
   },
 });
 

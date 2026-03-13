@@ -10,6 +10,12 @@ import {
   CalendarCheck,
   Tag,
   X,
+  ShoppingBasket,
+  Truck,
+  ShoppingCart,
+  ChefHat,
+  Trash2,
+  BarChart3,
 } from "lucide-react";
 
 const AdminSidebar = ({ isOpen, onClose }) => {
@@ -24,6 +30,15 @@ const AdminSidebar = ({ isOpen, onClose }) => {
     { path: "/admin/deals", icon: Tag, label: "Deals" },
     { path: "/admin/expenses", icon: DollarSign, label: "Expenses" },
     { path: "/admin/analytics", icon: TrendingUp, label: "Analytics" },
+  ];
+
+  const stockNavItems = [
+    { path: "/admin/ingredients", icon: ShoppingBasket, label: "Ingredients" },
+    { path: "/admin/suppliers", icon: Truck, label: "Suppliers" },
+    { path: "/admin/purchases", icon: ShoppingCart, label: "Purchases" },
+    { path: "/admin/recipes", icon: ChefHat, label: "Recipes" },
+    { path: "/admin/wastage", icon: Trash2, label: "Wastage" },
+    { path: "/admin/stock-reports", icon: BarChart3, label: "Stock Reports" },
   ];
 
   const isActive = (path) =>
@@ -92,6 +107,9 @@ const AdminSidebar = ({ isOpen, onClose }) => {
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto px-4 py-6 scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent border-t-2 border-gray-200">
           <div className="space-y-2.5">
+            <p className="text-xs uppercase tracking-[0.10em] font-bold text-gray-400 px-3 mb-3">
+              Main Menu
+            </p>
             {navItems.map((item) => (
               <Link
                 key={item.path}
@@ -106,12 +124,9 @@ const AdminSidebar = ({ isOpen, onClose }) => {
                   }
                 `}
               >
-                {/* Active Hover Glow */}
                 <div
                   className={`absolute inset-0 rounded-2xl bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none`}
                 />
-
-                {/* Icon Container */}
                 <div
                   className={`
                   flex items-center justify-center p-2 rounded-xl transition-all duration-300 shadow-sm
@@ -128,18 +143,64 @@ const AdminSidebar = ({ isOpen, onClose }) => {
                     }`}
                   />
                 </div>
-
-                {/* Text */}
                 <span className="text-[14.5px] tracking-wide relative z-10 flex-1">
                   {item.label}
                 </span>
-
-                {/* Active Indicator Chevron or Dot */}
                 {isActive(item.path) && (
                   <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse shadow-sm" />
                 )}
               </Link>
             ))}
+          </div>
+
+          {/* Stock Management Section */}
+          <div className="mt-6 pt-5 border-t border-gray-100">
+            <p className="text-xs uppercase tracking-[0.10em] font-bold text-gray-400 px-3 mb-3">
+              Stock Management
+            </p>
+            <div className="space-y-2.5">
+              {stockNavItems.map((item) => (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  onClick={() => onClose && onClose()}
+                  className={`
+                    relative flex items-center gap-4 px-4 py-3 rounded-2xl transition-all duration-300 ease-in-out group outline-none
+                    ${
+                      isActive(item.path)
+                        ? "bg-gradient-to-r from-primary to-primary-dark text-white shadow-[0_8px_20px_rgba(230,126,34,0.3)] shadow-primary/30 font-semibold border border-primary-light/20 scale-[1.02]"
+                        : "text-dark-gray hover:bg-cream-light hover:text-primary hover:shadow-md hover:shadow-gray-200/50 hover:scale-[1.02] border border-transparent"
+                    }
+                  `}
+                >
+                  <div
+                    className={`absolute inset-0 rounded-2xl bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none`}
+                  />
+                  <div
+                    className={`
+                    flex items-center justify-center p-2 rounded-xl transition-all duration-300 shadow-sm
+                    ${
+                      isActive(item.path)
+                        ? "bg-white/20 shadow-inner backdrop-blur-sm"
+                        : "bg-white group-hover:bg-primary/10 text-gray-500 group-hover:text-primary border border-gray-100/50"
+                    }
+                  `}
+                  >
+                    <item.icon
+                      className={`w-5 h-5 transition-transform duration-300 group-hover:scale-110 ${
+                        isActive(item.path) ? "text-white drop-shadow-sm" : ""
+                      }`}
+                    />
+                  </div>
+                  <span className="text-[14.5px] tracking-wide relative z-10 flex-1">
+                    {item.label}
+                  </span>
+                  {isActive(item.path) && (
+                    <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse shadow-sm" />
+                  )}
+                </Link>
+              ))}
+            </div>
           </div>
         </nav>
       </aside>

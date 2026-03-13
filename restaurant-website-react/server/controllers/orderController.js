@@ -1,4 +1,6 @@
 const Order = require('../models/Order');
+const Recipe = require('../models/Recipe');
+const Ingredient = require('../models/Ingredient');
 const { sendOrderEmails } = require('../../api/_lib/emailService');
 
 // @desc    Place new order
@@ -27,6 +29,31 @@ const placeOrder = async (req, res) => {
 
     // Create order in database
     const order = await Order.create(orderData);
+
+    // Deduct stock based on recipes (non-blocking — does not affect order response)
+    try {
+      const deductionTasks = [];
+      for (const item of order.items) {
+        if (item.isDeal) continue; // Skip deal items (no single recipe to apply)
+        const productId = item.productId || item.id;
+        if (!productId) continue;
+        const recipe = await Recipe.findOne({ productId });
+        if (!recipe || recipe.ingredients.length === 0) continue;
+        for (const ing of recipe.ingredients) {
+          const required = ing.quantityRequired * item.quantity;
+          deductionTasks.push(
+            Ingredient.findByIdAndUpdate(ing.ingredientId, {
+              $inc: { currentStock: -required }
+            })
+          );
+        }
+      }
+      await Promise.all(deductionTasks);
+      // Floor any negatives to 0
+      await Ingredient.updateMany({ currentStock: { $lt: 0 } }, { $set: { currentStock: 0 } });
+    } catch (stockErr) {
+      console.error('Stock deduction error (non-fatal):', stockErr);
+    }
 
     // Send emails
     const emailStatus = await sendOrderEmails(order.toObject());
