@@ -186,7 +186,7 @@ const Checkout = () => {
         orderId: `ORD-${Date.now()}`,
         userId: currentUser?._id || null, // MongoDB ObjectId
         customerInfo: formData,
-        items: items,
+        items: items.map((item) => ({ ...item, productId: item.id })),
         subtotal: subtotal,
         deliveryFee: deliveryFee,
         total: grandTotal,

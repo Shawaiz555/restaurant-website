@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Order = require('../models/Order');
 const Recipe = require('../models/Recipe');
 const Ingredient = require('../models/Ingredient');
@@ -36,8 +37,14 @@ const placeOrder = async (req, res) => {
       const deductionTasks = [];
       for (const item of order.items) {
         if (item.isDeal) continue; // Skip deal items (no single recipe to apply)
-        const productId = item.productId || item.id;
-        if (!productId) continue;
+        const rawId = item.productId || item.id;
+        if (!rawId) continue;
+        let productId;
+        try {
+          productId = new mongoose.Types.ObjectId(rawId.toString());
+        } catch {
+          continue; // Invalid ObjectId, skip
+        }
         const recipe = await Recipe.findOne({ productId });
         if (!recipe || recipe.ingredients.length === 0) continue;
         for (const ing of recipe.ingredients) {
