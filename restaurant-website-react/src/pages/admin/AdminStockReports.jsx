@@ -2,26 +2,36 @@ import React, { useState, useEffect, useCallback } from "react";
 import {
   BarChart3,
   RefreshCw,
-  AlertTriangle,
   TrendingDown,
   Package,
   ShoppingCart,
   ChevronsLeft,
   ChevronsRight,
+  CupSoda,
 } from "lucide-react";
 import ingredientsService from "../../services/ingredientsService";
 import purchasesService from "../../services/purchasesService";
 import wastageService from "../../services/wastageService";
+import addonStockService from "../../services/addonStockService";
 import { useDispatch } from "react-redux";
 import { showNotification } from "../../store/slices/notificationSlice";
-import StatsCard from "../../components/admin/common/StatsCard";
+
+const TYPE_COLORS = {
+  Drink: "bg-blue-100 text-blue-700",
+  Dessert: "bg-pink-100 text-pink-700",
+  Extra: "bg-purple-100 text-purple-700",
+};
 
 const AdminStockReports = () => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [ingredients, setIngredients] = useState([]);
+  const [addonStocks, setAddonStocks] = useState([]);
   const [purchaseStats, setPurchaseStats] = useState({});
   const [wastageStats, setWastageStats] = useState({});
+
+  // Unified table state
+  const [activeTab, setActiveTab] = useState("all"); // "all" | "ingredients" | "addons"
   const [sortBy, setSortBy] = useState("name");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -29,14 +39,16 @@ const AdminStockReports = () => {
   const loadData = useCallback(async () => {
     setLoading(true);
     try {
-      const [ingRes, purchRes, wasteRes] = await Promise.all([
+      const [ingRes, purchRes, wasteRes, addonRes] = await Promise.all([
         ingredientsService.getIngredients(),
         purchasesService.getPurchaseStats(),
         wastageService.getWastageStats(),
+        addonStockService.getAddonStocks(),
       ]);
       setIngredients(ingRes.ingredients || []);
       setPurchaseStats(purchRes.stats || {});
       setWastageStats(wasteRes.stats || {});
+      setAddonStocks(addonRes.addonStocks || []);
     } catch {
       dispatch(
         showNotification({
@@ -53,47 +65,95 @@ const AdminStockReports = () => {
     loadData();
   }, [loadData]);
 
-  const sorted = [...ingredients].sort((a, b) => {
+  // Reset page when tab/sort changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeTab, sortBy]);
+
+  // Ingredient stats
+  const ingTotal = ingredients.length;
+  const ingOut = ingredients.filter((i) => i.currentStock === 0).length;
+  const ingLow = ingredients.filter(
+    (i) => i.currentStock > 0 && i.currentStock <= i.minimumStock,
+  ).length;
+  const ingHealthy = ingTotal - ingOut - ingLow;
+
+  // Addon stats
+  const addTotal = addonStocks.length;
+  const addOut = addonStocks.filter((a) => a.currentStock === 0).length;
+  const addLow = addonStocks.filter(
+    (a) => a.currentStock > 0 && a.currentStock <= a.minimumStock,
+  ).length;
+  const addHealthy = addTotal - addOut - addLow;
+
+  // Normalise rows so both datasets have the same shape
+  const ingRows = ingredients.map((i) => ({
+    _id: i._id || i.id,
+    name: i.name,
+    kind: "Ingredient",
+    kindColor: "bg-gray-100 text-gray-700",
+    subLabel: i.category || "—",
+    currentStock: i.currentStock,
+    minimumStock: i.minimumStock,
+    unit: i.unit,
+    costPerUnit: i.costPerUnit || null,
+  }));
+
+  const addRows = addonStocks.map((a) => ({
+    _id: a._id,
+    name: a.name,
+    kind: a.addonType,
+    kindColor: TYPE_COLORS[a.addonType] || "bg-gray-100 text-gray-700",
+    subLabel: a.addonType,
+    currentStock: a.currentStock,
+    minimumStock: a.minimumStock,
+    unit: a.unit,
+    costPerUnit: a.costPerUnit || null,
+  }));
+
+  const allRows =
+    activeTab === "ingredients"
+      ? ingRows
+      : activeTab === "addons"
+        ? addRows
+        : [...ingRows, ...addRows];
+
+  const sorted = [...allRows].sort((a, b) => {
     if (sortBy === "name") return a.name.localeCompare(b.name);
     if (sortBy === "stock") return a.currentStock - b.currentStock;
     if (sortBy === "status") {
-      const getLevel = (i) =>
-        i.currentStock === 0 ? 0 : i.currentStock <= i.minimumStock ? 1 : 2;
-      return getLevel(a) - getLevel(b);
+      const lv = (x) =>
+        x.currentStock === 0 ? 0 : x.currentStock <= x.minimumStock ? 1 : 2;
+      return lv(a) - lv(b);
     }
+    if (sortBy === "type") return a.kind.localeCompare(b.kind);
     return 0;
   });
 
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [sortBy]);
-
   const totalPages = Math.ceil(sorted.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const paginated = sorted.slice(startIndex, endIndex);
-
-  const total = ingredients.length;
-  const outOfStock = ingredients.filter((i) => i.currentStock === 0).length;
-  const lowStock = ingredients.filter(
-    (i) => i.currentStock > 0 && i.currentStock <= i.minimumStock,
-  ).length;
-  const healthy = total - outOfStock - lowStock;
+  const paginated = sorted.slice(startIndex, startIndex + itemsPerPage);
 
   const formatCurrency = (n) => `Rs. ${(n || 0).toLocaleString()}`;
 
-  const getStatusInfo = (ing) => {
-    if (ing.currentStock === 0)
+  const getStatusInfo = (row) => {
+    if (row.currentStock === 0)
       return { label: "Out of Stock", classes: "bg-red-100 text-red-700" };
-    if (ing.currentStock <= ing.minimumStock)
+    if (row.currentStock <= row.minimumStock)
       return { label: "Low Stock", classes: "bg-amber-100 text-amber-700" };
     return { label: "In Stock", classes: "bg-green-100 text-green-700" };
   };
 
-  const stockPercent = (ing) => {
-    if (ing.minimumStock === 0) return 100;
-    return Math.min(100, (ing.currentStock / (ing.minimumStock * 3)) * 100);
+  const stockPercent = (row) => {
+    if (row.minimumStock === 0) return 100;
+    return Math.min(100, (row.currentStock / (row.minimumStock * 3)) * 100);
   };
+
+  const TABS = [
+    { key: "all", label: `All (${ingTotal + addTotal})` },
+    { key: "ingredients", label: `Ingredients (${ingTotal})` },
+    { key: "addons", label: `Addons (${addTotal})` },
+  ];
 
   return (
     <div className="space-y-6">
@@ -108,7 +168,7 @@ const AdminStockReports = () => {
               Stock Reports
             </h1>
             <p className="text-sm text-dark-gray">
-              Overview of current stock levels and inventory health
+              Overview of ingredients & addon stock health
             </p>
           </div>
         </div>
@@ -121,16 +181,63 @@ const AdminStockReports = () => {
         </button>
       </div>
 
-      {/* Summary Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatsCard label="Total Ingredients" value={total} icon={Package} />
-        <StatsCard label="In Stock" value={healthy} icon={Package} />
-        <StatsCard label="Low Stock" value={lowStock} icon={AlertTriangle} />
-        <StatsCard
-          label="Out of Stock"
-          value={outOfStock}
-          icon={AlertTriangle}
-        />
+      {/* Unified summary cards — 4 ingredient + 4 addon */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+        {/* Ingredient block */}
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <Package className="w-7 h-7 text-primary" />
+            <span className="font-semibold text-lg lg:text-xl text-dark">
+              Ingredients
+            </span>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="bg-gray-50 rounded-xl p-3 text-center">
+              <p className="text-2xl font-bold text-dark">{ingTotal}</p>
+              <p className="text-xs text-dark-gray mt-0.5">Total</p>
+            </div>
+            <div className="bg-green-50 rounded-xl p-3 text-center">
+              <p className="text-2xl font-bold text-green-700">{ingHealthy}</p>
+              <p className="text-xs text-dark-gray mt-0.5">In Stock</p>
+            </div>
+            <div className="bg-amber-50 rounded-xl p-3 text-center">
+              <p className="text-2xl font-bold text-amber-700">{ingLow}</p>
+              <p className="text-xs text-dark-gray mt-0.5">Low Stock</p>
+            </div>
+            <div className="bg-red-50 rounded-xl p-3 text-center">
+              <p className="text-2xl font-bold text-red-700">{ingOut}</p>
+              <p className="text-xs text-dark-gray mt-0.5">Out of Stock</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Addon block */}
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <CupSoda className="w-7 h-7 text-primary" />
+            <span className="font-semibold text-lg lg:text-xl text-dark">
+              Addons
+            </span>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="bg-gray-50 rounded-xl p-3 text-center">
+              <p className="text-2xl font-bold text-dark">{addTotal}</p>
+              <p className="text-xs text-dark-gray mt-0.5">Total</p>
+            </div>
+            <div className="bg-green-50 rounded-xl p-3 text-center">
+              <p className="text-2xl font-bold text-green-700">{addHealthy}</p>
+              <p className="text-xs text-dark-gray mt-0.5">In Stock</p>
+            </div>
+            <div className="bg-amber-50 rounded-xl p-3 text-center">
+              <p className="text-2xl font-bold text-amber-700">{addLow}</p>
+              <p className="text-xs text-dark-gray mt-0.5">Low Stock</p>
+            </div>
+            <div className="bg-red-50 rounded-xl p-3 text-center">
+              <p className="text-2xl font-bold text-red-700">{addOut}</p>
+              <p className="text-xs text-dark-gray mt-0.5">Out of Stock</p>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Purchase & Wastage Summary */}
@@ -219,40 +326,56 @@ const AdminStockReports = () => {
         </div>
       </div>
 
-      {/* Ingredient Stock Levels */}
+      {/* Unified Stock Table */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-        <div className="p-4 border-b border-gray-100 flex items-center justify-between">
-          <h3 className="font-semibold text-lg lg:text-2xl text-dark">
-            Current Stock Levels
-          </h3>
+        {/* Table header with tabs + sort */}
+        <div className="p-4 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-1 bg-gray-100 rounded-xl p-1">
+            {TABS.map((tab) => (
+              <button
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key)}
+                className={`px-3 py-1.5 rounded-lg text-sm font-semibold transition-all ${
+                  activeTab === tab.key
+                    ? "bg-white text-primary shadow-sm"
+                    : "text-dark-gray hover:text-dark"
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
             className="px-3 py-1.5 rounded-xl border border-gray-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary/20"
           >
             <option value="name">Sort by Name</option>
+            <option value="type">Sort by Type</option>
             <option value="stock">Sort by Stock (Low First)</option>
             <option value="status">Sort by Status (Critical First)</option>
           </select>
         </div>
+
         {loading ? (
           <div className="p-12 text-center text-dark-gray">Loading...</div>
         ) : sorted.length === 0 ? (
           <div className="p-12 text-center text-dark-gray">
-            No ingredients found. Add ingredients first.
+            No stock records found.
           </div>
         ) : (
           <>
-            {/* Top info bar */}
+            {/* Info bar */}
             <div className="px-4 py-3 border-b border-gray-100 bg-gray-50/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
               <p className="text-sm text-dark-gray">
                 Showing{" "}
                 <span className="font-semibold text-dark">
-                  {startIndex + 1}–{Math.min(endIndex, sorted.length)}
+                  {startIndex + 1}–
+                  {Math.min(startIndex + itemsPerPage, sorted.length)}
                 </span>{" "}
                 of{" "}
                 <span className="font-semibold text-dark">{sorted.length}</span>{" "}
-                ingredients
+                items
               </p>
               <div className="flex items-center gap-2">
                 <label className="text-sm text-dark-gray font-medium whitespace-nowrap">
@@ -273,15 +396,16 @@ const AdminStockReports = () => {
                 </select>
               </div>
             </div>
+
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-gray-100 bg-gray-50/50">
                     <th className="text-left px-4 py-3 text-xs font-semibold text-dark-gray uppercase tracking-wide">
-                      Ingredient
+                      Name
                     </th>
                     <th className="text-left px-4 py-3 text-xs font-semibold text-dark-gray uppercase tracking-wide">
-                      Category
+                      Type
                     </th>
                     <th className="text-right px-4 py-3 text-xs font-semibold text-dark-gray uppercase tracking-wide">
                       Current
@@ -292,8 +416,11 @@ const AdminStockReports = () => {
                     <th className="text-right px-4 py-3 text-xs font-semibold text-dark-gray uppercase tracking-wide">
                       Unit
                     </th>
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-dark-gray uppercase tracking-wide w-40">
-                      Stock Level
+                    <th className="text-right px-4 py-3 text-xs font-semibold text-dark-gray uppercase tracking-wide">
+                      Cost/Unit
+                    </th>
+                    <th className="text-left px-4 py-3 text-xs font-semibold text-dark-gray uppercase tracking-wide w-36">
+                      Level
                     </th>
                     <th className="text-center px-4 py-3 text-xs font-semibold text-dark-gray uppercase tracking-wide">
                       Status
@@ -301,34 +428,43 @@ const AdminStockReports = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-50">
-                  {paginated.map((ing) => {
-                    const status = getStatusInfo(ing);
-                    const pct = stockPercent(ing);
+                  {paginated.map((row) => {
+                    const status = getStatusInfo(row);
+                    const pct = stockPercent(row);
                     const barColor =
-                      ing.currentStock === 0
+                      row.currentStock === 0
                         ? "bg-red-400"
-                        : ing.currentStock <= ing.minimumStock
+                        : row.currentStock <= row.minimumStock
                           ? "bg-amber-400"
                           : "bg-green-400";
                     return (
                       <tr
-                        key={ing._id || ing.id}
+                        key={row._id}
                         className="hover:bg-gray-50/50 transition-colors"
                       >
                         <td className="px-4 py-3 font-medium text-dark text-sm">
-                          {ing.name}
+                          {row.name}
                         </td>
-                        <td className="px-4 py-3 text-sm text-dark-gray">
-                          {ing.category}
+                        <td className="px-4 py-3 text-sm">
+                          <span
+                            className={`px-2 py-0.5 rounded-full text-xs font-semibold ${row.kindColor}`}
+                          >
+                            {row.kind}
+                          </span>
                         </td>
                         <td className="px-4 py-3 text-right text-sm font-semibold text-dark">
-                          {ing.currentStock}
+                          {row.currentStock}
                         </td>
                         <td className="px-4 py-3 text-right text-sm text-dark-gray">
-                          {ing.minimumStock}
+                          {row.minimumStock}
                         </td>
                         <td className="px-4 py-3 text-right text-sm text-dark-gray">
-                          {ing.unit}
+                          {row.unit}
+                        </td>
+                        <td className="px-4 py-3 text-right text-sm text-dark-gray">
+                          {row.costPerUnit != null
+                            ? `Rs. ${row.costPerUnit}`
+                            : "—"}
                         </td>
                         <td className="px-4 py-3">
                           <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
@@ -351,7 +487,8 @@ const AdminStockReports = () => {
                 </tbody>
               </table>
             </div>
-            {/* Pagination controls */}
+
+            {/* Pagination */}
             {totalPages > 1 && (
               <div className="px-4 py-4 border-t border-gray-100 bg-gray-50/50 flex flex-col sm:flex-row items-center justify-between gap-3">
                 <p className="text-sm font-medium text-dark">

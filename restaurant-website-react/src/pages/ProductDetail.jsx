@@ -88,41 +88,32 @@ const ProductDetail = () => {
   console.log("Product addOnsConfig:", product.addOnsConfig);
   console.log("Final addOnsConfig:", addOnsConfig);
 
-  // Convert nutrition info to consistent format
-  // Handles both old format {calories: "...", protein: "..."}
-  // and new array format [{label: "Calories", value: "...", unit: "..."}] or [{name: "calories", value: "280 kcal"}]
-  const getNutritionInfo = () => {
-    if (!product.nutritionInfo || product.nutritionInfo.length === 0) {
-      return null;
-    }
+  // Normalise nutritionInfo to a flat array of {label, display} entries.
+  // Handles both old object format {calories, protein, carbs, fat}
+  // and new array format [{label, value, unit}].
+  const nutritionRows = (() => {
+    const raw = product.nutritionInfo;
+    if (!raw) return [];
 
-    // If it's already in object format, return as is
-    if (!Array.isArray(product.nutritionInfo)) {
-      return product.nutritionInfo;
-    }
-
-    // Convert array format to object format
-    const nutritionObj = {};
-    product.nutritionInfo.forEach((item) => {
-      if (item && item.value) {
-        // Handle both 'label' and 'name' properties
-        const key = (item.label || item.name)?.toLowerCase();
-        if (key) {
-          // If value already includes unit (e.g., "280 kcal"), use as is
-          // Otherwise add unit if present
-          const valueStr = item.value.toString().trim();
-          nutritionObj[key] =
+    if (Array.isArray(raw)) {
+      return raw
+        .filter((item) => item && (item.label || item.name) && item.value !== "" && item.value != null)
+        .map((item) => {
+          const label = item.label || item.name;
+          const valueStr = String(item.value).trim();
+          const display =
             item.unit && !valueStr.includes(item.unit)
-              ? valueStr + " " + item.unit
+              ? `${valueStr} ${item.unit}`
               : valueStr;
-        }
-      }
-    });
+          return { label, display };
+        });
+    }
 
-    return Object.keys(nutritionObj).length > 0 ? nutritionObj : null;
-  };
-
-  const nutritionInfo = getNutritionInfo();
+    // Old object format
+    return ["calories", "protein", "carbs", "fat"]
+      .filter((k) => raw[k] != null && raw[k] !== "")
+      .map((k) => ({ label: k.charAt(0).toUpperCase() + k.slice(1), display: String(raw[k]) }));
+  })();
 
   // Toggle add-on selection with quantity
   const toggleAddOn = (category, item) => {
@@ -237,125 +228,27 @@ const ProductDetail = () => {
                   />
                 </div>
 
-                {/* Nutrition Info - Professional Design */}
-                {nutritionInfo && (
+                {/* Nutrition Info */}
+                {nutritionRows.length > 0 && (
                   <div className="rounded-3xl p-3 lg:p-5">
                     <h3 className="font-sans font-bold text-2xl lg:text-3xl mb-4">
                       Nutrition Information
                     </h3>
                     <div className="bg-cream-light border-2 border-gray-200 rounded-2xl p-6 py-3 shadow-sm">
                       <div className="space-y-4">
-                        {nutritionInfo.calories && (
-                          <div className="flex items-center justify-between py-1 border-b border-gray-200">
-                            <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                                <svg
-                                  className="w-5 h-5 text-primary"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M13 10V3L4 14h7v7l9-11h-7z"
-                                  />
-                                </svg>
-                              </div>
-                              <span className="font-sans text-md lg:text-lg text-dark">
-                                Calories
-                              </span>
-                            </div>
+                        {nutritionRows.map((row, idx) => (
+                          <div
+                            key={idx}
+                            className={`flex items-center justify-between py-1 ${idx < nutritionRows.length - 1 ? "border-b border-gray-200" : ""}`}
+                          >
+                            <span className="font-sans text-md lg:text-lg text-dark">
+                              {row.label}
+                            </span>
                             <span className="font-semibold text-lg text-primary">
-                              {nutritionInfo.calories}
+                              {row.display}
                             </span>
                           </div>
-                        )}
-
-                        {nutritionInfo.protein && (
-                          <div className="flex items-center justify-between py-1 border-b border-gray-200">
-                            <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                                <svg
-                                  className="w-5 h-5 text-primary"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                                  />
-                                </svg>
-                              </div>
-                              <span className="font-sans text-md lg:text-lg text-dark">
-                                Protein
-                              </span>
-                            </div>
-                            <span className="font-semibold text-lg text-primary">
-                              {nutritionInfo.protein}
-                            </span>
-                          </div>
-                        )}
-
-                        {nutritionInfo.carbs && (
-                          <div className="flex items-center justify-between py-1 border-b border-gray-200">
-                            <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                                <svg
-                                  className="w-5 h-5 text-primary"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
-                                  />
-                                </svg>
-                              </div>
-                              <span className="font-sans text-md lg:text-lg text-dark">
-                                Carbs
-                              </span>
-                            </div>
-                            <span className="font-semibold text-lg text-primary">
-                              {nutritionInfo.carbs}
-                            </span>
-                          </div>
-                        )}
-
-                        {nutritionInfo.fat && (
-                          <div className="flex items-center justify-between py-1">
-                            <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                                <svg
-                                  className="w-5 h-5 text-primary"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                                  />
-                                </svg>
-                              </div>
-                              <span className="font-sans text-md lg:text-lg text-dark">
-                                Fat
-                              </span>
-                            </div>
-                            <span className="font-semibold text-lg text-primary">
-                              {nutritionInfo.fat}
-                            </span>
-                          </div>
-                        )}
+                        ))}
                       </div>
                     </div>
                   </div>
@@ -399,19 +292,21 @@ const ProductDetail = () => {
                 </div>
 
                 {/* Ingredients */}
-                <div>
-                  <h3 className="font-sans font-bold text-2xl mb-4">Ingredients</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {product.ingredients.map((ingredient, idx) => (
-                      <span
-                        key={idx}
-                        className="bg-cream-light px-4 py-2 rounded-full text-dark-gray text-sm border-2 border-primary hover:bg-primary hover:text-white transition-all cursor-pointer"
-                      >
-                        {ingredient}
-                      </span>
-                    ))}
+                {product.ingredients && product.ingredients.length > 0 && (
+                  <div>
+                    <h3 className="font-sans font-bold text-2xl mb-4">Ingredients</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {product.ingredients.map((ingredient, idx) => (
+                        <span
+                          key={idx}
+                          className="bg-cream-light px-4 py-2 rounded-full text-dark-gray text-sm border-2 border-primary hover:bg-primary hover:text-white transition-all cursor-pointer"
+                        >
+                          {ingredient}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
 
                 {/* Size Selection and Add to Cart */}
                 <div className="rounded-3xl p-6 lg:p-8 bg-cream-light border border-gray-200 shadow-xl">

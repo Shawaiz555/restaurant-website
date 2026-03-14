@@ -16,6 +16,7 @@ import {
   ChefHat,
   Trash2,
   BarChart3,
+  CupSoda,
 } from "lucide-react";
 
 const AdminSidebar = ({ isOpen, onClose }) => {
@@ -38,6 +39,7 @@ const AdminSidebar = ({ isOpen, onClose }) => {
     { path: "/admin/purchases", icon: ShoppingCart, label: "Purchases" },
     { path: "/admin/recipes", icon: ChefHat, label: "Recipes" },
     { path: "/admin/wastage", icon: Trash2, label: "Wastage" },
+    { path: "/admin/addon-stock", icon: CupSoda, label: "Addon Stock" },
     { path: "/admin/stock-reports", icon: BarChart3, label: "Stock Reports" },
   ];
 

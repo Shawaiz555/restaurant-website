@@ -21,6 +21,7 @@ const supplierRoutes = require('./routes/supplierRoutes');
 const purchaseRoutes = require('./routes/purchaseRoutes');
 const recipeRoutes = require('./routes/recipeRoutes');
 const wastageRoutes = require('./routes/wastageRoutes');
+const addonStockRoutes = require('./routes/addonStockRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -52,6 +53,7 @@ app.use('/api/suppliers', supplierRoutes);
 app.use('/api/purchases', purchaseRoutes);
 app.use('/api/recipes', recipeRoutes);
 app.use('/api/wastage', wastageRoutes);
+app.use('/api/addon-stocks', addonStockRoutes);
 
 // Legacy email endpoints (keep for backward compatibility)
 app.post('/api/emails/customer', async (req, res) => {

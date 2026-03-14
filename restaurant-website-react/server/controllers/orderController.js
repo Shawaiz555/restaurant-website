@@ -1,6 +1,7 @@
 const Order = require('../models/Order');
 const Recipe = require('../models/Recipe');
 const Ingredient = require('../models/Ingredient');
+const AddonStock = require('../models/AddonStock');
 const { sendOrderEmails } = require('../../api/_lib/emailService');
 
 // @desc    Place new order
@@ -53,6 +54,32 @@ const placeOrder = async (req, res) => {
       await Ingredient.updateMany({ currentStock: { $lt: 0 } }, { $set: { currentStock: 0 } });
     } catch (stockErr) {
       console.error('Stock deduction error (non-fatal):', stockErr);
+    }
+
+    // Deduct addon stock (non-blocking)
+    try {
+      const addonTasks = [];
+      const typeMap = { drinks: 'Drink', desserts: 'Dessert', extras: 'Extra' };
+      for (const item of order.items) {
+        if (!item.addOns) continue;
+        for (const [key, addonType] of Object.entries(typeMap)) {
+          const addons = item.addOns[key];
+          if (!Array.isArray(addons)) continue;
+          for (const addon of addons) {
+            const qty = (addon.quantity || 1) * item.quantity;
+            addonTasks.push(
+              AddonStock.findOneAndUpdate(
+                { name: addon.name, addonType },
+                { $inc: { currentStock: -qty } }
+              )
+            );
+          }
+        }
+      }
+      await Promise.all(addonTasks);
+      await AddonStock.updateMany({ currentStock: { $lt: 0 } }, { $set: { currentStock: 0 } });
+    } catch (addonStockErr) {
+      console.error('Addon stock deduction error (non-fatal):', addonStockErr);
     }
 
     // Send emails

@@ -29,13 +29,14 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 
 // ── Models ──────────────────────────────────────────────────────────────────
-const Ingredient = require('../models/Ingredient');
-const Supplier   = require('../models/Supplier');
-const Purchase   = require('../models/Purchase');
-const Recipe     = require('../models/Recipe');
-const Wastage    = require('../models/Wastage');
-const Product    = require('../models/Product');
-const User       = require('../models/User');
+const Ingredient  = require('../models/Ingredient');
+const Supplier    = require('../models/Supplier');
+const Purchase    = require('../models/Purchase');
+const Recipe      = require('../models/Recipe');
+const Wastage     = require('../models/Wastage');
+const AddonStock  = require('../models/AddonStock');
+const Product     = require('../models/Product');
+const User        = require('../models/User');
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 const daysAgo  = (n) => new Date(Date.now() - n * 86400000);
@@ -249,7 +250,45 @@ const RECIPE_TEMPLATES = [
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 4. PURCHASE SCHEDULE  (2 months, ~8 purchase events)
+// 4. ADDON STOCK DEFINITIONS
+//    These mirror the actual drink/dessert/extra addons attached to products.
+//    currentStock is set to a realistic level after ~2 months of simulated usage.
+// ─────────────────────────────────────────────────────────────────────────────
+const ADDON_STOCK_DEFS = [
+  // ── Drinks ──────────────────────────────────────────────────────────────
+  { name: 'Mango Lassi',          addonType: 'Drink',   unit: 'pcs', currentStock: 48,  minimumStock: 20, costPerUnit: 80  },
+  { name: 'Sweet Lassi',          addonType: 'Drink',   unit: 'pcs', currentStock: 55,  minimumStock: 20, costPerUnit: 60  },
+  { name: 'Rooh Afza Sharbat',    addonType: 'Drink',   unit: 'pcs', currentStock: 40,  minimumStock: 15, costPerUnit: 50  },
+  { name: 'Cold Coffee',          addonType: 'Drink',   unit: 'pcs', currentStock: 30,  minimumStock: 15, costPerUnit: 90  },
+  { name: 'Mineral Water',        addonType: 'Drink',   unit: 'pcs', currentStock: 120, minimumStock: 40, costPerUnit: 30  },
+  { name: 'Coca Cola',            addonType: 'Drink',   unit: 'pcs', currentStock: 80,  minimumStock: 30, costPerUnit: 60  },
+  { name: 'Sprite',               addonType: 'Drink',   unit: 'pcs', currentStock: 65,  minimumStock: 25, costPerUnit: 60  },
+  { name: 'Fanta',                addonType: 'Drink',   unit: 'pcs', currentStock: 45,  minimumStock: 20, costPerUnit: 60  },
+  { name: 'Fresh Lime Soda',      addonType: 'Drink',   unit: 'pcs', currentStock: 38,  minimumStock: 15, costPerUnit: 70  },
+  { name: 'Doodh Soda',           addonType: 'Drink',   unit: 'pcs', currentStock: 22,  minimumStock: 10, costPerUnit: 55  },
+  // ── Desserts ────────────────────────────────────────────────────────────
+  { name: 'Gulab Jamun',          addonType: 'Dessert', unit: 'pcs', currentStock: 60,  minimumStock: 20, costPerUnit: 40  },
+  { name: 'Kheer',                addonType: 'Dessert', unit: 'pcs', currentStock: 35,  minimumStock: 15, costPerUnit: 70  },
+  { name: 'Zarda',                addonType: 'Dessert', unit: 'pcs', currentStock: 28,  minimumStock: 10, costPerUnit: 80  },
+  { name: 'Phirni',               addonType: 'Dessert', unit: 'pcs', currentStock: 20,  minimumStock: 10, costPerUnit: 75  },
+  { name: 'Gajar Halwa',          addonType: 'Dessert', unit: 'pcs', currentStock: 25,  minimumStock: 10, costPerUnit: 90  },
+  { name: 'Rasgulla',             addonType: 'Dessert', unit: 'pcs', currentStock: 40,  minimumStock: 15, costPerUnit: 50  },
+  { name: 'Ice Cream (Vanilla)',  addonType: 'Dessert', unit: 'pcs', currentStock: 50,  minimumStock: 20, costPerUnit: 60  },
+  { name: 'Brownie',              addonType: 'Dessert', unit: 'pcs', currentStock: 18,  minimumStock: 10, costPerUnit: 100 },
+  // ── Extras ──────────────────────────────────────────────────────────────
+  { name: 'Raita',                addonType: 'Extra',   unit: 'pcs', currentStock: 70,  minimumStock: 25, costPerUnit: 30  },
+  { name: 'Pappad',               addonType: 'Extra',   unit: 'pcs', currentStock: 90,  minimumStock: 30, costPerUnit: 15  },
+  { name: 'Green Chutney',        addonType: 'Extra',   unit: 'pcs', currentStock: 65,  minimumStock: 25, costPerUnit: 20  },
+  { name: 'Imli Chutney',         addonType: 'Extra',   unit: 'pcs', currentStock: 60,  minimumStock: 20, costPerUnit: 20  },
+  { name: 'Extra Naan',           addonType: 'Extra',   unit: 'pcs', currentStock: 100, minimumStock: 40, costPerUnit: 30  },
+  { name: 'Extra Rice',           addonType: 'Extra',   unit: 'pcs', currentStock: 55,  minimumStock: 20, costPerUnit: 40  },
+  { name: 'Salad',                addonType: 'Extra',   unit: 'pcs', currentStock: 45,  minimumStock: 15, costPerUnit: 50  },
+  { name: 'Pickles',              addonType: 'Extra',   unit: 'pcs', currentStock: 80,  minimumStock: 25, costPerUnit: 15  },
+  { name: 'Butter (Portion)',     addonType: 'Extra',   unit: 'pcs', currentStock: 40,  minimumStock: 15, costPerUnit: 25  },
+];
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 5. PURCHASE SCHEDULE  (2 months, ~8 purchase events)
 //    Each event: { daysAgoVal, supplierIdx, items: [{ingName, qty, price}] }
 // ─────────────────────────────────────────────────────────────────────────────
 function buildPurchaseSchedule(supplierIds, ingredientMap) {
@@ -604,22 +643,35 @@ async function main() {
     console.log(`✔  Inserted ${wastageCount} wastage records (stock auto-decremented)`);
   }
 
+  // ── 6. ADDON STOCKS ─────────────────────────────────────────────────────
+  const existingAddonCount = await AddonStock.countDocuments();
+
+  if (existingAddonCount > 0) {
+    console.log(`⚠  Addon stocks already exist (${existingAddonCount}). Skipping addon stock insert.`);
+  } else {
+    console.log('  Inserting addon stocks...');
+    const inserted = await AddonStock.insertMany(ADDON_STOCK_DEFS);
+    console.log(`✔  Inserted ${inserted.length} addon stock records`);
+  }
+
   // ── Summary ──────────────────────────────────────────────────────────────
-  const [ingTotal, supTotal, purTotal, recTotal, wasTotal] = await Promise.all([
+  const [ingTotal, supTotal, purTotal, recTotal, wasTotal, addonTotal] = await Promise.all([
     Ingredient.countDocuments(),
     Supplier.countDocuments(),
     Purchase.countDocuments(),
     Recipe.countDocuments(),
     Wastage.countDocuments(),
+    AddonStock.countDocuments(),
   ]);
 
   console.log('\n─────────────────────────────────────────');
   console.log('  SEED COMPLETE — Database totals:');
-  console.log(`  Ingredients : ${ingTotal}`);
-  console.log(`  Suppliers   : ${supTotal}`);
-  console.log(`  Purchases   : ${purTotal}`);
-  console.log(`  Recipes     : ${recTotal}`);
-  console.log(`  Wastage     : ${wasTotal}`);
+  console.log(`  Ingredients  : ${ingTotal}`);
+  console.log(`  Suppliers    : ${supTotal}`);
+  console.log(`  Purchases    : ${purTotal}`);
+  console.log(`  Recipes      : ${recTotal}`);
+  console.log(`  Wastage      : ${wasTotal}`);
+  console.log(`  Addon Stocks : ${addonTotal}`);
   console.log('─────────────────────────────────────────');
   console.log('\n  ✔  All done. No existing data was modified or deleted.');
 

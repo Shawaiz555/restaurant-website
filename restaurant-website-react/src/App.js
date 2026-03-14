@@ -40,6 +40,7 @@ import AdminPurchases from './pages/admin/AdminPurchases';
 import AdminRecipes from './pages/admin/AdminRecipes';
 import AdminWastage from './pages/admin/AdminWastage';
 import AdminStockReports from './pages/admin/AdminStockReports';
+import AdminAddonStock from './pages/admin/AdminAddonStock';
 
 // User Pages
 import Reservations from './pages/Reservations';
@@ -113,6 +114,7 @@ function AppContent() {
           <Route path="recipes" element={<AdminRecipes />} />
           <Route path="wastage" element={<AdminWastage />} />
           <Route path="stock-reports" element={<AdminStockReports />} />
+          <Route path="addon-stock" element={<AdminAddonStock />} />
         </Route>
 
         {/* Public Routes - Using standard layout */}
