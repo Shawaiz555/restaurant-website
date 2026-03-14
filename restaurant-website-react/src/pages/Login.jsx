@@ -5,15 +5,7 @@ import { loginUser } from "../store/slices/authSlice";
 import { fetchCart } from "../store/slices/cartSlice";
 import { showNotification } from "../store/slices/notificationSlice";
 import Loader from "../components/common/Loader";
-import {
-  Mail,
-  Lock,
-  Eye,
-  EyeOff,
-  ArrowLeft,
-  Utensils,
-  Sparkles,
-} from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, ArrowLeft, Utensils } from "lucide-react";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -26,9 +18,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setPageLoading(false);
-    }, 800);
+    const timer = setTimeout(() => setPageLoading(false), 800);
     return () => clearTimeout(timer);
   }, []);
 
@@ -38,17 +28,13 @@ const Login = () => {
     setError("");
 
     try {
-      // Use Redux thunk for login
       const resultAction = await dispatch(
         loginUser({ email: formData.email, password: formData.password }),
       );
 
       if (loginUser.fulfilled.match(resultAction)) {
         const user = resultAction.payload;
-
-        // Fetch user's cart from server
         await dispatch(fetchCart());
-
         dispatch(
           showNotification({
             message: `Welcome back, ${user.name}! 🎉`,
@@ -56,25 +42,13 @@ const Login = () => {
           }),
         );
         setNavigating(true);
-
-        // Redirect admin users to admin panel, regular users to home
         setTimeout(() => {
-          if (user.role === "admin") {
-            navigate("/admin/dashboard");
-          } else {
-            navigate("/");
-          }
+          navigate(user.role === "admin" ? "/admin/dashboard" : "/");
         }, 800);
       } else {
-        // Login failed
         const errorMessage = resultAction.payload || "Login failed";
         setError(errorMessage);
-        dispatch(
-          showNotification({
-            message: errorMessage,
-            type: "error",
-          }),
-        );
+        dispatch(showNotification({ message: errorMessage, type: "error" }));
         setLoading(false);
       }
     } catch (err) {
@@ -91,116 +65,65 @@ const Login = () => {
 
   const handleBackToHome = () => {
     setNavigating(true);
-    setTimeout(() => {
-      navigate("/");
-    }, 500);
+    setTimeout(() => navigate("/"), 500);
   };
 
-  if (pageLoading || navigating) {
-    return <Loader />;
-  }
+  if (pageLoading || navigating) return <Loader />;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-cream-light to-amber-50 flex items-center justify-center p-4 pt-32 pb-16">
-      <div className="relative w-full max-w-7xl">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 bg-white rounded-3xl shadow-2xl overflow-hidden">
-          {/* Left Side - Decorative */}
-          <div className="hidden lg:flex relative bg-gradient-to-br from-primary via-orange-600 to-amber-600 p-12 overflow-hidden">
-            <div className="relative h-full flex flex-col justify-between text-white z-10">
-              {/* Top Section */}
-              <div className="flex items-center gap-3">
-                <div className="p-4 bg-white/20 backdrop-blur-sm rounded-3xl">
-                  <Utensils className="w-8 h-8" />
-                </div>
-                <div>
-                  <h3 className="font-sans text-2xl font-bold">Bites</h3>
-                  <p className="text-sm text-white/80">
-                    Delicious Food Delivered
-                  </p>
-                </div>
-              </div>
+    <div
+      className="bg-gradient-to-br from-orange-50 via-cream-light to-amber-50 flex items-center justify-center px-4"
+      style={{ minHeight: "calc(100vh - 5rem)", marginTop: "5rem" }}
+    >
+      <div className="w-full max-w-md my-6">
+        {/* Card */}
+        <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+          {/* Top accent bar */}
+          <div className="h-1.5 bg-gradient-to-r from-primary via-orange-400 to-amber-400" />
 
-              {/* Center Content */}
-              <div className="text-center space-y-6 mt-3">
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-sm font-medium">
-                  <Sparkles className="w-4 h-4" />
-                  Welcome Back
-                </div>
-
-                <h2 className="font-sans text-5xl xl:text-6xl font-bold leading-tight">
-                  Your Favorite
-                  <br />
-                  Meals Await!
-                </h2>
-
-                <p className="text-xl text-white/90 max-w-md mx-auto leading-relaxed">
-                  Login to explore our delicious menu and continue your culinary
-                  journey
-                </p>
-
-                {/* Decorative Food Image */}
-                <div className="relative w-full max-w-lg mx-auto mt-8">
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent rounded-3xl blur-2xl"></div>
-                  <img
-                    src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&h=600&fit=crop"
-                    alt="Delicious Food"
-                    className="relative rounded-3xl shadow-2xl transform hover:scale-105 transition-transform duration-500"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Right Side - Form */}
-          <div className="p-8 sm:p-12 lg:p-16 flex flex-col">
-            {/* Back Button */}
+          <div className="px-9 pt-7 pb-8">
+            {/* Back button */}
             <button
               onClick={handleBackToHome}
-              className="inline-flex items-center gap-2 text-dark-gray hover:text-primary transition-colors mb-8 group w-fit"
+              className="inline-flex items-center gap-2 text-gray-500 hover:text-primary transition-colors mb-7 group"
             >
-              <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-              <span className="font-medium">Back to Home</span>
+              <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+              <span className="text-sm font-medium">Back to Home</span>
             </button>
 
-            {/* Logo for Mobile */}
-            <div className="lg:hidden mb-8">
-              <button onClick={handleBackToHome} className="mx-auto block">
-                <img
-                  src="/assets/images/BitesLogo.png"
-                  alt="Bites Logo"
-                  className="h-24 w-40 object-contain"
-                />
-              </button>
-            </div>
-
-            {/* Header */}
-            <div className="text-center mb-8 md:mt-16">
-              <h2 className="font-sans text-4xl lg:text-5xl font-bold text-dark mb-3">
-                Login
+            {/* Icon + heading */}
+            <div className="text-center mb-7">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-primary rounded-2xl mb-4">
+                <Utensils className="w-8 h-8 text-white" />
+              </div>
+              <h2 className="font-sans text-[1.75rem] font-bold text-dark mb-1.5 tracking-tight">
+                Welcome back
               </h2>
-              <p className="text-lg text-dark-gray">
-                Welcome back! Please enter your details
+              <p className="text-[0.9rem] text-gray-500">
+                Sign in to your{" "}
+                <span className="font-semibold text-primary">Bites</span>{" "}
+                account
               </p>
             </div>
 
-            {/* Error Message */}
+            {/* Error */}
             {error && (
-              <div className="bg-red-50 border-2 border-red-200 text-red-700 px-5 py-4 rounded-2xl mb-6 flex items-center gap-3 animate-shake">
-                <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                <p className="font-medium">{error}</p>
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-5 flex items-center gap-2.5 animate-shake">
+                <div className="w-2 h-2 bg-red-500 rounded-full flex-shrink-0" />
+                <p className="text-sm font-medium">{error}</p>
               </div>
             )}
 
             {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-5 flex-grow">
-              {/* Email Field */}
-              <div className="space-y-2">
-                <label className="block text-dark font-semibold text-sm ml-1">
+            <form onSubmit={handleSubmit} className="space-y-5">
+              {/* Email */}
+              <div className="space-y-1.5">
+                <label className="block text-dark font-semibold text-[0.875rem]">
                   Email Address
                 </label>
                 <div className="relative group">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <Mail className="w-5 h-5 text-gray-400 group-focus-within:text-primary transition-colors" />
+                    <Mail className="w-[1.05rem] h-[1.05rem] text-gray-400 group-focus-within:text-primary transition-colors" />
                   </div>
                   <input
                     type="email"
@@ -208,21 +131,21 @@ const Login = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, email: e.target.value })
                     }
-                    className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-gray-200 focus:border-primary focus:ring-4 focus:ring-primary/10 focus:outline-none transition-all text-dark placeholder:text-gray-400"
+                    className="w-full pl-11 pr-4 py-3.5 rounded-xl border-2 border-gray-200 focus:border-primary focus:ring-4 focus:ring-primary/10 focus:outline-none transition-all text-dark text-[0.9rem] placeholder:text-gray-400"
                     placeholder="your@email.com"
                     required
                   />
                 </div>
               </div>
 
-              {/* Password Field */}
-              <div className="space-y-2">
-                <label className="block text-dark font-semibold text-sm ml-1">
+              {/* Password */}
+              <div className="space-y-1.5">
+                <label className="block text-dark font-semibold text-[0.875rem]">
                   Password
                 </label>
                 <div className="relative group">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <Lock className="w-5 h-5 text-gray-400 group-focus-within:text-primary transition-colors" />
+                    <Lock className="w-[1.05rem] h-[1.05rem] text-gray-400 group-focus-within:text-primary transition-colors" />
                   </div>
                   <input
                     type={showPassword ? "text" : "password"}
@@ -230,7 +153,7 @@ const Login = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, password: e.target.value })
                     }
-                    className="w-full pl-12 pr-12 py-4 rounded-xl border-2 border-gray-200 focus:border-primary focus:ring-4 focus:ring-primary/10 focus:outline-none transition-all text-dark placeholder:text-gray-400"
+                    className="w-full pl-11 pr-12 py-3.5 rounded-xl border-2 border-gray-200 focus:border-primary focus:ring-4 focus:ring-primary/10 focus:outline-none transition-all text-dark text-[0.9rem] placeholder:text-gray-400"
                     placeholder="••••••••"
                     required
                   />
@@ -240,23 +163,23 @@ const Login = () => {
                     className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-primary transition-colors"
                   >
                     {showPassword ? (
-                      <EyeOff className="w-5 h-5" />
+                      <EyeOff className="w-[1.05rem] h-[1.05rem]" />
                     ) : (
-                      <Eye className="w-5 h-5" />
+                      <Eye className="w-[1.05rem] h-[1.05rem]" />
                     )}
                   </button>
                 </div>
               </div>
 
-              {/* Submit Button */}
+              {/* Submit */}
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-primary hover:bg-primary-dark text-white py-4 rounded-xl text-lg font-semibold transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2 mt-8"
+                className="w-full bg-primary hover:bg-primary-dark text-white py-3.5 rounded-xl text-[0.95rem] font-semibold transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2 mt-1"
               >
                 {loading ? (
                   <>
-                    <div className="w-5 h-5 border-3 border-white/30 border-t-white rounded-full animate-spin"></div>
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                     Logging in...
                   </>
                 ) : (
@@ -265,8 +188,8 @@ const Login = () => {
               </button>
             </form>
 
-            {/* Sign Up Link */}
-            <p className="text-center mt-8 text-dark-gray">
+            {/* Signup link */}
+            <p className="mt-6 text-center text-[0.875rem] text-gray-500">
               Don't have an account?{" "}
               <Link
                 to="/signup"
@@ -280,16 +203,6 @@ const Login = () => {
       </div>
 
       <style jsx>{`
-        @keyframes floating {
-          0%,
-          100% {
-            transform: translateY(0px) rotate(0deg);
-          }
-          50% {
-            transform: translateY(-20px) rotate(2deg);
-          }
-        }
-
         @keyframes shake {
           0%,
           100% {
@@ -309,7 +222,6 @@ const Login = () => {
             transform: translateX(5px);
           }
         }
-
         .animate-shake {
           animation: shake 0.5s;
         }

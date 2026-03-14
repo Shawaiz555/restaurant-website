@@ -12,7 +12,6 @@ import {
   ArrowLeft,
   User,
   Utensils,
-  Sparkles,
   Check,
   X,
 } from "lucide-react";
@@ -33,33 +32,26 @@ const Signup = () => {
   const [navigating, setNavigating] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [passwordFocused, setPasswordFocused] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setPageLoading(false);
-    }, 800);
+    const timer = setTimeout(() => setPageLoading(false), 800);
     return () => clearTimeout(timer);
   }, []);
 
   const handleBackToHome = () => {
     setNavigating(true);
-    setTimeout(() => {
-      navigate("/");
-    }, 500);
+    setTimeout(() => navigate("/"), 500);
   };
 
-  // Password strength validation
   const getPasswordStrength = () => {
-    const password = formData.password;
+    const p = formData.password;
     const checks = {
-      length: password.length >= 6,
-      hasUpper: /[A-Z]/.test(password),
-      hasLower: /[a-z]/.test(password),
-      hasNumber: /[0-9]/.test(password),
+      length: p.length >= 6,
+      hasUpper: /[A-Z]/.test(p),
+      hasLower: /[a-z]/.test(p),
+      hasNumber: /[0-9]/.test(p),
     };
-    const score = Object.values(checks).filter(Boolean).length;
-    return { checks, score };
+    return { checks, score: Object.values(checks).filter(Boolean).length };
   };
 
   const passwordStrength = getPasswordStrength();
@@ -89,17 +81,13 @@ const Signup = () => {
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
       dispatch(
-        showNotification({
-          message: "Passwords do not match",
-          type: "error",
-        }),
+        showNotification({ message: "Passwords do not match", type: "error" }),
       );
       setLoading(false);
       return;
     }
 
     try {
-      // Use Redux thunk for registration
       const resultAction = await dispatch(
         registerUser({
           name: formData.name,
@@ -116,19 +104,11 @@ const Signup = () => {
             type: "success",
           }),
         );
-        setTimeout(() => {
-          navigate("/login");
-        }, 1500);
+        setTimeout(() => navigate("/login"), 1500);
       } else {
-        // Registration failed
         const errorMessage = resultAction.payload || "Registration failed";
         setError(errorMessage);
-        dispatch(
-          showNotification({
-            message: errorMessage,
-            type: "error",
-          }),
-        );
+        dispatch(showNotification({ message: errorMessage, type: "error" }));
         setLoading(false);
       }
     } catch (err) {
@@ -143,121 +123,67 @@ const Signup = () => {
     }
   };
 
-  if (pageLoading || navigating) {
-    return <Loader />;
-  }
+  if (pageLoading || navigating) return <Loader />;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-cream-light to-amber-50 flex items-center justify-center p-4 pt-32 pb-16">
-      <div className="relative w-full max-w-7xl">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 bg-white rounded-3xl shadow-2xl overflow-hidden">
-          {/* Left Side - Decorative */}
-          <div className="hidden lg:flex relative bg-gradient-to-br from-primary via-orange-600 to-amber-600 p-12 overflow-hidden">
-            <div className="relative h-full flex flex-col justify-between text-white z-10">
-              {/* Top Section */}
-              <div className="flex items-center gap-3">
-                <div className="p-4 bg-white/20 backdrop-blur-sm rounded-3xl">
-                  <Utensils className="w-8 h-8" />
-                </div>
-                <div>
-                  <h3 className="font-sans text-2xl font-bold ml-1">
-                    Bites
-                  </h3>
-                  <p className="text-sm text-white/80 ml-1">
-                    Delicious Food Delivered
-                  </p>
-                </div>
-              </div>
+    <div
+      className="bg-gradient-to-br from-orange-50 via-cream-light to-amber-50 flex items-center justify-center px-4"
+      style={{ minHeight: "calc(100vh - 5rem)", marginTop: "5rem" }}
+    >
+      <div className="w-full max-w-lg my-6">
+        {/* Card */}
+        <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+          {/* Top accent bar */}
+          <div className="h-1.5 bg-gradient-to-r from-primary via-orange-400 to-amber-400" />
 
-              {/* Center Content */}
-              <div className="text-center space-y-6 mt-3">
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-sm font-medium">
-                  <Sparkles className="w-4 h-4" />
-                  Join Our Community
-                </div>
-
-                <h2 className="font-sans text-5xl xl:text-6xl font-bold leading-tight">
-                  Start Your
-                  <br />
-                  Food Journey!
-                </h2>
-
-                <p className="text-xl text-white/90 max-w-md mx-auto leading-relaxed">
-                  Create an account and unlock exclusive access to our delicious
-                  menu
-                </p>
-
-                {/* Decorative Food Image */}
-                <div className="relative w-full max-w-lg mx-auto mt-8">
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent rounded-3xl blur-2xl"></div>
-                  <img
-                    src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&h=600&fit=crop"
-                    alt="Delicious Food"
-                    className="relative rounded-3xl shadow-2xl transform hover:scale-105 transition-transform duration-500"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Right Side - Form */}
-          <div className="p-8 sm:p-12 lg:p-16 flex flex-col">
-            {/* Back Button */}
+          <div className="px-9 pt-7 pb-8">
+            {/* Back button */}
             <button
               onClick={handleBackToHome}
-              className="inline-flex items-center gap-2 text-dark-gray hover:text-primary transition-colors mb-6 group w-fit"
+              className="inline-flex items-center gap-2 text-gray-500 hover:text-primary transition-colors mb-6 group"
             >
-              <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-              <span className="font-medium">Back to Home</span>
+              <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+              <span className="text-sm font-medium">Back to Home</span>
             </button>
 
-            {/* Logo for Mobile */}
-            <div className="lg:hidden mb-6">
-              <button onClick={handleBackToHome} className="mx-auto block">
-                <img
-                  src="/assets/images/BitesLogo.png"
-                  alt="Bites Logo"
-                  className="h-24 w-40 object-contain"
-                />
-              </button>
-            </div>
-
-            {/* Header */}
-            <div className="text-center mb-6 md:mt-5">
-              <h2 className="font-sans text-4xl lg:text-5xl font-bold text-dark mb-3">
-                Sign Up
+            {/* Icon + heading */}
+            <div className="text-center mb-6">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-primary rounded-2xl mb-4">
+                <Utensils className="w-8 h-8 text-white" />
+              </div>
+              <h2 className="font-sans text-[1.75rem] font-bold text-dark mb-1.5 tracking-tight">
+                Create account
               </h2>
-              <p className="text-lg text-dark-gray">
-                Create your account to get started
+              <p className="text-[0.9rem] text-gray-500">
+                Join <span className="font-semibold text-primary">Bites</span>{" "}
+                and start your food journey
               </p>
             </div>
 
-            {/* Error Message */}
+            {/* Error / Success */}
             {error && (
-              <div className="bg-red-50 border-2 border-red-200 text-red-700 px-5 py-4 rounded-2xl mb-6 flex items-center gap-3 animate-shake">
-                <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                <p className="font-medium">{error}</p>
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-4 flex items-center gap-2.5 animate-shake">
+                <div className="w-2 h-2 bg-red-500 rounded-full flex-shrink-0" />
+                <p className="text-sm font-medium">{error}</p>
               </div>
             )}
-
-            {/* Success Message */}
             {success && (
-              <div className="bg-green-50 border-2 border-green-200 text-green-700 px-5 py-4 rounded-2xl mb-6 flex items-center gap-3 animate-bounce-in">
-                <Check className="w-5 h-5 text-green-600" />
-                <p className="font-medium">{success}</p>
+              <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl mb-4 flex items-center gap-2.5 animate-bounce-in">
+                <Check className="w-4 h-4 text-green-600 flex-shrink-0" />
+                <p className="text-sm font-medium">{success}</p>
               </div>
             )}
 
             {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-4 flex-grow">
-              {/* Name Field */}
-              <div className="space-y-2">
-                <label className="block text-dark font-semibold text-sm ml-1">
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Name */}
+              <div className="space-y-1.5">
+                <label className="block text-dark font-semibold text-[0.875rem]">
                   Full Name
                 </label>
                 <div className="relative group">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <User className="w-5 h-5 text-gray-400 group-focus-within:text-primary transition-colors" />
+                    <User className="w-[1.05rem] h-[1.05rem] text-gray-400 group-focus-within:text-primary transition-colors" />
                   </div>
                   <input
                     type="text"
@@ -265,21 +191,21 @@ const Signup = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, name: e.target.value })
                     }
-                    className="w-full pl-12 pr-4 py-3.5 rounded-xl border-2 border-gray-200 focus:border-primary focus:ring-4 focus:ring-primary/10 focus:outline-none transition-all text-dark placeholder:text-gray-400"
+                    className="w-full pl-11 pr-4 py-3.5 rounded-xl border-2 border-gray-200 focus:border-primary focus:ring-4 focus:ring-primary/10 focus:outline-none transition-all text-dark text-[0.9rem] placeholder:text-gray-400"
                     placeholder="John Doe"
                     required
                   />
                 </div>
               </div>
 
-              {/* Email Field */}
-              <div className="space-y-2">
-                <label className="block text-dark font-semibold text-sm ml-1">
+              {/* Email */}
+              <div className="space-y-1.5">
+                <label className="block text-dark font-semibold text-[0.875rem]">
                   Email Address
                 </label>
                 <div className="relative group">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <Mail className="w-5 h-5 text-gray-400 group-focus-within:text-primary transition-colors" />
+                    <Mail className="w-[1.05rem] h-[1.05rem] text-gray-400 group-focus-within:text-primary transition-colors" />
                   </div>
                   <input
                     type="email"
@@ -287,21 +213,21 @@ const Signup = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, email: e.target.value })
                     }
-                    className="w-full pl-12 pr-4 py-3.5 rounded-xl border-2 border-gray-200 focus:border-primary focus:ring-4 focus:ring-primary/10 focus:outline-none transition-all text-dark placeholder:text-gray-400"
+                    className="w-full pl-11 pr-4 py-3.5 rounded-xl border-2 border-gray-200 focus:border-primary focus:ring-4 focus:ring-primary/10 focus:outline-none transition-all text-dark text-[0.9rem] placeholder:text-gray-400"
                     placeholder="your@email.com"
                     required
                   />
                 </div>
               </div>
 
-              {/* Password Field */}
-              <div className="space-y-2">
-                <label className="block text-dark font-semibold text-sm ml-1">
+              {/* Password */}
+              <div className="space-y-1.5">
+                <label className="block text-dark font-semibold text-[0.875rem]">
                   Password
                 </label>
                 <div className="relative group">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <Lock className="w-5 h-5 text-gray-400 group-focus-within:text-primary transition-colors" />
+                    <Lock className="w-[1.05rem] h-[1.05rem] text-gray-400 group-focus-within:text-primary transition-colors" />
                   </div>
                   <input
                     type={showPassword ? "text" : "password"}
@@ -309,9 +235,7 @@ const Signup = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, password: e.target.value })
                     }
-                    onFocus={() => setPasswordFocused(true)}
-                    onBlur={() => setPasswordFocused(false)}
-                    className="w-full pl-12 pr-12 py-3.5 rounded-xl border-2 border-gray-200 focus:border-primary focus:ring-4 focus:ring-primary/10 focus:outline-none transition-all text-dark placeholder:text-gray-400"
+                    className="w-full pl-11 pr-12 py-3.5 rounded-xl border-2 border-gray-200 focus:border-primary focus:ring-4 focus:ring-primary/10 focus:outline-none transition-all text-dark text-[0.9rem] placeholder:text-gray-400"
                     placeholder="••••••••"
                     required
                   />
@@ -321,92 +245,48 @@ const Signup = () => {
                     className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-primary transition-colors"
                   >
                     {showPassword ? (
-                      <EyeOff className="w-5 h-5" />
+                      <EyeOff className="w-[1.05rem] h-[1.05rem]" />
                     ) : (
-                      <Eye className="w-5 h-5" />
+                      <Eye className="w-[1.05rem] h-[1.05rem]" />
                     )}
                   </button>
                 </div>
-
-                {/* Password Strength Indicator */}
-                {formData.password &&
-                  (passwordFocused || formData.password.length > 0) && (
-                    <div className="mt-2 space-y-2">
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="text-dark-gray">
-                          Password Strength:
-                        </span>
-                        <span
-                          className={`font-semibold ${
-                            passwordStrength.score === 4
-                              ? "text-green-600"
-                              : passwordStrength.score === 3
-                                ? "text-yellow-600"
-                                : passwordStrength.score >= 2
-                                  ? "text-orange-600"
-                                  : "text-red-600"
-                          }`}
-                        >
-                          {strengthText}
-                        </span>
-                      </div>
-                      <div className="flex gap-1">
-                        {[1, 2, 3, 4].map((level) => (
-                          <div
-                            key={level}
-                            className={`h-1.5 flex-1 rounded-full transition-all ${
-                              level <= passwordStrength.score
-                                ? strengthColor
-                                : "bg-gray-200"
-                            }`}
-                          ></div>
-                        ))}
-                      </div>
-                      <div className="space-y-1">
+                {/* Strength bar */}
+                {formData.password && (
+                  <div className="flex items-center gap-2 pt-0.5">
+                    <div className="flex gap-1 flex-1">
+                      {[1, 2, 3, 4].map((level) => (
                         <div
-                          className={`flex items-center gap-2 text-xs ${passwordStrength.checks.length ? "text-green-600" : "text-gray-400"}`}
-                        >
-                          {passwordStrength.checks.length ? (
-                            <Check className="w-3 h-3" />
-                          ) : (
-                            <X className="w-3 h-3" />
-                          )}
-                          <span>At least 6 characters</span>
-                        </div>
-                        <div
-                          className={`flex items-center gap-2 text-xs ${passwordStrength.checks.hasNumber ? "text-green-600" : "text-gray-400"}`}
-                        >
-                          {passwordStrength.checks.hasNumber ? (
-                            <Check className="w-3 h-3" />
-                          ) : (
-                            <X className="w-3 h-3" />
-                          )}
-                          <span>Contains a number</span>
-                        </div>
-                        <div
-                          className={`flex items-center gap-2 text-xs ${passwordStrength.checks.hasUpper && passwordStrength.checks.hasLower ? "text-green-600" : "text-gray-400"}`}
-                        >
-                          {passwordStrength.checks.hasUpper &&
-                          passwordStrength.checks.hasLower ? (
-                            <Check className="w-3 h-3" />
-                          ) : (
-                            <X className="w-3 h-3" />
-                          )}
-                          <span>Mix of uppercase & lowercase</span>
-                        </div>
-                      </div>
+                          key={level}
+                          className={`h-1.5 flex-1 rounded-full transition-all ${level <= passwordStrength.score ? strengthColor : "bg-gray-200"}`}
+                        />
+                      ))}
                     </div>
-                  )}
+                    <span
+                      className={`text-xs font-semibold w-10 text-right ${
+                        passwordStrength.score === 4
+                          ? "text-green-600"
+                          : passwordStrength.score === 3
+                            ? "text-yellow-600"
+                            : passwordStrength.score >= 2
+                              ? "text-orange-600"
+                              : "text-red-600"
+                      }`}
+                    >
+                      {strengthText}
+                    </span>
+                  </div>
+                )}
               </div>
 
-              {/* Confirm Password Field */}
-              <div className="space-y-2">
-                <label className="block text-dark font-semibold text-sm ml-1">
+              {/* Confirm Password */}
+              <div className="space-y-1.5">
+                <label className="block text-dark font-semibold text-[0.875rem]">
                   Confirm Password
                 </label>
                 <div className="relative group">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <Lock className="w-5 h-5 text-gray-400 group-focus-within:text-primary transition-colors" />
+                    <Lock className="w-[1.05rem] h-[1.05rem] text-gray-400 group-focus-within:text-primary transition-colors" />
                   </div>
                   <input
                     type={showConfirmPassword ? "text" : "password"}
@@ -417,7 +297,7 @@ const Signup = () => {
                         confirmPassword: e.target.value,
                       })
                     }
-                    className="w-full pl-12 pr-12 py-3.5 rounded-xl border-2 border-gray-200 focus:border-primary focus:ring-4 focus:ring-primary/10 focus:outline-none transition-all text-dark placeholder:text-gray-400"
+                    className="w-full pl-11 pr-12 py-3.5 rounded-xl border-2 border-gray-200 focus:border-primary focus:ring-4 focus:ring-primary/10 focus:outline-none transition-all text-dark text-[0.9rem] placeholder:text-gray-400"
                     placeholder="••••••••"
                     required
                   />
@@ -427,30 +307,29 @@ const Signup = () => {
                     className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-primary transition-colors"
                   >
                     {showConfirmPassword ? (
-                      <EyeOff className="w-5 h-5" />
+                      <EyeOff className="w-[1.05rem] h-[1.05rem]" />
                     ) : (
-                      <Eye className="w-5 h-5" />
+                      <Eye className="w-[1.05rem] h-[1.05rem]" />
                     )}
                   </button>
                 </div>
                 {formData.confirmPassword &&
                   formData.password !== formData.confirmPassword && (
-                    <p className="text-xs text-red-600 flex items-center gap-1 mt-1 ml-1">
-                      <X className="w-3 h-3" />
-                      Passwords do not match
+                    <p className="text-xs text-red-600 flex items-center gap-1">
+                      <X className="w-3 h-3" /> Passwords do not match
                     </p>
                   )}
               </div>
 
-              {/* Submit Button */}
+              {/* Submit */}
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-primary hover:bg-primary-dark text-white py-4 rounded-xl text-lg font-semibold transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2 mt-6"
+                className="w-full bg-primary hover:bg-primary-dark text-white py-3.5 rounded-xl text-[0.95rem] font-semibold transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2 mt-1"
               >
                 {loading ? (
                   <>
-                    <div className="w-5 h-5 border-3 border-white/30 border-t-white rounded-full animate-spin"></div>
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                     Creating Account...
                   </>
                 ) : (
@@ -459,8 +338,8 @@ const Signup = () => {
               </button>
             </form>
 
-            {/* Login Link */}
-            <p className="text-center mt-6 text-dark-gray">
+            {/* Login link */}
+            <p className="mt-5 text-center text-[0.875rem] text-gray-500">
               Already have an account?{" "}
               <Link
                 to="/login"
@@ -474,16 +353,6 @@ const Signup = () => {
       </div>
 
       <style jsx>{`
-        @keyframes floating {
-          0%,
-          100% {
-            transform: translateY(0px) rotate(0deg);
-          }
-          50% {
-            transform: translateY(-20px) rotate(2deg);
-          }
-        }
-
         @keyframes shake {
           0%,
           100% {
@@ -503,7 +372,6 @@ const Signup = () => {
             transform: translateX(5px);
           }
         }
-
         @keyframes bounce-in {
           0% {
             transform: scale(0.95);
@@ -517,11 +385,9 @@ const Signup = () => {
             opacity: 1;
           }
         }
-
         .animate-shake {
           animation: shake 0.5s;
         }
-
         .animate-bounce-in {
           animation: bounce-in 0.4s ease-out;
         }
