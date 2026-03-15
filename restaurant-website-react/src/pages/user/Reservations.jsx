@@ -7,9 +7,9 @@ import React, {
 } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { showNotification } from "../store/slices/notificationSlice";
-import tablesService from "../services/tablesService";
-import reservationsService from "../services/reservationsService";
+import { showNotification } from "../../store/slices/notificationSlice";
+import tablesService from "../../services/tablesService";
+import reservationsService from "../../services/reservationsService";
 import {
   Calendar,
   Clock,

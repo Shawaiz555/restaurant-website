@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
-import ServicesHeroSection from "../components/services/ServicesHeroSection";
-import CoreServicesSection from "../components/services/CoreServicesSection";
-import HowItWorksSection from "../components/services/HowItWorksSection";
-import SpecialServicesSection from "../components/services/SpecialServicesSection";
-import BenefitsSection from "../components/services/BenefitsSection";
-import ServicesCTASection from "../components/services/ServicesCTASection";
+import ServicesHeroSection from "../../components/services/ServicesHeroSection";
+import CoreServicesSection from "../../components/services/CoreServicesSection";
+import HowItWorksSection from "../../components/services/HowItWorksSection";
+import SpecialServicesSection from "../../components/services/SpecialServicesSection";
+import BenefitsSection from "../../components/services/BenefitsSection";
+import ServicesCTASection from "../../components/services/ServicesCTASection";
 
 const Services = () => {
   useEffect(() => {

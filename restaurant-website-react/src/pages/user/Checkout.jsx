@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { useCart } from "../hooks/useCart";
-import { useAuth } from "../hooks/useAuth";
-import { showNotification } from "../store/slices/notificationSlice";
-import { clearServerCart } from "../store/slices/cartSlice";
-import LocationMap from "../components/common/LocationMap";
+import { useCart } from "../../hooks/useCart";
+import { useAuth } from "../../hooks/useAuth";
+import { showNotification } from "../../store/slices/notificationSlice";
+import { clearServerCart } from "../../store/slices/cartSlice";
+import LocationMap from "../../components/common/LocationMap";
 import { ShoppingCart, Loader2, Check, Info, CreditCard, Tag } from "lucide-react";
-import ordersService from "../services/ordersService";
-import cartService from "../services/cartService";
-import productsService from "../services/productsService";
+import ordersService from "../../services/ordersService";
+import cartService from "../../services/cartService";
+import productsService from "../../services/productsService";
 
 const Checkout = () => {
   const navigate = useNavigate();

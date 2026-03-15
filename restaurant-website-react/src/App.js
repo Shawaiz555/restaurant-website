@@ -6,14 +6,14 @@ import { loadCart, fetchCart } from './store/slices/cartSlice';
 import Loader from './components/common/Loader';
 import NotificationManager from './components/common/NotificationManager';
 
-import Home from './pages/Home';
-import Menu from './pages/Menu';
-import About from './pages/About';
-import Services from './pages/Services';
-import ProductDetail from './pages/ProductDetail';
+import Home from './pages/user/Home';
+import Menu from './pages/user/Menu';
+import About from './pages/user/About';
+import Services from './pages/user/Services';
+import ProductDetail from './pages/user/ProductDetail';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
-import Checkout from './pages/Checkout';
+import Checkout from './pages/user/Checkout';
 import Navbar from './components/layout/Navbar';
 import CartDrawer from './components/layout/CartDrawer';
 import Footer from './components/layout/Footer';
@@ -43,9 +43,9 @@ import AdminStockReports from './pages/admin/AdminStockReports';
 import AdminAddonStock from './pages/admin/AdminAddonStock';
 
 // User Pages
-import Reservations from './pages/Reservations';
-import MyReservations from './pages/MyReservations';
-import Deals from './pages/Deals';
+import Reservations from './pages/user/Reservations';
+import MyReservations from './pages/user/MyReservations';
+import Deals from './pages/user/Deals';
 
 // Component to handle cart initialization
 function AppContent() {

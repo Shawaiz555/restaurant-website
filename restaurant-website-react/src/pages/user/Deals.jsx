@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import dealsService from "../services/dealsService";
-import DealsHeroSection from "../components/deals/DealsHeroSection";
-import { addDealToCart, openCart } from "../store/slices/cartSlice";
-import { showNotification } from "../store/slices/notificationSlice";
-import { useAuth } from "../hooks/useAuth";
-import productsService from "../services/productsService";
+import dealsService from "../../services/dealsService";
+import DealsHeroSection from "../../components/deals/DealsHeroSection";
+import { addDealToCart, openCart } from "../../store/slices/cartSlice";
+import { showNotification } from "../../store/slices/notificationSlice";
+import { useAuth } from "../../hooks/useAuth";
+import productsService from "../../services/productsService";
 import {
   Package,
   ArrowRight,

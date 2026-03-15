@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import MenuHeroSection from "../components/menu/MenuHeroSection";
-import MenuCategoriesSection from "../components/menu/MenuCategoriesSection";
-import productsService from "../services/productsService";
+import MenuHeroSection from "../../components/menu/MenuHeroSection";
+import MenuCategoriesSection from "../../components/menu/MenuCategoriesSection";
+import productsService from "../../services/productsService";
 import {
   Utensils,
   Star,

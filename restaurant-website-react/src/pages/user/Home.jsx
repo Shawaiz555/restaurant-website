@@ -1,14 +1,14 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
-import HeroSection from "../components/home/HeroSection";
-import PopularDishes from "../components/home/PopularDishes";
-import ServicesSection from "../components/home/ServicesSection";
-import MenuSection from "../components/home/MenuSection";
-import ReviewsSection from "../components/home/ReviewsSection";
-import ChefsSection from "../components/home/ChefsSection";
-import MobileAppSection from "../components/home/MobileAppSection";
-import FAQSection from "../components/home/FAQSection";
+import { useAuth } from "../../hooks/useAuth";
+import HeroSection from "../../components/home/HeroSection";
+import PopularDishes from "../../components/home/PopularDishes";
+import ServicesSection from "../../components/home/ServicesSection";
+import MenuSection from "../../components/home/MenuSection";
+import ReviewsSection from "../../components/home/ReviewsSection";
+import ChefsSection from "../../components/home/ChefsSection";
+import MobileAppSection from "../../components/home/MobileAppSection";
+import FAQSection from "../../components/home/FAQSection";
 
 const Home = () => {
   const navigate = useNavigate();

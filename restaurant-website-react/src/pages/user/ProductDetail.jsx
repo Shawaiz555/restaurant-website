@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import productsService from "../services/productsService";
-import { useCart } from "../hooks/useCart";
-import Loader from "../components/common/Loader";
+import productsService from "../../services/productsService";
+import { useCart } from "../../hooks/useCart";
+import Loader from "../../components/common/Loader";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import { Wine, Cake, PlusCircle } from "lucide-react";

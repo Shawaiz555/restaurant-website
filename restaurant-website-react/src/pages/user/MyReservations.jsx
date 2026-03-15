@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { showNotification } from "../store/slices/notificationSlice";
-import reservationsService from "../services/reservationsService";
-import ConfirmModal from "../components/admin/common/ConfirmModal";
+import { showNotification } from "../../store/slices/notificationSlice";
+import reservationsService from "../../services/reservationsService";
+import ConfirmModal from "../../components/admin/common/ConfirmModal";
 import {
   CalendarCheck,
   Calendar,
