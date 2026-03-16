@@ -81,7 +81,7 @@ const ServicesHeroSection = () => {
           </p>
 
           {/* Service Cards Grid */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5 max-w-4xl mx-auto animate-slide-up-delay-3">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto animate-slide-up-delay-3">
             {services.map((service, idx) => (
               <div
                 key={service.label}

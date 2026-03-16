@@ -35,7 +35,7 @@ const ChefsSection = () => {
 
   return (
     <section className="py-16 lg:py-24 bg-white" id="chefs">
-      <div className="container mx-auto px-6 sm:px-6 lg:px-16">
+      <div className="container mx-auto px-6 sm:px-6 lg:px-10 xl:px-16">
         <div className="flex items-center justify-between mb-12">
           <h2 className="font-sans font-bold text-4xl lg:text-5xl">Meet Our Chefs</h2>
           <div className="flex gap-2">
@@ -68,9 +68,13 @@ const ChefsSection = () => {
             },
             1024: {
               slidesPerView: 3,
-              spaceBetween: 30,
+              spaceBetween: 24,
             },
             1280: {
+              slidesPerView: 3,
+              spaceBetween: 28,
+            },
+            1400: {
               slidesPerView: 4,
               spaceBetween: 30,
             },

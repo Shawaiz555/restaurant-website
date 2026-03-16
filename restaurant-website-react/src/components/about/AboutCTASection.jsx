@@ -3,7 +3,7 @@ import React from "react";
 const AboutCTASection = () => {
   return (
     <section className="py-20">
-      <div className="container mx-auto px-6 sm:px-6 lg:px-16">
+      <div className="container mx-auto px-6 sm:px-6 lg:px-10 xl:px-16">
         <div className="bg-gradient-to-r from-primary via-primary to-primary-dark rounded-3xl p-12 lg:p-16 text-center relative overflow-hidden shadow-2xl">
           <div className="absolute inset-0 opacity-10">
             <div className="absolute top-10 left-10 w-40 h-40 bg-white rounded-full blur-3xl"></div>

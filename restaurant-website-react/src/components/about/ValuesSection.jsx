@@ -31,9 +31,9 @@ const ValuesSection = () => {
 
   return (
     <section className="py-20 bg-gradient-to-br from-cream-light to-cream">
-      <div className="container mx-auto px-6 sm:px-6 lg:px-16">
+      <div className="container mx-auto px-6 sm:px-6 lg:px-10 xl:px-16">
         <div className="text-center mb-16">
-          <h2 className="font-sans font-bold text-5xl text-dark mb-4">
+          <h2 className="font-sans font-bold text-4xl lg:text-5xl text-dark mb-4">
             Our Core Values
           </h2>
           <p className="text-dark-gray text-xl max-w-2xl mx-auto">
@@ -42,7 +42,7 @@ const ValuesSection = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6 xl:gap-8">
           {values.map((value, index) => (
             <div
               key={index}

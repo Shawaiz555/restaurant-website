@@ -21,10 +21,10 @@ const MenuCategoriesSection = ({
 
   return (
     <section className="py-8 lg:py-12">
-      <div className="container mx-auto px-6 sm:px-6 lg:px-16">
-        <div className="flex flex-col lg:flex-row gap-8">
+      <div className="container mx-auto px-6 sm:px-6 lg:px-8 xl:px-16">
+        <div className="flex flex-col lg:flex-row gap-6 xl:gap-8">
           {/* Left Sidebar - Categories */}
-          <aside className="lg:w-80 flex-shrink-0">
+          <aside className="lg:w-64 xl:w-72 2xl:w-80 flex-shrink-0">
             {/* Enhanced Mobile Category Toggle with Animation */}
             <div className="lg:hidden mb-6">
               {/* Attention-grabbing header */}
@@ -231,7 +231,7 @@ const MenuCategoriesSection = ({
           {/* Right Content - Products Grid */}
           <div className="flex-1 min-w-0" id="products-section">
             {/* Enhanced Results Header */}
-            <div className="bg-gradient-to-r from-white via-cream-light to-white rounded-2xl px-6 lg:px-8 py-6 mb-8 shadow-xl border-2 border-primary/10">
+            <div className="bg-gradient-to-r from-white via-cream-light to-white rounded-2xl px-4 lg:px-6 xl:px-8 py-5 lg:py-6 mb-6 lg:mb-8 shadow-xl border-2 border-primary/10">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="flex items-start gap-4">
                   <div className="w-14 h-14 bg-gradient-to-br from-primary to-primary-dark rounded-2xl flex items-center justify-center shadow-lg transform rotate-3 hover:rotate-0 transition-transform">
@@ -240,7 +240,7 @@ const MenuCategoriesSection = ({
                     })}
                   </div>
                   <div>
-                    <h3 className="font-sans font-bold text-3xl text-dark mb-2 flex items-center gap-3">
+                    <h3 className="font-sans font-bold text-2xl xl:text-3xl text-dark mb-2 flex items-center gap-3 flex-wrap">
                       {activeCategoryName}
                       <span className="text-sm font-normal bg-primary/10 text-primary px-3 py-1 rounded-full">
                         {filteredProducts.length}{" "}
@@ -313,7 +313,7 @@ const MenuCategoriesSection = ({
 
             {/* Products Grid */}
             {filteredProducts.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 1xl:grid-cols-3 gap-5 xl:gap-6">
                 {filteredProducts.map((product, index) => (
                   <div
                     key={product.id}

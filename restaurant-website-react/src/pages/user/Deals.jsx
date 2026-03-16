@@ -420,7 +420,7 @@ const XlCard = ({ deal, onClaim }) => {
               <AvailBadge deal={{ ...deal, _overrideStyle: "light" }} />
             </div>
 
-            <h3 className="font-black text-white text-3xl sm:text-4xl lg:text-5xl leading-tight">
+            <h3 className="font-black text-white text-3xl sm:text-4xl lg:text-4xl xl:text-5xl leading-tight">
               {deal.title}
             </h3>
 
@@ -437,7 +437,7 @@ const XlCard = ({ deal, onClaim }) => {
               <p className="text-white/60 text-[10px] font-black uppercase tracking-widest">
                 Total Value
               </p>
-              <p className="text-white font-black text-5xl sm:text-6xl leading-none">
+              <p className="text-white font-black text-4xl sm:text-5xl xl:text-6xl leading-none">
                 {formatPrice(deal.price)}
               </p>
               <p className="text-white/50 text-[10px] mt-1">

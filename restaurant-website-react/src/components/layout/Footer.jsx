@@ -53,7 +53,7 @@ const Footer = () => {
       id="contact"
       className="bg-gradient-to-br from-white via-cream-light to-white py-16 lg:py-20"
     >
-      <div className="container mx-auto px-6 sm:px-6 lg:px-16">
+      <div className="container mx-auto px-6 sm:px-6 lg:px-10 xl:px-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           {/* Company Info */}
           <div>
@@ -72,7 +72,7 @@ const Footer = () => {
             {/* Social Media Links */}
             <div className="mb-4">
               <h5 className="font-bold text-dark mb-3">Follow Us</h5>
-              <div className="flex gap-3">
+              <div className="flex gap-2">
                 {socialLinks.map((social) => (
                   <a
                     key={social.name}

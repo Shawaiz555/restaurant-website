@@ -49,13 +49,13 @@ const ProductCard = ({ product }) => {
       <p className="text-dark-gray text-sm text-center mb-4 line-clamp-2">
         {product.description}
       </p>
-      <div className="flex items-center justify-between">
-        <span className="font-sans text-2xl font-semibold text-dark">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <span className="font-sans text-xl font-semibold text-dark whitespace-nowrap">
           Rs.{product.basePrice.toFixed(2)}
         </span>
         <button
           onClick={handleAddToCart}
-          className="bg-primary text-white hover:bg-primary-dark px-6 py-2 rounded-full font-medium transition-all shadow-md hover:shadow-lg"
+          className="bg-primary text-white hover:bg-primary-dark px-4 py-2 rounded-full font-medium transition-all shadow-md hover:shadow-lg text-sm whitespace-nowrap"
         >
           Add to Cart
         </button>

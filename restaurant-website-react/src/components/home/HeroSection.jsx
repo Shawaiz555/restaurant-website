@@ -10,8 +10,6 @@ import {
   Cake,
   Wine,
   Salad,
-  Check,
-  Zap,
   ShoppingCart,
 } from "lucide-react";
 
@@ -36,8 +34,8 @@ const HeroSection = () => {
         <div className="absolute bottom-32 left-1/3 w-24 h-24 bg-white/20 rounded-full blur-xl animate-float-3"></div>
       </div>
 
-      <div className="container mx-auto px-6 sm:px-8 lg:px-12 xl:px-16 relative z-10">
-        <div className="flex flex-col-reverse lg:grid lg:grid-cols-2 gap-8 lg:gap-10 xl:gap-12 items-center">
+      <div className="container mx-auto px-6 sm:px-8 lg:px-10 xl:px-16 relative z-10">
+        <div className="flex flex-col-reverse lg:grid lg:grid-cols-2 gap-8 lg:gap-8 xl:gap-12 items-center">
           {/* Left Content */}
           <div className="relative space-y-5 lg:space-y-6">
             {/* Enhanced Decorative Badge */}
@@ -54,7 +52,7 @@ const HeroSection = () => {
 
             {/* Enhanced Heading */}
             <div className="space-y-3">
-              <h1 className="font-sans font-bold text-5xl sm:text-6xl lg:text-7xl xl:text-8xl leading-[1.1] text-primary drop-shadow-lg animate-slide-up">
+              <h1 className="font-sans font-bold text-5xl sm:text-6xl lg:text-6xl xl:text-7xl 2xl:text-8xl leading-[1.1] text-primary drop-shadow-lg animate-slide-up">
                 We Serve The
                 <span className="block text-primary-dark mt-1">
                   Taste You Love
@@ -95,7 +93,7 @@ const HeroSection = () => {
 
             {/* Enhanced Stats with Icons */}
             <div className="mt-8 grid grid-cols-3 gap-4 lg:gap-6 max-w-xl animate-slide-up-delay-4">
-              <div className="group text-center p-3 rounded-xl bg-white/50 backdrop-blur-sm border border-primary/20 hover:border-primary/40 transition-all duration-300 hover:scale-105 hover:shadow-xl">
+              <div className="group text-center p-2 rounded-xl bg-white/50 backdrop-blur-sm border border-primary/20 hover:border-primary/40 transition-all duration-300 hover:scale-105 hover:shadow-xl">
                 <div className="text-primary text-3xl lg:text-4xl font-sans mb-1 group-hover:scale-110 transition-transform">
                   50K+
                 </div>
@@ -104,7 +102,7 @@ const HeroSection = () => {
                 </div>
                 <Users className="w-6 h-6 mx-auto mt-2 text-primary" />
               </div>
-              <div className="group text-center p-3 rounded-xl bg-white/50 backdrop-blur-sm border border-primary/20 hover:border-primary/40 transition-all duration-300 hover:scale-105 hover:shadow-xl">
+              <div className="group text-center p-2 rounded-xl bg-white/50 backdrop-blur-sm border border-primary/20 hover:border-primary/40 transition-all duration-300 hover:scale-105 hover:shadow-xl">
                 <div className="text-primary text-3xl lg:text-4xl font-sans mb-1 group-hover:scale-110 transition-transform flex items-center justify-center gap-1">
                   4.9
                   <Star className="w-5 h-5 text-yellow-500 fill-current" />
@@ -114,7 +112,7 @@ const HeroSection = () => {
                 </div>
                 <Trophy className="w-6 h-6 mx-auto mt-2 text-primary" />
               </div>
-              <div className="group text-center p-3 rounded-xl bg-white/50 backdrop-blur-sm border border-primary/20 hover:border-primary/40 transition-all duration-300 hover:scale-105 hover:shadow-xl">
+              <div className="group text-center p-2 rounded-xl bg-white/50 backdrop-blur-sm border border-primary/20 hover:border-primary/40 transition-all duration-300 hover:scale-105 hover:shadow-xl">
                 <div className="text-primary text-3xl lg:text-4xl font-sans mb-1 group-hover:scale-110 transition-transform">
                   200+
                 </div>
@@ -127,17 +125,17 @@ const HeroSection = () => {
           </div>
 
           {/* Right Content - Enhanced Image Section */}
-          <div className="relative min-h-[400px] lg:min-h-[500px] flex items-center justify-center">
+          <div className="relative min-h-[400px] lg:min-h-[450px] xl:min-h-[500px] flex items-center justify-center">
             {/* Decorative Circle Background */}
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-[350px] h-[350px] lg:w-[500px] lg:h-[500px] rounded-full bg-gradient-to-br from-primary/20 to-primary-dark/20 blur-3xl animate-pulse-slow"></div>
+              <div className="w-[350px] h-[350px] lg:w-[420px] lg:h-[420px] xl:w-[500px] xl:h-[500px] rounded-full bg-gradient-to-br from-primary/20 to-primary-dark/20 blur-3xl animate-pulse-slow"></div>
             </div>
 
             {/* Main Content Container */}
             <div className="relative w-full max-w-5xl mx-auto">
               {/* Food Image with Enhanced Effects */}
               <div className="relative z-10 flex justify-center w-full px-4 sm:px-6 lg:px-8">
-                <div className="relative w-full max-w-[280px] sm:max-w-[360px] md:max-w-[420px] lg:max-w-[500px] xl:max-w-[600px] aspect-square">
+                <div className="relative w-full max-w-[280px] sm:max-w-[360px] md:max-w-[420px] lg:max-w-[440px] xl:max-w-[520px] 2xl:max-w-[600px] aspect-square">
                   {/* Glow effect behind image */}
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-primary-light/30 rounded-full blur-2xl transform scale-105"></div>
 
@@ -230,32 +228,6 @@ const HeroSection = () => {
                     <span className="font-bold text-sm">{item.label}</span>
                   </div>
                 ))}
-              </div>
-
-              {/* Floating Badge - Quality Assured */}
-              <div className="absolute top-4 left-2 lg:left-4 bg-white rounded-xl shadow-xl p-3 animate-float-1 hidden sm:block">
-                <div className="flex items-center gap-2">
-                  <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center">
-                    <Check className="w-6 h-6 text-white" />
-                  </div>
-                  <div>
-                    <div className="text-dark font-bold text-xs">Quality</div>
-                    <div className="text-dark-gray text-[10px]">Assured</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Floating Badge - Fast Delivery */}
-              <div className="absolute bottom-12 right-2 lg:right-4 bg-white rounded-xl shadow-xl p-3 animate-float-2 hidden md:block">
-                <div className="flex items-center gap-2">
-                  <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-light rounded-full flex items-center justify-center">
-                    <Zap className="w-6 h-6 text-white" />
-                  </div>
-                  <div>
-                    <div className="text-dark font-bold text-xs">Fast</div>
-                    <div className="text-dark-gray text-[10px]">Delivery</div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>

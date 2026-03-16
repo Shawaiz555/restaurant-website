@@ -6,13 +6,13 @@ const OurStorySection = () => {
 
   return (
     <section className="py-20">
-      <div className="container mx-auto px-6 sm:px-6 lg:px-16">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <div className="container mx-auto px-6 sm:px-6 lg:px-10 xl:px-16">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-10 xl:gap-12 items-center">
           <div className="space-y-6">
             <div className="inline-block bg-primary/10 px-4 py-2 rounded-full">
               <span className="text-primary font-semibold">Est. 2009</span>
             </div>
-            <h2 className="font-sans font-bold text-4xl lg:text-6xl text-dark leading-tight">
+            <h2 className="font-sans font-bold text-4xl lg:text-5xl xl:text-6xl text-dark leading-tight">
               A Journey of Flavor & Passion
             </h2>
             <div className="space-y-4 text-dark-gray text-lg leading-relaxed">

@@ -37,15 +37,15 @@ const HowItWorksSection = () => {
 
   return (
     <section className="py-20 bg-gradient-to-br from-cream to-cream-light">
-      <div className="container mx-auto px-6 sm:px-6 lg:px-16">
+      <div className="container mx-auto px-6 sm:px-6 lg:px-10 xl:px-16">
         <div className="text-center mb-16">
-          <h2 className="font-sans font-bold text-5xl text-dark mb-4">How It Works</h2>
+          <h2 className="font-sans font-bold text-4xl lg:text-5xl text-dark mb-4">How It Works</h2>
           <p className="text-dark-gray text-xl">
             Simple steps to enjoy our delicious food
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-8xl mx-auto">
+        <div className="grid md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6 xl:gap-8 max-w-8xl mx-auto">
           {process.map((item, index) => (
             <div key={index} className="relative">
               <div className="bg-white rounded-3xl p-8 shadow-xl text-center h-full border-2 border-primary/10 hover:border-primary/30 transition-all">

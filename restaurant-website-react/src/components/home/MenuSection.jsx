@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import ProductCard from "../common/ProductCard";
 import productsService from "../../services/productsService";
@@ -23,6 +23,7 @@ import {
   Beef,
   Leaf,
   Sprout,
+  ChevronDown,
 } from "lucide-react";
 
 // Default category icons
@@ -85,6 +86,19 @@ const MenuSection = () => {
   const [allCategories, setAllCategories] = useState([]);
   const [activeCategory, setActiveCategory] = useState("");
   const [menuItems, setMenuItems] = useState([]);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   // Load categories dynamically from products
   useEffect(() => {
@@ -139,15 +153,15 @@ const MenuSection = () => {
       <div className="absolute top-40 -left-20 w-80 h-80 bg-primary/5 rounded-full blur-3xl"></div>
       <div className="absolute bottom-40 -right-20 w-80 h-80 bg-primary/5 rounded-full blur-3xl"></div>
 
-      <div className="container mx-auto px-6 sm:px-8 lg:px-16 relative z-10">
-        <div className="text-center mb-16 space-y-4">
+      <div className="container mx-auto px-6 sm:px-8 lg:px-8 xl:px-16 relative z-10">
+        <div className="text-center mb-5 space-y-3">
           <div className="inline-flex items-center gap-2 bg-primary/10 px-4 py-2 rounded-full border border-primary/20 animate-fade-in translate-y-[-10px]">
             <Sparkles className="w-4 h-4 text-primary" />
             <span className="text-primary font-bold text-xs tracking-widest uppercase">
               Special Selection
             </span>
           </div>
-          <h2 className="font-sans font-bold text-5xl lg:text-6xl text-dark leading-tight">
+          <h2 className="font-sans font-bold text-4xl lg:text-5xl xl:text-6xl text-dark leading-tight">
             Our Regular <span className="text-primary italic">Menu Pack</span>
           </h2>
           <div className="w-24 h-1.5 bg-primary/20 mx-auto rounded-full mt-4 flex overflow-hidden">
@@ -155,33 +169,84 @@ const MenuSection = () => {
           </div>
         </div>
 
-        {/* Category Filter */}
-        <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 justify-center gap-4 mb-5">
-          {allCategories.map((category) => (
-            <button
-              key={category.id}
-              onClick={() => setActiveCategory(category.id)}
-              className={`
-                group flex items-center gap-3 px-8 py-4 rounded-2xl border-2 transition-all duration-300 transform
-                ${
-                  activeCategory === category.id
-                    ? "bg-primary border-primary text-white shadow-xl scale-105"
-                    : "bg-white border-primary/10 text-dark-gray hover:border-primary/40 hover:bg-cream-light/50"
-                }
-              `}
+        {/* Category Filter Dropdown */}
+        {(() => {
+          const activeCat = allCategories.find((c) => c.id === activeCategory);
+          const ActiveIcon = activeCat?.icon || Utensils;
+          return (
+            <div
+              className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-3 mb-8"
+              ref={dropdownRef}
             >
-              <category.icon
-                className={`w-5 h-5 transition-transform group-hover:scale-110 ${
-                  activeCategory === category.id ? "text-white" : "text-primary"
-                }`}
-              />
-              <span className="font-bold tracking-wide">{category.label}</span>
-            </button>
-          ))}
-        </div>
+              <span className="font-bold text-base text-dark whitespace-nowrap">
+                Select Category:
+              </span>
+
+              {/* Dropdown wrapper */}
+              <div className="relative w-full sm:w-64">
+                {/* Trigger button */}
+                <button
+                  onClick={() => setDropdownOpen((prev) => !prev)}
+                  className="w-full flex items-center justify-between gap-3 px-4 py-2.5 bg-white border-2 border-primary/20 rounded-2xl shadow-md hover:border-primary/50 hover:shadow-lg transition-all duration-300"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                      <ActiveIcon className="w-4 h-4 text-primary" />
+                    </div>
+                    <span className="font-bold text-dark text-sm">
+                      {activeCat?.label || "Select Category"}
+                    </span>
+                  </div>
+                  <ChevronDown
+                    className={`w-4 h-4 text-primary transition-transform duration-300 flex-shrink-0 ${dropdownOpen ? "rotate-180" : ""}`}
+                  />
+                </button>
+
+                {/* Dropdown list */}
+                {dropdownOpen && (
+                  <div className="absolute left-0 right-0 top-full mt-2 bg-white border border-primary/10 rounded-2xl shadow-2xl z-50 overflow-hidden">
+                    <div className="max-h-64 overflow-y-auto py-1">
+                      {allCategories.map((category) => {
+                        const Icon = category.icon;
+                        const isActive = activeCategory === category.id;
+                        return (
+                          <button
+                            key={category.id}
+                            onClick={() => {
+                              setActiveCategory(category.id);
+                              setDropdownOpen(false);
+                            }}
+                            className={`w-full flex items-center gap-3 px-4 py-2.5 transition-all duration-200 ${
+                              isActive
+                                ? "bg-primary text-white"
+                                : "text-dark-gray hover:bg-cream-light/60 hover:text-dark"
+                            }`}
+                          >
+                            <div
+                              className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                                isActive ? "bg-white/20" : "bg-primary/10"
+                              }`}
+                            >
+                              <Icon
+                                className={`w-4 h-4 ${isActive ? "text-white" : "text-primary"}`}
+                              />
+                            </div>
+                            <span className="font-semibold text-sm">
+                              {category.label}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })()}
 
         {/* Menu Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
           {menuItems.map((product) => (
             <div
               key={product.id}

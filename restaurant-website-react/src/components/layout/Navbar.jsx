@@ -57,19 +57,19 @@ const Navbar = () => {
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 bg-cream-light/85 backdrop-blur-sm z-[70] shadow-sm">
-        <div className="container mx-auto px-2 sm:px-4 lg:px-5 py-1">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 py-1">
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
             <Link to="/" className="flex items-center">
               <img
                 src="/assets/images/BitesLogo.png"
                 alt="Bites Restaurant Logo"
-                className="h-28 w-32 lg:w-52 lg:h-20 object-contain transition-all"
+                className="h-20 w-auto lg:w-40 lg:h-16 xl:w-48 xl:h-20 object-contain transition-all"
               />
             </Link>
 
             {/* Desktop Menu */}
-            <div className="hidden lg:flex items-center gap-8">
+            <div className="hidden lg:flex items-center gap-5 xl:gap-8">
               <Link
                 to="/"
                 className="text-dark hover:text-primary transition-colors font-medium"
@@ -103,11 +103,11 @@ const Navbar = () => {
             </div>
 
             {/* Right Side */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 lg:gap-3 xl:gap-4">
               <div className="hidden lg:block">
                 <Link
                   to="/reservations"
-                  className="flex items-center gap-1.5 bg-gradient-to-r from-primary to-primary-dark text-white px-4 py-2 rounded-xl font-semibold hover:shadow-lg hover:shadow-primary/30 transition-all hover:scale-95 text-sm"
+                  className="flex items-center gap-1.5 bg-gradient-to-r from-primary to-primary-dark text-white px-3 py-2 lg:px-3 xl:px-4 rounded-xl font-semibold hover:shadow-lg hover:shadow-primary/30 transition-all hover:scale-95 text-xs xl:text-sm whitespace-nowrap"
                 >
                   <CalendarCheck className="w-4 h-4" />
                   Reserve a Table

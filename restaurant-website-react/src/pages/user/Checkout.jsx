@@ -6,7 +6,14 @@ import { useAuth } from "../../hooks/useAuth";
 import { showNotification } from "../../store/slices/notificationSlice";
 import { clearServerCart } from "../../store/slices/cartSlice";
 import LocationMap from "../../components/common/LocationMap";
-import { ShoppingCart, Loader2, Check, Info, CreditCard, Tag } from "lucide-react";
+import {
+  ShoppingCart,
+  Loader2,
+  Check,
+  Info,
+  CreditCard,
+  Tag,
+} from "lucide-react";
 import ordersService from "../../services/ordersService";
 import cartService from "../../services/cartService";
 import productsService from "../../services/productsService";
@@ -265,10 +272,10 @@ const Checkout = () => {
 
   return (
     <div className="min-h-screen bg-cream-light py-24">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-16">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-10 xl:px-16">
         {/* Header */}
         <div className="mb-8 lg:ml-2">
-          <h1 className="font-sans font-bold text-4xl md:text-5xl text-primary mb-2">
+          <h1 className="font-sans font-bold text-4xl xl:text-5xl text-primary mb-2">
             Checkout
           </h1>
           <p className="text-dark-gray">
@@ -552,7 +559,7 @@ const Checkout = () => {
           {/* Right Side - Order Summary */}
           <div className="lg:col-span-1">
             <div className="bg-cream-light rounded-3xl p-6 md:p-8 shadow-lg sticky top-24">
-              <h2 className="font-sans font-bold text-2xl text-dark mb-6 flex items-center gap-2">
+              <h2 className="font-sans font-bold text-xl xl:text-2xl text-dark mb-6 flex items-center gap-2">
                 <ShoppingCart className="w-6 h-6 text-primary" />
                 <span>Order Summary</span>
               </h2>
@@ -746,7 +753,7 @@ const Checkout = () => {
                           </div>
                         )}
                     </div>
-                  )
+                  ),
                 )}
               </div>
 
@@ -762,7 +769,7 @@ const Checkout = () => {
                 </div>
                 <div className="border-t-2 border-gray-200 pt-3 flex justify-between items-center">
                   <span className="font-sans text-xl text-dark">Total</span>
-                  <span className="font-sans text-2xl text-primary">
+                  <span className="font-sans text-xl xl:text-2xl text-primary">
                     Rs.{grandTotal.toFixed(2)}
                   </span>
                 </div>
@@ -772,7 +779,7 @@ const Checkout = () => {
               <button
                 onClick={handlePlaceOrder}
                 disabled={isProcessing}
-                className={`w-full mt-6 py-4 rounded-2xl font-sans text-lg transition-all shadow-xl flex items-center justify-center gap-2 ${
+                className={`w-full mt-6 py-2 xl:py-4 rounded-2xl font-sans text-lg transition-all shadow-xl flex items-center justify-center gap-2 ${
                   isProcessing
                     ? "bg-gray-400 cursor-not-allowed"
                     : "bg-gradient-to-r from-primary to-primary-dark hover:from-primary-dark hover:to-primary text-white hover:shadow-2xl hover:scale-105"

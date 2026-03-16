@@ -31,9 +31,9 @@ const SpecialServicesSection = () => {
 
   return (
     <section className="py-20">
-      <div className="container mx-auto px-6 sm:px-6 lg:px-16">
+      <div className="container mx-auto px-6 sm:px-6 lg:px-10 xl:px-16">
         <div className="text-center mb-16">
-          <h2 className="font-sans font-bold text-5xl text-dark mb-4">
+          <h2 className="font-sans font-bold text-4xl lg:text-5xl text-dark mb-4">
             Special Services
           </h2>
           <p className="text-dark-gray text-xl">
@@ -41,7 +41,7 @@ const SpecialServicesSection = () => {
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {specialServices.map((service, index) => (
             <div
               key={index}

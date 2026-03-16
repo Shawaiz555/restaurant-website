@@ -4,7 +4,17 @@ module.exports = {
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
+    screens: {
+      sm: "640px",
+      md: "768px",
+      lg: "1024px",
+      xl: "1280px",
+      "2xl": "1536px",
+    },
     extend: {
+      screens: {
+        "1xl": "1152px",
+      },
       colors: {
         // Option 2: Deep Orange & Warm Brown (Bold & Energetic)
         primary: "#E67E22", // Vibrant orange
