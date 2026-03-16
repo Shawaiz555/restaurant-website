@@ -150,7 +150,7 @@ const AdminReservations = () => {
       <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl lg:text-4xl font-sans font-bold text-primary mb-2">
+            <h1 className="text-2xl lg:text-3xl xl:text-4xl font-sans font-bold text-primary mb-2">
               Reservations Management
             </h1>
             <p className="text-dark-gray text-sm mt-1">
@@ -171,7 +171,7 @@ const AdminReservations = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-6 gap-2">
+      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-2">
         <StatsCard icon={CalendarCheck} label="Total" value={stats.total} />
         <StatsCard icon={Clock} label="Pending" value={stats.pending} />
         <StatsCard
@@ -190,7 +190,7 @@ const AdminReservations = () => {
 
       {/* Filters */}
       <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-        <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center">
+        <div className="flex flex-col xl:flex-row gap-4 items-start xl:items-center">
           <div className="flex-1 w-full">
             <SearchBar
               placeholder="Search by name, email, phone or ID..."
@@ -264,27 +264,27 @@ const AdminReservations = () => {
         </div>
       ) : (
         <>
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full">
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100">
+            <div className="overflow-x-auto rounded-2xl">
+              <table className="w-full min-w-[900px]">
                 <thead>
                   <tr className="border-b border-gray-100 bg-gray-50">
-                    <th className="text-left px-5 py-4 text-xs font-semibold text-dark-gray uppercase tracking-wider">
+                    <th className="text-left px-3 lg:px-4 xl:px-5 py-4 text-xs font-semibold text-dark-gray uppercase tracking-wider">
                       Reservation
                     </th>
-                    <th className="text-left px-5 py-4 text-xs font-semibold text-dark-gray uppercase tracking-wider hidden md:table-cell">
+                    <th className="text-left px-3 lg:px-4 xl:px-5 py-4 text-xs font-semibold text-dark-gray uppercase tracking-wider">
                       Date & Time
                     </th>
-                    <th className="text-left px-5 py-4 text-xs font-semibold text-dark-gray uppercase tracking-wider hidden lg:table-cell">
+                    <th className="text-left px-3 lg:px-4 xl:px-5 py-4 text-xs font-semibold text-dark-gray uppercase tracking-wider">
                       Table
                     </th>
-                    <th className="text-left px-5 py-4 text-xs font-semibold text-dark-gray uppercase tracking-wider hidden sm:table-cell">
+                    <th className="text-left px-3 lg:px-4 xl:px-5 py-4 text-xs font-semibold text-dark-gray uppercase tracking-wider">
                       Guests
                     </th>
-                    <th className="text-left px-5 py-4 text-xs font-semibold text-dark-gray uppercase tracking-wider">
+                    <th className="text-left px-3 lg:px-4 xl:px-5 py-4 text-xs font-semibold text-dark-gray uppercase tracking-wider">
                       Status
                     </th>
-                    <th className="text-right px-5 py-4 text-xs font-semibold text-dark-gray uppercase tracking-wider">
+                    <th className="text-right px-3 lg:px-4 xl:px-5 py-4 text-xs font-semibold text-dark-gray uppercase tracking-wider">
                       Actions
                     </th>
                   </tr>
@@ -307,7 +307,7 @@ const AdminReservations = () => {
                         }
                       >
                         {/* Reservation Info */}
-                        <td className="px-5 py-4">
+                        <td className="px-3 lg:px-4 xl:px-5 py-4">
                           <div className="flex items-center gap-3">
                             <div
                               className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${res.isGuestReservation ? "bg-orange-100" : "bg-primary/10"}`}
@@ -330,7 +330,7 @@ const AdminReservations = () => {
                         </td>
 
                         {/* Date & Time */}
-                        <td className="px-5 py-4 hidden md:table-cell">
+                        <td className="px-3 lg:px-4 xl:px-5 py-4">
                           <p className="text-sm font-semibold text-dark">
                             {reservationsService.formatDate(
                               res.reservationDate,
@@ -344,7 +344,7 @@ const AdminReservations = () => {
                         </td>
 
                         {/* Table */}
-                        <td className="px-5 py-4 hidden lg:table-cell">
+                        <td className="px-3 lg:px-4 xl:px-5 py-4">
                           {tables.length > 0 ? (
                             <div className="space-y-1.5">
                               {tables.map((t) => (
@@ -374,7 +374,7 @@ const AdminReservations = () => {
                         </td>
 
                         {/* Party Size */}
-                        <td className="px-5 py-4 hidden sm:table-cell">
+                        <td className="px-3 lg:px-4 xl:px-5 py-4">
                           <div className="flex items-center gap-1.5 text-dark text-sm font-medium">
                             <Users className="w-4 h-4 text-primary" />
                             {res.partySize}
@@ -383,7 +383,7 @@ const AdminReservations = () => {
 
                         {/* Status */}
                         <td
-                          className="px-5 py-4"
+                          className="px-3 lg:px-4 xl:px-5 py-4"
                           onClick={(e) => e.stopPropagation()}
                         >
                           <div className="relative">
@@ -407,7 +407,7 @@ const AdminReservations = () => {
 
                         {/* Actions */}
                         <td
-                          className="px-5 py-4"
+                          className="px-3 lg:px-4 xl:px-5 py-4"
                           onClick={(e) => e.stopPropagation()}
                         >
                           <div className="flex items-center justify-end gap-2">

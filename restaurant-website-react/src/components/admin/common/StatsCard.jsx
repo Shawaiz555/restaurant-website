@@ -26,16 +26,18 @@ const StatsCard = ({
         bg-white rounded-2xl p-5 sm:p-6 shadow-lg border-2 border-gray-100 relative
         hover:shadow-2xl hover:border-primary/30 transition-all duration-300
         ${onClick ? "cursor-pointer hover:scale-[1.02] active:scale-[0.98]" : ""}
-        flex flex-col items-center text-center min-h-[200px] justify-center
+        flex flex-col items-center text-center min-h-[160px] lg:min-h-[175px] xl:min-h-[200px] justify-center
       `}
       onClick={onClick}
     >
       {/* Icon - Centered and Proportional */}
-      <div className="w-16 h-16 sm:w-18 sm:h-18 bg-gradient-to-br from-primary via-primary-light to-primary/80 rounded-2xl flex items-center justify-center shadow-md mb-3 sm:mb-4 transform hover:rotate-6 transition-transform">
+      <div className="w-14 h-14 lg:w-16 lg:h-16 xl:w-18 xl:h-18 bg-gradient-to-br from-primary via-primary-light to-primary/80 rounded-2xl flex items-center justify-center shadow-md mb-3 sm:mb-4 transform hover:rotate-6 transition-transform">
         {typeof icon === "string" ? (
-          <span className="text-3xl sm:text-4xl">{icon}</span>
+          <span className="text-2xl lg:text-3xl xl:text-4xl">{icon}</span>
         ) : (
-          React.createElement(icon, { className: "w-8 h-8 text-white" })
+          React.createElement(icon, {
+            className: "w-7 h-7 lg:w-8 lg:h-8 text-white",
+          })
         )}
       </div>
 
@@ -45,7 +47,7 @@ const StatsCard = ({
       </h3>
 
       {/* Value - Proportional and Readable */}
-      <p className="text-xl sm:text-2xl font-sans text-primary font-bold mb-2 break-words max-w-full">
+      <p className="text-lg sm:text-xl lg:text-xl xl:text-2xl font-sans text-primary font-bold mb-2 break-words max-w-full">
         {value}
       </p>
 

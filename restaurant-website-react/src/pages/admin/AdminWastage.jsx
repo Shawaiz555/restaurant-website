@@ -190,7 +190,7 @@ const AdminWastage = () => {
             <Trash2 className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h1 className="text-2xl lg:text-4xl font-bold text-primary">
+            <h1 className="text-2xl lg:text-3xl xl:text-4xl font-bold text-primary">
               Wastage
             </h1>
             <p className="text-sm text-dark-gray">
@@ -375,7 +375,7 @@ const AdminWastage = () => {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm">
         {loading ? (
           <div className="p-12 text-center text-dark-gray">
             Loading records...
@@ -420,7 +420,7 @@ const AdminWastage = () => {
               </div>
             </div>
             <div className="overflow-x-auto">
-              <table className="w-full">
+              <table className="w-full min-w-[850px]">
                 <thead>
                   <tr className="border-b border-gray-100 bg-gray-50/50">
                     <th className="text-left px-4 py-3 text-xs font-semibold text-dark-gray uppercase tracking-wide">

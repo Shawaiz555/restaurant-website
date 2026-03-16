@@ -122,7 +122,7 @@ const AdminTables = () => {
       <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl lg:text-4xl font-sans font-bold text-primary mb-2">
+            <h1 className="text-2xl lg:text-3xl xl:text-4xl font-sans font-bold text-primary mb-2">
               Tables Management
             </h1>
             <p className="text-dark-gray text-sm mt-1">
@@ -140,7 +140,7 @@ const AdminTables = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
         <StatsCard icon={TableIcon} label="Total Tables" value={stats.total} />
         <StatsCard
           icon={CheckCircle}
@@ -162,7 +162,7 @@ const AdminTables = () => {
 
       {/* Filters & Search */}
       <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-        <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center">
+        <div className="flex flex-col xl:flex-row gap-4 items-start xl:items-center">
           <div className="flex-1 w-full">
             <SearchBar
               placeholder="Search tables by name or number..."

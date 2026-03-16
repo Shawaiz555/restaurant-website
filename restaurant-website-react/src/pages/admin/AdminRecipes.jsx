@@ -140,7 +140,7 @@ const AdminRecipes = () => {
           <ChefHat className="w-5 h-5 text-white" />
         </div>
         <div>
-          <h1 className="text-2xl lg:text-4xl font-bold text-primary">
+          <h1 className="text-2xl lg:text-3xl xl:text-4xl font-bold text-primary">
             Recipes
           </h1>
           <p className="text-sm text-dark-gray">

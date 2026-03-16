@@ -246,7 +246,7 @@ const AdminExpenses = () => {
       <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
           <div>
-            <h1 className="text-2xl lg:text-4xl font-sans font-bold text-primary mb-2">
+            <h1 className="text-2xl lg:text-3xl xl:text-4xl font-sans font-bold text-primary mb-2">
               Expense Tracker
             </h1>
             <p className="text-dark-gray">

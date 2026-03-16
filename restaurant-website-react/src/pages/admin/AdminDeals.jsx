@@ -138,7 +138,7 @@ const AdminDeals = () => {
       <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl lg:text-4xl font-sans font-bold text-primary mb-2">
+            <h1 className="text-2xl lg:text-3xl xl:text-4xl font-sans font-bold text-primary mb-2">
               Deals Management
             </h1>
             <p className="text-dark-gray text-sm mt-1">
@@ -156,7 +156,7 @@ const AdminDeals = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <StatsCard icon={Tag} label="Total Deals" value={stats.total} />
         <StatsCard icon={CheckCircle} label="Active" value={stats.active} />
         <StatsCard icon={XCircle} label="Inactive" value={stats.inactive} />
@@ -164,7 +164,7 @@ const AdminDeals = () => {
 
       {/* Filters */}
       <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-        <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center">
+        <div className="flex flex-col xl:flex-row gap-4 items-start xl:items-center">
           <div className="flex-1 w-full">
             <SearchBar
               placeholder="Search deals by title or item name..."

@@ -25,7 +25,7 @@ const AdminLayout = () => {
         <AdminHeader onMenuToggle={toggleSidebar} />
 
         {/* Page Content */}
-        <main className="flex-1 p-6">
+        <main className="flex-1 p-4 lg:p-5 xl:p-6">
           <Outlet />
         </main>
 

@@ -225,7 +225,7 @@ const AdminPurchases = () => {
             <ShoppingCart className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h1 className="text-2xl lg:text-4xl font-bold text-primary">
+            <h1 className="text-2xl lg:text-3xl xl:text-4xl font-bold text-primary">
               Purchases
             </h1>
             <p className="text-sm text-dark-gray">

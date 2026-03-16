@@ -175,14 +175,14 @@ const AdminDashboard = () => {
     <div className="space-y-6">
       {/* Page Header */}
       <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-        <h1 className="text-2xl lg:text-4xl font-bold font-sans text-primary mb-2">
+        <h1 className="text-2xl lg:text-3xl xl:text-4xl font-bold font-sans text-primary mb-2">
           Dashboard
         </h1>
         <p className="text-dark-gray">Welcome to your restaurant admin panel</p>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 sm:gap-6">
         <StatsCard
           icon={DollarSign}
           label="Total Revenue"

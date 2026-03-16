@@ -132,14 +132,14 @@ const AdminOrders = () => {
     <div className="space-y-6">
       {/* Page Header */}
       <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-        <h1 className="text-2xl lg:text-4xl font-sans font-bold text-primary mb-2">
+        <h1 className="text-2xl lg:text-3xl xl:text-4xl font-sans font-bold text-primary mb-2">
           Orders Management
         </h1>
         <p className="text-dark-gray">View and manage all customer orders</p>
       </div>
 
       {/* Stats Row */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
         <StatsCard icon={Package} label="Total Orders" value={stats.total} />
         <StatsCard icon={Clock} label="Pending" value={stats.pending} />
         <StatsCard
@@ -253,49 +253,49 @@ const AdminOrders = () => {
               <table className="w-full min-w-full">
                 <thead className="bg-gradient-to-r from-primary/5 via-primary-light/5 to-primary/5 border-b-2 border-primary/20">
                   <tr>
-                    <th className="px-4 lg:px-6 py-4 text-center text-xs font-bold uppercase tracking-wide text-dark whitespace-nowrap">
+                    <th className="px-3 lg:px-4 xl:px-6 py-4 text-center text-xs font-bold uppercase tracking-wide text-dark whitespace-nowrap">
                       <div className="flex items-center justify-center gap-2">
                         <Hash className="w-4 h-4 text-primary" />
                         <span>Order ID</span>
                       </div>
                     </th>
-                    <th className="px-4 lg:px-6 py-4 text-center text-xs font-bold uppercase tracking-wide text-dark whitespace-nowrap">
+                    <th className="px-3 lg:px-4 xl:px-6 py-4 text-center text-xs font-bold uppercase tracking-wide text-dark whitespace-nowrap">
                       <div className="flex items-center justify-center gap-2">
                         <User className="w-4 h-4 text-primary" />
                         <span>Customer</span>
                       </div>
                     </th>
-                    <th className="px-4 lg:px-6 py-4 text-center text-xs font-bold uppercase tracking-wide text-dark whitespace-nowrap">
+                    <th className="px-3 lg:px-4 xl:px-6 py-4 text-center text-xs font-bold uppercase tracking-wide text-dark whitespace-nowrap">
                       <div className="flex items-center justify-center gap-2">
                         <Mail className="w-4 h-4 text-primary" />
                         <span>Email</span>
                       </div>
                     </th>
-                    <th className="px-4 lg:px-6 py-4 text-center text-xs font-bold uppercase tracking-wide text-dark whitespace-nowrap">
+                    <th className="px-3 lg:px-4 xl:px-6 py-4 text-center text-xs font-bold uppercase tracking-wide text-dark whitespace-nowrap">
                       <div className="flex items-center justify-center gap-2">
                         <Phone className="w-4 h-4 text-primary" />
                         <span>Phone</span>
                       </div>
                     </th>
-                    <th className="px-4 lg:px-6 py-4 text-center text-xs font-bold uppercase tracking-wide text-dark whitespace-nowrap">
+                    <th className="px-3 lg:px-4 xl:px-6 py-4 text-center text-xs font-bold uppercase tracking-wide text-dark whitespace-nowrap">
                       <div className="flex items-center justify-center gap-2">
                         <DollarSign className="w-4 h-4 text-primary" />
                         <span>Total</span>
                       </div>
                     </th>
-                    <th className="px-4 lg:px-6 py-4 text-center text-xs font-bold uppercase tracking-wide text-dark whitespace-nowrap">
+                    <th className="px-3 lg:px-4 xl:px-6 py-4 text-center text-xs font-bold uppercase tracking-wide text-dark whitespace-nowrap">
                       <div className="flex items-center justify-center gap-2">
                         <RefreshCw className="w-4 h-4 text-primary" />
                         <span>Status</span>
                       </div>
                     </th>
-                    <th className="px-4 lg:px-6 py-4 text-center text-xs font-bold uppercase tracking-wide text-dark whitespace-nowrap">
+                    <th className="px-3 lg:px-4 xl:px-6 py-4 text-center text-xs font-bold uppercase tracking-wide text-dark whitespace-nowrap">
                       <div className="flex items-center justify-center gap-2">
                         <Calendar className="w-4 h-4 text-primary" />
                         <span>Date</span>
                       </div>
                     </th>
-                    <th className="px-4 lg:px-6 py-4 text-center text-xs font-bold uppercase tracking-wide text-dark whitespace-nowrap">
+                    <th className="px-3 lg:px-4 xl:px-6 py-4 text-center text-xs font-bold uppercase tracking-wide text-dark whitespace-nowrap">
                       <div className="flex items-center justify-center gap-2">
                         <Settings className="w-4 h-4 text-primary" />
                         <span>Actions</span>
@@ -312,7 +312,7 @@ const AdminOrders = () => {
                       } hover:bg-cream-light/60 transition-all duration-200 cursor-pointer border-l-4 border-transparent hover:border-primary group`}
                       onClick={() => navigate(`/admin/orders/${order._id}`)}
                     >
-                      <td className="px-4 lg:px-6 py-4 whitespace-nowrap">
+                      <td className="px-3 lg:px-4 xl:px-6 py-4 whitespace-nowrap">
                         <div className="flex flex-col items-center gap-1">
                           <span className="text-xs font-mono font-semibold text-dark group-hover:text-primary transition-colors">
                             {order.orderId?.substring(0, 12)}...
@@ -325,7 +325,7 @@ const AdminOrders = () => {
                           )}
                         </div>
                       </td>
-                      <td className="px-4 lg:px-6 py-4 whitespace-nowrap">
+                      <td className="px-3 lg:px-4 xl:px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center justify-center gap-2">
                           <span className="text-sm font-medium text-dark">
                             {order.customerInfo?.name ||
@@ -334,24 +334,24 @@ const AdminOrders = () => {
                           </span>
                         </div>
                       </td>
-                      <td className="px-4 lg:px-6 py-4 text-center">
+                      <td className="px-3 lg:px-4 xl:px-6 py-4 text-center">
                         <span className="text-sm text-dark-gray">
                           {order.customerInfo?.email || "N/A"}
                         </span>
                       </td>
-                      <td className="px-4 lg:px-6 py-4 text-center whitespace-nowrap">
+                      <td className="px-3 lg:px-4 xl:px-6 py-4 text-center whitespace-nowrap">
                         <span className="text-sm text-dark-gray font-medium">
                           {order.customerInfo?.phone || "N/A"}
                         </span>
                       </td>
-                      <td className="px-4 lg:px-6 py-4 text-center whitespace-nowrap">
+                      <td className="px-3 lg:px-4 xl:px-6 py-4 text-center whitespace-nowrap">
                         <div className="inline-flex items-center px-3 py-1 rounded-lg bg-gradient-to-r from-primary/10 to-primary-light/10 border border-primary/20">
                           <span className="text-sm font-bold text-primary">
                             {formatCurrency(order.total)}
                           </span>
                         </div>
                       </td>
-                      <td className="px-4 lg:px-6 py-4 text-center">
+                      <td className="px-3 lg:px-4 xl:px-6 py-4 text-center">
                         <div className="flex justify-center">
                           <select
                             value={order.status}
@@ -369,7 +369,7 @@ const AdminOrders = () => {
                           </select>
                         </div>
                       </td>
-                      <td className="px-4 lg:px-6 py-4 text-center whitespace-nowrap">
+                      <td className="px-3 lg:px-4 xl:px-6 py-4 text-center whitespace-nowrap">
                         <div className="flex flex-col items-center gap-0.5">
                           <span className="text-xs font-semibold text-dark">
                             {new Date(order.orderDate).toLocaleDateString(
@@ -392,7 +392,7 @@ const AdminOrders = () => {
                           </span>
                         </div>
                       </td>
-                      <td className="px-4 lg:px-6 py-4 text-center">
+                      <td className="px-3 lg:px-4 xl:px-6 py-4 text-center">
                         <div className="flex items-center justify-center gap-2">
                           <button
                             onClick={(e) => {
