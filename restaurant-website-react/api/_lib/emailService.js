@@ -33,20 +33,20 @@ const formatOrderItems = (items) => {
 
         return `
         <tr>
-          <td style="padding: 15px; border-bottom: 1px solid #e5e7eb; background-color: #fffbf5;">
+          <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; background-color: #fffbf5;">
             <table width="100%" cellpadding="0" cellspacing="0" border="0">
               <tr>
-                <td width="100" valign="top" style="padding-right: 20px;">
+                <td class="item-image-cell" style="width:80px; min-width:80px; max-width:80px; padding-right:12px; vertical-align:top;">
                   ${dealImageUrl
-                    ? `<img src="${dealImageUrl}" alt="${item.name}" width="100" height="100" style="width:100px; height:100px; object-fit:cover; border-radius:12px; display:block; border:none;" />`
-                    : `<table width="100" height="100" cellpadding="0" cellspacing="0" border="0" style="background:#fed7aa; border-radius:12px; width:100px; height:100px;"><tr><td align="center" valign="middle" style="color:#9a3412; font-size:32px; text-align:center;">&#127873;</td></tr></table>`
+                    ? `<img src="${dealImageUrl}" alt="${item.name}" width="80" height="80" style="width:80px; height:80px; object-fit:cover; border-radius:10px; display:block; border:none;" />`
+                    : `<table width="80" height="80" cellpadding="0" cellspacing="0" border="0" style="background:#fed7aa; border-radius:10px; width:80px; height:80px;"><tr><td align="center" valign="middle" style="color:#9a3412; font-size:28px; text-align:center;">&#127873;</td></tr></table>`
                   }
                 </td>
-                <td valign="top">
+                <td style="vertical-align:top;">
                   <div style="display:inline-block; background:#E67E22; color:#fff; font-size:10px; font-weight:800; letter-spacing:1px; text-transform:uppercase; padding:3px 10px; border-radius:20px; margin-bottom:6px;">Deal</div>
-                  <h4 style="margin: 0 0 6px 0; color: #1f2937; font-size: 16px; font-weight: 700;">${item.name}</h4>
-                  <p style="margin: 0 0 8px 0; color: #6b7280; font-size: 14px;">Quantity: ${item.quantity}</p>
-                  <p style="margin: 0; color: #E67E22; font-weight: bold; font-size: 16px;">Rs.${(item.price * item.quantity).toFixed(2)}</p>
+                  <h4 style="margin: 0 0 5px 0; color: #1f2937; font-size: 15px; font-weight: 700;">${item.name}</h4>
+                  <p style="margin: 0 0 4px 0; color: #6b7280; font-size: 13px;">Qty: ${item.quantity}</p>
+                  <p style="margin: 0; color: #E67E22; font-weight: bold; font-size: 15px;">Rs.${(item.price * item.quantity).toFixed(2)}</p>
                 </td>
               </tr>
               ${packageItems ? `
@@ -69,17 +69,17 @@ const formatOrderItems = (items) => {
 
       let itemText = `
         <tr>
-          <td style="padding: 15px; border-bottom: 1px solid #e5e7eb;">
+          <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">
             <table width="100%" cellpadding="0" cellspacing="0" border="0">
               <tr>
-                <td width="100" valign="top" style="padding-right: 20px;">
-                  <img src="${imageUrl}" alt="${item.name}" width="100" height="100" style="width: 100px; height: 100px; object-fit: cover; border-radius: 12px; display: block; border: none;" />
+                <td class="item-image-cell" style="width:80px; min-width:80px; max-width:80px; padding-right:12px; vertical-align:top;">
+                  <img src="${imageUrl}" alt="${item.name}" width="80" height="80" style="width:80px; height:80px; object-fit:cover; border-radius:10px; display:block; border:none;" />
                 </td>
-                <td valign="top">
-                  <h4 style="margin: 0 0 8px 0; color: #1f2937; font-size: 16px; font-weight: 600;">${item.name}</h4>
-                  ${item.size ? `<p style="margin: 0 0 6px 0; color: #6b7280; font-size: 14px;">Size: ${item.size}</p>` : ''}
-                  <p style="margin: 0 0 8px 0; color: #6b7280; font-size: 14px;">Quantity: ${item.quantity}</p>
-                  <p style="margin: 0; color: #E67E22; font-weight: bold; font-size: 16px;">Rs.${(item.price * item.quantity).toFixed(2)}</p>
+                <td style="vertical-align:top;">
+                  <h4 style="margin: 0 0 5px 0; color: #1f2937; font-size: 15px; font-weight: 600;">${item.name}</h4>
+                  ${item.size ? `<p style="margin: 0 0 4px 0; color: #6b7280; font-size: 13px;">Size: ${item.size}</p>` : ''}
+                  <p style="margin: 0 0 4px 0; color: #6b7280; font-size: 13px;">Qty: ${item.quantity}</p>
+                  <p style="margin: 0; color: #E67E22; font-weight: bold; font-size: 15px;">Rs.${(item.price * item.quantity).toFixed(2)}</p>
                 </td>
               </tr>
       `;
@@ -148,78 +148,92 @@ const getCustomerEmailTemplate = (order) => `
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Order Confirmation</title>
+      <style>
+        @media only screen and (max-width: 600px) {
+          .email-wrapper { padding: 10px !important; }
+          .email-container { width: 100% !important; border-radius: 8px !important; }
+          .email-header { padding: 24px 16px !important; }
+          .email-header h1 { font-size: 24px !important; }
+          .email-header p { font-size: 14px !important; }
+          .email-section { padding: 16px !important; }
+          .section-title { font-size: 17px !important; }
+          .summary-total-label { font-size: 16px !important; }
+          .summary-total-value { font-size: 18px !important; }
+          .item-image-cell { display: none !important; width: 0 !important; min-width: 0 !important; max-width: 0 !important; padding: 0 !important; overflow: hidden !important; }
+        }
+      </style>
     </head>
     <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f9fafb;">
-      <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f9fafb; padding: 20px;">
+      <table width="100%" cellpadding="0" cellspacing="0" class="email-wrapper" style="background-color: #f9fafb; padding: 20px;">
         <tr>
           <td align="center">
-            <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+            <table width="100%" cellpadding="0" cellspacing="0" class="email-container" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
               <tr>
-                <td style="background: linear-gradient(135deg, #E67E22 0%, #D35400 100%); padding: 40px 30px; text-align: center;">
-                  <h1 style="margin: 0; color: #ffffff; font-size: 32px; font-weight: bold;">Order Confirmed!</h1>
-                  <p style="margin: 10px 0 0 0; color: #ffffff; font-size: 16px;">Thank you for your order</p>
+                <td class="email-header" style="background: linear-gradient(135deg, #E67E22 0%, #D35400 100%); padding: 40px 30px; text-align: center;">
+                  <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: bold;">Order Confirmed!</h1>
+                  <p style="margin: 10px 0 0 0; color: #ffffff; font-size: 15px;">Thank you for your order</p>
                 </td>
               </tr>
               <tr>
-                <td style="padding: 30px 30px 20px 30px; text-align: center; background-color: #FFFBF5;">
-                  <p style="margin: 0; color: #6b7280; font-size: 14px;">Order ID</p>
-                  <h2 style="margin: 5px 0 15px 0; color: #E67E22; font-size: 24px; font-weight: bold;">${order.orderId}</h2>
-                  <div style="display: inline-block; background-color: #d1fae5; color: #065f46; padding: 8px 20px; border-radius: 20px; font-weight: bold; font-size: 14px;">
+                <td class="email-section" style="padding: 24px 20px 16px 20px; text-align: center; background-color: #FFFBF5;">
+                  <p style="margin: 0; color: #6b7280; font-size: 13px;">Order ID</p>
+                  <h2 style="margin: 5px 0 12px 0; color: #E67E22; font-size: 20px; font-weight: bold; word-break: break-all;">${order.orderId}</h2>
+                  <div style="display: inline-block; background-color: #d1fae5; color: #065f46; padding: 7px 18px; border-radius: 20px; font-weight: bold; font-size: 13px;">
                     ${order.status}
                   </div>
                 </td>
               </tr>
               <tr>
-                <td style="padding: 20px 30px;">
-                  <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 20px; border-bottom: 2px solid #E67E22; padding-bottom: 10px;">Customer Details</h3>
+                <td class="email-section" style="padding: 16px 20px;">
+                  <h3 class="section-title" style="margin: 0 0 12px 0; color: #1f2937; font-size: 18px; border-bottom: 2px solid #E67E22; padding-bottom: 8px;">Customer Details</h3>
                   <table width="100%" cellpadding="0" cellspacing="0">
-                    <tr><td style="padding: 8px 0;"><p style="margin: 0; color: #6b7280; font-size: 14px;">Name</p><p style="margin: 3px 0 0 0; color: #1f2937; font-size: 16px; font-weight: 600;">${order.customerInfo.fullName}</p></td></tr>
-                    <tr><td style="padding: 8px 0;"><p style="margin: 0; color: #6b7280; font-size: 14px;">Email</p><p style="margin: 3px 0 0 0; color: #1f2937; font-size: 16px; font-weight: 600;">${order.customerInfo.email}</p></td></tr>
-                    <tr><td style="padding: 8px 0;"><p style="margin: 0; color: #6b7280; font-size: 14px;">Phone</p><p style="margin: 3px 0 0 0; color: #1f2937; font-size: 16px; font-weight: 600;">${order.customerInfo.phone}</p></td></tr>
+                    <tr><td style="padding: 7px 0;"><p style="margin: 0; color: #6b7280; font-size: 13px;">Name</p><p style="margin: 2px 0 0 0; color: #1f2937; font-size: 15px; font-weight: 600;">${order.customerInfo.fullName}</p></td></tr>
+                    <tr><td style="padding: 7px 0;"><p style="margin: 0; color: #6b7280; font-size: 13px;">Email</p><p style="margin: 2px 0 0 0; color: #1f2937; font-size: 15px; font-weight: 600; word-break: break-all;">${order.customerInfo.email}</p></td></tr>
+                    <tr><td style="padding: 7px 0;"><p style="margin: 0; color: #6b7280; font-size: 13px;">Phone</p><p style="margin: 2px 0 0 0; color: #1f2937; font-size: 15px; font-weight: 600;">${order.customerInfo.phone}</p></td></tr>
                   </table>
                 </td>
               </tr>
               <tr>
-                <td style="padding: 20px 30px;">
-                  <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 20px; border-bottom: 2px solid #E67E22; padding-bottom: 10px;">Delivery Address</h3>
-                  <p style="margin: 0; color: #1f2937; font-size: 16px; line-height: 1.6;">
+                <td class="email-section" style="padding: 16px 20px;">
+                  <h3 class="section-title" style="margin: 0 0 12px 0; color: #1f2937; font-size: 18px; border-bottom: 2px solid #E67E22; padding-bottom: 8px;">Delivery Address</h3>
+                  <p style="margin: 0; color: #1f2937; font-size: 15px; line-height: 1.6;">
                     ${order.customerInfo.address}<br/>
                     ${order.customerInfo.city}${order.customerInfo.postalCode ? `, ${order.customerInfo.postalCode}` : ''}
                   </p>
-                  ${order.customerInfo.additionalNotes ? `<p style="margin: 10px 0 0 0; color: #6b7280; font-size: 14px; font-style: italic;">Note: ${order.customerInfo.additionalNotes}</p>` : ''}
+                  ${order.customerInfo.additionalNotes ? `<p style="margin: 8px 0 0 0; color: #6b7280; font-size: 13px; font-style: italic;">Note: ${order.customerInfo.additionalNotes}</p>` : ''}
                 </td>
               </tr>
               <tr>
-                <td style="padding: 20px 30px;">
-                  <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 20px; border-bottom: 2px solid #E67E22; padding-bottom: 10px;">Order Items</h3>
+                <td class="email-section" style="padding: 16px 20px;">
+                  <h3 class="section-title" style="margin: 0 0 12px 0; color: #1f2937; font-size: 18px; border-bottom: 2px solid #E67E22; padding-bottom: 8px;">Order Items</h3>
                   <table width="100%" cellpadding="0" cellspacing="0" style="border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;">
                     ${formatOrderItems(order.items)}
                   </table>
                 </td>
               </tr>
               <tr>
-                <td style="padding: 20px 30px;">
-                  <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 20px; border-bottom: 2px solid #E67E22; padding-bottom: 10px;">Order Summary</h3>
+                <td class="email-section" style="padding: 16px 20px;">
+                  <h3 class="section-title" style="margin: 0 0 12px 0; color: #1f2937; font-size: 18px; border-bottom: 2px solid #E67E22; padding-bottom: 8px;">Order Summary</h3>
                   <table width="100%" cellpadding="0" cellspacing="0">
-                    <tr><td style="padding: 8px 0; color: #6b7280; font-size: 15px;">Subtotal</td><td align="right" style="padding: 8px 0; color: #1f2937; font-size: 15px; font-weight: 600;">Rs.${order.subtotal.toFixed(2)}</td></tr>
-                    <tr><td style="padding: 8px 0; color: #6b7280; font-size: 15px;">Delivery Fee</td><td align="right" style="padding: 8px 0; color: #1f2937; font-size: 15px; font-weight: 600;">Rs.${order.deliveryFee.toFixed(2)}</td></tr>
-                    <tr style="border-top: 2px solid #E67E22;"><td style="padding: 12px 0; color: #1f2937; font-size: 18px; font-weight: bold;">Total</td><td align="right" style="padding: 12px 0; color: #E67E22; font-size: 22px; font-weight: bold;">Rs.${order.total.toFixed(2)}</td></tr>
+                    <tr><td style="padding: 7px 0; color: #6b7280; font-size: 14px;">Subtotal</td><td align="right" style="padding: 7px 0; color: #1f2937; font-size: 14px; font-weight: 600;">Rs.${order.subtotal.toFixed(2)}</td></tr>
+                    <tr><td style="padding: 7px 0; color: #6b7280; font-size: 14px;">Delivery Fee</td><td align="right" style="padding: 7px 0; color: #1f2937; font-size: 14px; font-weight: 600;">Rs.${order.deliveryFee.toFixed(2)}</td></tr>
+                    <tr style="border-top: 2px solid #E67E22;"><td class="summary-total-label" style="padding: 10px 0; color: #1f2937; font-size: 16px; font-weight: bold;">Total</td><td align="right" class="summary-total-value" style="padding: 10px 0; color: #E67E22; font-size: 20px; font-weight: bold;">Rs.${order.total.toFixed(2)}</td></tr>
                   </table>
                 </td>
               </tr>
               <tr>
-                <td style="padding: 20px 30px;">
-                  <div style="background-color: #FFFBF5; border-left: 4px solid #E67E22; padding: 15px; border-radius: 8px;">
-                    <p style="margin: 0; color: #6b7280; font-size: 14px;">Payment Method</p>
-                    <p style="margin: 5px 0 0 0; color: #1f2937; font-size: 16px; font-weight: bold;">${order.paymentMethod}</p>
+                <td class="email-section" style="padding: 16px 20px;">
+                  <div style="background-color: #FFFBF5; border-left: 4px solid #E67E22; padding: 14px; border-radius: 8px;">
+                    <p style="margin: 0; color: #6b7280; font-size: 13px;">Payment Method</p>
+                    <p style="margin: 4px 0 0 0; color: #1f2937; font-size: 15px; font-weight: bold;">${order.paymentMethod}</p>
                   </div>
                 </td>
               </tr>
               <tr>
-                <td style="padding: 30px; text-align: center; background-color: #f9fafb; border-top: 1px solid #e5e7eb;">
-                  <p style="margin: 0 0 10px 0; color: #6b7280; font-size: 14px;">Your order will be delivered soon!</p>
+                <td class="email-section" style="padding: 24px 20px; text-align: center; background-color: #f9fafb; border-top: 1px solid #e5e7eb;">
+                  <p style="margin: 0 0 8px 0; color: #6b7280; font-size: 14px;">Your order will be delivered soon!</p>
                   <p style="margin: 0; color: #9ca3af; font-size: 12px;">If you have any questions, please contact us.</p>
-                  <div style="margin-top: 20px;">
+                  <div style="margin-top: 16px;">
                     <p style="margin: 0; color: #6b7280; font-size: 12px;">Order Date: ${new Date(order.orderDate).toLocaleString()}</p>
                   </div>
                 </td>
@@ -239,84 +253,99 @@ const getAdminEmailTemplate = (order) => `
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>New Order Received</title>
+      <style>
+        @media only screen and (max-width: 600px) {
+          .email-wrapper { padding: 10px !important; }
+          .email-container { width: 100% !important; border-radius: 8px !important; }
+          .email-header { padding: 24px 16px !important; }
+          .email-header h1 { font-size: 22px !important; }
+          .email-header p { font-size: 13px !important; }
+          .email-section { padding: 16px !important; }
+          .section-title { font-size: 17px !important; }
+          .summary-total-label { font-size: 14px !important; }
+          .summary-total-value { font-size: 18px !important; }
+          .item-image-cell { display: none !important; width: 0 !important; min-width: 0 !important; max-width: 0 !important; padding: 0 !important; overflow: hidden !important; }
+          .action-list { padding-left: 16px !important; }
+        }
+      </style>
     </head>
     <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f9fafb;">
-      <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f9fafb; padding: 20px;">
+      <table width="100%" cellpadding="0" cellspacing="0" class="email-wrapper" style="background-color: #f9fafb; padding: 20px;">
         <tr>
           <td align="center">
-            <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+            <table width="100%" cellpadding="0" cellspacing="0" class="email-container" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
               <tr>
-                <td style="background: linear-gradient(135deg, #E67E22 0%, #D35400 100%); padding: 40px 30px; text-align: center;">
-                  <h1 style="margin: 0; color: #ffffff; font-size: 32px; font-weight: bold;">New Order Received!</h1>
-                  <p style="margin: 10px 0 0 0; color: #ffffff; font-size: 16px;">Action Required - Process Order</p>
+                <td class="email-header" style="background: linear-gradient(135deg, #E67E22 0%, #D35400 100%); padding: 40px 30px; text-align: center;">
+                  <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: bold;">New Order Received!</h1>
+                  <p style="margin: 10px 0 0 0; color: #ffffff; font-size: 15px;">Action Required - Process Order</p>
                 </td>
               </tr>
               <tr>
-                <td style="padding: 20px 30px; background-color: #FFFBF5; border-left: 4px solid #E67E22;">
-                  <p style="margin: 0; color: #D35400; font-size: 16px; font-weight: bold;">⚠️ New order needs to be processed immediately!</p>
+                <td class="email-section" style="padding: 16px 20px; background-color: #FFFBF5; border-left: 4px solid #E67E22;">
+                  <p style="margin: 0; color: #D35400; font-size: 15px; font-weight: bold;">&#9888;&#65039; New order needs to be processed immediately!</p>
                 </td>
               </tr>
               <tr>
-                <td style="padding: 30px 30px 20px 30px; text-align: center; background-color: #FFFBF5;">
-                  <p style="margin: 0; color: #6b7280; font-size: 14px;">Order ID</p>
-                  <h2 style="margin: 5px 0 15px 0; color: #E67E22; font-size: 24px; font-weight: bold;">${order.orderId}</h2>
-                  <p style="margin: 0; color: #6b7280; font-size: 14px;">Order Date & Time</p>
-                  <p style="margin: 5px 0 0 0; color: #1f2937; font-size: 16px; font-weight: 600;">${new Date(order.orderDate).toLocaleString()}</p>
+                <td class="email-section" style="padding: 24px 20px 16px 20px; text-align: center; background-color: #FFFBF5;">
+                  <p style="margin: 0; color: #6b7280; font-size: 13px;">Order ID</p>
+                  <h2 style="margin: 5px 0 12px 0; color: #E67E22; font-size: 20px; font-weight: bold; word-break: break-all;">${order.orderId}</h2>
+                  <p style="margin: 0; color: #6b7280; font-size: 13px;">Order Date &amp; Time</p>
+                  <p style="margin: 4px 0 0 0; color: #1f2937; font-size: 15px; font-weight: 600;">${new Date(order.orderDate).toLocaleString()}</p>
                 </td>
               </tr>
               <tr>
-                <td style="padding: 20px 30px;">
-                  <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 20px; border-bottom: 2px solid #E67E22; padding-bottom: 10px;">Customer Information</h3>
-                  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f9fafb; border-radius: 8px; padding: 15px;">
-                    <tr><td style="padding: 8px 0;"><p style="margin: 0; color: #6b7280; font-size: 14px;">Customer Name</p><p style="margin: 3px 0 0 0; color: #1f2937; font-size: 16px; font-weight: 600;">${order.customerInfo.fullName}</p></td></tr>
-                    <tr><td style="padding: 8px 0;"><p style="margin: 0; color: #6b7280; font-size: 14px;">Email</p><p style="margin: 3px 0 0 0; color: #1f2937; font-size: 16px; font-weight: 600;">${order.customerInfo.email}</p></td></tr>
-                    <tr><td style="padding: 8px 0;"><p style="margin: 0; color: #6b7280; font-size: 14px;">Phone (Contact for confirmation)</p><p style="margin: 3px 0 0 0; color: #E67E22; font-size: 18px; font-weight: bold;">${order.customerInfo.phone}</p></td></tr>
-                    ${order.userId ? `<tr><td style="padding: 8px 0;"><p style="margin: 0; color: #6b7280; font-size: 14px;">User ID</p><p style="margin: 3px 0 0 0; color: #1f2937; font-size: 16px; font-weight: 600;">${order.userId}</p></td></tr>` : ''}
+                <td class="email-section" style="padding: 16px 20px;">
+                  <h3 class="section-title" style="margin: 0 0 12px 0; color: #1f2937; font-size: 18px; border-bottom: 2px solid #E67E22; padding-bottom: 8px;">Customer Information</h3>
+                  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f9fafb; border-radius: 8px; padding: 12px;">
+                    <tr><td style="padding: 7px 0;"><p style="margin: 0; color: #6b7280; font-size: 13px;">Customer Name</p><p style="margin: 2px 0 0 0; color: #1f2937; font-size: 15px; font-weight: 600;">${order.customerInfo.fullName}</p></td></tr>
+                    <tr><td style="padding: 7px 0;"><p style="margin: 0; color: #6b7280; font-size: 13px;">Email</p><p style="margin: 2px 0 0 0; color: #1f2937; font-size: 15px; font-weight: 600; word-break: break-all;">${order.customerInfo.email}</p></td></tr>
+                    <tr><td style="padding: 7px 0;"><p style="margin: 0; color: #6b7280; font-size: 13px;">Phone (Contact for confirmation)</p><p style="margin: 2px 0 0 0; color: #E67E22; font-size: 17px; font-weight: bold;">${order.customerInfo.phone}</p></td></tr>
+                    ${order.userId ? `<tr><td style="padding: 7px 0;"><p style="margin: 0; color: #6b7280; font-size: 13px;">User ID</p><p style="margin: 2px 0 0 0; color: #1f2937; font-size: 14px; font-weight: 600; word-break: break-all;">${order.userId}</p></td></tr>` : ''}
                   </table>
                 </td>
               </tr>
               <tr>
-                <td style="padding: 20px 30px;">
-                  <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 20px; border-bottom: 2px solid #E67E22; padding-bottom: 10px;">Delivery Location</h3>
-                  <div style="background-color: #FFFBF5; border-radius: 8px; padding: 15px;">
-                    <p style="margin: 0; color: #1f2937; font-size: 16px; line-height: 1.6; font-weight: 600;">
+                <td class="email-section" style="padding: 16px 20px;">
+                  <h3 class="section-title" style="margin: 0 0 12px 0; color: #1f2937; font-size: 18px; border-bottom: 2px solid #E67E22; padding-bottom: 8px;">Delivery Location</h3>
+                  <div style="background-color: #FFFBF5; border-radius: 8px; padding: 14px;">
+                    <p style="margin: 0; color: #1f2937; font-size: 15px; line-height: 1.6; font-weight: 600;">
                       ${order.customerInfo.address}<br/>
                       ${order.customerInfo.city}${order.customerInfo.postalCode ? `, ${order.customerInfo.postalCode}` : ''}
                     </p>
-                    ${order.customerInfo.additionalNotes ? `<div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e5e7eb;"><p style="margin: 0; color: #6b7280; font-size: 14px; font-weight: 600;">Delivery Instructions:</p><p style="margin: 5px 0 0 0; color: #E67E22; font-size: 14px; font-style: italic;">${order.customerInfo.additionalNotes}</p></div>` : ''}
+                    ${order.customerInfo.additionalNotes ? `<div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #e5e7eb;"><p style="margin: 0; color: #6b7280; font-size: 13px; font-weight: 600;">Delivery Instructions:</p><p style="margin: 4px 0 0 0; color: #E67E22; font-size: 13px; font-style: italic;">${order.customerInfo.additionalNotes}</p></div>` : ''}
                   </div>
                 </td>
               </tr>
               <tr>
-                <td style="padding: 20px 30px;">
-                  <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 20px; border-bottom: 2px solid #E67E22; padding-bottom: 10px;">Order Details</h3>
+                <td class="email-section" style="padding: 16px 20px;">
+                  <h3 class="section-title" style="margin: 0 0 12px 0; color: #1f2937; font-size: 18px; border-bottom: 2px solid #E67E22; padding-bottom: 8px;">Order Details</h3>
                   <table width="100%" cellpadding="0" cellspacing="0" style="border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;">
                     ${formatOrderItems(order.items)}
                   </table>
                 </td>
               </tr>
               <tr>
-                <td style="padding: 20px 30px;">
-                  <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 20px; border-bottom: 2px solid #E67E22; padding-bottom: 10px;">Financial Summary</h3>
-                  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f9fafb; border-radius: 8px; padding: 15px;">
-                    <tr><td style="padding: 8px 0; color: #6b7280; font-size: 15px;">Subtotal</td><td align="right" style="padding: 8px 0; color: #1f2937; font-size: 15px; font-weight: 600;">Rs.${order.subtotal.toFixed(2)}</td></tr>
-                    <tr><td style="padding: 8px 0; color: #6b7280; font-size: 15px;">Delivery Fee</td><td align="right" style="padding: 8px 0; color: #1f2937; font-size: 15px; font-weight: 600;">Rs.${order.deliveryFee.toFixed(2)}</td></tr>
-                    <tr style="border-top: 2px solid #E67E22;"><td style="padding: 12px 0; color: #1f2937; font-size: 18px; font-weight: bold;">Total Amount to Collect</td><td align="right" style="padding: 12px 0; color: #E67E22; font-size: 24px; font-weight: bold;">Rs.${order.total.toFixed(2)}</td></tr>
+                <td class="email-section" style="padding: 16px 20px;">
+                  <h3 class="section-title" style="margin: 0 0 12px 0; color: #1f2937; font-size: 18px; border-bottom: 2px solid #E67E22; padding-bottom: 8px;">Financial Summary</h3>
+                  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f9fafb; border-radius: 8px; padding: 12px;">
+                    <tr><td style="padding: 7px 0; color: #6b7280; font-size: 14px;">Subtotal</td><td align="right" style="padding: 7px 0; color: #1f2937; font-size: 14px; font-weight: 600;">Rs.${order.subtotal.toFixed(2)}</td></tr>
+                    <tr><td style="padding: 7px 0; color: #6b7280; font-size: 14px;">Delivery Fee</td><td align="right" style="padding: 7px 0; color: #1f2937; font-size: 14px; font-weight: 600;">Rs.${order.deliveryFee.toFixed(2)}</td></tr>
+                    <tr style="border-top: 2px solid #E67E22;"><td class="summary-total-label" style="padding: 10px 0; color: #1f2937; font-size: 15px; font-weight: bold;">Total Amount to Collect</td><td align="right" class="summary-total-value" style="padding: 10px 0; color: #E67E22; font-size: 20px; font-weight: bold;">Rs.${order.total.toFixed(2)}</td></tr>
                   </table>
                 </td>
               </tr>
               <tr>
-                <td style="padding: 20px 30px;">
-                  <div style="background-color: #FFFBF5; border-left: 4px solid #E67E22; padding: 15px; border-radius: 8px;">
-                    <p style="margin: 0; color: #6b7280; font-size: 14px;">Payment Method</p>
-                    <p style="margin: 5px 0 0 0; color: #1f2937; font-size: 16px; font-weight: bold;">${order.paymentMethod}</p>
+                <td class="email-section" style="padding: 16px 20px;">
+                  <div style="background-color: #FFFBF5; border-left: 4px solid #E67E22; padding: 14px; border-radius: 8px;">
+                    <p style="margin: 0; color: #6b7280; font-size: 13px;">Payment Method</p>
+                    <p style="margin: 4px 0 0 0; color: #1f2937; font-size: 15px; font-weight: bold;">${order.paymentMethod}</p>
                   </div>
                 </td>
               </tr>
               <tr>
-                <td style="padding: 20px 30px; background-color: #fffbeb;">
-                  <h3 style="margin: 0 0 15px 0; color: #92400e; font-size: 18px;">Action Items:</h3>
-                  <ul style="margin: 0; padding-left: 20px; color: #78350f; font-size: 14px; line-height: 1.8;">
+                <td class="email-section" style="padding: 16px 20px; background-color: #fffbeb;">
+                  <h3 style="margin: 0 0 12px 0; color: #92400e; font-size: 17px;">Action Items:</h3>
+                  <ul class="action-list" style="margin: 0; padding-left: 18px; color: #78350f; font-size: 13px; line-height: 2;">
                     <li>Call customer at ${order.customerInfo.phone} for order confirmation</li>
                     <li>Prepare order items as listed above</li>
                     <li>Assign delivery rider</li>
@@ -326,9 +355,9 @@ const getAdminEmailTemplate = (order) => `
                 </td>
               </tr>
               <tr>
-                <td style="padding: 30px; text-align: center; background-color: #f9fafb; border-top: 1px solid #e5e7eb;">
-                  <p style="margin: 0; color: #6b7280; font-size: 14px; font-weight: bold;">Restaurant Management System</p>
-                  <p style="margin: 10px 0 0 0; color: #9ca3af; font-size: 12px;">This is an automated notification for new orders</p>
+                <td class="email-section" style="padding: 24px 20px; text-align: center; background-color: #f9fafb; border-top: 1px solid #e5e7eb;">
+                  <p style="margin: 0; color: #6b7280; font-size: 13px; font-weight: bold;">Restaurant Management System</p>
+                  <p style="margin: 8px 0 0 0; color: #9ca3af; font-size: 12px;">This is an automated notification for new orders</p>
                 </td>
               </tr>
             </table>
@@ -483,79 +512,88 @@ const getReservationCustomerEmailTemplate = (reservation) => `
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Reservation Confirmation</title>
+      <style>
+        @media only screen and (max-width: 600px) {
+          .email-wrapper { padding: 10px !important; }
+          .email-container { width: 100% !important; border-radius: 8px !important; }
+          .email-header { padding: 24px 16px !important; }
+          .email-header h1 { font-size: 24px !important; }
+          .email-header p { font-size: 14px !important; }
+          .email-section { padding: 16px !important; }
+          .section-title { font-size: 17px !important; }
+        }
+      </style>
     </head>
     <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f9fafb;">
-      <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f9fafb; padding: 20px;">
+      <table width="100%" cellpadding="0" cellspacing="0" class="email-wrapper" style="background-color: #f9fafb; padding: 20px;">
         <tr>
           <td align="center">
-            <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+            <table width="100%" cellpadding="0" cellspacing="0" class="email-container" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
               <tr>
-                <td style="background: linear-gradient(135deg, #E67E22 0%, #D35400 100%); padding: 40px 30px; text-align: center;">
-                  <h1 style="margin: 0; color: #ffffff; font-size: 32px; font-weight: bold;">Reservation Confirmed!</h1>
-                  <p style="margin: 10px 0 0 0; color: #ffffff; font-size: 16px;">Your table has been reserved</p>
+                <td class="email-header" style="background: linear-gradient(135deg, #E67E22 0%, #D35400 100%); padding: 40px 30px; text-align: center;">
+                  <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: bold;">Reservation Confirmed!</h1>
+                  <p style="margin: 10px 0 0 0; color: #ffffff; font-size: 15px;">Your table has been reserved</p>
                 </td>
               </tr>
               <tr>
-                <td style="padding: 30px 30px 20px 30px; text-align: center; background-color: #FFFBF5;">
-                  <p style="margin: 0; color: #6b7280; font-size: 14px;">Reservation ID</p>
-                  <h2 style="margin: 5px 0 15px 0; color: #E67E22; font-size: 24px; font-weight: bold;">${reservation.reservationId}</h2>
-                  <div style="display: inline-block; background-color: #d1fae5; color: #065f46; padding: 8px 20px; border-radius: 20px; font-weight: bold; font-size: 14px;">
+                <td class="email-section" style="padding: 24px 20px 16px 20px; text-align: center; background-color: #FFFBF5;">
+                  <p style="margin: 0; color: #6b7280; font-size: 13px;">Reservation ID</p>
+                  <h2 style="margin: 5px 0 12px 0; color: #E67E22; font-size: 20px; font-weight: bold; word-break: break-all;">${reservation.reservationId}</h2>
+                  <div style="display: inline-block; background-color: #d1fae5; color: #065f46; padding: 7px 18px; border-radius: 20px; font-weight: bold; font-size: 13px;">
                     ${reservation.status}
                   </div>
                 </td>
               </tr>
               <tr>
-                <td style="padding: 20px 30px;">
-                  <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 20px; border-bottom: 2px solid #E67E22; padding-bottom: 10px;">Reservation Details</h3>
+                <td class="email-section" style="padding: 16px 20px;">
+                  <h3 class="section-title" style="margin: 0 0 12px 0; color: #1f2937; font-size: 18px; border-bottom: 2px solid #E67E22; padding-bottom: 8px;">Reservation Details</h3>
                   <table width="100%" cellpadding="0" cellspacing="0">
-                    <tr><td style="padding: 8px 0;">
-                      <p style="margin: 0; color: #6b7280; font-size: 14px;">Date</p>
-                      <p style="margin: 3px 0 0 0; color: #1f2937; font-size: 16px; font-weight: 600;">${reservation.reservationDate}</p>
+                    <tr><td style="padding: 7px 0;">
+                      <p style="margin: 0; color: #6b7280; font-size: 13px;">Date</p>
+                      <p style="margin: 2px 0 0 0; color: #1f2937; font-size: 15px; font-weight: 600;">${reservation.reservationDate}</p>
                     </td></tr>
-                    <tr><td style="padding: 8px 0;">
-                      <p style="margin: 0; color: #6b7280; font-size: 14px;">Time</p>
-                      <p style="margin: 3px 0 0 0; color: #1f2937; font-size: 16px; font-weight: 600;">${formatReservationTime(reservation.reservationTime)}</p>
+                    <tr><td style="padding: 7px 0;">
+                      <p style="margin: 0; color: #6b7280; font-size: 13px;">Time</p>
+                      <p style="margin: 2px 0 0 0; color: #1f2937; font-size: 15px; font-weight: 600;">${formatReservationTime(reservation.reservationTime)}</p>
                     </td></tr>
-                    <tr><td style="padding: 8px 0;">
-                      <p style="margin: 0; color: #6b7280; font-size: 14px;">Party Size</p>
-                      <p style="margin: 3px 0 0 0; color: #1f2937; font-size: 16px; font-weight: 600;">${reservation.partySize} ${reservation.partySize === 1 ? 'Guest' : 'Guests'}</p>
+                    <tr><td style="padding: 7px 0;">
+                      <p style="margin: 0; color: #6b7280; font-size: 13px;">Party Size</p>
+                      <p style="margin: 2px 0 0 0; color: #1f2937; font-size: 15px; font-weight: 600;">${reservation.partySize} ${reservation.partySize === 1 ? 'Guest' : 'Guests'}</p>
                     </td></tr>
-                    <tr><td style="padding: 8px 0;">
-                      <p style="margin: 0; color: #6b7280; font-size: 14px;">${reservation.tables && reservation.tables.length > 1 ? 'Tables' : 'Table'}</p>
-                      <p style="margin: 3px 0 0 0; color: #1f2937; font-size: 16px; font-weight: 600;">${reservation.tables && reservation.tables.length > 1 ? reservation.tables.map(t => `Table #${t.tableNumber} — ${t.name} (${t.location})`).join('<br>') : `Table #${reservation.tableNumber} — ${reservation.tableName} (${reservation.tableLocation})`}</p>
+                    <tr><td style="padding: 7px 0;">
+                      <p style="margin: 0; color: #6b7280; font-size: 13px;">${reservation.tables && reservation.tables.length > 1 ? 'Tables' : 'Table'}</p>
+                      <p style="margin: 2px 0 0 0; color: #1f2937; font-size: 15px; font-weight: 600;">${reservation.tables && reservation.tables.length > 1 ? reservation.tables.map(t => `Table #${t.tableNumber} — ${t.name} (${t.location})`).join('<br>') : `Table #${reservation.tableNumber} — ${reservation.tableName} (${reservation.tableLocation})`}</p>
                     </td></tr>
                     ${reservation.specialRequests ? `
-                    <tr><td style="padding: 8px 0;">
-                      <p style="margin: 0; color: #6b7280; font-size: 14px;">Special Requests</p>
-                      <p style="margin: 3px 0 0 0; color: #1f2937; font-size: 16px; font-style: italic;">${reservation.specialRequests}</p>
+                    <tr><td style="padding: 7px 0;">
+                      <p style="margin: 0; color: #6b7280; font-size: 13px;">Special Requests</p>
+                      <p style="margin: 2px 0 0 0; color: #1f2937; font-size: 15px; font-style: italic;">${reservation.specialRequests}</p>
                     </td></tr>` : ''}
                   </table>
                 </td>
               </tr>
               ${reservation.guestDetails && reservation.guestDetails.hasGuestList && reservation.guestDetails.guests && reservation.guestDetails.guests.length > 0 ? `
               <tr>
-                <td style="padding: 20px 30px;">
-                  <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 20px; border-bottom: 2px solid #E67E22; padding-bottom: 10px;">Guest List (${reservation.guestDetails.guests.length} ${reservation.guestDetails.guests.length === 1 ? 'Guest' : 'Guests'})</h3>
+                <td class="email-section" style="padding: 16px 20px;">
+                  <h3 class="section-title" style="margin: 0 0 12px 0; color: #1f2937; font-size: 18px; border-bottom: 2px solid #E67E22; padding-bottom: 8px;">Guest List (${reservation.guestDetails.guests.length} ${reservation.guestDetails.guests.length === 1 ? 'Guest' : 'Guests'})</h3>
                   <table width="100%" cellpadding="0" cellspacing="0" style="border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;">
                     ${reservation.guestDetails.guests.map((guest, i) => `
                     <tr>
-                      <td style="padding: 12px 15px; border-bottom: 1px solid #f3f4f6; background-color: ${i % 2 === 0 ? '#ffffff' : '#f9fafb'};">
+                      <td style="padding: 10px 12px; border-bottom: 1px solid #f3f4f6; background-color: ${i % 2 === 0 ? '#ffffff' : '#f9fafb'};">
                         <table width="100%" cellpadding="0" cellspacing="0">
                           <tr>
-                            <td width="32" valign="middle" style="padding-right: 12px;">
-                              <div style="width: 28px; height: 28px; background-color: #E67E22; border-radius: 14px; text-align: center; display: inline-block; vertical-align: middle;">
-                                <table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0">
-                                  <tr>
-                                    <td align="center" valign="middle" style="color: #ffffff; font-size: 13px; font-weight: bold; line-height: 28px; text-align: center;">
-                                      ${i + 1}
-                                    </td>
-                                  </tr>
-                                </table>
-                              </div>
+                            <td width="32" valign="middle" style="padding-right: 10px;">
+                              <table width="28" height="28" cellpadding="0" cellspacing="0" style="border-collapse: separate; background: #E67E22; border-radius: 50%; width: 28px; height: 28px;">
+                                <tr>
+                                  <td align="center" valign="middle" style="color: #ffffff; font-size: 13px; font-weight: bold; line-height: 1; mso-line-height-rule: exactly;">
+                                    ${i + 1}
+                                  </td>
+                                </tr>
+                              </table>
                             </td>
                             <td valign="middle">
-                              <p style="margin: 0; color: #1f2937; font-size: 15px; font-weight: 600;">${guest.name}</p>
-                              ${guest.note ? `<p style="margin: 3px 0 0 0; color: #6b7280; font-size: 13px; font-style: italic;">${guest.note}</p>` : ''}
+                              <p style="margin: 0; color: #1f2937; font-size: 14px; font-weight: 600;">${guest.name}</p>
+                              ${guest.note ? `<p style="margin: 2px 0 0 0; color: #6b7280; font-size: 12px; font-style: italic;">${guest.note}</p>` : ''}
                             </td>
                           </tr>
                         </table>
@@ -565,23 +603,23 @@ const getReservationCustomerEmailTemplate = (reservation) => `
                 </td>
               </tr>` : ''}
               <tr>
-                <td style="padding: 20px 30px;">
-                  <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 20px; border-bottom: 2px solid #E67E22; padding-bottom: 10px;">Your Information</h3>
+                <td class="email-section" style="padding: 16px 20px;">
+                  <h3 class="section-title" style="margin: 0 0 12px 0; color: #1f2937; font-size: 18px; border-bottom: 2px solid #E67E22; padding-bottom: 8px;">Your Information</h3>
                   <table width="100%" cellpadding="0" cellspacing="0">
-                    <tr><td style="padding: 8px 0;">
-                      <p style="margin: 0; color: #6b7280; font-size: 14px;">Name</p>
-                      <p style="margin: 3px 0 0 0; color: #1f2937; font-size: 16px; font-weight: 600;">${reservation.fullName}</p>
+                    <tr><td style="padding: 7px 0;">
+                      <p style="margin: 0; color: #6b7280; font-size: 13px;">Name</p>
+                      <p style="margin: 2px 0 0 0; color: #1f2937; font-size: 15px; font-weight: 600;">${reservation.fullName}</p>
                     </td></tr>
-                    <tr><td style="padding: 8px 0;">
-                      <p style="margin: 0; color: #6b7280; font-size: 14px;">Phone</p>
-                      <p style="margin: 3px 0 0 0; color: #1f2937; font-size: 16px; font-weight: 600;">${reservation.phone}</p>
+                    <tr><td style="padding: 7px 0;">
+                      <p style="margin: 0; color: #6b7280; font-size: 13px;">Phone</p>
+                      <p style="margin: 2px 0 0 0; color: #1f2937; font-size: 15px; font-weight: 600;">${reservation.phone}</p>
                     </td></tr>
                   </table>
                 </td>
               </tr>
               <tr>
-                <td style="padding: 30px; text-align: center; background-color: #f9fafb; border-top: 1px solid #e5e7eb;">
-                  <p style="margin: 0 0 10px 0; color: #6b7280; font-size: 14px;">We look forward to seeing you! Please arrive a few minutes early.</p>
+                <td class="email-section" style="padding: 24px 20px; text-align: center; background-color: #f9fafb; border-top: 1px solid #e5e7eb;">
+                  <p style="margin: 0 0 8px 0; color: #6b7280; font-size: 14px;">We look forward to seeing you! Please arrive a few minutes early.</p>
                   <p style="margin: 0; color: #9ca3af; font-size: 12px;">If you need to cancel or modify, please contact us as soon as possible.</p>
                 </td>
               </tr>
@@ -600,67 +638,79 @@ const getReservationAdminEmailTemplate = (reservation) => `
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>New Reservation</title>
+      <style>
+        @media only screen and (max-width: 600px) {
+          .email-wrapper { padding: 10px !important; }
+          .email-container { width: 100% !important; border-radius: 8px !important; }
+          .email-header { padding: 24px 16px !important; }
+          .email-header h1 { font-size: 22px !important; }
+          .email-header p { font-size: 13px !important; }
+          .email-section { padding: 16px !important; }
+          .section-title { font-size: 17px !important; }
+          .datetime-value { font-size: 15px !important; }
+          .action-list { padding-left: 16px !important; }
+        }
+      </style>
     </head>
     <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f9fafb;">
-      <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f9fafb; padding: 20px;">
+      <table width="100%" cellpadding="0" cellspacing="0" class="email-wrapper" style="background-color: #f9fafb; padding: 20px;">
         <tr>
           <td align="center">
-            <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+            <table width="100%" cellpadding="0" cellspacing="0" class="email-container" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
               <tr>
-                <td style="background: linear-gradient(135deg, #E67E22 0%, #D35400 100%); padding: 40px 30px; text-align: center;">
-                  <h1 style="margin: 0; color: #ffffff; font-size: 32px; font-weight: bold;">New Reservation!</h1>
-                  <p style="margin: 10px 0 0 0; color: #ffffff; font-size: 16px;">Action Required — Confirm Reservation</p>
+                <td class="email-header" style="background: linear-gradient(135deg, #E67E22 0%, #D35400 100%); padding: 40px 30px; text-align: center;">
+                  <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: bold;">New Reservation!</h1>
+                  <p style="margin: 10px 0 0 0; color: #ffffff; font-size: 15px;">Action Required &#8212; Confirm Reservation</p>
                 </td>
               </tr>
               <tr>
-                <td style="padding: 20px 30px; background-color: #FFFBF5; border-left: 4px solid #E67E22;">
-                  <p style="margin: 0; color: #D35400; font-size: 16px; font-weight: bold;">🗓️ New table reservation requires confirmation!</p>
+                <td class="email-section" style="padding: 16px 20px; background-color: #FFFBF5; border-left: 4px solid #E67E22;">
+                  <p style="margin: 0; color: #D35400; font-size: 15px; font-weight: bold;">&#128197; New table reservation requires confirmation!</p>
                 </td>
               </tr>
               <tr>
-                <td style="padding: 30px 30px 20px 30px; text-align: center; background-color: #FFFBF5;">
-                  <p style="margin: 0; color: #6b7280; font-size: 14px;">Reservation ID</p>
-                  <h2 style="margin: 5px 0 15px 0; color: #E67E22; font-size: 24px; font-weight: bold;">${reservation.reservationId}</h2>
-                  <p style="margin: 0; color: #6b7280; font-size: 14px;">Booked At</p>
-                  <p style="margin: 5px 0 0 0; color: #1f2937; font-size: 16px; font-weight: 600;">${new Date().toLocaleString()}</p>
+                <td class="email-section" style="padding: 24px 20px 16px 20px; text-align: center; background-color: #FFFBF5;">
+                  <p style="margin: 0; color: #6b7280; font-size: 13px;">Reservation ID</p>
+                  <h2 style="margin: 5px 0 12px 0; color: #E67E22; font-size: 20px; font-weight: bold; word-break: break-all;">${reservation.reservationId}</h2>
+                  <p style="margin: 0; color: #6b7280; font-size: 13px;">Booked At</p>
+                  <p style="margin: 4px 0 0 0; color: #1f2937; font-size: 15px; font-weight: 600;">${new Date().toLocaleString()}</p>
                 </td>
               </tr>
               <tr>
-                <td style="padding: 20px 30px;">
-                  <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 20px; border-bottom: 2px solid #E67E22; padding-bottom: 10px;">Reservation Details</h3>
-                  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f9fafb; border-radius: 8px; padding: 15px;">
-                    <tr><td style="padding: 8px 0;">
-                      <p style="margin: 0; color: #6b7280; font-size: 14px;">Date & Time</p>
-                      <p style="margin: 3px 0 0 0; color: #E67E22; font-size: 18px; font-weight: bold;">${reservation.reservationDate} at ${formatReservationTime(reservation.reservationTime)}</p>
+                <td class="email-section" style="padding: 16px 20px;">
+                  <h3 class="section-title" style="margin: 0 0 12px 0; color: #1f2937; font-size: 18px; border-bottom: 2px solid #E67E22; padding-bottom: 8px;">Reservation Details</h3>
+                  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f9fafb; border-radius: 8px; padding: 12px;">
+                    <tr><td style="padding: 7px 0;">
+                      <p style="margin: 0; color: #6b7280; font-size: 13px;">Date &amp; Time</p>
+                      <p class="datetime-value" style="margin: 2px 0 0 0; color: #E67E22; font-size: 17px; font-weight: bold;">${reservation.reservationDate} at ${formatReservationTime(reservation.reservationTime)}</p>
                     </td></tr>
-                    <tr><td style="padding: 8px 0;">
-                      <p style="margin: 0; color: #6b7280; font-size: 14px;">${reservation.tables && reservation.tables.length > 1 ? 'Tables' : 'Table'}</p>
-                      <p style="margin: 3px 0 0 0; color: #1f2937; font-size: 16px; font-weight: 600;">${reservation.tables && reservation.tables.length > 1 ? reservation.tables.map(t => `Table #${t.tableNumber} — ${t.name} (${t.location})`).join('<br>') : `Table #${reservation.tableNumber} — ${reservation.tableName} (${reservation.tableLocation})`}</p>
+                    <tr><td style="padding: 7px 0;">
+                      <p style="margin: 0; color: #6b7280; font-size: 13px;">${reservation.tables && reservation.tables.length > 1 ? 'Tables' : 'Table'}</p>
+                      <p style="margin: 2px 0 0 0; color: #1f2937; font-size: 15px; font-weight: 600;">${reservation.tables && reservation.tables.length > 1 ? reservation.tables.map(t => `Table #${t.tableNumber} &#8212; ${t.name} (${t.location})`).join('<br>') : `Table #${reservation.tableNumber} &#8212; ${reservation.tableName} (${reservation.tableLocation})`}</p>
                     </td></tr>
-                    <tr><td style="padding: 8px 0;">
-                      <p style="margin: 0; color: #6b7280; font-size: 14px;">Party Size</p>
-                      <p style="margin: 3px 0 0 0; color: #1f2937; font-size: 16px; font-weight: 600;">${reservation.partySize} ${reservation.partySize === 1 ? 'Guest' : 'Guests'}</p>
+                    <tr><td style="padding: 7px 0;">
+                      <p style="margin: 0; color: #6b7280; font-size: 13px;">Party Size</p>
+                      <p style="margin: 2px 0 0 0; color: #1f2937; font-size: 15px; font-weight: 600;">${reservation.partySize} ${reservation.partySize === 1 ? 'Guest' : 'Guests'}</p>
                     </td></tr>
                     ${reservation.specialRequests ? `
-                    <tr><td style="padding: 8px 0;">
-                      <p style="margin: 0; color: #6b7280; font-size: 14px;">Special Requests</p>
-                      <p style="margin: 3px 0 0 0; color: #E67E22; font-size: 14px; font-style: italic;">${reservation.specialRequests}</p>
+                    <tr><td style="padding: 7px 0;">
+                      <p style="margin: 0; color: #6b7280; font-size: 13px;">Special Requests</p>
+                      <p style="margin: 2px 0 0 0; color: #E67E22; font-size: 13px; font-style: italic;">${reservation.specialRequests}</p>
                     </td></tr>` : ''}
                   </table>
                 </td>
               </tr>
               ${reservation.guestDetails && reservation.guestDetails.hasGuestList && reservation.guestDetails.guests && reservation.guestDetails.guests.length > 0 ? `
               <tr>
-                <td style="padding: 20px 30px;">
-                  <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 20px; border-bottom: 2px solid #E67E22; padding-bottom: 10px;">Guest List (${reservation.guestDetails.guests.length} ${reservation.guestDetails.guests.length === 1 ? 'Guest' : 'Guests'})</h3>
+                <td class="email-section" style="padding: 16px 20px;">
+                  <h3 class="section-title" style="margin: 0 0 12px 0; color: #1f2937; font-size: 18px; border-bottom: 2px solid #E67E22; padding-bottom: 8px;">Guest List (${reservation.guestDetails.guests.length} ${reservation.guestDetails.guests.length === 1 ? 'Guest' : 'Guests'})</h3>
                   <table width="100%" cellpadding="0" cellspacing="0" style="border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;">
                     ${reservation.guestDetails.guests.map((guest, i) => `
                     <tr>
-                      <td style="padding: 12px 15px; border-bottom: 1px solid #f3f4f6; background-color: ${i % 2 === 0 ? '#ffffff' : '#f9fafb'};">
+                      <td style="padding: 10px 12px; border-bottom: 1px solid #f3f4f6; background-color: ${i % 2 === 0 ? '#ffffff' : '#f9fafb'};">
                         <table width="100%" cellpadding="0" cellspacing="0">
                           <tr>
-                            <td width="32" valign="middle" style="padding-right: 12px;">
-                              <!-- Number Circle -->
+                            <td width="32" valign="middle" style="padding-right: 10px;">
                               <table width="28" height="28" cellpadding="0" cellspacing="0" style="border-collapse: separate; background: #E67E22; border-radius: 50%; width: 28px; height: 28px;">
                                 <tr>
                                   <td align="center" valign="middle" style="color: #ffffff; font-size: 13px; font-weight: bold; line-height: 1; mso-line-height-rule: exactly;">
@@ -670,8 +720,8 @@ const getReservationAdminEmailTemplate = (reservation) => `
                               </table>
                             </td>
                             <td valign="middle">
-                              <p style="margin: 0; color: #1f2937; font-size: 15px; font-weight: 600;">${guest.name}</p>
-                              ${guest.note ? `<p style="margin: 3px 0 0 0; color: #6b7280; font-size: 13px; font-style: italic;">${guest.note}</p>` : ''}
+                              <p style="margin: 0; color: #1f2937; font-size: 14px; font-weight: 600;">${guest.name}</p>
+                              ${guest.note ? `<p style="margin: 2px 0 0 0; color: #6b7280; font-size: 12px; font-style: italic;">${guest.note}</p>` : ''}
                             </td>
                           </tr>
                         </table>
@@ -681,33 +731,33 @@ const getReservationAdminEmailTemplate = (reservation) => `
                 </td>
               </tr>` : ''}
               <tr>
-                <td style="padding: 20px 30px;">
-                  <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 20px; border-bottom: 2px solid #E67E22; padding-bottom: 10px;">Customer Information</h3>
-                  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f9fafb; border-radius: 8px; padding: 15px;">
-                    <tr><td style="padding: 8px 0;">
-                      <p style="margin: 0; color: #6b7280; font-size: 14px;">Name</p>
-                      <p style="margin: 3px 0 0 0; color: #1f2937; font-size: 16px; font-weight: 600;">${reservation.fullName}</p>
+                <td class="email-section" style="padding: 16px 20px;">
+                  <h3 class="section-title" style="margin: 0 0 12px 0; color: #1f2937; font-size: 18px; border-bottom: 2px solid #E67E22; padding-bottom: 8px;">Customer Information</h3>
+                  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f9fafb; border-radius: 8px; padding: 12px;">
+                    <tr><td style="padding: 7px 0;">
+                      <p style="margin: 0; color: #6b7280; font-size: 13px;">Name</p>
+                      <p style="margin: 2px 0 0 0; color: #1f2937; font-size: 15px; font-weight: 600;">${reservation.fullName}</p>
                     </td></tr>
-                    <tr><td style="padding: 8px 0;">
-                      <p style="margin: 0; color: #6b7280; font-size: 14px;">Email</p>
-                      <p style="margin: 3px 0 0 0; color: #1f2937; font-size: 16px; font-weight: 600;">${reservation.email}</p>
+                    <tr><td style="padding: 7px 0;">
+                      <p style="margin: 0; color: #6b7280; font-size: 13px;">Email</p>
+                      <p style="margin: 2px 0 0 0; color: #1f2937; font-size: 15px; font-weight: 600; word-break: break-all;">${reservation.email}</p>
                     </td></tr>
-                    <tr><td style="padding: 8px 0;">
-                      <p style="margin: 0; color: #6b7280; font-size: 14px;">Phone (Call for confirmation)</p>
-                      <p style="margin: 3px 0 0 0; color: #E67E22; font-size: 18px; font-weight: bold;">${reservation.phone}</p>
+                    <tr><td style="padding: 7px 0;">
+                      <p style="margin: 0; color: #6b7280; font-size: 13px;">Phone (Call for confirmation)</p>
+                      <p style="margin: 2px 0 0 0; color: #E67E22; font-size: 17px; font-weight: bold;">${reservation.phone}</p>
                     </td></tr>
                     ${reservation.isGuestReservation ? `
-                    <tr><td style="padding: 8px 0;">
-                      <p style="margin: 0; color: #6b7280; font-size: 14px;">Guest Type</p>
-                      <p style="margin: 3px 0 0 0; color: #1f2937; font-size: 16px;">Walk-in / Guest</p>
+                    <tr><td style="padding: 7px 0;">
+                      <p style="margin: 0; color: #6b7280; font-size: 13px;">Guest Type</p>
+                      <p style="margin: 2px 0 0 0; color: #1f2937; font-size: 15px;">Walk-in / Guest</p>
                     </td></tr>` : ''}
                   </table>
                 </td>
               </tr>
               <tr>
-                <td style="padding: 20px 30px; background-color: #fffbeb;">
-                  <h3 style="margin: 0 0 15px 0; color: #92400e; font-size: 18px;">Action Items:</h3>
-                  <ul style="margin: 0; padding-left: 20px; color: #78350f; font-size: 14px; line-height: 1.8;">
+                <td class="email-section" style="padding: 16px 20px; background-color: #fffbeb;">
+                  <h3 style="margin: 0 0 12px 0; color: #92400e; font-size: 17px;">Action Items:</h3>
+                  <ul class="action-list" style="margin: 0; padding-left: 18px; color: #78350f; font-size: 13px; line-height: 2;">
                     <li>Call customer at ${reservation.phone} to confirm reservation</li>
                     <li>Mark ${reservation.tables && reservation.tables.length > 1 ? reservation.tables.map(t => `Table #${t.tableNumber}`).join(', ') : `Table #${reservation.tableNumber}`} as Reserved for ${reservation.reservationDate} at ${formatReservationTime(reservation.reservationTime)}</li>
                     <li>Prepare table setup for ${reservation.partySize} guests</li>
@@ -716,9 +766,9 @@ const getReservationAdminEmailTemplate = (reservation) => `
                 </td>
               </tr>
               <tr>
-                <td style="padding: 30px; text-align: center; background-color: #f9fafb; border-top: 1px solid #e5e7eb;">
-                  <p style="margin: 0; color: #6b7280; font-size: 14px; font-weight: bold;">Restaurant Management System</p>
-                  <p style="margin: 10px 0 0 0; color: #9ca3af; font-size: 12px;">This is an automated notification for new reservations</p>
+                <td class="email-section" style="padding: 24px 20px; text-align: center; background-color: #f9fafb; border-top: 1px solid #e5e7eb;">
+                  <p style="margin: 0; color: #6b7280; font-size: 13px; font-weight: bold;">Restaurant Management System</p>
+                  <p style="margin: 8px 0 0 0; color: #9ca3af; font-size: 12px;">This is an automated notification for new reservations</p>
                 </td>
               </tr>
             </table>
