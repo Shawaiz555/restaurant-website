@@ -3,6 +3,7 @@ const Order = require('../models/Order');
 const Recipe = require('../models/Recipe');
 const Ingredient = require('../models/Ingredient');
 const AddonStock = require('../models/AddonStock');
+const Deal = require('../models/Deal');
 const { sendOrderEmails } = require('../../api/_lib/emailService');
 
 // @desc    Place new order
@@ -36,24 +37,50 @@ const placeOrder = async (req, res) => {
     try {
       const deductionTasks = [];
       for (const item of order.items) {
-        if (item.isDeal) continue; // Skip deal items (no single recipe to apply)
-        const rawId = item.productId || item.id;
-        if (!rawId) continue;
-        let productId;
-        try {
-          productId = new mongoose.Types.ObjectId(rawId.toString());
-        } catch {
-          continue; // Invalid ObjectId, skip
-        }
-        const recipe = await Recipe.findOne({ productId });
-        if (!recipe || recipe.ingredients.length === 0) continue;
-        for (const ing of recipe.ingredients) {
-          const required = ing.quantityRequired * item.quantity;
-          deductionTasks.push(
-            Ingredient.findByIdAndUpdate(ing.ingredientId, {
-              $inc: { currentStock: -required }
-            })
-          );
+        if (item.isDeal) {
+          // Fetch the deal to get productIds for each deal item
+          const rawDealId = item.dealId;
+          if (!rawDealId) continue;
+          let dealObjectId;
+          try {
+            dealObjectId = new mongoose.Types.ObjectId(rawDealId.toString());
+          } catch {
+            continue;
+          }
+          const deal = await Deal.findById(dealObjectId);
+          if (!deal) continue;
+          for (const dealItem of deal.items) {
+            const dealItemQty = (dealItem.quantity || 1) * item.quantity;
+            const recipe = await Recipe.findOne({ productId: dealItem.productId });
+            if (!recipe || recipe.ingredients.length === 0) continue;
+            for (const ing of recipe.ingredients) {
+              const required = ing.quantityRequired * dealItemQty;
+              deductionTasks.push(
+                Ingredient.findByIdAndUpdate(ing.ingredientId, {
+                  $inc: { currentStock: -required }
+                })
+              );
+            }
+          }
+        } else {
+          const rawId = item.productId || item.id;
+          if (!rawId) continue;
+          let productId;
+          try {
+            productId = new mongoose.Types.ObjectId(rawId.toString());
+          } catch {
+            continue; // Invalid ObjectId, skip
+          }
+          const recipe = await Recipe.findOne({ productId });
+          if (!recipe || recipe.ingredients.length === 0) continue;
+          for (const ing of recipe.ingredients) {
+            const required = ing.quantityRequired * item.quantity;
+            deductionTasks.push(
+              Ingredient.findByIdAndUpdate(ing.ingredientId, {
+                $inc: { currentStock: -required }
+              })
+            );
+          }
         }
       }
       await Promise.all(deductionTasks);

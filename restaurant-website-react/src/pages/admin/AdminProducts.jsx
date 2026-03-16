@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import SearchBar from "../../components/admin/common/SearchBar";
 import ConfirmModal from "../../components/admin/common/ConfirmModal";
+import StatsCard from "../../components/admin/common/StatsCard";
 import { setProducts, deleteProduct } from "../../store/slices/productsSlice";
 import {
   selectAllProducts,
@@ -140,50 +141,10 @@ const AdminProducts = () => {
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-white rounded-2xl p-5 shadow-lg border-2 border-gray-100 hover:shadow-xl hover:border-primary/30 transition-all duration-300 text-center">
-          <div className="w-16 h-16 mx-auto bg-gradient-to-br from-primary via-primary-light to-primary/80 rounded-xl flex items-center justify-center mb-3">
-            <Package className="w-9 h-9 text-white" />
-          </div>
-          <p className="text-xs sm:text-sm text-dark-gray mb-2 font-semibold uppercase tracking-wide">
-            Total Products
-          </p>
-          <p className="text-2xl sm:text-3xl font-bold text-primary">
-            {products.length}
-          </p>
-        </div>
-        <div className="bg-white rounded-2xl p-5 shadow-lg border-2 border-gray-100 hover:shadow-xl hover:border-primary/30 transition-all duration-300 text-center">
-          <div className="w-16 h-16 mx-auto bg-gradient-to-br from-primary via-primary-light to-primary/80 rounded-xl flex items-center justify-center mb-3">
-            <Tag className="w-9 h-9 text-white" />
-          </div>
-          <p className="text-xs sm:text-sm text-dark-gray mb-2 font-semibold uppercase tracking-wide">
-            Categories
-          </p>
-          <p className="text-2xl sm:text-3xl font-bold text-primary">
-            {categories.length}
-          </p>
-        </div>
-        <div className="bg-white rounded-2xl p-5 shadow-lg border-2 border-gray-100 hover:shadow-xl hover:border-primary/30 transition-all duration-300 text-center">
-          <div className="w-16 h-16 mx-auto bg-gradient-to-br from-primary via-primary-light to-primary/80 rounded-xl flex items-center justify-center mb-3">
-            <Eye className="w-9 h-9 text-white" />
-          </div>
-          <p className="text-xs sm:text-sm text-dark-gray mb-2 font-semibold uppercase tracking-wide">
-            Showing
-          </p>
-          <p className="text-2xl sm:text-3xl font-bold text-primary">
-            {filteredProducts.length}
-          </p>
-        </div>
-        <div className="bg-white rounded-2xl p-5 shadow-lg border-2 border-gray-100 hover:shadow-xl hover:border-primary/30 transition-all duration-300 text-center">
-          <div className="w-16 h-16 mx-auto bg-gradient-to-br from-primary via-primary-light to-primary/80 rounded-xl flex items-center justify-center mb-3">
-            <Filter className="w-9 h-9 text-white" />
-          </div>
-          <p className="text-xs sm:text-sm text-dark-gray mb-2 font-semibold uppercase tracking-wide">
-            Selected Category
-          </p>
-          <p className="text-lg sm:text-xl font-bold text-primary truncate">
-            {selectedCategory}
-          </p>
-        </div>
+        <StatsCard icon={Package} label="Total Products"    value={products.length}         />
+        <StatsCard icon={Tag}     label="Categories"        value={categories.length}       />
+        <StatsCard icon={Eye}     label="Showing"           value={filteredProducts.length} />
+        <StatsCard icon={Filter}  label="Selected Category" value={selectedCategory}        />
       </div>
 
       {/* Filters */}

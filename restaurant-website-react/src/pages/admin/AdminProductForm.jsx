@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import productsService from "../../services/productsService";
+import ingredientsService from "../../services/ingredientsService";
 import { showNotification } from "../../store/slices/notificationSlice";
 import {
   Edit3,
@@ -18,7 +19,6 @@ import {
   X,
   Ruler,
   Salad,
-  Apple,
   Settings,
   Flame,
   Wine,
@@ -28,8 +28,10 @@ import {
   Check,
   FolderOpen,
   AlertCircle,
+  Search,
+  Hash,
+  FlaskConical,
 } from "lucide-react";
-
 
 const AdminProductForm = () => {
   const navigate = useNavigate();
@@ -65,6 +67,9 @@ const AdminProductForm = () => {
   const [showNewCategoryInput, setShowNewCategoryInput] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState("");
   const [existingCategories, setExistingCategories] = useState([]);
+  const [availableIngredients, setAvailableIngredients] = useState([]);
+  const [openIngredientDropdown, setOpenIngredientDropdown] = useState(null);
+  const [ingredientSearches, setIngredientSearches] = useState({});
 
   const loadProduct = React.useCallback(async () => {
     setLoading(true);
@@ -131,20 +136,24 @@ const AdminProductForm = () => {
     }
   }, [id, dispatch, navigate]);
 
-  // Load existing categories on mount
+  // Load existing categories and available ingredients on mount
   useEffect(() => {
-    const loadCategories = async () => {
+    const loadInitialData = async () => {
       try {
-        const allProducts = await productsService.fetchProducts();
+        const [allProducts, ingRes] = await Promise.all([
+          productsService.fetchProducts(),
+          ingredientsService.getIngredients(),
+        ]);
         const categories = [
           ...new Set(allProducts.map((p) => p.category)),
         ].sort();
         setExistingCategories(categories);
+        setAvailableIngredients(ingRes.ingredients || []);
       } catch (error) {
-        console.error("Error loading categories:", error);
+        console.error("Error loading initial data:", error);
       }
     };
-    loadCategories();
+    loadInitialData();
   }, []);
 
   useEffect(() => {
@@ -235,6 +244,29 @@ const AdminProductForm = () => {
     }
   };
 
+  // Ingredients not yet selected (for a given dropdown), filtered by its own search term
+  const getIngredientOptions = (currentIndex) => {
+    const selected = new Set(
+      formData.ingredients.filter((v, i) => i !== currentIndex && v !== ""),
+    );
+    const search = (ingredientSearches[currentIndex] || "").toLowerCase();
+    return availableIngredients.filter(
+      (ing) =>
+        !selected.has(ing.name) &&
+        (search === "" ||
+          ing.name.toLowerCase().includes(search) ||
+          (ing.category || "").toLowerCase().includes(search)),
+    );
+  };
+
+  const setIngredientSearch = (index, value) =>
+    setIngredientSearches((prev) => ({ ...prev, [index]: value }));
+
+  const closeIngredientDropdown = () => {
+    setOpenIngredientDropdown(null);
+    setIngredientSearches({});
+  };
+
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -321,7 +353,7 @@ const AdminProductForm = () => {
       rating: parseFloat(formData.rating),
       ingredients: formData.ingredients.filter((ing) => ing.trim() !== ""),
       nutritionInfo: formData.nutritionInfo.filter(
-        (n) => n.label.trim() !== "" && n.value.toString().trim() !== ""
+        (n) => n.label.trim() !== "" && n.value.toString().trim() !== "",
       ),
       sizes: formData.sizes.map((size) => ({
         ...size,
@@ -678,9 +710,10 @@ const AdminProductForm = () => {
 
           {/* Sizes */}
           <div className="bg-white rounded-xl lg:rounded-2xl p-5 sm:p-6 lg:p-8 shadow-xl border-2 border-gray-100 hover:border-primary/30 transition-all">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-5 sm:mb-6 pb-4 border-b-2 border-gray-100">
+            {/* Section header */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-5 pb-4 border-b-2 border-gray-100">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary/10 to-primary-light/20 rounded-xl flex items-center justify-center">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary/10 to-primary-light/20 rounded-xl flex items-center justify-center shrink-0">
                   <Ruler className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                 </div>
                 <div>
@@ -688,62 +721,81 @@ const AdminProductForm = () => {
                     Sizes *
                   </h2>
                   <p className="text-xs text-dark-gray">
-                    Define product size options
+                    Define product size options and their prices
                   </p>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={addSize}
-                className="w-full sm:w-auto px-5 py-2.5 rounded-lg bg-gradient-to-r from-primary to-primary-dark text-white text-sm font-semibold hover:from-primary-dark hover:to-primary transition-all shadow-md hover:shadow-lg hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
+                className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-gradient-to-r from-primary to-primary-dark text-white text-sm font-semibold hover:from-primary-dark hover:to-primary transition-all shadow-md hover:shadow-lg hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
               >
                 <Plus className="w-4 h-4" />
                 Add Size
               </button>
             </div>
-            <div className="space-y-4">
+
+            {/* Column headers — visible on sm+ */}
+            {formData.sizes.length > 0 && (
+              <div className="hidden sm:grid sm:grid-cols-[2fr_1.5fr_2fr_auto] gap-3 px-4 mb-2">
+                <span className="text-xs font-bold text-dark-gray uppercase tracking-wider">
+                  Size Name
+                </span>
+                <span className="text-xs font-bold text-dark-gray uppercase tracking-wider">
+                  Price (Rs)
+                </span>
+                <span className="text-xs font-bold text-dark-gray uppercase tracking-wider">
+                  Description
+                </span>
+                <span className="w-9" />
+              </div>
+            )}
+
+            <div className="space-y-3">
               {formData.sizes.map((size, index) => (
                 <div
                   key={index}
-                  className="p-4 sm:p-5 bg-gradient-to-br from-gray-50 to-white rounded-xl border-2 border-gray-200 hover:border-primary/50 transition-all shadow-sm hover:shadow-md"
+                  className="group grid grid-cols-1 sm:grid-cols-[2fr_1.5fr_2fr_auto] gap-3 items-start p-4 rounded-xl border-2 border-gray-100 bg-gray-50/60 hover:border-primary/30 hover:bg-white transition-all"
                 >
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="w-7 h-7 bg-gradient-to-br from-primary to-primary-dark text-white rounded-lg flex items-center justify-center text-sm font-bold">
-                      {index + 1}
-                    </span>
-                    <p className="font-bold text-dark text-sm">
-                      Size Option {index + 1}
-                    </p>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-semibold text-dark mb-2">
-                        Size Name
-                      </label>
+                  {/* Name */}
+                  <div>
+                    {/* Mobile label */}
+                    <label className="sm:hidden block text-xs font-bold text-dark-gray mb-1.5 uppercase tracking-wider">
+                      Size Name
+                    </label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 w-6 h-6 bg-gradient-to-br from-primary to-primary-dark text-white rounded-md flex items-center justify-center text-xs font-bold pointer-events-none">
+                        {index + 1}
+                      </span>
                       <input
                         type="text"
                         value={size.name}
                         onChange={(e) =>
                           handleSizeChange(index, "name", e.target.value)
                         }
-                        className={`w-full px-4 py-2.5 rounded-lg text-sm border-2 ${
-                          errors[`size_${index}_name`]
-                            ? "border-red-500"
-                            : "border-gray-200"
-                        } focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 hover:border-primary/50 bg-white transition-all`}
-                        placeholder="e.g., Regular, Large"
+                        className={`w-full pl-11 pr-4 py-2.5 rounded-lg text-sm border-2 bg-white transition-all
+                          ${errors[`size_${index}_name`] ? "border-red-400 focus:border-red-500" : "border-gray-200 focus:border-primary hover:border-primary/50"}
+                          focus:outline-none focus:ring-2 focus:ring-primary/20`}
+                        placeholder="e.g., Small, Regular, Large"
                       />
-                      {errors[`size_${index}_name`] && (
-                        <p className="text-red-500 text-xs mt-1.5 flex items-center gap-1">
-                          <AlertCircle className="w-3 h-3" />{" "}
-                          {errors[`size_${index}_name`]}
-                        </p>
-                      )}
                     </div>
-                    <div>
-                      <label className="block text-sm font-semibold text-dark mb-2">
-                        Price (Rs)
-                      </label>
+                    {errors[`size_${index}_name`] && (
+                      <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                        <AlertCircle className="w-3 h-3" />{" "}
+                        {errors[`size_${index}_name`]}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Price */}
+                  <div>
+                    <label className="sm:hidden block text-xs font-bold text-dark-gray mb-1.5 uppercase tracking-wider">
+                      Price (Rs)
+                    </label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-primary pointer-events-none select-none">
+                        Rs
+                      </span>
                       <input
                         type="number"
                         value={size.price}
@@ -752,40 +804,50 @@ const AdminProductForm = () => {
                         }
                         step="0.01"
                         min="0"
-                        className={`w-full px-4 py-2.5 rounded-lg text-sm border-2 ${
-                          errors[`size_${index}_price`]
-                            ? "border-red-500"
-                            : "border-gray-200"
-                        } focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 hover:border-primary/50 bg-white transition-all`}
-                        placeholder="9.99"
+                        className={`w-full pl-9 pr-4 py-2.5 rounded-lg text-sm border-2 bg-white transition-all
+                          ${errors[`size_${index}_price`] ? "border-red-400 focus:border-red-500" : "border-gray-200 focus:border-primary hover:border-primary/50"}
+                          focus:outline-none focus:ring-2 focus:ring-primary/20`}
+                        placeholder="0.00"
                       />
-                      {errors[`size_${index}_price`] && (
-                        <p className="text-red-500 text-xs mt-1.5 flex items-center gap-1">
-                          <AlertCircle className="w-3 h-3" />{" "}
-                          {errors[`size_${index}_price`]}
-                        </p>
-                      )}
                     </div>
+                    {errors[`size_${index}_price`] && (
+                      <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
+                        <AlertCircle className="w-3 h-3" />{" "}
+                        {errors[`size_${index}_price`]}
+                      </p>
+                    )}
                   </div>
-                  <div className="mt-4 flex flex-col sm:flex-row gap-3">
+
+                  {/* Description */}
+                  <div>
+                    <label className="sm:hidden block text-xs font-bold text-dark-gray mb-1.5 uppercase tracking-wider">
+                      Description
+                    </label>
                     <input
                       type="text"
                       value={size.description}
                       onChange={(e) =>
                         handleSizeChange(index, "description", e.target.value)
                       }
-                      className="flex-1 px-4 py-2.5 rounded-lg text-sm border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 hover:border-primary/50 bg-white transition-all"
-                      placeholder="Description (optional)"
+                      className="w-full px-4 py-2.5 rounded-lg text-sm border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 hover:border-primary/50 bg-white transition-all"
+                      placeholder="Optional note…"
                     />
-                    {formData.sizes.length > 1 && (
+                  </div>
+
+                  {/* Remove */}
+                  <div className="flex sm:items-start sm:pt-0 items-center">
+                    {formData.sizes.length > 1 ? (
                       <button
                         type="button"
                         onClick={() => removeSize(index)}
-                        className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-red-500 to-red-600 text-white text-sm font-semibold hover:from-red-600 hover:to-red-700 transition-all whitespace-nowrap shadow-md hover:shadow-lg hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
+                        title="Remove size"
+                        className="w-full sm:w-9 h-9 rounded-lg bg-red-50 text-red-500 border-2 border-red-100 hover:bg-red-500 hover:text-white hover:border-red-500 transition-all flex items-center justify-center gap-2 sm:gap-0 text-sm font-semibold"
                       >
                         <Trash2 className="w-4 h-4" />
-                        Remove
+                        <span className="sm:hidden">Remove</span>
                       </button>
+                    ) : (
+                      <div className="w-9 h-9" />
                     )}
                   </div>
                 </div>
@@ -805,7 +867,7 @@ const AdminProductForm = () => {
                     Ingredients
                   </h2>
                   <p className="text-xs text-dark-gray">
-                    List product ingredients
+                    Select from available stock ingredients (display on menu)
                   </p>
                 </div>
               </div>
@@ -818,138 +880,292 @@ const AdminProductForm = () => {
                 Add Ingredient
               </button>
             </div>
+
+            {availableIngredients.length === 0 && (
+              <div className="mb-4 flex items-center gap-2 px-4 py-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-700 text-sm">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                <span>
+                  No ingredients found in stock. Add ingredients in{" "}
+                  <strong>Stock → Ingredients</strong> first.
+                </span>
+              </div>
+            )}
+
+            {/* Click-outside overlay to close any open dropdown */}
+            {openIngredientDropdown !== null && (
+              <div
+                className="fixed inset-0 z-10"
+                onClick={closeIngredientDropdown}
+              />
+            )}
+
             <div className="grid grid-cols-1 gap-3 sm:gap-4">
-              {formData.ingredients.map((ingredient, index) => (
-                <div
-                  key={index}
-                  className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-stretch sm:items-center p-3 rounded-lg bg-gradient-to-r from-gray-50 to-white border-2 border-gray-200 hover:border-primary/50 transition-all"
-                >
-                  <span className="w-7 h-7 bg-gradient-to-br from-primary to-primary-dark text-white rounded-lg flex items-center justify-center text-sm font-bold flex-shrink-0">
-                    {index + 1}
-                  </span>
-                  <input
-                    type="text"
-                    value={ingredient}
-                    onChange={(e) =>
-                      handleIngredientChange(index, e.target.value)
-                    }
-                    className="flex-1 px-4 py-2.5 rounded-lg text-sm border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 hover:border-primary/50 bg-white transition-all"
-                    placeholder="e.g., Chicken, Lettuce"
-                  />
-                  {formData.ingredients.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => removeIngredient(index)}
-                      className="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-gradient-to-r from-red-500 to-red-600 text-white text-sm font-semibold hover:from-red-600 hover:to-red-700 transition-all whitespace-nowrap shadow-md hover:shadow-lg hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                      <span className="sm:hidden">Remove</span>
-                      <span className="hidden sm:inline">Remove</span>
-                    </button>
-                  )}
-                </div>
-              ))}
+              {formData.ingredients.map((ingredient, index) => {
+                const isOpen = openIngredientDropdown === index;
+                const options = getIngredientOptions(index);
+                return (
+                  <div
+                    key={index}
+                    className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-stretch sm:items-center p-3 rounded-lg bg-gradient-to-r from-gray-50 to-white border-2 border-gray-200 hover:border-primary/50 transition-all"
+                  >
+                    <span className="w-7 h-7 bg-gradient-to-br from-primary to-primary-dark text-white rounded-lg flex items-center justify-center text-sm font-bold flex-shrink-0">
+                      {index + 1}
+                    </span>
+
+                    {/* Searchable dropdown */}
+                    <div className="relative flex-1">
+                      {/* Trigger button */}
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setOpenIngredientDropdown(isOpen ? null : index)
+                        }
+                        className="w-full flex items-center justify-between gap-2 px-4 py-2.5 rounded-lg text-sm border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 hover:border-primary/50 bg-white transition-all text-left"
+                      >
+                        <span
+                          className={ingredient ? "text-dark" : "text-gray-400"}
+                        >
+                          {ingredient || "— Select an ingredient —"}
+                        </span>
+                        <svg
+                          className={`w-4 h-4 text-gray-400 shrink-0 transition-transform ${isOpen ? "rotate-180" : ""}`}
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 9l-7 7-7-7"
+                          />
+                        </svg>
+                      </button>
+
+                      {/* Dropdown panel */}
+                      {isOpen && (
+                        <div className="absolute z-20 left-0 right-0 top-full mt-1 bg-white rounded-xl border-2 border-primary/30 shadow-2xl overflow-hidden">
+                          {/* Search input inside dropdown */}
+                          <div className="p-2 border-b border-gray-100">
+                            <div className="relative">
+                              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                              <input
+                                type="text"
+                                autoFocus
+                                value={ingredientSearches[index] || ""}
+                                onChange={(e) =>
+                                  setIngredientSearch(index, e.target.value)
+                                }
+                                placeholder="Search ingredients..."
+                                className="w-full pl-9 pr-4 py-2 rounded-lg border border-gray-200 focus:border-primary focus:outline-none text-sm bg-gray-50"
+                                onClick={(e) => e.stopPropagation()}
+                              />
+                            </div>
+                          </div>
+                          {/* Options list */}
+                          <ul className="max-h-52 overflow-y-auto py-1">
+                            {ingredient !== "" && (
+                              <li
+                                className="px-4 py-2 text-sm text-gray-400 italic cursor-pointer hover:bg-gray-50"
+                                onClick={() => {
+                                  handleIngredientChange(index, "");
+                                  closeIngredientDropdown();
+                                }}
+                              >
+                                — Clear selection —
+                              </li>
+                            )}
+                            {options.length === 0 ? (
+                              <li className="px-4 py-3 text-sm text-gray-400 text-center">
+                                No matches found
+                              </li>
+                            ) : (
+                              options.map((ing) => (
+                                <li
+                                  key={ing._id || ing.name}
+                                  onClick={() => {
+                                    handleIngredientChange(index, ing.name);
+                                    closeIngredientDropdown();
+                                  }}
+                                  className={`px-4 py-2.5 text-sm cursor-pointer flex items-center justify-between gap-2 hover:bg-primary/5 hover:text-primary transition-colors ${ingredient === ing.name ? "bg-primary/10 text-primary font-semibold" : "text-dark"}`}
+                                >
+                                  <span>{ing.name}</span>
+                                  {ing.category && (
+                                    <span className="text-xs text-gray-400 shrink-0">
+                                      {ing.category}
+                                    </span>
+                                  )}
+                                </li>
+                              ))
+                            )}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+
+                    {formData.ingredients.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => removeIngredient(index)}
+                        className="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-gradient-to-r from-red-500 to-red-600 text-white text-sm font-semibold hover:from-red-600 hover:to-red-700 transition-all whitespace-nowrap shadow-md hover:shadow-lg hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                        Remove
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
 
           {/* Nutrition Info */}
           <div className="bg-white rounded-xl lg:rounded-2xl p-5 sm:p-6 lg:p-8 shadow-xl border-2 border-gray-100 hover:border-primary/30 transition-all">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-5 sm:mb-6 pb-4 border-b-2 border-gray-100">
+            {/* Section header */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-5 pb-4 border-b-2 border-gray-100">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary/10 to-primary-light/20 rounded-xl flex items-center justify-center">
-                  <Apple className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary/10 to-primary-light/20 rounded-xl flex items-center justify-center shrink-0">
+                  <FlaskConical className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                 </div>
                 <div>
                   <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-dark">
                     Nutrition Information
                   </h2>
                   <p className="text-xs text-dark-gray">
-                    Add nutritional facts (Optional)
+                    Nutritional facts shown on the menu{" "}
+                    <span className="text-gray-400">(optional)</span>
                   </p>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={addNutrition}
-                className="w-full sm:w-auto px-5 py-2.5 rounded-lg bg-gradient-to-r from-primary to-primary-dark text-white text-sm font-semibold hover:from-primary-dark hover:to-primary transition-all whitespace-nowrap shadow-md hover:shadow-lg hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
+                className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-gradient-to-r from-primary to-primary-dark text-white text-sm font-semibold hover:from-primary-dark hover:to-primary transition-all shadow-md hover:shadow-lg hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
               >
                 <Plus className="w-4 h-4" />
-                Add Nutrition
+                Add Row
               </button>
             </div>
-            <div className="space-y-4">
+
+            {/* Column headers — visible on sm+ */}
+            {formData.nutritionInfo.length > 0 && (
+              <div className="hidden sm:grid sm:grid-cols-[2fr_1.5fr_1fr_auto] gap-3 px-4 mb-2">
+                <span className="text-xs font-bold text-dark-gray uppercase tracking-wider">
+                  Nutrient
+                </span>
+                <span className="text-xs font-bold text-dark-gray uppercase tracking-wider">
+                  Amount
+                </span>
+                <span className="text-xs font-bold text-dark-gray uppercase tracking-wider">
+                  Unit
+                </span>
+                <span className="w-9" />
+              </div>
+            )}
+
+            <div className="space-y-2.5">
               {formData.nutritionInfo.map((nutrition, index) => (
                 <div
                   key={index}
-                  className="p-4 sm:p-5 bg-gradient-to-br from-gray-50 to-white rounded-xl border-2 border-gray-200 hover:border-primary/50 transition-all shadow-sm hover:shadow-md"
+                  className="grid grid-cols-1 sm:grid-cols-[2fr_1.5fr_1fr_auto] gap-3 items-start p-4 rounded-xl border-2 border-gray-100 bg-gray-50/60 hover:border-primary/30 hover:bg-white transition-all"
                 >
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="w-7 h-7 bg-gradient-to-br from-primary to-primary-dark text-white rounded-lg flex items-center justify-center text-sm font-bold">
-                      {index + 1}
-                    </span>
-                    <p className="font-bold text-dark text-sm">
-                      Nutrition Item {index + 1}
-                    </p>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div>
-                      <label className="block text-sm font-semibold text-dark mb-2">
-                        Label
-                      </label>
+                  {/* Label */}
+                  <div>
+                    <label className="sm:hidden block text-xs font-bold text-dark-gray mb-1.5 uppercase tracking-wider">
+                      Nutrient
+                    </label>
+                    <div className="relative">
+                      <Hash className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-primary/50 pointer-events-none" />
                       <input
                         type="text"
                         value={nutrition.label}
                         onChange={(e) =>
                           handleNutritionChange(index, "label", e.target.value)
                         }
-                        className="w-full px-4 py-2.5 rounded-lg text-sm border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 hover:border-primary/50 bg-white transition-all"
-                        placeholder="e.g., Calories"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-semibold text-dark mb-2">
-                        Value
-                      </label>
-                      <input
-                        type="text"
-                        value={nutrition.value}
-                        onChange={(e) =>
-                          handleNutritionChange(index, "value", e.target.value)
-                        }
-                        className="w-full px-4 py-2.5 rounded-lg text-sm border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 hover:border-primary/50 bg-white transition-all"
-                        placeholder="e.g., 450"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-semibold text-dark mb-2">
-                        Unit
-                      </label>
-                      <input
-                        type="text"
-                        value={nutrition.unit}
-                        onChange={(e) =>
-                          handleNutritionChange(index, "unit", e.target.value)
-                        }
-                        className="w-full px-4 py-2.5 rounded-lg text-sm border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 hover:border-primary/50 bg-white transition-all"
-                        placeholder="e.g., kcal"
+                        className="w-full pl-8 pr-4 py-2.5 rounded-lg text-sm border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 hover:border-primary/50 bg-white transition-all"
+                        placeholder="e.g., Calories, Protein"
                       />
                     </div>
                   </div>
-                  {formData.nutritionInfo.length > 1 && (
-                    <div className="flex justify-end mt-4">
+
+                  {/* Value */}
+                  <div>
+                    <label className="sm:hidden block text-xs font-bold text-dark-gray mb-1.5 uppercase tracking-wider">
+                      Amount
+                    </label>
+                    <input
+                      type="text"
+                      value={nutrition.value}
+                      onChange={(e) =>
+                        handleNutritionChange(index, "value", e.target.value)
+                      }
+                      className="w-full px-4 py-2.5 rounded-lg text-sm border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 hover:border-primary/50 bg-white transition-all font-mono"
+                      placeholder="450"
+                    />
+                  </div>
+
+                  {/* Unit */}
+                  <div>
+                    <label className="sm:hidden block text-xs font-bold text-dark-gray mb-1.5 uppercase tracking-wider">
+                      Unit
+                    </label>
+                    <input
+                      type="text"
+                      value={nutrition.unit}
+                      onChange={(e) =>
+                        handleNutritionChange(index, "unit", e.target.value)
+                      }
+                      className="w-full px-4 py-2.5 rounded-lg text-sm border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 hover:border-primary/50 bg-white transition-all"
+                      placeholder="kcal"
+                    />
+                  </div>
+
+                  {/* Remove */}
+                  <div className="flex sm:items-start items-center">
+                    {formData.nutritionInfo.length > 1 ? (
                       <button
                         type="button"
                         onClick={() => removeNutrition(index)}
-                        className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-red-500 to-red-600 text-white text-sm font-semibold hover:from-red-600 hover:to-red-700 transition-all whitespace-nowrap shadow-md hover:shadow-lg hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
+                        title="Remove row"
+                        className="w-full sm:w-9 h-9 rounded-lg bg-red-50 text-red-400 border-2 border-red-100 hover:bg-red-500 hover:text-white hover:border-red-500 transition-all flex items-center justify-center gap-2 sm:gap-0 text-sm font-semibold"
                       >
                         <Trash2 className="w-4 h-4" />
-                        Remove
+                        <span className="sm:hidden">Remove</span>
                       </button>
-                    </div>
-                  )}
+                    ) : (
+                      <div className="w-9 h-9" />
+                    )}
+                  </div>
                 </div>
               ))}
             </div>
+
+            {/* Preview pills */}
+            {formData.nutritionInfo.some((n) => n.label && n.value) && (
+              <div className="mt-5 pt-4 border-t border-gray-100">
+                <p className="text-xs font-bold text-dark-gray uppercase tracking-wider mb-2.5">
+                  Preview
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {formData.nutritionInfo
+                    .filter((n) => n.label && n.value)
+                    .map((n, i) => (
+                      <span
+                        key={i}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/5 border border-primary/20 text-sm"
+                      >
+                        <span className="font-semibold text-primary">
+                          {n.label}
+                        </span>
+                        <span className="text-primary/70 font-mono">
+                          {n.value}
+                          {n.unit}
+                        </span>
+                      </span>
+                    ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Add-ons Configuration */}

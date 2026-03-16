@@ -3,7 +3,6 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   expenses: [],
   categories: [
-    'Ingredients',
     'Utilities',
     'Salaries',
     'Rent',

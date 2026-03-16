@@ -8,7 +8,12 @@ import {
   ChevronsLeft,
   ChevronsRight,
   CupSoda,
+  CheckCircle,
+  AlertTriangle,
+  XCircle,
+  Layers,
 } from "lucide-react";
+import StatsCard from "../../components/admin/common/StatsCard";
 import ingredientsService from "../../services/ingredientsService";
 import purchasesService from "../../services/purchasesService";
 import wastageService from "../../services/wastageService";
@@ -181,62 +186,35 @@ const AdminStockReports = () => {
         </button>
       </div>
 
-      {/* Unified summary cards — 4 ingredient + 4 addon */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-        {/* Ingredient block */}
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-          <div className="flex items-center gap-2 mb-3">
-            <Package className="w-7 h-7 text-primary" />
-            <span className="font-semibold text-lg lg:text-xl text-dark">
-              Ingredients
-            </span>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div className="bg-gray-50 rounded-xl p-3 text-center">
-              <p className="text-2xl font-bold text-dark">{ingTotal}</p>
-              <p className="text-xs text-dark-gray mt-0.5">Total</p>
-            </div>
-            <div className="bg-green-50 rounded-xl p-3 text-center">
-              <p className="text-2xl font-bold text-green-700">{ingHealthy}</p>
-              <p className="text-xs text-dark-gray mt-0.5">In Stock</p>
-            </div>
-            <div className="bg-amber-50 rounded-xl p-3 text-center">
-              <p className="text-2xl font-bold text-amber-700">{ingLow}</p>
-              <p className="text-xs text-dark-gray mt-0.5">Low Stock</p>
-            </div>
-            <div className="bg-red-50 rounded-xl p-3 text-center">
-              <p className="text-2xl font-bold text-red-700">{ingOut}</p>
-              <p className="text-xs text-dark-gray mt-0.5">Out of Stock</p>
-            </div>
-          </div>
+      {/* Ingredients Stats */}
+      <div>
+        <div className="flex items-center gap-2 mb-3">
+          <Package className="w-7 h-7 text-primary" />
+          <h2 className="text-base font-bold text-dark uppercase tracking-wide">
+            Ingredients
+          </h2>
         </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <StatsCard icon={Layers} label="Total Ingredients" value={ingTotal} />
+          <StatsCard icon={CheckCircle} label="In Stock" value={ingHealthy} />
+          <StatsCard icon={AlertTriangle} label="Low Stock" value={ingLow} />
+          <StatsCard icon={XCircle} label="Out of Stock" value={ingOut} />
+        </div>
+      </div>
 
-        {/* Addon block */}
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-          <div className="flex items-center gap-2 mb-3">
-            <CupSoda className="w-7 h-7 text-primary" />
-            <span className="font-semibold text-lg lg:text-xl text-dark">
-              Addons
-            </span>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div className="bg-gray-50 rounded-xl p-3 text-center">
-              <p className="text-2xl font-bold text-dark">{addTotal}</p>
-              <p className="text-xs text-dark-gray mt-0.5">Total</p>
-            </div>
-            <div className="bg-green-50 rounded-xl p-3 text-center">
-              <p className="text-2xl font-bold text-green-700">{addHealthy}</p>
-              <p className="text-xs text-dark-gray mt-0.5">In Stock</p>
-            </div>
-            <div className="bg-amber-50 rounded-xl p-3 text-center">
-              <p className="text-2xl font-bold text-amber-700">{addLow}</p>
-              <p className="text-xs text-dark-gray mt-0.5">Low Stock</p>
-            </div>
-            <div className="bg-red-50 rounded-xl p-3 text-center">
-              <p className="text-2xl font-bold text-red-700">{addOut}</p>
-              <p className="text-xs text-dark-gray mt-0.5">Out of Stock</p>
-            </div>
-          </div>
+      {/* Addons Stats */}
+      <div>
+        <div className="flex items-center gap-2 mb-3">
+          <CupSoda className="w-7 h-7 text-primary" />
+          <h2 className="text-base font-bold text-dark uppercase tracking-wide">
+            Addons
+          </h2>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <StatsCard icon={Layers} label="Total Addons" value={addTotal} />
+          <StatsCard icon={CheckCircle} label="In Stock" value={addHealthy} />
+          <StatsCard icon={AlertTriangle} label="Low Stock" value={addLow} />
+          <StatsCard icon={XCircle} label="Out of Stock" value={addOut} />
         </div>
       </div>
 

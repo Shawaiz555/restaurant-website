@@ -23,6 +23,13 @@ import {
   TrendingDown,
   Tag,
   X,
+  Zap,
+  Users,
+  Home,
+  Megaphone,
+  MoreHorizontal,
+  ShoppingCart,
+  Wrench,
 } from "lucide-react";
 
 const AdminExpenses = () => {
@@ -42,7 +49,7 @@ const AdminExpenses = () => {
 
   const [formData, setFormData] = useState({
     date: new Date().toISOString().split("T")[0],
-    category: "Ingredients",
+    category: "Utilities",
     description: "",
     amount: "",
     paymentMethod: "Cash",
@@ -205,7 +212,7 @@ const AdminExpenses = () => {
   const resetForm = () => {
     setFormData({
       date: new Date().toISOString().split("T")[0],
-      category: "Ingredients",
+      category: "Utilities",
       description: "",
       amount: "",
       paymentMethod: "Cash",
@@ -468,23 +475,127 @@ const AdminExpenses = () => {
       {/* Category Breakdown */}
       {summary.byCategory && Object.keys(summary.byCategory).length > 0 && (
         <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-          <h2 className="text-xl font-bold text-dark mb-4">
-            Expense by Category (This Month)
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {Object.entries(summary.byCategory).map(([category, amount]) => (
-              <div
-                key={category}
-                className="bg-cream-light rounded-xl p-4 text-center"
-              >
-                <p className="text-xl text-dark-gray font-bold mb-1">
-                  {category}
-                </p>
-                <p className="text-md font-bold text-primary">
-                  {formatCurrency(amount)}
-                </p>
-              </div>
-            ))}
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="text-xl font-bold text-dark">
+                Expense by Category
+              </h2>
+              <p className="text-sm text-dark-gray mt-0.5">
+                All-time breakdown per category
+              </p>
+            </div>
+            <div className="bg-primary/10 px-4 py-2 rounded-xl">
+              <span className="text-sm font-bold text-primary">
+                {Object.keys(summary.byCategory).length} categories
+              </span>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+            {Object.entries(summary.byCategory).map(([category, amount]) => {
+              const totalAll = Object.values(summary.byCategory).reduce(
+                (s, v) => s + v,
+                0,
+              );
+              const pct =
+                totalAll > 0 ? Math.round((amount / totalAll) * 100) : 0;
+              const count = expenses.filter(
+                (e) => e.category === category,
+              ).length;
+              const categoryConfig = {
+                Utilities: {
+                  icon: Zap,
+                  gradient: "from-yellow-400 to-orange-400",
+                  bg: "bg-yellow-50",
+                  text: "text-yellow-600",
+                  bar: "bg-yellow-400",
+                },
+                Salaries: {
+                  icon: Users,
+                  gradient: "from-blue-400 to-indigo-500",
+                  bg: "bg-blue-50",
+                  text: "text-blue-600",
+                  bar: "bg-blue-400",
+                },
+                Rent: {
+                  icon: Home,
+                  gradient: "from-purple-400 to-pink-500",
+                  bg: "bg-purple-50",
+                  text: "text-purple-600",
+                  bar: "bg-purple-400",
+                },
+                Marketing: {
+                  icon: Megaphone,
+                  gradient: "from-green-400 to-teal-500",
+                  bg: "bg-green-50",
+                  text: "text-green-600",
+                  bar: "bg-green-400",
+                },
+                Supplies: {
+                  icon: ShoppingCart,
+                  gradient: "from-cyan-400 to-blue-400",
+                  bg: "bg-cyan-50",
+                  text: "text-cyan-600",
+                  bar: "bg-cyan-400",
+                },
+                Maintenance: {
+                  icon: Wrench,
+                  gradient: "from-rose-400 to-red-500",
+                  bg: "bg-rose-50",
+                  text: "text-rose-600",
+                  bar: "bg-rose-400",
+                },
+                Other: {
+                  icon: MoreHorizontal,
+                  gradient: "from-gray-400 to-slate-500",
+                  bg: "bg-gray-50",
+                  text: "text-gray-600",
+                  bar: "bg-gray-400",
+                },
+              };
+              const cfg = categoryConfig[category] || categoryConfig.Other;
+              const Icon = cfg.icon;
+              return (
+                <div
+                  key={category}
+                  className="group relative bg-white border-2 border-gray-100 hover:border-primary/20 rounded-2xl p-5 transition-all hover:shadow-lg hover:-translate-y-0.5"
+                >
+                  {/* Icon */}
+                  <div className="flex items-center justify-center mb-2">
+                    <div
+                      className={`w-11 h-11 rounded-xl bg-gradient-to-br ${cfg.gradient} flex items-center justify-center shadow-sm`}
+                    >
+                      <Icon className="w-5 h-5 text-white" />
+                    </div>
+                  </div>
+
+                  {/* Category name & count */}
+                  <p className="text-sm text-center font-semibold text-dark-gray mb-0.5">
+                    {category}
+                  </p>
+                  <p className="text-xs text-center text-gray-400 mb-1">
+                    {count} expense{count !== 1 ? "s" : ""}
+                  </p>
+
+                  {/* Amount */}
+                  <p className="text-lg text-center font-bold text-dark mb-1">
+                    {formatCurrency(amount)}
+                  </p>
+
+                  {/* Progress bar */}
+                  <div className="w-full bg-gray-100 rounded-full h-1.5 mb-1">
+                    <div
+                      className={`h-1.5 rounded-full ${cfg.bar} transition-all duration-500`}
+                      style={{ width: `${pct}%` }}
+                    />
+                  </div>
+                  <p
+                    className={`text-xs text-center font-semibold ${cfg.text}`}
+                  >
+                    {pct}% of total
+                  </p>
+                </div>
+              );
+            })}
           </div>
         </div>
       )}
@@ -557,13 +668,13 @@ const AdminExpenses = () => {
                       <div className="flex gap-2">
                         <button
                           onClick={() => handleEdit(expense)}
-                          className="text-primary bg-primary px-7 py-1 rounded-xl hover:bg-primary/80 text-sm font-semibold transition-colors"
+                          className="text-white bg-primary px-7 py-1 rounded-xl hover:bg-primary/80 text-sm font-semibold transition-colors"
                         >
                           Edit
                         </button>
                         <button
                           onClick={() => handleDeleteClick(expense)}
-                          className="text-red-600 bg-red-600 px-7 py-1 rounded-xl hover:bg-red-800 text-sm font-semibold transition-colors"
+                          className="text-white bg-red-600 px-7 py-1 rounded-xl hover:bg-red-800 text-sm font-semibold transition-colors"
                         >
                           Delete
                         </button>

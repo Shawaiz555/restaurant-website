@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import SearchBar from "../../components/admin/common/SearchBar";
 import ConfirmModal from "../../components/admin/common/ConfirmModal";
+import StatsCard from "../../components/admin/common/StatsCard";
 import {
   setOrders,
   updateOrderStatus,
@@ -139,61 +140,11 @@ const AdminOrders = () => {
 
       {/* Stats Row */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        <div className="bg-white rounded-2xl p-5 shadow-lg border-2 border-gray-100 hover:shadow-xl hover:border-primary/30 transition-all duration-300 text-center">
-          <div className="w-16 h-16 mx-auto bg-gradient-to-br from-primary via-primary-light to-primary/80 rounded-xl flex items-center justify-center mb-3">
-            <Package className="w-9 h-9 text-white" />
-          </div>
-          <p className="text-xs sm:text-sm text-dark-gray mb-2 font-semibold uppercase tracking-wide">
-            Total Orders
-          </p>
-          <p className="text-2xl sm:text-3xl font-bold text-primary">
-            {stats.total}
-          </p>
-        </div>
-        <div className="bg-white rounded-2xl p-5 shadow-lg border-2 hover:shadow-xl hover:border-primary/30 transition-all duration-300 text-center">
-          <div className="w-16 h-16 mx-auto bg-gradient-to-br from-primary via-primary-light to-primary/80 rounded-xl flex items-center justify-center mb-3 shadow-sm">
-            <Clock className="w-9 h-9 text-white" />
-          </div>
-          <p className="text-xs sm:text-sm text-dark-gray mb-2 font-semibold uppercase tracking-wide">
-            Pending
-          </p>
-          <p className="text-2xl sm:text-3xl font-bold text-primary">
-            {stats.pending}
-          </p>
-        </div>
-        <div className="bg-white rounded-2xl p-5 shadow-lg border-2 hover:shadow-xl hover:border-primary/30 transition-all duration-300 text-center">
-          <div className="w-16 h-16 mx-auto bg-gradient-to-br from-primary via-primary-light to-primary/80 rounded-xl flex items-center justify-center mb-3 shadow-sm">
-            <RefreshCw className="w-9 h-9 text-white" />
-          </div>
-          <p className="text-xs sm:text-sm text-dark-gray mb-2 font-semibold uppercase tracking-wide">
-            Processing
-          </p>
-          <p className="text-2xl sm:text-3xl font-bold text-primary">
-            {stats.processing}
-          </p>
-        </div>
-        <div className="bg-white rounded-2xl p-5 shadow-lg border-2 hover:shadow-xl hover:border-primary/30 transition-all duration-300 text-center">
-          <div className="w-16 h-16 mx-auto bg-gradient-to-br from-primary via-primary-light to-primary/80 rounded-xl flex items-center justify-center mb-3 shadow-sm">
-            <CheckCircle className="w-9 h-9 text-white" />
-          </div>
-          <p className="text-xs sm:text-sm text-dark-gray mb-2 font-semibold uppercase tracking-wide">
-            Completed
-          </p>
-          <p className="text-2xl sm:text-3xl font-bold text-primary">
-            {stats.completed}
-          </p>
-        </div>
-        <div className="bg-white rounded-2xl p-5 shadow-lg border-2 hover:shadow-xl hover:border-primary/30 transition-all duration-300 text-center">
-          <div className="w-16 h-16 mx-auto bg-gradient-to-br from-primary via-primary-light to-primary/80 rounded-xl flex items-center justify-center mb-3 shadow-sm">
-            <XCircle className="w-9 h-9 text-white" />
-          </div>
-          <p className="text-xs sm:text-sm text-dark-gray mb-2 font-semibold uppercase tracking-wide">
-            Cancelled
-          </p>
-          <p className="text-2xl sm:text-3xl font-bold text-primary">
-            {stats.cancelled}
-          </p>
-        </div>
+        <StatsCard icon={Package}     label="Total Orders" value={stats.total}      />
+        <StatsCard icon={Clock}       label="Pending"      value={stats.pending}    />
+        <StatsCard icon={RefreshCw}   label="Processing"   value={stats.processing} />
+        <StatsCard icon={CheckCircle} label="Completed"    value={stats.completed}  />
+        <StatsCard icon={XCircle}     label="Cancelled"    value={stats.cancelled}  />
       </div>
 
       {/* Filters */}
