@@ -48,7 +48,8 @@ class ImageService {
   // Get image URL for GridFS image
   getImageUrl(imageId) {
     if (!imageId) return null;
-    return `http://localhost:8000/api/images/${imageId}`;
+    const base = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8000';
+    return `${base}/api/images/${imageId}`;
   }
 
   // Delete image from GridFS

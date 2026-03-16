@@ -44,8 +44,7 @@ const STATUS_BAR = {
   Cancelled: "from-red-400 to-red-500",
 };
 
-const formatCurrency = (amount) =>
-  `Rs ${parseFloat(amount || 0).toFixed(2)}`;
+const formatCurrency = (amount) => `Rs ${parseFloat(amount || 0).toFixed(2)}`;
 
 const formatDate = (dateString) =>
   new Date(dateString).toLocaleDateString("en-US", {
@@ -89,7 +88,10 @@ const AdminOrderDetail = () => {
     if (!order || updatingStatus) return;
     setUpdatingStatus(true);
     try {
-      const result = await ordersService.updateOrderStatus(order._id, newStatus);
+      const result = await ordersService.updateOrderStatus(
+        order._id,
+        newStatus,
+      );
       if (result.success) {
         setOrder((prev) => ({ ...prev, status: newStatus }));
         dispatch(updateOrderStatus({ orderId: order._id, status: newStatus }));
@@ -100,9 +102,7 @@ const AdminOrderDetail = () => {
           }),
         );
       } else {
-        dispatch(
-          showNotification({ type: "error", message: result.message }),
-        );
+        dispatch(showNotification({ type: "error", message: result.message }));
       }
     } catch {
       dispatch(
@@ -308,7 +308,12 @@ const AdminOrderDetail = () => {
           </div>
           <div className="space-y-3">
             {[
-              { icon: Hash, label: "Order ID", value: order.orderId, mono: true },
+              {
+                icon: Hash,
+                label: "Order ID",
+                value: order.orderId,
+                mono: true,
+              },
               {
                 icon: CreditCard,
                 label: "Payment Method",

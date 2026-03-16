@@ -68,14 +68,17 @@ const AdminDashboard = () => {
       const orderStats = (await analyticsService.getOrderStats()) || {}; // Ensure orderStats is an object
       const totalRevenue = ordersService.getTotalRevenue(orders); // Synchronous helper
       const expenseSummary = await expensesService.getSummary();
-      const reservationStats = await reservationsService.getReservationStats().catch(() => ({}));
+      const reservationStats = await reservationsService
+        .getReservationStats()
+        .catch(() => ({}));
 
       setStats({
         revenue: totalRevenue,
         orders: orderStats.total || 0,
         pendingOrders: orderStats.pending || 0,
         products: productsArray.length,
-        expenses: expenseSummary?.thisMonth?.total || expenseSummary?.total || 0,
+        expenses:
+          expenseSummary?.thisMonth?.total || expenseSummary?.total || 0,
         reservations: reservationStats.total || 0,
         pendingReservations: reservationStats.pending || 0,
       });
@@ -213,7 +216,9 @@ const AdminDashboard = () => {
           label="Total Reservations"
           value={stats.reservations}
           change={
-            stats.pendingReservations > 0 ? `${stats.pendingReservations} pending` : null
+            stats.pendingReservations > 0
+              ? `${stats.pendingReservations} pending`
+              : null
           }
           trend={stats.pendingReservations > 0 ? "up" : "neutral"}
           onClick={() => navigate("/admin/reservations")}

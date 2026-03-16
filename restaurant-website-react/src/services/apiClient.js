@@ -1,6 +1,6 @@
 class APIClient {
   constructor() {
-    this.baseURL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
+    this.baseURL = process.env.REACT_APP_API_URL || (process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:8000/api');
     this.accessToken = null;
   }
 

@@ -246,7 +246,10 @@ const AdminPurchases = () => {
               setShowForm(true);
               setTimeout(() => {
                 if (formRef.current) {
-                  window.scrollTo({ top: formRef.current.offsetTop - 80, behavior: "smooth" });
+                  window.scrollTo({
+                    top: formRef.current.offsetTop - 80,
+                    behavior: "smooth",
+                  });
                 }
               }, 100);
             }}
@@ -284,7 +287,10 @@ const AdminPurchases = () => {
 
       {/* Purchase Form */}
       {showForm && (
-        <div ref={formRef} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+        <div
+          ref={formRef}
+          className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6"
+        >
           <div className="flex items-center justify-between mb-5">
             <h2 className="text-lg font-semibold text-dark">
               Record New Purchase

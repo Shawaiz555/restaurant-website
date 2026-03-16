@@ -140,11 +140,19 @@ const AdminOrders = () => {
 
       {/* Stats Row */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        <StatsCard icon={Package}     label="Total Orders" value={stats.total}      />
-        <StatsCard icon={Clock}       label="Pending"      value={stats.pending}    />
-        <StatsCard icon={RefreshCw}   label="Processing"   value={stats.processing} />
-        <StatsCard icon={CheckCircle} label="Completed"    value={stats.completed}  />
-        <StatsCard icon={XCircle}     label="Cancelled"    value={stats.cancelled}  />
+        <StatsCard icon={Package} label="Total Orders" value={stats.total} />
+        <StatsCard icon={Clock} label="Pending" value={stats.pending} />
+        <StatsCard
+          icon={RefreshCw}
+          label="Processing"
+          value={stats.processing}
+        />
+        <StatsCard
+          icon={CheckCircle}
+          label="Completed"
+          value={stats.completed}
+        />
+        <StatsCard icon={XCircle} label="Cancelled" value={stats.cancelled} />
       </div>
 
       {/* Filters */}

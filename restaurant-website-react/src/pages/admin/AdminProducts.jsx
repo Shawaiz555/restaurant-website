@@ -141,10 +141,18 @@ const AdminProducts = () => {
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatsCard icon={Package} label="Total Products"    value={products.length}         />
-        <StatsCard icon={Tag}     label="Categories"        value={categories.length}       />
-        <StatsCard icon={Eye}     label="Showing"           value={filteredProducts.length} />
-        <StatsCard icon={Filter}  label="Selected Category" value={selectedCategory}        />
+        <StatsCard
+          icon={Package}
+          label="Total Products"
+          value={products.length}
+        />
+        <StatsCard icon={Tag} label="Categories" value={categories.length} />
+        <StatsCard icon={Eye} label="Showing" value={filteredProducts.length} />
+        <StatsCard
+          icon={Filter}
+          label="Selected Category"
+          value={selectedCategory}
+        />
       </div>
 
       {/* Filters */}

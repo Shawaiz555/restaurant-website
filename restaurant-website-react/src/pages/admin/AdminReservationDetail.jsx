@@ -159,7 +159,8 @@ const AdminReservationDetail = () => {
   }
 
   const res = reservation;
-  const tables = res.tableIds?.length > 0 ? res.tableIds : (res.tableId ? [res.tableId] : []);
+  const tables =
+    res.tableIds?.length > 0 ? res.tableIds : res.tableId ? [res.tableId] : [];
   const barClass = STATUS_BAR[res.status] || "from-gray-400 to-gray-500";
   const guestDetails = res.guestDetails;
   const hasGuests =
@@ -378,7 +379,10 @@ const AdminReservationDetail = () => {
           {tables.length > 0 ? (
             <div className="space-y-3">
               {tables.map((t) => (
-                <div key={t._id} className="flex items-center gap-4 bg-gradient-to-r from-cream-light to-cream rounded-2xl p-4 border border-primary/10">
+                <div
+                  key={t._id}
+                  className="flex items-center gap-4 bg-gradient-to-r from-cream-light to-cream rounded-2xl p-4 border border-primary/10"
+                >
                   <div className="w-14 h-14 bg-gradient-to-br from-primary to-primary-dark rounded-2xl flex items-center justify-center shadow-md shadow-primary/20 flex-shrink-0">
                     <span className="text-white font-bold text-lg">
                       #{t.tableNumber}

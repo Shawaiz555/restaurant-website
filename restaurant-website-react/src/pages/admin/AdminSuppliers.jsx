@@ -91,7 +91,10 @@ const AdminSuppliers = () => {
   const scrollToForm = () => {
     setTimeout(() => {
       if (formRef.current) {
-        window.scrollTo({ top: formRef.current.offsetTop - 80, behavior: "smooth" });
+        window.scrollTo({
+          top: formRef.current.offsetTop - 80,
+          behavior: "smooth",
+        });
       }
     }, 100);
   };

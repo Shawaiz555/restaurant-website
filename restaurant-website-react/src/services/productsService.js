@@ -191,7 +191,7 @@ class ProductsService {
     if (image.startsWith("http") || image.startsWith("data:")) return image;
 
     // Handle relative paths from public folder or API images
-    const baseURL = process.env.REACT_APP_API_URL || "http://localhost:8000/api";
+    const baseURL = process.env.REACT_APP_API_URL || (process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:8000/api');
     const baseServerURL = baseURL.replace("/api", "");
 
     if (image.startsWith("/api/images")) {

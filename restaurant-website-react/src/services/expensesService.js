@@ -72,7 +72,7 @@ class ExpensesService {
 
   // Utility methods
   getCategories() {
-    return ['Ingredients', 'Utilities', 'Salaries', 'Rent', 'Marketing', 'Other'];
+    return ['Utilities', 'Salaries', 'Rent', 'Marketing', 'Other'];
   }
 
   // Client-side helper for filtering by date range

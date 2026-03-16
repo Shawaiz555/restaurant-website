@@ -71,7 +71,10 @@ const AdminAddonStock = () => {
       dispatch(setAddonStockStats(statsRes.stats || {}));
     } catch {
       dispatch(
-        showNotification({ message: "Failed to load addon stocks", type: "error" })
+        showNotification({
+          message: "Failed to load addon stocks",
+          type: "error",
+        }),
       );
     } finally {
       dispatch(setLoading(false));
@@ -98,7 +101,7 @@ const AdminAddonStock = () => {
   const paginated = filtered.slice(startIndex, endIndex);
 
   const lowStockItems = addonStocks.filter(
-    (a) => a.currentStock <= a.minimumStock && a.minimumStock > 0
+    (a) => a.currentStock <= a.minimumStock && a.minimumStock > 0,
   );
 
   const getStockLabel = (a) => {
@@ -110,7 +113,10 @@ const AdminAddonStock = () => {
   const scrollToForm = () => {
     setTimeout(() => {
       if (formRef.current) {
-        window.scrollTo({ top: formRef.current.offsetTop - 80, behavior: "smooth" });
+        window.scrollTo({
+          top: formRef.current.offsetTop - 80,
+          behavior: "smooth",
+        });
       }
     }, 100);
   };
@@ -139,7 +145,9 @@ const AdminAddonStock = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.name.trim()) {
-      dispatch(showNotification({ message: "Addon name is required", type: "error" }));
+      dispatch(
+        showNotification({ message: "Addon name is required", type: "error" }),
+      );
       return;
     }
     setSaving(true);
@@ -147,18 +155,27 @@ const AdminAddonStock = () => {
       if (editingId) {
         const res = await addonStockService.updateAddonStock(editingId, form);
         dispatch(updateAddonStock(res.addonStock));
-        dispatch(showNotification({ message: "Addon stock updated", type: "success" }));
+        dispatch(
+          showNotification({ message: "Addon stock updated", type: "success" }),
+        );
       } else {
         const res = await addonStockService.createAddonStock(form);
         dispatch(addAddonStock(res.addonStock));
-        dispatch(showNotification({ message: "Addon stock added", type: "success" }));
+        dispatch(
+          showNotification({ message: "Addon stock added", type: "success" }),
+        );
       }
       setShowForm(false);
       setForm(EMPTY_FORM);
       setEditingId(null);
       loadData();
     } catch (err) {
-      dispatch(showNotification({ message: err.message || "Save failed", type: "error" }));
+      dispatch(
+        showNotification({
+          message: err.message || "Save failed",
+          type: "error",
+        }),
+      );
     } finally {
       setSaving(false);
     }
@@ -167,12 +184,21 @@ const AdminAddonStock = () => {
   const handleDelete = async () => {
     if (!deleteTarget) return;
     try {
-      await addonStockService.deleteAddonStock(deleteTarget.id || deleteTarget._id);
+      await addonStockService.deleteAddonStock(
+        deleteTarget.id || deleteTarget._id,
+      );
       dispatch(deleteAddonStock(deleteTarget.id || deleteTarget._id));
-      dispatch(showNotification({ message: "Addon stock deleted", type: "success" }));
+      dispatch(
+        showNotification({ message: "Addon stock deleted", type: "success" }),
+      );
       loadData();
     } catch {
-      dispatch(showNotification({ message: "Failed to delete addon stock", type: "error" }));
+      dispatch(
+        showNotification({
+          message: "Failed to delete addon stock",
+          type: "error",
+        }),
+      );
     } finally {
       setDeleteTarget(null);
     }
@@ -221,9 +247,21 @@ const AdminAddonStock = () => {
 
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatsCard label="Total Addons" value={stats.total || 0} icon={CupSoda} />
-        <StatsCard label="Low Stock" value={stats.lowStock || 0} icon={AlertTriangle} />
-        <StatsCard label="Out of Stock" value={stats.outOfStock || 0} icon={AlertTriangle} />
+        <StatsCard
+          label="Total Addons"
+          value={stats.total || 0}
+          icon={CupSoda}
+        />
+        <StatsCard
+          label="Low Stock"
+          value={stats.lowStock || 0}
+          icon={AlertTriangle}
+        />
+        <StatsCard
+          label="Out of Stock"
+          value={stats.outOfStock || 0}
+          icon={AlertTriangle}
+        />
         <StatsCard label="Types" value={addonTypes.length} icon={CupSoda} />
       </div>
 
@@ -261,7 +299,9 @@ const AdminAddonStock = () => {
         >
           <option value="All">All Types</option>
           {addonTypes.map((t) => (
-            <option key={t} value={t}>{t}</option>
+            <option key={t} value={t}>
+              {t}
+            </option>
           ))}
         </select>
       </div>
@@ -277,7 +317,10 @@ const AdminAddonStock = () => {
               {editingId ? "Edit Addon Stock" : "Add Addon Stock"}
             </h2>
             <button
-              onClick={() => { setShowForm(false); setEditingId(null); }}
+              onClick={() => {
+                setShowForm(false);
+                setEditingId(null);
+              }}
               className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400"
             >
               <X className="w-4 h-4" />
@@ -306,11 +349,15 @@ const AdminAddonStock = () => {
               </label>
               <select
                 value={form.addonType}
-                onChange={(e) => setForm({ ...form, addonType: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, addonType: e.target.value })
+                }
                 className="w-full px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm bg-white"
               >
                 {addonTypes.map((t) => (
-                  <option key={t} value={t}>{t}</option>
+                  <option key={t} value={t}>
+                    {t}
+                  </option>
                 ))}
               </select>
             </div>
@@ -324,7 +371,9 @@ const AdminAddonStock = () => {
                 className="w-full px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm bg-white"
               >
                 {units.map((u) => (
-                  <option key={u} value={u}>{u}</option>
+                  <option key={u} value={u}>
+                    {u}
+                  </option>
                 ))}
               </select>
             </div>
@@ -338,7 +387,10 @@ const AdminAddonStock = () => {
                 step="1"
                 value={form.currentStock}
                 onChange={(e) =>
-                  setForm({ ...form, currentStock: parseFloat(e.target.value) || 0 })
+                  setForm({
+                    ...form,
+                    currentStock: parseFloat(e.target.value) || 0,
+                  })
                 }
                 className="w-full px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm"
               />
@@ -353,7 +405,10 @@ const AdminAddonStock = () => {
                 step="1"
                 value={form.minimumStock}
                 onChange={(e) =>
-                  setForm({ ...form, minimumStock: parseFloat(e.target.value) || 0 })
+                  setForm({
+                    ...form,
+                    minimumStock: parseFloat(e.target.value) || 0,
+                  })
                 }
                 className="w-full px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm"
               />
@@ -368,7 +423,10 @@ const AdminAddonStock = () => {
                 step="1"
                 value={form.costPerUnit}
                 onChange={(e) =>
-                  setForm({ ...form, costPerUnit: parseFloat(e.target.value) || 0 })
+                  setForm({
+                    ...form,
+                    costPerUnit: parseFloat(e.target.value) || 0,
+                  })
                 }
                 className="w-full px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm"
               />
@@ -380,11 +438,18 @@ const AdminAddonStock = () => {
                 className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-primary to-primary-dark text-white font-medium shadow-sm hover:shadow-md transition-all disabled:opacity-60"
               >
                 <Save className="w-4 h-4" />
-                {saving ? "Saving..." : editingId ? "Update Addon" : "Add Addon"}
+                {saving
+                  ? "Saving..."
+                  : editingId
+                    ? "Update Addon"
+                    : "Add Addon"}
               </button>
               <button
                 type="button"
-                onClick={() => { setShowForm(false); setEditingId(null); }}
+                onClick={() => {
+                  setShowForm(false);
+                  setEditingId(null);
+                }}
                 className="px-5 py-2.5 rounded-xl border border-gray-200 text-dark-gray hover:bg-gray-50 transition-colors"
               >
                 Cancel
@@ -397,7 +462,9 @@ const AdminAddonStock = () => {
       {/* Table */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
         {loading ? (
-          <div className="p-12 text-center text-dark-gray">Loading addon stocks...</div>
+          <div className="p-12 text-center text-dark-gray">
+            Loading addon stocks...
+          </div>
         ) : filtered.length === 0 ? (
           <div className="p-12 text-center">
             <CupSoda className="w-12 h-12 text-gray-300 mx-auto mb-3" />
@@ -413,7 +480,9 @@ const AdminAddonStock = () => {
                   {startIndex + 1}–{Math.min(endIndex, filtered.length)}
                 </span>{" "}
                 of{" "}
-                <span className="font-semibold text-dark">{filtered.length}</span>{" "}
+                <span className="font-semibold text-dark">
+                  {filtered.length}
+                </span>{" "}
                 addons
               </p>
               <div className="flex items-center gap-2">
@@ -422,7 +491,10 @@ const AdminAddonStock = () => {
                 </label>
                 <select
                   value={itemsPerPage}
-                  onChange={(e) => { setItemsPerPage(Number(e.target.value)); setCurrentPage(1); }}
+                  onChange={(e) => {
+                    setItemsPerPage(Number(e.target.value));
+                    setCurrentPage(1);
+                  }}
                   className="px-3 py-1.5 rounded-lg border border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm bg-white font-medium"
                 >
                   <option value={5}>5</option>
@@ -436,37 +508,68 @@ const AdminAddonStock = () => {
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-gray-100 bg-gray-50/50">
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-dark-gray uppercase tracking-wide">Name</th>
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-dark-gray uppercase tracking-wide">Type</th>
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-dark-gray uppercase tracking-wide">Unit</th>
-                    <th className="text-right px-4 py-3 text-xs font-semibold text-dark-gray uppercase tracking-wide">Current Stock</th>
-                    <th className="text-right px-4 py-3 text-xs font-semibold text-dark-gray uppercase tracking-wide">Min Stock</th>
-                    <th className="text-right px-4 py-3 text-xs font-semibold text-dark-gray uppercase tracking-wide">Cost/Unit</th>
-                    <th className="text-center px-4 py-3 text-xs font-semibold text-dark-gray uppercase tracking-wide">Status</th>
-                    <th className="text-right px-4 py-3 text-xs font-semibold text-dark-gray uppercase tracking-wide">Actions</th>
+                    <th className="text-left px-4 py-3 text-xs font-semibold text-dark-gray uppercase tracking-wide">
+                      Name
+                    </th>
+                    <th className="text-left px-4 py-3 text-xs font-semibold text-dark-gray uppercase tracking-wide">
+                      Type
+                    </th>
+                    <th className="text-left px-4 py-3 text-xs font-semibold text-dark-gray uppercase tracking-wide">
+                      Unit
+                    </th>
+                    <th className="text-right px-4 py-3 text-xs font-semibold text-dark-gray uppercase tracking-wide">
+                      Current Stock
+                    </th>
+                    <th className="text-right px-4 py-3 text-xs font-semibold text-dark-gray uppercase tracking-wide">
+                      Min Stock
+                    </th>
+                    <th className="text-right px-4 py-3 text-xs font-semibold text-dark-gray uppercase tracking-wide">
+                      Cost/Unit
+                    </th>
+                    <th className="text-center px-4 py-3 text-xs font-semibold text-dark-gray uppercase tracking-wide">
+                      Status
+                    </th>
+                    <th className="text-right px-4 py-3 text-xs font-semibold text-dark-gray uppercase tracking-wide">
+                      Actions
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-50">
                   {paginated.map((a) => (
-                    <tr key={a.id} className="hover:bg-gray-50/50 transition-colors">
-                      <td className="px-4 py-3 font-medium text-dark text-sm">{a.name}</td>
+                    <tr
+                      key={a.id}
+                      className="hover:bg-gray-50/50 transition-colors"
+                    >
+                      <td className="px-4 py-3 font-medium text-dark text-sm">
+                        {a.name}
+                      </td>
                       <td className="px-4 py-3 text-sm">
-                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold border ${typeColor[a.addonType] || "bg-gray-100 text-gray-700 border-gray-200"}`}>
+                        <span
+                          className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold border ${typeColor[a.addonType] || "bg-gray-100 text-gray-700 border-gray-200"}`}
+                        >
                           {a.addonType}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-sm text-dark-gray">{a.unit}</td>
-                      <td className="px-4 py-3 text-right text-sm font-semibold text-dark">{a.currentStock}</td>
-                      <td className="px-4 py-3 text-right text-sm text-dark-gray">{a.minimumStock}</td>
-                      <td className="px-4 py-3 text-right text-sm text-dark-gray">Rs. {a.costPerUnit}</td>
+                      <td className="px-4 py-3 text-sm text-dark-gray">
+                        {a.unit}
+                      </td>
+                      <td className="px-4 py-3 text-right text-sm font-semibold text-dark">
+                        {a.currentStock}
+                      </td>
+                      <td className="px-4 py-3 text-right text-sm text-dark-gray">
+                        {a.minimumStock}
+                      </td>
+                      <td className="px-4 py-3 text-right text-sm text-dark-gray">
+                        Rs. {a.costPerUnit}
+                      </td>
                       <td className="px-4 py-3 text-center">
                         <span
                           className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold border ${
                             a.currentStock === 0
                               ? "bg-red-100 text-red-800 border-red-200"
                               : a.currentStock <= a.minimumStock
-                              ? "bg-yellow-100 text-yellow-800 border-yellow-200"
-                              : "bg-green-100 text-green-800 border-green-200"
+                                ? "bg-yellow-100 text-yellow-800 border-yellow-200"
+                                : "bg-green-100 text-green-800 border-green-200"
                           }`}
                         >
                           {getStockLabel(a)}
@@ -531,9 +634,17 @@ const AdminAddonStock = () => {
                             {page}
                           </button>
                         );
-                      } else if (page === currentPage - 2 || page === currentPage + 2) {
+                      } else if (
+                        page === currentPage - 2 ||
+                        page === currentPage + 2
+                      ) {
                         return (
-                          <span key={page} className="px-1 text-dark-gray font-bold">...</span>
+                          <span
+                            key={page}
+                            className="px-1 text-dark-gray font-bold"
+                          >
+                            ...
+                          </span>
                         );
                       }
                       return null;
