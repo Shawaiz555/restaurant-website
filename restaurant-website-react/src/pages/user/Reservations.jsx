@@ -554,7 +554,7 @@ const Reservations = () => {
                     value={selectedDate}
                     min={getTodayStr()}
                     onChange={(e) => setSelectedDate(e.target.value)}
-                    className="w-full px-4 sm:px-6 py-4 sm:py-5 rounded-xl sm:rounded-2xl border-2 border-gray-100 bg-gray-50 focus:border-primary focus:bg-white focus:outline-none transition-all text-dark text-sm sm:text-md cursor-pointer"
+                    className="w-full px-4 sm:px-6 py-4 sm:py-5 rounded-xl sm:rounded-2xl border-2 border-gray-100 bg-gray-50 focus:border-primary focus:bg-white focus:outline-none transition-all text-black text-sm sm:text-md cursor-pointer"
                   />
                 </div>
               </div>
@@ -1519,7 +1519,7 @@ const Reservations = () => {
                       Special Requests
                     </h4>
                     <div
-                      className={`rounded-2xl p-6 border ${confirmedReservation.specialRequests ? "bg-primary/5 border-primary/10" : "bg-gray-50 border-gray-100"}`}
+                      className={`rounded-2xl p-6 border ${confirmedReservation.specialRequests ? "bg-gray-50 border-gray-100" : "bg-gray-50 border-gray-100"}`}
                     >
                       <p className="text-sm font-medium text-dark leading-relaxed italic">
                         {confirmedReservation.specialRequests ||

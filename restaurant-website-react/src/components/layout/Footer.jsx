@@ -51,7 +51,7 @@ const Footer = () => {
   return (
     <footer
       id="contact"
-      className="bg-gradient-to-br from-white via-cream-light to-white py-16 lg:py-20"
+      className="bg-gradient-to-br from-white via-cream-light to-white py-10 lg:py-20"
     >
       <div className="container mx-auto px-6 sm:px-6 lg:px-10 xl:px-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
@@ -91,7 +91,7 @@ const Footer = () => {
           </div>
 
           {/* Quick Links */}
-          <div className="py-10">
+          <div className="py-1 md:py-10">
             <h4 className="font-sans font-bold text-xl mb-6 text-dark">
               Quick Links
             </h4>
@@ -140,7 +140,7 @@ const Footer = () => {
           </div>
 
           {/* Our Services */}
-          <div className="py-10">
+          <div className="py-1 md:py-10">
             <h4 className="font-sans font-bold text-xl mb-6 text-dark">
               Our Services
             </h4>
@@ -165,7 +165,7 @@ const Footer = () => {
           </div>
 
           {/* Contact Info */}
-          <div className="py-10">
+          <div className="py-1 md:py-10">
             <h4 className="font-sans font-bold text-xl mb-6 text-dark">
               Contact Us
             </h4>
@@ -210,26 +210,6 @@ const Footer = () => {
             <p className="text-dark-gray text-center md:text-left">
               © 2026 Bites Restaurant. All rights reserved.
             </p>
-            <div className="flex gap-6 text-sm">
-              <a
-                href="/"
-                className="text-dark-gray hover:text-primary transition-colors"
-              >
-                Privacy Policy
-              </a>
-              <a
-                href="/"
-                className="text-dark-gray hover:text-primary transition-colors"
-              >
-                Terms of Service
-              </a>
-              <a
-                href="/"
-                className="text-dark-gray hover:text-primary transition-colors"
-              >
-                Refund Policy
-              </a>
-            </div>
           </div>
         </div>
       </div>

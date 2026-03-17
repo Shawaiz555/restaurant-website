@@ -259,14 +259,14 @@ const MenuSection = () => {
         </div>
 
         {/* View Full Menu Button */}
-        <div className="text-center mt-8">
+        <div className="text-center mt-3">
           <button
             onClick={() => navigate("/menu")}
-            className="group relative bg-primary text-white hover:bg-primary-dark px-12 py-5 rounded-2xl font-bold text-lg transition-all shadow-2xl hover:shadow-primary/40 hover:scale-105 flex items-center gap-3 mx-auto overflow-hidden"
+            className="group relative bg-primary text-white hover:bg-primary-dark px-12 py-4 rounded-2xl font-bold text-md transition-all shadow-2xl hover:shadow-primary/40 hover:scale-95 flex items-center gap-3 mx-auto overflow-hidden"
           >
             <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
             <UtensilsCrossed className="w-6 h-6" />
-            <span className="relative">View Complete Menu</span>
+            <span className="relative">View Menu</span>
             <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
           </button>
         </div>

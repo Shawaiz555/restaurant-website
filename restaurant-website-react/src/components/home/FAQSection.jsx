@@ -96,7 +96,7 @@ const FAQSection = () => {
               >
                 <button
                   onClick={() => toggleFAQ(index)}
-                  className="w-full p-3 py-3 lg:p-6 lg:py-5 text-left flex items-start justify-between gap-4 group"
+                  className="w-full p-2 py-3 lg:p-6 lg:py-5 text-left flex items-start justify-between gap-4 group"
                 >
                   <div className="flex items-start gap-4 flex-1">
                     <div
@@ -110,7 +110,7 @@ const FAQSection = () => {
                     </div>
                     <div className="flex-1">
                       <h3
-                        className={`text-md transition-colors ${
+                        className={`text-sm sm:text-md transition-colors ${
                           openIndex === index
                             ? "text-primary"
                             : "text-dark group-hover:text-primary"
@@ -138,10 +138,10 @@ const FAQSection = () => {
                       : "max-h-0 opacity-0"
                   }`}
                 >
-                  <div className="px-6 lg:px-8 pb-6 lg:pb-8">
+                  <div className="px-3 lg:px-8 pb-3 lg:pb-8">
                     <div className="lg:pl-6 lg:pr-4">
                       <div className="bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl p-6">
-                        <p className="text-dark-gray text-base lg:text-md leading-relaxed">
+                        <p className="text-dark-gray text-sm sm:text-md leading-relaxed">
                           {faq.answer}
                         </p>
                       </div>

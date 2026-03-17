@@ -64,7 +64,7 @@ const Navbar = () => {
               <img
                 src="/assets/images/BitesLogo.png"
                 alt="Bites Restaurant Logo"
-                className="h-20 w-auto lg:w-40 lg:h-16 xl:w-48 xl:h-20 object-contain transition-all"
+                className="h-16 w-auto sm:h-20 sm:w-auto lg:w-40 lg:h-16 xl:w-48 xl:h-20 object-contain transition-all"
               />
             </Link>
 
@@ -139,7 +139,7 @@ const Navbar = () => {
 
                 {/* Profile Dropdown */}
                 {showProfileDropdown && (
-                  <div className="absolute -right-4 sm:right-0 left-auto mt-3 w-64 sm:w-72 max-w-[90vw] bg-white rounded-2xl shadow-2xl border-2 border-gray-100 z-50 overflow-hidden sm:animate-dropdown">
+                  <div className="absolute -right-14 sm:right-0 left-auto mt-3 w-64 sm:w-72 max-w-[90vw] bg-white rounded-2xl shadow-2xl border-2 border-gray-100 z-50 overflow-hidden sm:animate-dropdown">
                     {isAuthenticated ? (
                       <>
                         {/* User Info Header */}
@@ -327,42 +327,42 @@ const Navbar = () => {
           <Link
             to="/"
             onClick={() => setShowMobileMenu(false)}
-            className="text-dark hover:text-primary transition-colors font-medium text-lg text-left"
+            className="text-dark hover:text-primary transition-colors font-medium text-md text-left"
           >
             Home
           </Link>
           <Link
             to="/menu"
             onClick={() => setShowMobileMenu(false)}
-            className="text-dark hover:text-primary transition-colors font-medium text-lg text-left"
+            className="text-dark hover:text-primary transition-colors font-medium text-md text-left"
           >
             Menu
           </Link>
           <Link
             to="/about"
             onClick={() => setShowMobileMenu(false)}
-            className="text-dark hover:text-primary transition-colors font-medium text-lg text-left"
+            className="text-dark hover:text-primary transition-colors font-medium text-md text-left"
           >
             About
           </Link>
           <Link
             to="/services"
             onClick={() => setShowMobileMenu(false)}
-            className="text-dark hover:text-primary transition-colors font-medium text-lg text-left"
+            className="text-dark hover:text-primary transition-colors font-medium text-md text-left"
           >
             Services
           </Link>
           <Link
             to="/deals"
             onClick={() => setShowMobileMenu(false)}
-            className="text-dark hover:text-primary transition-colors font-medium text-lg text-left"
+            className="text-dark hover:text-primary transition-colors font-medium text-md text-left"
           >
             Deals
           </Link>
           <Link
             to="/reservations"
             onClick={() => setShowMobileMenu(false)}
-            className="flex items-center gap-2 bg-gradient-to-r from-primary to-primary-dark text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg transition-all text-base w-full justify-center"
+            className="flex items-center gap-2 bg-gradient-to-r from-primary to-primary-dark text-white px-5 py-3 rounded-xl font-semibold hover:shadow-lg transition-all text-base max-w-md justify-center"
           >
             <CalendarCheck className="w-5 h-5" />
             Reserve a Table

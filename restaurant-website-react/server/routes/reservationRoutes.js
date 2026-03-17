@@ -25,8 +25,9 @@ const optionalAuth = async (req, res, next) => {
         const token = authHeader.split(' ')[1];
         const decoded = verifyAccessToken(token);
         req.user = await User.findById(decoded.userId).select('-password');
-      } catch {
-        // Token invalid — treat as guest, continue
+      } catch (tokenErr) {
+        // Token invalid/expired — treat as guest, continue
+        console.warn('optionalAuth: token invalid, treating as guest:', tokenErr.message);
         req.user = null;
       }
     }

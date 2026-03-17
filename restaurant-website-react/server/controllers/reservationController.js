@@ -272,7 +272,14 @@ const getReservationStats = async (req, res) => {
 // @route   GET /api/reservations/my
 const getMyReservations = async (req, res) => {
   try {
-    const reservations = await Reservation.find({ userId: req.user._id })
+    // Match by userId OR by email — catches reservations saved with userId:null
+    // when the token expired silently during optionalAuth on creation
+    const reservations = await Reservation.find({
+      $or: [
+        { userId: req.user._id },
+        { email: req.user.email.toLowerCase() },
+      ],
+    })
       .populate('tableId', 'tableNumber name capacity location')
       .populate('tableIds', 'tableNumber name capacity location')
       .sort({ reservationDate: -1, reservationTime: -1 });

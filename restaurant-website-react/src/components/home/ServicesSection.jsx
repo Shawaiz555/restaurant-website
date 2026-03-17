@@ -109,7 +109,7 @@ const ServicesSection = () => {
 
             <div className="flex gap-4 pt-2">
               <Link to="/about">
-                <button className="group bg-primary text-white hover:bg-primary-dark px-6 lg:px-8 xl:px-10 py-2 lg:py-3 rounded-2xl font-bold transition-all shadow-xl hover:shadow-primary/30 hover:scale-105 flex items-center gap-2">
+                <button className="group bg-primary text-white hover:bg-primary-dark px-6 lg:px-8 xl:px-10 py-3 lg:py-3 rounded-2xl font-bold transition-all shadow-xl hover:shadow-primary/30 hover:scale-105 flex items-center gap-2">
                   Learn About Us
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </button>
