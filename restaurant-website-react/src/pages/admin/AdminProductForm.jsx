@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import productsService from "../../services/productsService";
 import ingredientsService from "../../services/ingredientsService";
+import recipesService from "../../services/recipesService";
 import { showNotification } from "../../store/slices/notificationSlice";
 import {
   Edit3,
@@ -28,7 +29,6 @@ import {
   Check,
   FolderOpen,
   AlertCircle,
-  Search,
   Hash,
   FlaskConical,
 } from "lucide-react";
@@ -47,7 +47,6 @@ const AdminProductForm = () => {
     basePrice: "",
     rating: 4,
     sizes: [{ name: "Regular", price: "", description: "" }],
-    ingredients: [""],
     nutritionInfo: [
       { label: "Calories", value: "", unit: "kcal" },
       { label: "Protein", value: "", unit: "g" },
@@ -62,14 +61,15 @@ const AdminProductForm = () => {
     },
   });
 
+  // Recipe ingredients: { ingredientId, ingredientName, unit, quantityRequired }
+  const [recipeIngredients, setRecipeIngredients] = useState([]);
+
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [showNewCategoryInput, setShowNewCategoryInput] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState("");
   const [existingCategories, setExistingCategories] = useState([]);
   const [availableIngredients, setAvailableIngredients] = useState([]);
-  const [openIngredientDropdown, setOpenIngredientDropdown] = useState(null);
-  const [ingredientSearches, setIngredientSearches] = useState({});
 
   const loadProduct = React.useCallback(async () => {
     setLoading(true);
@@ -101,7 +101,6 @@ const AdminProductForm = () => {
         setFormData({
           ...product,
           image: product.image || product.imageUrl || product.imageId || "",
-          ingredients: product.ingredients || [""],
           sizes: product.sizes || [
             { name: "Regular", price: "", description: "" },
           ],
@@ -113,6 +112,18 @@ const AdminProductForm = () => {
             showExtras: false,
           },
         });
+
+        // Load existing recipe for this product (if any)
+        try {
+          const recipeRes = await recipesService.getRecipeByProductId(id);
+          if (recipeRes?.recipe?.ingredients?.length) {
+            setRecipeIngredients(
+              recipeRes.recipe.ingredients.map((i) => ({ ...i })),
+            );
+          }
+        } catch {
+          // No recipe yet — that's fine, leave recipeIngredients empty
+        }
       } else {
         dispatch(
           showNotification({
@@ -224,47 +235,30 @@ const AdminProductForm = () => {
     }
   };
 
-  const handleIngredientChange = (index, value) => {
-    const newIngredients = [...formData.ingredients];
-    newIngredients[index] = value;
-    setFormData((prev) => ({ ...prev, ingredients: newIngredients }));
-  };
-
-  const addIngredient = () => {
-    setFormData((prev) => ({
+  const addRecipeIngredientRow = () => {
+    setRecipeIngredients((prev) => [
       ...prev,
-      ingredients: [...prev.ingredients, ""],
-    }));
+      { ingredientId: "", ingredientName: "", unit: "", quantityRequired: 0.5 },
+    ]);
   };
 
-  const removeIngredient = (index) => {
-    if (formData.ingredients.length > 1) {
-      const newIngredients = formData.ingredients.filter((_, i) => i !== index);
-      setFormData((prev) => ({ ...prev, ingredients: newIngredients }));
-    }
+  const updateRecipeRow = (idx, field, value) => {
+    setRecipeIngredients((prev) => {
+      const rows = [...prev];
+      rows[idx] = { ...rows[idx], [field]: value };
+      if (field === "ingredientId") {
+        const ing = availableIngredients.find((i) => (i._id || i.id) === value);
+        if (ing) {
+          rows[idx].ingredientName = ing.name;
+          rows[idx].unit = ing.unit;
+        }
+      }
+      return rows;
+    });
   };
 
-  // Ingredients not yet selected (for a given dropdown), filtered by its own search term
-  const getIngredientOptions = (currentIndex) => {
-    const selected = new Set(
-      formData.ingredients.filter((v, i) => i !== currentIndex && v !== ""),
-    );
-    const search = (ingredientSearches[currentIndex] || "").toLowerCase();
-    return availableIngredients.filter(
-      (ing) =>
-        !selected.has(ing.name) &&
-        (search === "" ||
-          ing.name.toLowerCase().includes(search) ||
-          (ing.category || "").toLowerCase().includes(search)),
-    );
-  };
-
-  const setIngredientSearch = (index, value) =>
-    setIngredientSearches((prev) => ({ ...prev, [index]: value }));
-
-  const closeIngredientDropdown = () => {
-    setOpenIngredientDropdown(null);
-    setIngredientSearches({});
+  const removeRecipeRow = (idx) => {
+    setRecipeIngredients((prev) => prev.filter((_, i) => i !== idx));
   };
 
   const handleImageChange = async (e) => {
@@ -351,7 +345,10 @@ const AdminProductForm = () => {
       ...formData,
       basePrice: parseFloat(formData.basePrice),
       rating: parseFloat(formData.rating),
-      ingredients: formData.ingredients.filter((ing) => ing.trim() !== ""),
+      // Derive ingredient display names from recipe rows
+      ingredients: recipeIngredients
+        .filter((r) => r.ingredientName)
+        .map((r) => r.ingredientName),
       nutritionInfo: formData.nutritionInfo.filter(
         (n) => n.label.trim() !== "" && n.value.toString().trim() !== "",
       ),
@@ -370,6 +367,28 @@ const AdminProductForm = () => {
       }
 
       if (result.success) {
+        // Save recipe (even if empty — clears any previous recipe)
+        const productId = isEditMode ? id : result.product?._id;
+        if (productId) {
+          const validRecipeRows = recipeIngredients.filter(
+            (r) => r.ingredientId && r.quantityRequired > 0,
+          );
+          try {
+            await recipesService.saveRecipe({
+              productId,
+              ingredients: validRecipeRows,
+            });
+          } catch {
+            dispatch(
+              showNotification({
+                type: "warning",
+                message:
+                  "Product saved, but recipe could not be saved. Try again from the Recipes page.",
+              }),
+            );
+          }
+        }
+
         dispatch(
           showNotification({
             type: "success",
@@ -855,7 +874,7 @@ const AdminProductForm = () => {
             </div>
           </div>
 
-          {/* Ingredients */}
+          {/* Ingredients & Recipe */}
           <div className="bg-white rounded-xl lg:rounded-2xl p-5 sm:p-6 lg:p-8 shadow-xl border-2 border-gray-100 hover:border-primary/30 transition-all">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-5 sm:mb-6 pb-4 border-b-2 border-gray-100">
               <div className="flex items-center gap-3">
@@ -864,16 +883,17 @@ const AdminProductForm = () => {
                 </div>
                 <div>
                   <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-dark">
-                    Ingredients
+                    Ingredients & Recipe
                   </h2>
                   <p className="text-xs text-dark-gray">
-                    Select from available stock ingredients (display on menu)
+                    Define ingredient quantities for automatic stock deduction
+                    when orders are placed
                   </p>
                 </div>
               </div>
               <button
                 type="button"
-                onClick={addIngredient}
+                onClick={addRecipeIngredientRow}
                 className="w-full sm:w-auto px-5 py-2.5 rounded-lg bg-gradient-to-r from-primary to-primary-dark text-white text-sm font-semibold hover:from-primary-dark hover:to-primary transition-all shadow-md hover:shadow-lg hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
               >
                 <Plus className="w-4 h-4" />
@@ -891,132 +911,111 @@ const AdminProductForm = () => {
               </div>
             )}
 
-            {/* Click-outside overlay to close any open dropdown */}
-            {openIngredientDropdown !== null && (
-              <div
-                className="fixed inset-0 z-10"
-                onClick={closeIngredientDropdown}
-              />
-            )}
+            <p className="text-xs text-dark-gray mb-4 italic">
+              Optional — leave empty if stock tracking is not needed for this
+              dish.
+            </p>
 
-            <div className="grid grid-cols-1 gap-3 sm:gap-4">
-              {formData.ingredients.map((ingredient, index) => {
-                const isOpen = openIngredientDropdown === index;
-                const options = getIngredientOptions(index);
-                return (
+            {recipeIngredients.length === 0 ? (
+              <div className="text-center py-8 text-dark-gray text-sm border-2 border-dashed border-gray-200 rounded-xl">
+                No ingredients added. Click "Add Ingredient" to define recipe
+                quantities.
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {/* Column headers */}
+                <div className="hidden sm:grid sm:grid-cols-12 gap-2 px-2 mb-1">
+                  <div className="col-span-6 text-xs font-semibold text-dark-gray uppercase tracking-wider">
+                    Ingredient
+                  </div>
+                  <div className="col-span-3 text-xs font-semibold text-dark-gray uppercase tracking-wider">
+                    Qty Required
+                  </div>
+                  <div className="col-span-2 text-xs font-semibold text-dark-gray uppercase tracking-wider">
+                    Unit
+                  </div>
+                  <div className="col-span-1" />
+                </div>
+
+                {recipeIngredients.map((row, idx) => (
                   <div
-                    key={index}
-                    className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-stretch sm:items-center p-3 rounded-lg bg-gradient-to-r from-gray-50 to-white border-2 border-gray-200 hover:border-primary/50 transition-all"
+                    key={idx}
+                    className="grid grid-cols-1 sm:grid-cols-12 gap-2 items-center p-3 rounded-xl bg-gray-50 border border-gray-200 hover:border-primary/30 transition-all"
                   >
-                    <span className="w-7 h-7 bg-gradient-to-br from-primary to-primary-dark text-white rounded-lg flex items-center justify-center text-sm font-bold flex-shrink-0">
-                      {index + 1}
-                    </span>
-
-                    {/* Searchable dropdown */}
-                    <div className="relative flex-1">
-                      {/* Trigger button */}
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setOpenIngredientDropdown(isOpen ? null : index)
+                    {/* Ingredient select */}
+                    <div className="sm:col-span-6">
+                      <label className="sm:hidden block text-xs font-bold text-dark-gray mb-1 uppercase tracking-wider">
+                        Ingredient
+                      </label>
+                      <select
+                        value={row.ingredientId}
+                        onChange={(e) =>
+                          updateRecipeRow(idx, "ingredientId", e.target.value)
                         }
-                        className="w-full flex items-center justify-between gap-2 px-4 py-2.5 rounded-lg text-sm border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 hover:border-primary/50 bg-white transition-all text-left"
+                        className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary hover:border-primary/50 transition-all"
                       >
-                        <span
-                          className={ingredient ? "text-dark" : "text-gray-400"}
-                        >
-                          {ingredient || "— Select an ingredient —"}
-                        </span>
-                        <svg
-                          className={`w-4 h-4 text-gray-400 shrink-0 transition-transform ${isOpen ? "rotate-180" : ""}`}
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M19 9l-7 7-7-7"
-                          />
-                        </svg>
-                      </button>
-
-                      {/* Dropdown panel */}
-                      {isOpen && (
-                        <div className="absolute z-20 left-0 right-0 top-full mt-1 bg-white rounded-xl border-2 border-primary/30 shadow-2xl overflow-hidden">
-                          {/* Search input inside dropdown */}
-                          <div className="p-2 border-b border-gray-100">
-                            <div className="relative">
-                              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                              <input
-                                type="text"
-                                autoFocus
-                                value={ingredientSearches[index] || ""}
-                                onChange={(e) =>
-                                  setIngredientSearch(index, e.target.value)
-                                }
-                                placeholder="Search ingredients..."
-                                className="w-full pl-9 pr-4 py-2 rounded-lg border border-gray-200 focus:border-primary focus:outline-none text-sm bg-gray-50"
-                                onClick={(e) => e.stopPropagation()}
-                              />
-                            </div>
-                          </div>
-                          {/* Options list */}
-                          <ul className="max-h-52 overflow-y-auto py-1">
-                            {ingredient !== "" && (
-                              <li
-                                className="px-4 py-2 text-sm text-gray-400 italic cursor-pointer hover:bg-gray-50"
-                                onClick={() => {
-                                  handleIngredientChange(index, "");
-                                  closeIngredientDropdown();
-                                }}
-                              >
-                                — Clear selection —
-                              </li>
-                            )}
-                            {options.length === 0 ? (
-                              <li className="px-4 py-3 text-sm text-gray-400 text-center">
-                                No matches found
-                              </li>
-                            ) : (
-                              options.map((ing) => (
-                                <li
-                                  key={ing._id || ing.name}
-                                  onClick={() => {
-                                    handleIngredientChange(index, ing.name);
-                                    closeIngredientDropdown();
-                                  }}
-                                  className={`px-4 py-2.5 text-sm cursor-pointer flex items-center justify-between gap-2 hover:bg-primary/5 hover:text-primary transition-colors ${ingredient === ing.name ? "bg-primary/10 text-primary font-semibold" : "text-dark"}`}
-                                >
-                                  <span>{ing.name}</span>
-                                  {ing.category && (
-                                    <span className="text-xs text-gray-400 shrink-0">
-                                      {ing.category}
-                                    </span>
-                                  )}
-                                </li>
-                              ))
-                            )}
-                          </ul>
-                        </div>
-                      )}
+                        <option value="">Select ingredient...</option>
+                        {availableIngredients.map((ing) => (
+                          <option
+                            key={ing._id || ing.id}
+                            value={ing._id || ing.id}
+                          >
+                            {ing.name} ({ing.unit})
+                          </option>
+                        ))}
+                      </select>
                     </div>
 
-                    {formData.ingredients.length > 1 && (
+                    {/* Quantity */}
+                    <div className="sm:col-span-3">
+                      <label className="sm:hidden block text-xs font-bold text-dark-gray mb-1 uppercase tracking-wider">
+                        Qty Required
+                      </label>
+                      <input
+                        type="number"
+                        min="0.001"
+                        step="0.001"
+                        value={row.quantityRequired}
+                        onChange={(e) =>
+                          updateRecipeRow(
+                            idx,
+                            "quantityRequired",
+                            parseFloat(e.target.value) || 0,
+                          )
+                        }
+                        className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary hover:border-primary/50 transition-all bg-white"
+                      />
+                    </div>
+
+                    {/* Unit (read-only) */}
+                    <div className="sm:col-span-2">
+                      <label className="sm:hidden block text-xs font-bold text-dark-gray mb-1 uppercase tracking-wider">
+                        Unit
+                      </label>
+                      <input
+                        type="text"
+                        value={row.unit}
+                        readOnly
+                        placeholder="—"
+                        className="w-full px-3 py-2.5 rounded-xl border border-gray-100 bg-gray-100 text-sm text-dark-gray"
+                      />
+                    </div>
+
+                    {/* Remove */}
+                    <div className="sm:col-span-1 flex sm:justify-end">
                       <button
                         type="button"
-                        onClick={() => removeIngredient(index)}
-                        className="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-gradient-to-r from-red-500 to-red-600 text-white text-sm font-semibold hover:from-red-600 hover:to-red-700 transition-all whitespace-nowrap shadow-md hover:shadow-lg hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
+                        onClick={() => removeRecipeRow(idx)}
+                        className="w-full sm:w-auto px-4 sm:px-0 py-2 sm:py-1.5 rounded-lg sm:rounded-lg text-red-400 hover:bg-red-50 hover:text-red-600 transition-colors flex items-center justify-center gap-2 sm:gap-0 text-sm font-semibold sm:font-normal border sm:border-0 border-red-200 sm:p-1.5"
                       >
                         <Trash2 className="w-4 h-4" />
-                        Remove
+                        <span className="sm:hidden">Remove</span>
                       </button>
-                    )}
+                    </div>
                   </div>
-                );
-              })}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Nutrition Info */}
