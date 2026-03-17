@@ -272,7 +272,7 @@ const Checkout = () => {
 
   return (
     <div className="min-h-screen bg-cream-light py-24">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-10 xl:px-16">
+      <div className="container mx-auto px-3 sm:px-6 lg:px-10 xl:px-16">
         {/* Header */}
         <div className="mb-8 lg:ml-2">
           <h1 className="font-sans font-bold text-4xl xl:text-5xl text-primary mb-2">

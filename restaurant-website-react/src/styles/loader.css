@@ -26,6 +26,12 @@
   animation: logoFloat 2s ease-in-out infinite;
 }
 
+.loader-logo-img {
+  width: clamp(140px, 40vw, 190px);
+  height: auto;
+  object-fit: contain;
+}
+
 .loader-logo-icon {
   width: 80px;
   height: 80px;
@@ -116,12 +122,6 @@
 }
 
 @media (max-width: 768px) {
-  .loader-logo-icon {
-    width: 60px;
-    height: 60px;
-    font-size: 30px;
-  }
-
   .loader-text {
     font-size: 20px;
   }

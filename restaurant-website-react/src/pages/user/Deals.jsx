@@ -585,7 +585,7 @@ const Deals = () => {
     <main className="min-h-screen bg-gradient-to-br from-cream-light via-white to-cream-light pt-20">
       <DealsHeroSection deals={deals} isLoading={isLoading} error={error} />
 
-      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="container max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-12">
         {/* Loading */}
         {isLoading && (
           <div className="flex flex-col items-center justify-center py-24 gap-4">

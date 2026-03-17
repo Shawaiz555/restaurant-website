@@ -34,7 +34,7 @@ const HeroSection = () => {
         <div className="absolute bottom-32 left-1/3 w-24 h-24 bg-white/20 rounded-full blur-xl animate-float-3"></div>
       </div>
 
-      <div className="container mx-auto px-6 sm:px-8 lg:px-10 xl:px-16 relative z-10">
+      <div className="container mx-auto px-3 sm:px-8 lg:px-10 xl:px-16 relative z-10">
         <div className="flex flex-col-reverse lg:grid lg:grid-cols-2 gap-8 lg:gap-8 xl:gap-12 items-center">
           {/* Left Content */}
           <div className="relative space-y-5 lg:space-y-6">

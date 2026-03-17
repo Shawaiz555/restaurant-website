@@ -29,7 +29,7 @@ const AboutHeroSection = () => {
         <div className="absolute bottom-28 left-1/3 w-20 h-20 bg-white/20 rounded-full blur-xl animate-float-3"></div>
       </div>
 
-      <div className="container mx-auto px-6 sm:px-8 lg:px-12 xl:px-16 relative z-10">
+      <div className="container mx-auto px-3 sm:px-8 lg:px-12 xl:px-16 relative z-10">
         <div className="max-w-6xl mx-auto text-center">
           {/* Enhanced Badge */}
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-primary/20 to-primary-light/20 backdrop-blur-md px-4 py-2 rounded-full border-2 border-primary/40 shadow-lg animate-fade-in mb-5">

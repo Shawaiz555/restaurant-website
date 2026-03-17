@@ -256,7 +256,7 @@ const ProductDetail = () => {
               </div>
 
               {/* Right Column - Product Details and Order Form */}
-              <div className="space-y-5 lg:space-y-6 xl:space-y-8 px-3 lg:px-0">
+              <div className="space-y-5 lg:space-y-6 xl:space-y-8">
                 {/* Product Name and Category */}
                 <div>
                   <p className="text-primary font-medium mb-2">
@@ -327,7 +327,7 @@ const ProductDetail = () => {
                           <option
                             key={index}
                             value={index}
-                            className="py-3 sm:py-4 px-2 sm:px-4 bg-cream text-dark text-xs sm:text-base"
+                            className="py-3 sm:py-4 px-3 sm:px-4 bg-cream text-dark text-xs sm:text-base"
                             style={{
                               padding: "10px 12px",
                               backgroundColor: "#FFF8F0",
@@ -397,7 +397,7 @@ const ProductDetail = () => {
                           >
                             <option
                               value=""
-                              className="py-3 sm:py-4 px-2 sm:px-4 bg-cream-light text-dark text-xs sm:text-xs"
+                              className="py-3 sm:py-4 px-3 sm:px-4 bg-cream-light text-dark text-xs sm:text-xs"
                               style={{
                                 padding: "10px 12px",
                                 backgroundColor: "#FFF8F0",
@@ -409,7 +409,7 @@ const ProductDetail = () => {
                               <option
                                 key={spiceIndex}
                                 value={spice.name}
-                                className="py-3 sm:py-4 px-2 sm:px-4 bg-cream-light text-dark text-xs sm:text-base"
+                                className="py-3 sm:py-4 px-3 sm:px-4 bg-cream-light text-dark text-xs sm:text-base"
                                 style={{
                                   padding: "10px 12px",
                                   backgroundColor: "#FFF8F0",
@@ -669,101 +669,66 @@ const ProductDetail = () => {
                               <div
                                 key={drinkWithId.id}
                                 onClick={() => {
-                                  if (!isSelected) {
-                                    toggleAddOn("drinks", drinkWithId);
-                                  }
+                                  if (!isSelected) toggleAddOn("drinks", drinkWithId);
                                 }}
-                                className={`group relative flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 border-2 rounded-xl transition-all duration-200 cursor-pointer ${
+                                className={`group relative flex flex-col p-3 sm:p-4 border-2 rounded-xl transition-all duration-200 cursor-pointer gap-2 ${
                                   isSelected
                                     ? "border-primary bg-gradient-to-br from-primary/5 to-primary/10 shadow-lg ring-2 ring-primary/20"
-                                    : "border-gray-200 hover:border-primary/60 hover:bg-cream-light/50 hover:shadow-md hover:scale-[1.01]"
+                                    : "border-gray-200 hover:border-primary/60 hover:bg-cream-light/50 hover:shadow-md"
                                 }`}
                               >
-                                {/* Top row on mobile, left side on desktop */}
-                                <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0 mb-2 sm:mb-0">
+                                {/* Row 1: checkbox + name + description */}
+                                <div className="flex items-start gap-3">
                                   <div
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      toggleAddOn("drinks", drinkWithId);
-                                    }}
-                                    className={`w-5 h-5 sm:w-6 sm:h-6 rounded-lg border-2 flex items-center justify-center transition-all cursor-pointer flex-shrink-0 ${
+                                    onClick={(e) => { e.stopPropagation(); toggleAddOn("drinks", drinkWithId); }}
+                                    className={`w-5 h-5 rounded-lg border-2 flex items-center justify-center transition-all cursor-pointer flex-shrink-0 mt-0.5 ${
                                       isSelected
-                                        ? "bg-primary border-primary scale-110"
+                                        ? "bg-primary border-primary"
                                         : "border-gray-300 hover:border-primary/60 hover:bg-primary/5"
                                     }`}
                                   >
                                     {isSelected && (
-                                      <svg
-                                        viewBox="0 0 16 16"
-                                        fill="white"
-                                        className="w-3 h-3 sm:w-4 sm:h-4"
-                                      >
+                                      <svg viewBox="0 0 16 16" fill="white" className="w-3 h-3">
                                         <path d="M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z" />
                                       </svg>
                                     )}
                                   </div>
                                   <div className="flex-1 min-w-0">
-                                    <div className="font-sans text-sm sm:text-base text-dark truncate">
+                                    <div className="font-sans text-sm sm:text-base text-dark font-medium leading-snug">
                                       {drinkWithId.name}
                                     </div>
-                                    <div className="text-[11px] sm:text-xs text-dark-gray">
+                                    <div className="text-xs text-dark-gray mt-0.5 leading-snug">
                                       {drinkWithId.description || "350ml"}
                                     </div>
                                   </div>
-                                  <div className="text-primary font-sans font-bold text-sm sm:text-base whitespace-nowrap flex-shrink-0 mr-2 sm:mr-3">
-                                    +Rs.
-                                    {(
-                                      drinkWithId.price *
-                                      (isSelected ? quantity : 1)
-                                    ).toFixed(2)}
-                                  </div>
                                 </div>
-
-                                {/* Quantity controls and "Add" button */}
-                                <div className="flex items-center justify-end gap-0 flex-shrink-0">
+                                {/* Row 2: price on left, action on right */}
+                                <div className="flex items-center justify-between pl-8">
+                                  <span className="text-primary font-bold text-sm">
+                                    +Rs.{(drinkWithId.price * (isSelected ? quantity : 1)).toFixed(2)}
+                                  </span>
                                   {isSelected ? (
-                                    <div className="flex items-center gap-0.5 sm:gap-1 bg-white rounded-lg sm:rounded-xl border-2 border-primary shadow-md">
+                                    <div className="flex items-center bg-white rounded-lg border-2 border-primary shadow-sm">
                                       <button
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          if (quantity === 1) {
-                                            toggleAddOn("drinks", drinkWithId);
-                                          } else {
-                                            updateAddOnQuantity(
-                                              "drinks",
-                                              drinkWithId.id,
-                                              quantity - 1,
-                                            );
-                                          }
-                                        }}
-                                        className="text-primary hover:text-white hover:bg-primary font-bold text-lg sm:text-xl w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 flex items-center justify-center rounded-l-lg transition-all active:scale-95"
+                                        onClick={(e) => { e.stopPropagation(); quantity === 1 ? toggleAddOn("drinks", drinkWithId) : updateAddOnQuantity("drinks", drinkWithId.id, quantity - 1); }}
+                                        className="text-primary hover:text-white hover:bg-primary font-bold text-base w-8 h-8 flex items-center justify-center rounded-l-md transition-all active:scale-95"
                                       >
                                         {quantity === 1 ? "✕" : "−"}
                                       </button>
-                                      <span className="font-sans font-bold text-dark min-w-[32px] sm:min-w-[40px] lg:min-w-[48px] text-center text-base sm:text-lg px-1 sm:px-2 lg:px-3">
+                                      <span className="font-bold text-dark min-w-[32px] text-center text-sm px-1">
                                         {quantity}
                                       </span>
                                       <button
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          updateAddOnQuantity(
-                                            "drinks",
-                                            drinkWithId.id,
-                                            quantity + 1,
-                                          );
-                                        }}
-                                        className="text-primary hover:text-white hover:bg-primary font-bold text-lg sm:text-xl w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-r-lg transition-all active:scale-95"
+                                        onClick={(e) => { e.stopPropagation(); updateAddOnQuantity("drinks", drinkWithId.id, quantity + 1); }}
+                                        className="text-primary hover:text-white hover:bg-primary font-bold text-base w-8 h-8 flex items-center justify-center rounded-r-md transition-all active:scale-95"
                                       >
                                         +
                                       </button>
                                     </div>
                                   ) : (
                                     <button
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        toggleAddOn("drinks", drink);
-                                      }}
-                                      className="px-3 py-1.5 sm:px-4 sm:py-2 bg-primary/10 hover:bg-primary text-primary hover:text-white rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm transition-all transform hover:scale-105 active:scale-95 border-2 border-primary/20 hover:border-primary"
+                                      onClick={(e) => { e.stopPropagation(); toggleAddOn("drinks", drinkWithId); }}
+                                      className="px-4 py-1.5 bg-primary/10 hover:bg-primary text-primary hover:text-white rounded-lg font-bold text-xs transition-all active:scale-95 border-2 border-primary/20 hover:border-primary"
                                     >
                                       Add
                                     </button>
@@ -805,105 +770,66 @@ const ProductDetail = () => {
                                   <div
                                     key={dessertWithId.id}
                                     onClick={() => {
-                                      if (!isSelected) {
-                                        toggleAddOn("desserts", dessertWithId);
-                                      }
+                                      if (!isSelected) toggleAddOn("desserts", dessertWithId);
                                     }}
-                                    className={`group relative flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 border-2 rounded-xl transition-all duration-200 cursor-pointer ${
+                                    className={`group relative flex flex-col p-3 sm:p-4 border-2 rounded-xl transition-all duration-200 cursor-pointer gap-2 ${
                                       isSelected
                                         ? "border-primary bg-gradient-to-br from-primary/5 to-primary/10 shadow-lg ring-2 ring-primary/20"
-                                        : "border-gray-200 hover:border-primary/60 hover:bg-cream-light/50 hover:shadow-md hover:scale-[1.01]"
+                                        : "border-gray-200 hover:border-primary/60 hover:bg-cream-light/50 hover:shadow-md"
                                     }`}
                                   >
-                                    {/* Checkbox, name, and price in one row */}
-                                    <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0 mb-2 sm:mb-0">
+                                    {/* Row 1: checkbox + name + description */}
+                                    <div className="flex items-start gap-3">
                                       <div
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          toggleAddOn(
-                                            "desserts",
-                                            dessertWithId,
-                                          );
-                                        }}
-                                        className={`w-5 h-5 sm:w-6 sm:h-6 rounded-lg border-2 flex items-center justify-center transition-all cursor-pointer flex-shrink-0 ${
+                                        onClick={(e) => { e.stopPropagation(); toggleAddOn("desserts", dessertWithId); }}
+                                        className={`w-5 h-5 rounded-lg border-2 flex items-center justify-center transition-all cursor-pointer flex-shrink-0 mt-0.5 ${
                                           isSelected
                                             ? "bg-primary border-primary"
                                             : "border-gray-300 hover:border-primary/60"
                                         }`}
                                       >
                                         {isSelected && (
-                                          <svg
-                                            viewBox="0 0 16 16"
-                                            fill="white"
-                                            className="w-3 h-3 sm:w-4 sm:h-4"
-                                          >
+                                          <svg viewBox="0 0 16 16" fill="white" className="w-3 h-3">
                                             <path d="M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z" />
                                           </svg>
                                         )}
                                       </div>
-                                      <span className="font-sans text-sm sm:text-base lg:text-lg text-dark font-medium flex-1 truncate">
-                                        {dessertWithId.name}
-                                      </span>
-                                      <div className="text-primary font-sans font-bold text-sm sm:text-base whitespace-nowrap flex-shrink-0 mr-2 sm:mr-3">
-                                        +Rs.
-                                        {(
-                                          dessertWithId.price *
-                                          (isSelected ? quantity : 1)
-                                        ).toFixed(2)}
+                                      <div className="flex-1 min-w-0">
+                                        <div className="font-sans text-sm sm:text-base text-dark font-medium leading-snug">
+                                          {dessertWithId.name}
+                                        </div>
+                                        <div className="text-xs text-dark-gray mt-0.5 leading-snug">
+                                          {dessertWithId.description || ""}
+                                        </div>
                                       </div>
                                     </div>
-
-                                    {/* Quantity controls and "Add" button */}
-                                    <div className="flex items-center justify-end gap-0 flex-shrink-0">
+                                    {/* Row 2: price on left, action on right */}
+                                    <div className="flex items-center justify-between pl-8">
+                                      <span className="text-primary font-bold text-sm">
+                                        +Rs.{(dessertWithId.price * (isSelected ? quantity : 1)).toFixed(2)}
+                                      </span>
                                       {isSelected ? (
-                                        <div className="flex items-center gap-0.5 sm:gap-1 bg-gradient-to-r from-white to-cream rounded-lg sm:rounded-xl border-2 border-primary/30 shadow-sm">
+                                        <div className="flex items-center bg-white rounded-lg border-2 border-primary shadow-sm">
                                           <button
-                                            onClick={(e) => {
-                                              e.stopPropagation();
-                                              if (quantity === 1) {
-                                                toggleAddOn(
-                                                  "desserts",
-                                                  dessertWithId,
-                                                );
-                                              } else {
-                                                updateAddOnQuantity(
-                                                  "desserts",
-                                                  dessertWithId.id,
-                                                  quantity - 1,
-                                                );
-                                              }
-                                            }}
-                                            className="text-primary hover:text-white hover:bg-primary font-bold text-lg sm:text-xl w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 flex items-center justify-center rounded-l-lg transition-all active:scale-95"
+                                            onClick={(e) => { e.stopPropagation(); quantity === 1 ? toggleAddOn("desserts", dessertWithId) : updateAddOnQuantity("desserts", dessertWithId.id, quantity - 1); }}
+                                            className="text-primary hover:text-white hover:bg-primary font-bold text-base w-8 h-8 flex items-center justify-center rounded-l-md transition-all active:scale-95"
                                           >
                                             {quantity === 1 ? "✕" : "−"}
                                           </button>
-                                          <span className="font-sans font-bold text-dark min-w-[28px] sm:min-w-[32px] lg:min-w-[40px] text-center text-base sm:text-lg bg-white px-1 sm:px-2 lg:px-3">
+                                          <span className="font-bold text-dark min-w-[32px] text-center text-sm px-1">
                                             {quantity}
                                           </span>
                                           <button
-                                            onClick={(e) => {
-                                              e.stopPropagation();
-                                              updateAddOnQuantity(
-                                                "desserts",
-                                                dessertWithId.id,
-                                                quantity + 1,
-                                              );
-                                            }}
-                                            className="text-primary hover:text-white hover:bg-primary font-bold text-lg sm:text-xl w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-r-lg transition-all active:scale-95"
+                                            onClick={(e) => { e.stopPropagation(); updateAddOnQuantity("desserts", dessertWithId.id, quantity + 1); }}
+                                            className="text-primary hover:text-white hover:bg-primary font-bold text-base w-8 h-8 flex items-center justify-center rounded-r-md transition-all active:scale-95"
                                           >
                                             +
                                           </button>
                                         </div>
                                       ) : (
                                         <button
-                                          onClick={(e) => {
-                                            e.stopPropagation();
-                                            toggleAddOn(
-                                              "desserts",
-                                              dessertWithId,
-                                            );
-                                          }}
-                                          className="px-3 py-1.5 sm:px-4 sm:py-2 bg-primary/10 hover:bg-primary text-primary hover:text-white rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm transition-all transform hover:scale-105 active:scale-95 border-2 border-primary/20 hover:border-primary"
+                                          onClick={(e) => { e.stopPropagation(); toggleAddOn("desserts", dessertWithId); }}
+                                          className="px-4 py-1.5 bg-primary/10 hover:bg-primary text-primary hover:text-white rounded-lg font-bold text-xs transition-all active:scale-95 border-2 border-primary/20 hover:border-primary"
                                         >
                                           Add
                                         </button>
@@ -943,96 +869,66 @@ const ProductDetail = () => {
                               <div
                                 key={extraWithId.id}
                                 onClick={() => {
-                                  if (!isSelected) {
-                                    toggleAddOn("extras", extraWithId);
-                                  }
+                                  if (!isSelected) toggleAddOn("extras", extraWithId);
                                 }}
-                                className={`group relative flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 border-2 rounded-xl transition-all duration-200 cursor-pointer ${
+                                className={`group relative flex flex-col p-3 sm:p-4 border-2 rounded-xl transition-all duration-200 cursor-pointer gap-2 ${
                                   isSelected
                                     ? "border-primary bg-gradient-to-br from-primary/5 to-primary/10 shadow-lg ring-2 ring-primary/20"
-                                    : "border-gray-200 hover:border-primary/60 hover:bg-cream-light/50 hover:shadow-md hover:scale-[1.01]"
+                                    : "border-gray-200 hover:border-primary/60 hover:bg-cream-light/50 hover:shadow-md"
                                 }`}
                               >
-                                {/* Checkbox, name, and price in one row */}
-                                <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0 mb-2 sm:mb-0">
+                                {/* Row 1: checkbox + name + description */}
+                                <div className="flex items-start gap-3">
                                   <div
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      toggleAddOn("extras", extraWithId);
-                                    }}
-                                    className={`w-5 h-5 sm:w-6 sm:h-6 rounded-lg border-2 flex items-center justify-center transition-all cursor-pointer flex-shrink-0 ${
+                                    onClick={(e) => { e.stopPropagation(); toggleAddOn("extras", extraWithId); }}
+                                    className={`w-5 h-5 rounded-lg border-2 flex items-center justify-center transition-all cursor-pointer flex-shrink-0 mt-0.5 ${
                                       isSelected
                                         ? "bg-primary border-primary"
                                         : "border-gray-300 hover:border-primary/60"
                                     }`}
                                   >
                                     {isSelected && (
-                                      <svg
-                                        viewBox="0 0 16 16"
-                                        fill="white"
-                                        className="w-3 h-3 sm:w-4 sm:h-4"
-                                      >
+                                      <svg viewBox="0 0 16 16" fill="white" className="w-3 h-3">
                                         <path d="M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z" />
                                       </svg>
                                     )}
                                   </div>
-                                  <span className="font-sans text-sm sm:text-base lg:text-lg text-dark font-medium flex-1 truncate">
-                                    {extraWithId.name}
-                                  </span>
-                                  <div className="text-primary font-sans font-bold text-sm sm:text-base whitespace-nowrap flex-shrink-0 mr-2 sm:mr-3">
-                                    +Rs.
-                                    {(
-                                      extraWithId.price *
-                                      (isSelected ? quantity : 1)
-                                    ).toFixed(2)}
+                                  <div className="flex-1 min-w-0">
+                                    <div className="font-sans text-sm sm:text-base text-dark font-medium leading-snug">
+                                      {extraWithId.name}
+                                    </div>
+                                    <div className="text-xs text-dark-gray mt-0.5 leading-snug">
+                                      {extraWithId.description || ""}
+                                    </div>
                                   </div>
                                 </div>
-
-                                {/* Quantity controls and "Add" button */}
-                                <div className="flex items-center justify-end gap-0 flex-shrink-0">
+                                {/* Row 2: price on left, action on right */}
+                                <div className="flex items-center justify-between pl-8">
+                                  <span className="text-primary font-bold text-sm">
+                                    +Rs.{(extraWithId.price * (isSelected ? quantity : 1)).toFixed(2)}
+                                  </span>
                                   {isSelected ? (
-                                    <div className="flex items-center gap-0.5 sm:gap-1 bg-gradient-to-r from-white to-cream rounded-lg sm:rounded-xl border-2 border-primary/30 shadow-sm">
+                                    <div className="flex items-center bg-white rounded-lg border-2 border-primary shadow-sm">
                                       <button
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          if (quantity === 1) {
-                                            toggleAddOn("extras", extraWithId);
-                                          } else {
-                                            updateAddOnQuantity(
-                                              "extras",
-                                              extraWithId.id,
-                                              quantity - 1,
-                                            );
-                                          }
-                                        }}
-                                        className="text-primary hover:text-white hover:bg-primary font-bold text-lg sm:text-xl w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 flex items-center justify-center rounded-l-lg transition-all active:scale-95"
+                                        onClick={(e) => { e.stopPropagation(); quantity === 1 ? toggleAddOn("extras", extraWithId) : updateAddOnQuantity("extras", extraWithId.id, quantity - 1); }}
+                                        className="text-primary hover:text-white hover:bg-primary font-bold text-base w-8 h-8 flex items-center justify-center rounded-l-md transition-all active:scale-95"
                                       >
                                         {quantity === 1 ? "✕" : "−"}
                                       </button>
-                                      <span className="font-sans font-bold text-dark min-w-[28px] sm:min-w-[32px] text-center text-base sm:text-lg bg-white px-1 sm:px-2">
+                                      <span className="font-bold text-dark min-w-[32px] text-center text-sm px-1">
                                         {quantity}
                                       </span>
                                       <button
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          updateAddOnQuantity(
-                                            "extras",
-                                            extraWithId.id,
-                                            quantity + 1,
-                                          );
-                                        }}
-                                        className="text-primary hover:text-white hover:bg-primary font-bold text-lg sm:text-xl w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-r-lg transition-all active:scale-95"
+                                        onClick={(e) => { e.stopPropagation(); updateAddOnQuantity("extras", extraWithId.id, quantity + 1); }}
+                                        className="text-primary hover:text-white hover:bg-primary font-bold text-base w-8 h-8 flex items-center justify-center rounded-r-md transition-all active:scale-95"
                                       >
                                         +
                                       </button>
                                     </div>
                                   ) : (
                                     <button
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        toggleAddOn("extras", extraWithId);
-                                      }}
-                                      className="px-3 py-1.5 sm:px-4 sm:py-2 bg-primary/10 hover:bg-primary text-primary hover:text-white rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm transition-all transform hover:scale-105 active:scale-95 border-2 border-primary/20 hover:border-primary"
+                                      onClick={(e) => { e.stopPropagation(); toggleAddOn("extras", extraWithId); }}
+                                      className="px-4 py-1.5 bg-primary/10 hover:bg-primary text-primary hover:text-white rounded-lg font-bold text-xs transition-all active:scale-95 border-2 border-primary/20 hover:border-primary"
                                     >
                                       Add
                                     </button>

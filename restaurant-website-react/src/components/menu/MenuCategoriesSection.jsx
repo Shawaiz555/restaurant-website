@@ -21,7 +21,7 @@ const MenuCategoriesSection = ({
 
   return (
     <section className="py-8 lg:py-12">
-      <div className="container mx-auto px-6 sm:px-6 lg:px-8 xl:px-16">
+      <div className="container mx-auto px-3 sm:px-6 lg:px-8 xl:px-16">
         <div className="flex flex-col lg:flex-row gap-6 xl:gap-8">
           {/* Left Sidebar - Categories */}
           <aside className="lg:w-64 xl:w-72 2xl:w-80 flex-shrink-0">

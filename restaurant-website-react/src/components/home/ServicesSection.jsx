@@ -34,7 +34,7 @@ const ServicesSection = () => {
       <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
       <div className="absolute bottom-0 left-0 w-1/4 h-1/4 bg-primary/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
 
-      <div className="container mx-auto px-6 sm:px-8 lg:px-10 xl:px-16 relative z-10">
+      <div className="container mx-auto px-3 sm:px-8 lg:px-10 xl:px-16 relative z-10">
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-10 xl:gap-16 items-center">
           {/* Chef Image Area */}
           <div className="w-full lg:w-1/2 relative group">

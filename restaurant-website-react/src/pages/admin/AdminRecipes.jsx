@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   ChefHat,
@@ -27,6 +27,7 @@ const AdminRecipes = () => {
   const [recipeIngredients, setRecipeIngredients] = useState([]);
   const [saving, setSaving] = useState(false);
   const [existingRecipeId, setExistingRecipeId] = useState(null);
+  const recipeEditorRef = useRef(null);
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -74,6 +75,12 @@ const AdminRecipes = () => {
     } else {
       setExistingRecipeId(null);
       setRecipeIngredients([]);
+    }
+    // Scroll to recipe editor on mobile (below lg breakpoint)
+    if (window.innerWidth < 1024) {
+      setTimeout(() => {
+        recipeEditorRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 50);
     }
   };
 
@@ -135,18 +142,25 @@ const AdminRecipes = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center shadow-md">
-          <ChefHat className="w-5 h-5 text-white" />
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center shadow-lg flex-shrink-0">
+            <ChefHat className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h1 className="text-2xl lg:text-3xl font-bold text-dark leading-tight">
+              Recipes
+            </h1>
+            <p className="text-sm text-dark-gray mt-0.5">
+              Define ingredient usage per dish — enables automatic stock deduction on orders
+            </p>
+          </div>
         </div>
-        <div>
-          <h1 className="text-2xl lg:text-3xl xl:text-4xl font-bold text-primary">
-            Recipes
-          </h1>
-          <p className="text-sm text-dark-gray">
-            Define ingredient usage per dish — enables automatic stock deduction
-            on orders
-          </p>
+        <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-primary/5 border border-primary/10 self-start sm:self-auto">
+          <CheckCircle className="w-4 h-4 text-primary flex-shrink-0" />
+          <span className="text-xs font-semibold text-primary whitespace-nowrap">
+            {recipes.filter(r => r.ingredients?.length > 0).length} / {products.length} dishes configured
+          </span>
         </div>
       </div>
 
@@ -220,7 +234,7 @@ const AdminRecipes = () => {
         </div>
 
         {/* Recipe Editor */}
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+        <div ref={recipeEditorRef} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
           {!selectedProduct ? (
             <div className="h-full flex flex-col items-center justify-center text-center py-12">
               <ChefHat className="w-14 h-14 text-gray-200 mb-4" />
@@ -233,19 +247,34 @@ const AdminRecipes = () => {
             </div>
           ) : (
             <>
-              <div className="flex items-center justify-between mb-5">
-                <div>
-                  <h2 className="text-lg font-semibold text-dark">
-                    {selectedProduct.name}
-                  </h2>
-                  <p className="text-xs text-dark-gray">
-                    {selectedProduct.category} ·{" "}
-                    {existingRecipeId ? "Editing recipe" : "No recipe yet"}
-                  </p>
+              {/* Recipe Editor Header */}
+              <div className="mb-5 pb-4 border-b border-gray-100">
+                <div className="flex items-start gap-3 mb-3">
+                  <img
+                    src={productsService.getImageUrl(selectedProduct)}
+                    alt={selectedProduct.name}
+                    className="w-12 h-12 rounded-xl object-cover flex-shrink-0 border border-gray-100"
+                    onError={(e) => { e.target.style.display = "none"; e.target.nextSibling.style.display = "flex"; }}
+                  />
+                  <div className="w-12 h-12 rounded-xl bg-gray-100 items-center justify-center flex-shrink-0 hidden">
+                    <ChefHat className="w-5 h-5 text-gray-400" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h2 className="text-base font-bold text-dark leading-tight truncate">
+                      {selectedProduct.name}
+                    </h2>
+                    <p className="text-xs text-dark-gray mt-0.5">
+                      {selectedProduct.category}
+                    </p>
+                    <span className={`inline-flex items-center gap-1 mt-1.5 text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full ${existingRecipeId ? "bg-green-100 text-green-700" : "bg-amber-100 text-amber-700"}`}>
+                      {existingRecipeId ? <CheckCircle className="w-3 h-3" /> : <AlertCircle className="w-3 h-3" />}
+                      {existingRecipeId ? "Recipe saved" : "No recipe yet"}
+                    </span>
+                  </div>
                 </div>
                 <button
                   onClick={addIngredientRow}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-primary/10 text-primary text-sm font-medium hover:bg-primary/20 transition-colors"
+                  className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-primary/10 text-primary text-sm font-semibold hover:bg-primary/20 transition-colors"
                 >
                   <Plus className="w-4 h-4" />
                   Add Ingredient

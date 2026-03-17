@@ -462,7 +462,7 @@ const Reservations = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[#faf9f6] pt-32 pb-20 px-4 relative overflow-hidden">
+    <div className="min-h-screen bg-[#faf9f6] pt-32 pb-20 px-3 relative overflow-hidden">
       {/* Decorative Background Elements */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary/5 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl pointer-events-none" />
@@ -541,9 +541,9 @@ const Reservations = () => {
                 Step 1: Date, Time & Group Size
               </p>
             </div>
-            <div className="p-6 sm:p-10 space-y-8 sm:space-y-10">
+            <div className="p-4 sm:p-8 space-y-8 sm:space-y-10">
               {/* Date */}
-              <div className="space-y-3 border-2 border-gray-100 rounded-2xl p-4">
+              <div className="space-y-3 border-2 border-gray-100 rounded-2xl p-3">
                 <label className="block text-dark font-bold text-[10px] sm:text-xs tracking-wide uppercase px-1">
                   <Calendar className="w-4 h-4 inline mr-2 text-primary" />
                   Select Date
@@ -560,13 +560,13 @@ const Reservations = () => {
               </div>
 
               {/* Time Slots */}
-              <div className="space-y-4 border-2 border-gray-100 rounded-2xl p-4">
+              <div className="space-y-4 border-2 border-gray-100 rounded-2xl p-3">
                 <label className="block text-dark font-bold text-[10px] sm:text-xs tracking-wide uppercase px-1">
                   <Clock className="w-4 h-4 inline mr-2 text-primary" />
                   Select Time Slot
                 </label>
 
-                <div className="space-y-6 border-2 border-gray-100 rounded-2xl p-4">
+                <div className="space-y-6 border-2 border-gray-100 rounded-2xl p-3">
                   {/* Lunch Slots */}
                   <div>
                     <h3 className="text-[10px] font-bold text-dark-gray/40 mb-3 flex items-center gap-2">
@@ -574,7 +574,7 @@ const Reservations = () => {
                       LUNCH SLOTS
                       <span className="w-6 h-px bg-gray-100"></span>
                     </h3>
-                    <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 gap-2 sm:gap-3">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2 sm:gap-3">
                       {TIME_SLOTS.filter(
                         (t) => parseInt(t.split(":")[0]) < 17,
                       ).map((t) => {
@@ -585,7 +585,7 @@ const Reservations = () => {
                             onClick={() => !isBooked && setSelectedTime(t)}
                             disabled={isBooked || loadingBookedTimes}
                             title={isBooked ? "Fully booked" : undefined}
-                            className={`py-2.5 sm:py-3 px-1 sm:px-2 rounded-xl sm:rounded-2xl text-[10px] sm:text-xs font-bold transition-all border-2 relative ${
+                            className={`py-3 px-2 rounded-xl sm:rounded-2xl text-xs font-bold transition-all border-2 relative ${
                               isBooked
                                 ? "border-gray-100 bg-gray-100 text-gray-300 cursor-not-allowed line-through"
                                 : selectedTime === t
@@ -612,7 +612,7 @@ const Reservations = () => {
                       DINNER SLOTS
                       <span className="w-6 h-px bg-gray-100"></span>
                     </h3>
-                    <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 gap-2 sm:gap-3">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2 sm:gap-3">
                       {TIME_SLOTS.filter(
                         (t) => parseInt(t.split(":")[0]) >= 17,
                       ).map((t) => {
@@ -623,7 +623,7 @@ const Reservations = () => {
                             onClick={() => !isBooked && setSelectedTime(t)}
                             disabled={isBooked || loadingBookedTimes}
                             title={isBooked ? "Fully booked" : undefined}
-                            className={`py-2.5 sm:py-3 px-1 sm:px-2 rounded-xl sm:rounded-2xl text-[10px] sm:text-xs font-bold transition-all border-2 relative ${
+                            className={`py-3 px-2 rounded-xl sm:rounded-2xl text-xs font-bold transition-all border-2 relative ${
                               isBooked
                                 ? "border-gray-100 bg-gray-100 text-gray-300 cursor-not-allowed line-through"
                                 : selectedTime === t
@@ -652,27 +652,27 @@ const Reservations = () => {
                   Group Size
                 </label>
 
-                <div className="bg-gray-50/50 rounded-[1.5rem] sm:rounded-[2rem] p-6 sm:p-8 border-2 border-gray-50 flex flex-col items-center gap-6">
-                  <div className="flex items-center justify-between w-full max-w-sm">
+                <div className="bg-gray-50/50 rounded-[1.5rem] sm:rounded-[2rem] p-4 sm:p-8 border-2 border-gray-50 flex flex-col items-center gap-4 sm:gap-6">
+                  <div className="flex items-center justify-between w-full max-w-xs sm:max-w-sm">
                     <button
                       onClick={() => setPartySize((p) => Math.max(1, p - 1))}
-                      className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-white border border-gray-100 flex items-center justify-center text-dark hover:border-primary hover:text-primary transition-all shadow-sm active:scale-95"
+                      className="w-11 h-11 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-white border border-gray-100 flex items-center justify-center text-dark hover:border-primary hover:text-primary transition-all shadow-sm active:scale-95"
                     >
                       <span className="text-2xl sm:text-3xl font-light">−</span>
                     </button>
 
                     <div className="flex flex-col items-center">
-                      <div className="text-4xl sm:text-6xl font-bold text-primary tabular-nums tracking-tighter">
+                      <div className="text-5xl sm:text-6xl font-bold text-primary tabular-nums tracking-tighter">
                         {partySize}
                       </div>
-                      <p className="text-[9px] sm:text-[10px] font-bold text-dark-gray/60 uppercase tracking-[0.2em] mt-1 sm:mt-2">
+                      <p className="text-[10px] font-bold text-dark-gray/60 uppercase tracking-[0.2em] mt-1 sm:mt-2">
                         {partySize === 1 ? "Guest" : "Guests"}
                       </p>
                     </div>
 
                     <button
                       onClick={() => setPartySize((p) => p + 1)}
-                      className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-white border border-gray-100 flex items-center justify-center text-dark hover:border-primary hover:text-primary transition-all shadow-sm active:scale-95"
+                      className="w-11 h-11 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-white border border-gray-100 flex items-center justify-center text-dark hover:border-primary hover:text-primary transition-all shadow-sm active:scale-95"
                     >
                       <span className="text-2xl sm:text-3xl font-light">+</span>
                     </button>
@@ -683,7 +683,7 @@ const Reservations = () => {
                       <button
                         key={n}
                         onClick={() => setPartySize(n)}
-                        className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-bold transition-all border-2 ${
+                        className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl text-xs font-bold transition-all border-2 ${
                           partySize === n
                             ? "bg-primary border-primary text-white shadow-lg shadow-primary/20 scale-105"
                             : "bg-white border-gray-50 text-dark-gray/40 hover:border-primary/20"
@@ -721,15 +721,15 @@ const Reservations = () => {
                 Choose Your Table
               </h2>
               <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mt-2 sm:mt-3 relative z-10 text-white text-[9px] sm:text-[10px] font-bold uppercase tracking-widest">
-                <span className="flex items-center gap-1.5 bg-white text-primary px-2 sm:px-3 py-1 sm:py-1.5 rounded-full border border-gray-100">
+                <span className="flex items-center gap-1.5 bg-white text-primary px-3 sm:px-3 py-1 sm:py-1.5 rounded-full border border-gray-100">
                   <Calendar className="w-3 h-3 text-primary" />
                   {reservationsService.formatDate(selectedDate)}
                 </span>
-                <span className="flex items-center gap-1.5 bg-white text-primary px-2 sm:px-3 py-1 sm:py-1.5 rounded-full border border-gray-100">
+                <span className="flex items-center gap-1.5 bg-white text-primary px-3 sm:px-3 py-1 sm:py-1.5 rounded-full border border-gray-100">
                   <Clock className="w-3 h-3 text-primary" />
                   {formatTimeDisplay(selectedTime)}
                 </span>
-                <span className="flex items-center gap-1.5 bg-white text-primary px-2 sm:px-3 py-1 sm:py-1.5 rounded-full border border-gray-100">
+                <span className="flex items-center gap-1.5 bg-white text-primary px-3 sm:px-3 py-1 sm:py-1.5 rounded-full border border-gray-100">
                   <Users className="w-3 h-3 text-primary" />
                   {partySize} Guests
                 </span>
@@ -1003,13 +1003,13 @@ const Reservations = () => {
             <div className="p-6 sm:p-10">
               <form onSubmit={handleSubmit} className="space-y-8 sm:space-y-10">
                 {/* Summary Banner */}
-                <div className="bg-gray-50/50 rounded-2xl sm:rounded-3xl p-4 sm:p-6 border border-gray-200 flex flex-wrap gap-4 sm:gap-8 justify-center sm:justify-start">
+                <div className="bg-gray-50/50 rounded-2xl sm:rounded-3xl p-4 sm:p-6 border border-gray-200 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-8">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-dark shadow-sm border border-gray-100">
+                    <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-dark shadow-sm border border-gray-100 flex-shrink-0">
                       <TableIcon className="w-5 h-5" />
                     </div>
                     <div>
-                      <p className="text-[14px] font-bold text-dark uppercase tracking-wide mb-0.5">
+                      <p className="text-[10px] font-bold text-dark-gray/50 uppercase tracking-widest mb-0.5">
                         {selectedTables.length > 1
                           ? "Selected Tables"
                           : "Selected Table"}
@@ -1019,7 +1019,7 @@ const Reservations = () => {
                           {selectedTables.map((t) => (
                             <p
                               key={t._id}
-                              className="text-xs font-semibold text-dark-gray"
+                              className="text-sm font-bold text-dark"
                             >
                               Table #{t.tableNumber} ({t.location})
                             </p>
@@ -1033,16 +1033,16 @@ const Reservations = () => {
                       )}
                     </div>
                   </div>
-                  <div className="w-px h-10 bg-gray-100 hidden sm:block" />
+                  <div className="w-full h-px sm:w-px sm:h-10 bg-gray-200" />
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-dark shadow-sm border border-gray-50">
+                    <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-dark shadow-sm border border-gray-100 flex-shrink-0">
                       <Calendar className="w-5 h-5" />
                     </div>
                     <div>
-                      <p className="text-[14px] font-bold text-dark uppercase tracking-wide">
+                      <p className="text-[10px] font-bold text-dark-gray/50 uppercase tracking-widest mb-0.5">
                         Date & Time
                       </p>
-                      <p className="text-xs font-semibold text-dark-gray">
+                      <p className="text-sm font-bold text-dark">
                         {reservationsService.formatDate(selectedDate)} at{" "}
                         {formatTimeDisplay(selectedTime)}
                       </p>

@@ -34,7 +34,7 @@ const TeamSection = () => {
 
   return (
     <section className="py-20 bg-gradient-to-br from-white via-cream-light to-white">
-      <div className="container mx-auto px-6 sm:px-6 lg:px-10 xl:px-16">
+      <div className="container mx-auto px-3 sm:px-6 lg:px-10 xl:px-16">
         <div className="text-center mb-16">
           <h2 className="font-sans font-bold text-4xl lg:text-5xl text-dark mb-4">
             Meet Our Culinary Team

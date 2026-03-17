@@ -3,7 +3,7 @@ import React from "react";
 const MobileAppSection = () => {
   return (
     <section className="py-16 lg:py-24 bg-cream">
-      <div className="container mx-auto px-6 sm:px-6 lg:px-10 xl:px-16">
+      <div className="container mx-auto px-3 sm:px-6 lg:px-10 xl:px-16">
         <div className="flex flex-col-reverse lg:grid lg:grid-cols-2 gap-8 lg:gap-10 xl:gap-12 items-center">
           <div>
             <h2 className="font-sans font-bold text-3xl lg:text-4xl xl:text-5xl mb-6">

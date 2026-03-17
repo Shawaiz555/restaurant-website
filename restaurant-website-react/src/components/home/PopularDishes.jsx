@@ -19,7 +19,7 @@ const PopularDishes = () => {
 
   return (
     <section className="py-16 lg:py-24">
-      <div className="container mx-auto px-6 sm:px-6 lg:px-8 xl:px-16">
+      <div className="container mx-auto px-3 sm:px-6 lg:px-8 xl:px-16">
         <div className="flex items-center justify-between mb-12">
           <h2 className="font-sans font-bold text-4xl lg:text-5xl">Popular Dishes</h2>
           <div className="flex gap-2">

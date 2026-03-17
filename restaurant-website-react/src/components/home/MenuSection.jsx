@@ -153,7 +153,7 @@ const MenuSection = () => {
       <div className="absolute top-40 -left-20 w-80 h-80 bg-primary/5 rounded-full blur-3xl"></div>
       <div className="absolute bottom-40 -right-20 w-80 h-80 bg-primary/5 rounded-full blur-3xl"></div>
 
-      <div className="container mx-auto px-6 sm:px-8 lg:px-8 xl:px-16 relative z-10">
+      <div className="container mx-auto px-3 sm:px-8 lg:px-8 xl:px-16 relative z-10">
         <div className="text-center mb-5 space-y-3">
           <div className="inline-flex items-center gap-2 bg-primary/10 px-4 py-2 rounded-full border border-primary/20 animate-fade-in translate-y-[-10px]">
             <Sparkles className="w-4 h-4 text-primary" />

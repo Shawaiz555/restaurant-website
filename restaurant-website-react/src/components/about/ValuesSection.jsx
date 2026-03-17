@@ -31,7 +31,7 @@ const ValuesSection = () => {
 
   return (
     <section className="py-20 bg-gradient-to-br from-cream-light to-cream">
-      <div className="container mx-auto px-6 sm:px-6 lg:px-10 xl:px-16">
+      <div className="container mx-auto px-3 sm:px-6 lg:px-10 xl:px-16">
         <div className="text-center mb-16">
           <h2 className="font-sans font-bold text-4xl lg:text-5xl text-dark mb-4">
             Our Core Values
