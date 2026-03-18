@@ -189,16 +189,18 @@ const AdminDeals = () => {
             <span className="font-semibold text-dark">{deals.length}</span> deal
             {deals.length !== 1 ? "s" : ""}
           </p>
-          {(filters.status !== "All" || filters.search) && (
-            <button
-              onClick={() =>
-                dispatch(setFilters({ status: "All", search: "" }))
-              }
-              className="text-sm text-primary hover:text-primary-dark font-medium transition-colors"
-            >
-              Clear filters
-            </button>
-          )}
+          <div className="flex items-center gap-3">
+            {(filters.status !== "All" || filters.search) && (
+              <button
+                onClick={() =>
+                  dispatch(setFilters({ status: "All", search: "" }))
+                }
+                className="text-sm text-primary hover:text-primary-dark font-medium transition-colors"
+              >
+                Clear filters
+              </button>
+            )}
+          </div>
         </div>
       </div>
 

@@ -98,9 +98,9 @@ export const selectFilteredReservations = (state) => {
   }
 
   return filtered.sort((a, b) => {
-    const dateCompare = b.reservationDate?.localeCompare(a.reservationDate) || 0;
+    const dateCompare = a.reservationDate?.localeCompare(b.reservationDate) || 0;
     if (dateCompare !== 0) return dateCompare;
-    return b.reservationTime?.localeCompare(a.reservationTime) || 0;
+    return a.reservationTime?.localeCompare(b.reservationTime) || 0;
   });
 };
 

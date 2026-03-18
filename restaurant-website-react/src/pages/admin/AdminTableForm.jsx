@@ -104,8 +104,8 @@ const AdminTableForm = () => {
     if (!formData.capacity) newErrors.capacity = "Capacity is required";
     else if (isNaN(formData.capacity) || parseInt(formData.capacity) < 1)
       newErrors.capacity = "Capacity must be at least 1";
-    else if (parseInt(formData.capacity) > 20)
-      newErrors.capacity = "Capacity cannot exceed 20";
+    else if (parseInt(formData.capacity) > 6)
+      newErrors.capacity = "Capacity cannot exceed 6";
 
     if (!formData.location) newErrors.location = "Location is required";
 
@@ -336,7 +336,7 @@ const AdminTableForm = () => {
                   onChange={handleChange}
                   placeholder="e.g. 4"
                   min="1"
-                  max="20"
+                  max="6"
                   className={`w-full pl-12 pr-4 py-3.5 rounded-xl border-2 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all text-dark placeholder:text-gray-400 ${
                     errors.capacity
                       ? "border-red-300 focus:border-red-400"

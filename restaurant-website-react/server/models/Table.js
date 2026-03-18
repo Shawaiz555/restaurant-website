@@ -17,7 +17,7 @@ const tableSchema = new mongoose.Schema(
       type: Number,
       required: [true, 'Capacity is required'],
       min: [1, 'Capacity must be at least 1'],
-      max: [20, 'Capacity cannot exceed 20'],
+      max: [6, 'Capacity cannot exceed 6'],
     },
     location: {
       type: String,

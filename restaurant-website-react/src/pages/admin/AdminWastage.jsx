@@ -27,6 +27,26 @@ import ingredientsService from "../../services/ingredientsService";
 import { showNotification } from "../../store/slices/notificationSlice";
 import StatsCard from "../../components/admin/common/StatsCard";
 import ConfirmModal from "../../components/admin/common/ConfirmModal";
+import PrintButton from "../../components/admin/common/PrintButton";
+import { printTable, getSelectionSummary } from "../../utils/printUtils";
+
+const PRINT_COLUMNS = [
+  { header: "#", render: (_, i) => i + 1 },
+  {
+    header: "Date",
+    render: (r) =>
+      new Date(r.date).toLocaleDateString("en-PK", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      }),
+  },
+  { header: "Ingredient", render: (r) => r.ingredientName },
+  { header: "Quantity", render: (r) => r.quantity },
+  { header: "Reason", render: (r) => r.reason },
+  { header: "Notes", render: (r) => r.notes || "—" },
+  { header: "Recorded By", render: (r) => r.createdBy?.name || "Admin" },
+];
 
 const EMPTY_FORM = {
   ingredientId: "",
@@ -51,6 +71,7 @@ const AdminWastage = () => {
   const [reasonFilter, setReasonFilter] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [selectedIds, setSelectedIds] = useState([]);
   const formRef = useRef(null);
   const reasons = wastageService.getReasons();
 
@@ -87,6 +108,7 @@ const AdminWastage = () => {
 
   useEffect(() => {
     setCurrentPage(1);
+    setSelectedIds([]);
   }, [reasonFilter]);
 
   const totalPages = Math.ceil(filtered.length / itemsPerPage);
@@ -179,6 +201,25 @@ const AdminWastage = () => {
     Expired: "bg-yellow-100 text-yellow-700",
     Overcooked: "bg-purple-100 text-purple-700",
     Other: "bg-gray-100 text-gray-600",
+  };
+
+  const buildSubtitle = () => {
+    const parts = [];
+    if (reasonFilter !== "All") parts.push(`Reason: ${reasonFilter}`);
+    if (selectedIds.length > 0)
+      parts.push(`${selectedIds.length} rows selected`);
+    return parts.length > 0 ? parts.join(" · ") : "All records";
+  };
+
+  const handlePrint = (mode = 'print') => {
+    const rowsToPrint = getSelectionSummary(selectedIds, filtered);
+    printTable({
+      title: "Wastage Report",
+      subtitle: buildSubtitle(),
+      columns: PRINT_COLUMNS,
+      rows: rowsToPrint,
+      mode,
+    });
   };
 
   return (
@@ -417,12 +458,45 @@ const AdminWastage = () => {
                   <option value={20}>20</option>
                   <option value={50}>50</option>
                 </select>
+                <PrintButton
+                  selectedCount={selectedIds.length}
+                  totalCount={filtered.length}
+                  onPrint={handlePrint}
+                />
               </div>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full min-w-[850px]">
                 <thead>
                   <tr className="border-b border-gray-100 bg-gray-50/50">
+                    <th className="px-4 py-3 text-center w-10">
+                      <input
+                        type="checkbox"
+                        className="w-4 h-4 rounded accent-primary cursor-pointer"
+                        checked={
+                          paginated.length > 0 &&
+                          paginated.every((r) =>
+                            selectedIds.includes(r._id || r.id),
+                          )
+                        }
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            const pageIds = paginated.map((r) => r._id || r.id);
+                            setSelectedIds((prev) => [
+                              ...new Set([...prev, ...pageIds]),
+                            ]);
+                          } else {
+                            const pageIds = new Set(
+                              paginated.map((r) => r._id || r.id),
+                            );
+                            setSelectedIds((prev) =>
+                              prev.filter((id) => !pageIds.has(id)),
+                            );
+                          }
+                        }}
+                        title="Select/deselect all on this page"
+                      />
+                    </th>
                     <th className="text-left px-4 py-3 text-xs font-semibold text-dark-gray uppercase tracking-wide">
                       Date
                     </th>
@@ -452,6 +526,21 @@ const AdminWastage = () => {
                       key={rec.id}
                       className="hover:bg-gray-50/50 transition-colors"
                     >
+                      <td className="px-4 py-3 text-center">
+                        <input
+                          type="checkbox"
+                          className="w-4 h-4 rounded accent-primary cursor-pointer"
+                          checked={selectedIds.includes(rec._id || rec.id)}
+                          onChange={(e) => {
+                            const id = rec._id || rec.id;
+                            setSelectedIds((prev) =>
+                              e.target.checked
+                                ? [...prev, id]
+                                : prev.filter((x) => x !== id),
+                            );
+                          }}
+                        />
+                      </td>
                       <td className="px-4 py-3 text-sm text-dark">
                         {formatDate(rec.date)}
                       </td>

@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import reservationsService from "../../services/reservationsService";
+import tablesService from "../../services/tablesService";
 import { updateReservationStatus } from "../../store/slices/reservationsSlice";
 import { showNotification } from "../../store/slices/notificationSlice";
 import {
@@ -22,6 +23,11 @@ import {
   ChevronDown,
   UserPlus,
   User,
+  LayoutGrid,
+  Layers,
+  Plus,
+  Check,
+  Loader2,
 } from "lucide-react";
 
 const STATUS_OPTIONS = ["Pending", "Confirmed", "Cancelled", "Completed"];
@@ -70,6 +76,13 @@ const AdminReservationDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [updatingStatus, setUpdatingStatus] = useState(false);
+
+  // Table assignment state (stacked mode only)
+  const [showAssignPanel, setShowAssignPanel] = useState(false);
+  const [availableTables, setAvailableTables] = useState([]);
+  const [loadingTables, setLoadingTables] = useState(false);
+  const [selectedTableIds, setSelectedTableIds] = useState([]);
+  const [assigning, setAssigning] = useState(false);
 
   useEffect(() => {
     const load = async () => {
@@ -121,6 +134,144 @@ const AdminReservationDetail = () => {
       );
     } finally {
       setUpdatingStatus(false);
+    }
+  };
+
+  // ── Table filtering logic (mirrors Reservations.jsx) ──────────────────────
+  const partySize = reservation?.partySize || 0;
+
+  // Combined capacity of currently selected tables
+  const assignCombinedCap = useMemo(
+    () =>
+      availableTables
+        .filter((t) => selectedTableIds.includes(t._id))
+        .reduce((s, t) => s + t.capacity, 0),
+    [availableTables, selectedTableIds],
+  );
+
+  // Remaining seats still needed
+  const assignRemaining = Math.max(0, partySize - assignCombinedCap);
+
+  // Does any single table NOT cover the full party? → must multi-select
+  const assignNeedsMulti = useMemo(
+    () =>
+      availableTables.length > 0 &&
+      availableTables.every((t) => t.capacity < partySize),
+    [availableTables, partySize],
+  );
+
+  // Target capacity tier for the "last pick" in multi-select mode
+  const assignTargetCap = useMemo(() => {
+    if (!assignNeedsMulti || assignRemaining <= 0) return null;
+    const unselected = availableTables.filter(
+      (t) => !selectedTableIds.includes(t._id),
+    );
+    if (!unselected.length) return null;
+    const maxCap = Math.max(...unselected.map((t) => t.capacity));
+    if (assignRemaining > maxCap) return "ALL";
+    const fits = unselected.filter((t) => t.capacity >= assignRemaining);
+    return Math.min(...fits.map((t) => t.capacity));
+  }, [assignNeedsMulti, assignRemaining, availableTables, selectedTableIds]);
+
+  // Which tables to show in the assign panel
+  const assignFilteredTables = useMemo(() => {
+    if (!availableTables.length) return [];
+    return availableTables
+      .filter((t) => {
+        const isSel = selectedTableIds.includes(t._id);
+        if (isSel) return true; // always show selected (allow deselect)
+        if (!assignNeedsMulti) return t.capacity >= partySize; // single-select: must fit party
+        if (assignRemaining <= 0) return false; // capacity already met
+        if (assignTargetCap === "ALL") return true; // still need multiple
+        return t.capacity === assignTargetCap; // final-pick tier
+      })
+      .sort((a, b) => {
+        const aS = selectedTableIds.includes(a._id) ? 0 : 1;
+        const bS = selectedTableIds.includes(b._id) ? 0 : 1;
+        if (aS !== bS) return aS - bS;
+        return b.capacity - a.capacity;
+      });
+  }, [
+    availableTables,
+    selectedTableIds,
+    assignNeedsMulti,
+    partySize,
+    assignRemaining,
+    assignTargetCap,
+  ]);
+
+  // Whether a table card should appear disabled
+  const isAssignTableDisabled = useCallback(
+    (table) => {
+      if (selectedTableIds.includes(table._id)) return false; // selected → allow deselect
+      if (!assignNeedsMulti) return table.capacity < partySize;
+      return assignRemaining <= 0;
+    },
+    [selectedTableIds, assignNeedsMulti, partySize, assignRemaining],
+  );
+  // ──────────────────────────────────────────────────────────────────────────
+
+  const openAssignPanel = async () => {
+    setShowAssignPanel(true);
+    setLoadingTables(true);
+    setSelectedTableIds([]);
+    try {
+      const tables = await tablesService.getAvailableTables({
+        date: reservation.reservationDate,
+        time: reservation.reservationTime,
+        excludeReservationId: reservation._id,
+      });
+      setAvailableTables(tables);
+    } catch {
+      dispatch(
+        showNotification({
+          type: "error",
+          message: "Failed to load available tables",
+        }),
+      );
+      setAvailableTables([]);
+    } finally {
+      setLoadingTables(false);
+    }
+  };
+
+  const toggleTableSelection = (tableId) => {
+    setSelectedTableIds((prev) => {
+      const isSel = prev.includes(tableId);
+      if (isSel) return prev.filter((id) => id !== tableId);
+      // Block adding when capacity already satisfied
+      const currentCap = availableTables
+        .filter((t) => prev.includes(t._id))
+        .reduce((s, t) => s + t.capacity, 0);
+      if (currentCap >= partySize) return prev;
+      return [...prev, tableId];
+    });
+  };
+
+  const handleAssignTables = async () => {
+    if (selectedTableIds.length === 0) return;
+    setAssigning(true);
+    try {
+      const result = await reservationsService.assignTablesToReservation(
+        reservation._id,
+        selectedTableIds,
+      );
+      if (result.success) {
+        setReservation(result.reservation);
+        setShowAssignPanel(false);
+        setSelectedTableIds([]);
+        dispatch(
+          showNotification({ type: "success", message: result.message }),
+        );
+      } else {
+        dispatch(showNotification({ type: "error", message: result.message }));
+      }
+    } catch {
+      dispatch(
+        showNotification({ type: "error", message: "Failed to assign tables" }),
+      );
+    } finally {
+      setAssigning(false);
     }
   };
 
@@ -370,12 +521,160 @@ const AdminReservationDetail = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Table Details */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-          <div className="flex items-center gap-2 mb-5">
-            <div className="w-9 h-9 bg-primary/10 rounded-xl flex items-center justify-center">
-              <TableIcon className="w-4 h-4 text-primary" />
+          <div className="flex items-center justify-between gap-2 mb-5">
+            <div className="flex items-center gap-2">
+              <div className="w-9 h-9 bg-primary/10 rounded-xl flex items-center justify-center">
+                <TableIcon className="w-4 h-4 text-primary" />
+              </div>
+              <h2 className="font-bold text-dark">Table Details</h2>
             </div>
-            <h2 className="font-bold text-dark">Table Details</h2>
+            {res.tableSelectionMode === "stacked" && !showAssignPanel && (
+              <button
+                onClick={openAssignPanel}
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-white text-xs font-semibold rounded-xl hover:bg-primary-dark transition-colors"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                {tables.length > 0 ? "Reassign Tables" : "Assign Tables"}
+              </button>
+            )}
           </div>
+
+          {/* Assign Panel (stacked mode) */}
+          {showAssignPanel && (
+            <div className="mb-5 bg-amber-50 border border-amber-200 rounded-2xl p-4">
+              <div className="flex items-center justify-between mb-3">
+                <p className="text-sm font-bold text-amber-800">
+                  Select tables to assign
+                </p>
+                <button
+                  onClick={() => {
+                    setShowAssignPanel(false);
+                    setSelectedTableIds([]);
+                  }}
+                  className="text-xs text-dark-gray hover:text-dark font-semibold"
+                >
+                  Cancel
+                </button>
+              </div>
+              {loadingTables ? (
+                <div className="flex items-center gap-2 py-4 justify-center text-dark-gray text-sm">
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Loading available tables...
+                </div>
+              ) : availableTables.length === 0 ? (
+                <p className="text-sm text-dark-gray text-center py-4">
+                  No tables available at this date and time.
+                </p>
+              ) : assignFilteredTables.length === 0 ? (
+                <p className="text-sm text-dark-gray text-center py-4">
+                  No tables can accommodate {partySize} guests at this slot.
+                </p>
+              ) : (
+                <>
+                  {/* Seat progress hint */}
+                  <div className="mb-3 flex items-center justify-between text-xs font-medium">
+                    <span className="text-amber-700">
+                      Party of <span className="font-bold">{partySize}</span>
+                      {assignCombinedCap > 0 && (
+                        <>
+                          {" "}
+                          ·{" "}
+                          <span className="text-primary font-bold">
+                            {assignCombinedCap}
+                          </span>{" "}
+                          seats covered
+                        </>
+                      )}
+                    </span>
+                    {assignRemaining > 0 && (
+                      <span className="text-dark-gray">
+                        Need{" "}
+                        <span className="font-bold text-amber-700">
+                          {assignRemaining}
+                        </span>{" "}
+                        more seat{assignRemaining !== 1 ? "s" : ""}
+                      </span>
+                    )}
+                    {assignRemaining <= 0 && selectedTableIds.length > 0 && (
+                      <span className="text-green-600 font-bold flex items-center gap-1">
+                        <Check className="w-3.5 h-3.5" /> Full coverage
+                      </span>
+                    )}
+                  </div>
+                  <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
+                    {assignFilteredTables.map((t) => {
+                      const isSelected = selectedTableIds.includes(t._id);
+                      const disabled = isAssignTableDisabled(t);
+                      return (
+                        <button
+                          key={t._id}
+                          onClick={() =>
+                            !disabled && toggleTableSelection(t._id)
+                          }
+                          disabled={disabled}
+                          className={`w-full flex items-center gap-3 p-3 rounded-xl border-2 text-left transition-all ${
+                            isSelected
+                              ? "border-primary bg-primary/5"
+                              : disabled
+                                ? "border-gray-100 bg-gray-50 opacity-40 cursor-not-allowed"
+                                : "border-gray-200 bg-white hover:border-primary/40 cursor-pointer"
+                          }`}
+                        >
+                          <div
+                            className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 font-bold text-sm ${
+                              isSelected
+                                ? "bg-primary text-white"
+                                : "bg-gray-100 text-dark-gray"
+                            }`}
+                          >
+                            #{t.tableNumber}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-semibold text-dark text-sm truncate">
+                              {t.name}
+                            </p>
+                            <p className="text-xs text-dark-gray">
+                              {t.location} · {t.capacity} seats
+                            </p>
+                          </div>
+                          {isSelected && (
+                            <Check className="w-4 h-4 text-primary flex-shrink-0" />
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {selectedTableIds.length > 0 && (
+                    <div className="mt-3 pt-3 border-t border-amber-200 flex items-center justify-between gap-3">
+                      <p className="text-xs text-amber-700 font-medium">
+                        {selectedTableIds.length} table
+                        {selectedTableIds.length !== 1 ? "s" : ""} ·{" "}
+                        {assignCombinedCap} seats
+                        {assignRemaining > 0 && (
+                          <span className="text-red-500 ml-1">
+                            (need {assignRemaining} more)
+                          </span>
+                        )}
+                      </p>
+                      <button
+                        onClick={handleAssignTables}
+                        disabled={assigning || assignRemaining > 0}
+                        className="flex items-center gap-1.5 px-4 py-1.5 bg-primary text-white text-xs font-bold rounded-xl hover:bg-primary-dark disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+                      >
+                        {assigning ? (
+                          <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                        ) : (
+                          <Check className="w-3.5 h-3.5" />
+                        )}
+                        {assigning ? "Assigning..." : "Confirm Assignment"}
+                      </button>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          )}
+
           {tables.length > 0 ? (
             <div className="space-y-3">
               {tables.map((t) => (
@@ -402,13 +701,47 @@ const AdminReservationDetail = () => {
                   </div>
                 </div>
               ))}
+              {res.tableSelectionMode && (
+                <div className="pt-1">
+                  <p className="text-xs text-dark-gray font-semibold mb-2">
+                    Selection Mode
+                  </p>
+                  <div
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold border ${
+                      res.tableSelectionMode === "stacked"
+                        ? "bg-amber-50 text-amber-700 border-amber-200"
+                        : "bg-blue-50 text-blue-700 border-blue-200"
+                    }`}
+                  >
+                    {res.tableSelectionMode === "stacked" ? (
+                      <Layers className="w-3.5 h-3.5" />
+                    ) : (
+                      <LayoutGrid className="w-3.5 h-3.5" />
+                    )}
+                    {res.tableSelectionMode === "stacked"
+                      ? "Stack Tables"
+                      : "Custom Selection"}
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center py-8 text-center">
               <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center mb-3">
                 <TableIcon className="w-6 h-6 text-dark-gray" />
               </div>
-              <p className="text-sm text-dark-gray">No table assigned</p>
+              {res.tableSelectionMode === "stacked" ? (
+                <>
+                  <p className="text-sm font-semibold text-amber-700">
+                    Pending table assignment
+                  </p>
+                  <p className="text-xs text-dark-gray mt-1">
+                    Use "Assign Tables" to allocate tables for this reservation
+                  </p>
+                </>
+              ) : (
+                <p className="text-sm text-dark-gray">No table assigned</p>
+              )}
             </div>
           )}
         </div>

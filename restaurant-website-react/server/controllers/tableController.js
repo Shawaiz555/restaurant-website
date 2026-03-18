@@ -162,7 +162,7 @@ const deleteTable = async (req, res) => {
 // @route   GET /api/tables/available
 const getAvailableTables = async (req, res) => {
   try {
-    const { date, time, partySize } = req.query;
+    const { date, time, partySize, excludeReservationId } = req.query;
 
     if (!date || !time) {
       return res.status(400).json({
@@ -174,11 +174,15 @@ const getAvailableTables = async (req, res) => {
     const Reservation = require('../models/Reservation');
 
     // Find tables already reserved at this exact date+time
-    const conflictingReservations = await Reservation.find({
+    const conflictQuery = {
       reservationDate: date,
       reservationTime: time,
       status: { $in: ['Pending', 'Confirmed'] },
-    }).select('tableId tableIds');
+    };
+    if (excludeReservationId) {
+      conflictQuery._id = { $ne: excludeReservationId };
+    }
+    const conflictingReservations = await Reservation.find(conflictQuery).select('tableId tableIds');
 
     const reservedTableIds = [];
     for (const r of conflictingReservations) {

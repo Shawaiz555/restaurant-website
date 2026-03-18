@@ -83,6 +83,16 @@ class ReservationsService {
     }
   }
 
+  async assignTablesToReservation(id, tableIds) {
+    try {
+      const response = await apiClient.put(`/reservations/${id}/tables`, { tableIds });
+      return { success: true, message: response.message, reservation: response.reservation };
+    } catch (error) {
+      console.error('Assign tables error:', error);
+      return { success: false, message: error.message };
+    }
+  }
+
   async deleteReservation(id) {
     try {
       const response = await apiClient.delete(`/reservations/${id}`);

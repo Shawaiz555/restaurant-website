@@ -15,6 +15,8 @@ import {
 import expensesService from "../../services/expensesService";
 import { showNotification } from "../../store/slices/notificationSlice";
 import ConfirmModal from "../../components/admin/common/ConfirmModal";
+import PrintButton from "../../components/admin/common/PrintButton";
+import { printTable, getSelectionSummary } from "../../utils/printUtils";
 import {
   Plus,
   DollarSign,
@@ -32,6 +34,26 @@ import {
   Wrench,
 } from "lucide-react";
 
+const PRINT_COLUMNS = [
+  { header: "#", render: (_, i) => i + 1 },
+  {
+    header: "Date",
+    render: (r) =>
+      new Date(r.date).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      }),
+  },
+  { header: "Category", render: (r) => r.category },
+  { header: "Description", render: (r) => r.description },
+  {
+    header: "Amount",
+    render: (r) => `Rs ${parseFloat(r.amount || 0).toFixed(2)}`,
+  },
+  { header: "Payment Method", render: (r) => r.paymentMethod },
+];
+
 const AdminExpenses = () => {
   const dispatch = useDispatch();
   const expenses = useSelector(selectAllExpenses);
@@ -43,6 +65,7 @@ const AdminExpenses = () => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [expenseToDelete, setExpenseToDelete] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedIds, setSelectedIds] = useState([]);
 
   // Ref for expense form section
   const expenseFormRef = useRef(null);
@@ -237,6 +260,29 @@ const AdminExpenses = () => {
       month: "short",
       day: "numeric",
       year: "numeric",
+    });
+  };
+
+  const buildSubtitle = () => {
+    const parts = [];
+    if (selectedCategory !== "All") parts.push(`Category: ${selectedCategory}`);
+    if (selectedIds.length > 0)
+      parts.push(`${selectedIds.length} rows selected`);
+    return parts.length > 0 ? parts.join(" · ") : "All records";
+  };
+
+  const handlePrint = (mode = 'print') => {
+    const rowsToPrint = getSelectionSummary(
+      selectedIds,
+      filteredExpenses,
+      "_id",
+    );
+    printTable({
+      title: "Expenses Report",
+      subtitle: buildSubtitle(),
+      columns: PRINT_COLUMNS,
+      rows: rowsToPrint,
+      mode,
     });
   };
 
@@ -453,22 +499,34 @@ const AdminExpenses = () => {
 
       {/* Filter */}
       <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-lg border border-gray-100">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
-          <label className="text-sm font-semibold text-dark whitespace-nowrap">
-            Filter by Category:
-          </label>
-          <select
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            className="w-full sm:w-auto px-4 py-2.5 sm:py-2 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-white text-sm sm:text-md min-w-[180px]"
-          >
-            <option value="All">All Categories</option>
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+            <label className="text-sm font-semibold text-dark whitespace-nowrap">
+              Filter by Category:
+            </label>
+            <select
+              value={selectedCategory}
+              onChange={(e) => {
+                setSelectedCategory(e.target.value);
+                setSelectedIds([]);
+              }}
+              className="w-full sm:w-auto px-4 py-2.5 sm:py-2 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-white text-sm sm:text-md min-w-[180px]"
+            >
+              <option value="All">All Categories</option>
+              {categories.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="flex items-center gap-3">
+            {selectedIds.length > 0 && (
+              <span className="text-sm text-primary font-semibold">
+                {selectedIds.length} selected
+              </span>
+            )}
+          </div>
         </div>
       </div>
 
@@ -617,94 +675,153 @@ const AdminExpenses = () => {
             </p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-cream border-b-2 border-gray-200">
-                <tr>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-dark">
-                    Date
-                  </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-dark">
-                    Category
-                  </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-dark">
-                    Description
-                  </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-dark">
-                    Amount
-                  </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-dark">
-                    Payment Method
-                  </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-dark">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {filteredExpenses.map((expense) => (
-                  <tr
-                    key={expense._id || expense.id}
-                    className="hover:bg-cream-light transition-colors"
-                  >
-                    <td className="px-6 py-4 text-sm text-dark whitespace-nowrap">
-                      {formatDate(expense.date)}
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary">
-                        {expense.category}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-dark">
-                      {expense.description}
-                    </td>
-                    <td className="px-6 py-4 text-sm font-bold text-red-600">
-                      -{formatCurrency(expense.amount)}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-dark-gray">
-                      {expense.paymentMethod}
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => handleEdit(expense)}
-                          className="text-white bg-primary px-7 py-1 rounded-xl hover:bg-primary/80 text-sm font-semibold transition-colors"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => handleDeleteClick(expense)}
-                          className="text-white bg-red-600 px-7 py-1 rounded-xl hover:bg-red-800 text-sm font-semibold transition-colors"
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </td>
+          <>
+            <div className="px-4 py-3 border-b border-gray-100 bg-gray-50/50 flex items-center justify-between">
+              <p className="text-sm text-dark-gray">
+                <span className="font-semibold text-dark">
+                  {filteredExpenses.length}
+                </span>{" "}
+                expense{filteredExpenses.length !== 1 ? "s" : ""}
+                {selectedIds.length > 0 && (
+                  <span className="ml-2 text-primary font-semibold">
+                    · {selectedIds.length} selected
+                  </span>
+                )}
+              </p>
+              <PrintButton
+                selectedCount={selectedIds.length}
+                totalCount={filteredExpenses.length}
+                onPrint={handlePrint}
+              />
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-cream border-b-2 border-gray-200">
+                  <tr>
+                    <th className="px-6 py-4 text-center w-10">
+                      <input
+                        type="checkbox"
+                        className="w-4 h-4 rounded accent-primary cursor-pointer"
+                        checked={
+                          filteredExpenses.length > 0 &&
+                          filteredExpenses.every((r) =>
+                            selectedIds.includes(r._id || r.id),
+                          )
+                        }
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedIds(
+                              filteredExpenses.map((r) => r._id || r.id),
+                            );
+                          } else {
+                            setSelectedIds([]);
+                          }
+                        }}
+                        title="Select/deselect all"
+                      />
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-dark">
+                      Date
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-dark">
+                      Category
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-dark">
+                      Description
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-dark">
+                      Amount
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-dark">
+                      Payment Method
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-dark">
+                      Actions
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-              <tfoot className="bg-cream-light border-t-2 border-gray-200">
-                <tr>
-                  <td
-                    colSpan="3"
-                    className="px-6 py-4 text-sm font-bold text-dark"
-                  >
-                    Total ({selectedCategory})
-                  </td>
-                  <td className="px-6 py-4 text-lg font-bold text-red-600">
-                    -
-                    {formatCurrency(
-                      filteredExpenses.reduce(
-                        (sum, exp) => sum + parseFloat(exp.amount),
-                        0,
-                      ),
-                    )}
-                  </td>
-                  <td colSpan="2"></td>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {filteredExpenses.map((expense) => (
+                    <tr
+                      key={expense._id || expense.id}
+                      className="hover:bg-cream-light transition-colors"
+                    >
+                      <td className="px-6 py-4 text-center">
+                        <input
+                          type="checkbox"
+                          className="w-4 h-4 rounded accent-primary cursor-pointer"
+                          checked={selectedIds.includes(
+                            expense._id || expense.id,
+                          )}
+                          onChange={(e) => {
+                            const id = expense._id || expense.id;
+                            setSelectedIds((prev) =>
+                              e.target.checked
+                                ? [...prev, id]
+                                : prev.filter((x) => x !== id),
+                            );
+                          }}
+                        />
+                      </td>
+                      <td className="px-6 py-4 text-sm text-dark whitespace-nowrap">
+                        {formatDate(expense.date)}
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary">
+                          {expense.category}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-sm text-dark">
+                        {expense.description}
+                      </td>
+                      <td className="px-6 py-4 text-sm font-bold text-red-600">
+                        -{formatCurrency(expense.amount)}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-dark-gray">
+                        {expense.paymentMethod}
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => handleEdit(expense)}
+                            className="text-white bg-primary px-7 py-1 rounded-xl hover:bg-primary/80 text-sm font-semibold transition-colors"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => handleDeleteClick(expense)}
+                            className="text-white bg-red-600 px-7 py-1 rounded-xl hover:bg-red-800 text-sm font-semibold transition-colors"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+                <tfoot className="bg-cream-light border-t-2 border-gray-200">
+                  <tr>
+                    <td
+                      colSpan="4"
+                      className="px-6 py-4 text-sm font-bold text-dark"
+                    >
+                      Total ({selectedCategory})
+                    </td>
+                    <td className="px-6 py-4 text-lg font-bold text-red-600">
+                      -
+                      {formatCurrency(
+                        filteredExpenses.reduce(
+                          (sum, exp) => sum + parseFloat(exp.amount),
+                          0,
+                        ),
+                      )}
+                    </td>
+                    <td colSpan="2"></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </>
         )}
       </div>
 

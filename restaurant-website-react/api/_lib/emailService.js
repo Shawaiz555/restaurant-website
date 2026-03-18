@@ -561,9 +561,21 @@ const getReservationCustomerEmailTemplate = (reservation) => `
                       <p style="margin: 2px 0 0 0; color: #1f2937; font-size: 15px; font-weight: 600;">${reservation.partySize} ${reservation.partySize === 1 ? 'Guest' : 'Guests'}</p>
                     </td></tr>
                     <tr><td style="padding: 7px 0;">
-                      <p style="margin: 0; color: #6b7280; font-size: 13px;">${reservation.tables && reservation.tables.length > 1 ? 'Tables' : 'Table'}</p>
-                      <p style="margin: 2px 0 0 0; color: #1f2937; font-size: 15px; font-weight: 600;">${reservation.tables && reservation.tables.length > 1 ? reservation.tables.map(t => `Table #${t.tableNumber} — ${t.name} (${t.location})`).join('<br>') : `Table #${reservation.tableNumber} — ${reservation.tableName} (${reservation.tableLocation})`}</p>
+                      <p style="margin: 0; color: #6b7280; font-size: 13px;">${reservation.tableSelectionMode === 'stacked' ? 'Table' : (reservation.tables && reservation.tables.length > 1 ? 'Tables' : 'Table')}</p>
+                      <p style="margin: 2px 0 0 0;">
+                        ${reservation.tableSelectionMode === 'stacked'
+                          ? `<span style="display:inline-block;padding:3px 12px;border-radius:20px;font-size:12px;font-weight:bold;background-color:#fef3c7;color:#92400e;border:1px solid #fde68a;">&#9776; Stacked &mdash; Admin will arrange your table</span>`
+                          : `<span style="color:#1f2937;font-size:15px;font-weight:600;">${reservation.tables && reservation.tables.length > 1 ? reservation.tables.map(t => `Table #${t.tableNumber} — ${t.name} (${t.location})`).join('<br>') : `Table #${reservation.tableNumber} — ${reservation.tableName} (${reservation.tableLocation})`}</span>`
+                        }
+                      </p>
                     </td></tr>
+                    ${reservation.tableSelectionMode === 'custom' ? `
+                    <tr><td style="padding: 7px 0;">
+                      <p style="margin: 0; color: #6b7280; font-size: 13px;">Table Selection Mode</p>
+                      <p style="margin: 4px 0 0 0;">
+                        <span style="display: inline-block; padding: 3px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; background-color: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe;">&#9638; Custom Selection</span>
+                      </p>
+                    </td></tr>` : ''}
                     ${reservation.specialRequests ? `
                     <tr><td style="padding: 7px 0;">
                       <p style="margin: 0; color: #6b7280; font-size: 13px;">Special Requests</p>
@@ -685,9 +697,21 @@ const getReservationAdminEmailTemplate = (reservation) => `
                       <p class="datetime-value" style="margin: 2px 0 0 0; color: #E67E22; font-size: 17px; font-weight: bold;">${reservation.reservationDate} at ${formatReservationTime(reservation.reservationTime)}</p>
                     </td></tr>
                     <tr><td style="padding: 7px 0;">
-                      <p style="margin: 0; color: #6b7280; font-size: 13px;">${reservation.tables && reservation.tables.length > 1 ? 'Tables' : 'Table'}</p>
-                      <p style="margin: 2px 0 0 0; color: #1f2937; font-size: 15px; font-weight: 600;">${reservation.tables && reservation.tables.length > 1 ? reservation.tables.map(t => `Table #${t.tableNumber} &#8212; ${t.name} (${t.location})`).join('<br>') : `Table #${reservation.tableNumber} &#8212; ${reservation.tableName} (${reservation.tableLocation})`}</p>
+                      <p style="margin: 0; color: #6b7280; font-size: 13px;">${reservation.tableSelectionMode === 'stacked' ? 'Table' : (reservation.tables && reservation.tables.length > 1 ? 'Tables' : 'Table')}</p>
+                      <p style="margin: 2px 0 0 0;">
+                        ${reservation.tableSelectionMode === 'stacked'
+                          ? `<span style="display:inline-block;padding:3px 12px;border-radius:20px;font-size:12px;font-weight:bold;background-color:#fef3c7;color:#92400e;border:1px solid #fde68a;">&#9776; Stacked &mdash; Assign tables via admin panel</span>`
+                          : `<span style="color:#1f2937;font-size:15px;font-weight:600;">${reservation.tables && reservation.tables.length > 1 ? reservation.tables.map(t => `Table #${t.tableNumber} &#8212; ${t.name} (${t.location})`).join('<br>') : `Table #${reservation.tableNumber} &#8212; ${reservation.tableName} (${reservation.tableLocation})`}</span>`
+                        }
+                      </p>
                     </td></tr>
+                    ${reservation.tableSelectionMode === 'custom' ? `
+                    <tr><td style="padding: 7px 0;">
+                      <p style="margin: 0; color: #6b7280; font-size: 13px;">Table Selection Mode</p>
+                      <p style="margin: 4px 0 0 0;">
+                        <span style="display: inline-block; padding: 3px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; background-color: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe;">&#9638; Custom Selection</span>
+                      </p>
+                    </td></tr>` : ''}
                     <tr><td style="padding: 7px 0;">
                       <p style="margin: 0; color: #6b7280; font-size: 13px;">Party Size</p>
                       <p style="margin: 2px 0 0 0; color: #1f2937; font-size: 15px; font-weight: 600;">${reservation.partySize} ${reservation.partySize === 1 ? 'Guest' : 'Guests'}</p>
@@ -759,7 +783,10 @@ const getReservationAdminEmailTemplate = (reservation) => `
                   <h3 style="margin: 0 0 12px 0; color: #92400e; font-size: 17px;">Action Items:</h3>
                   <ul class="action-list" style="margin: 0; padding-left: 18px; color: #78350f; font-size: 13px; line-height: 2;">
                     <li>Call customer at ${reservation.phone} to confirm reservation</li>
-                    <li>Mark ${reservation.tables && reservation.tables.length > 1 ? reservation.tables.map(t => `Table #${t.tableNumber}`).join(', ') : `Table #${reservation.tableNumber}`} as Reserved for ${reservation.reservationDate} at ${formatReservationTime(reservation.reservationTime)}</li>
+                    ${reservation.tableSelectionMode === 'stacked'
+                      ? `<li><strong>Assign tables</strong> to this stacked reservation via the admin panel before the reservation date</li>`
+                      : `<li>Mark ${reservation.tables && reservation.tables.length > 1 ? reservation.tables.map(t => `Table #${t.tableNumber}`).join(', ') : `Table #${reservation.tableNumber}`} as Reserved for ${reservation.reservationDate} at ${formatReservationTime(reservation.reservationTime)}</li>`
+                    }
                     <li>Prepare table setup for ${reservation.partySize} guests</li>
                     <li>Update reservation status in admin panel</li>
                   </ul>

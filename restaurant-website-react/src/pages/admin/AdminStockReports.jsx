@@ -14,12 +14,35 @@ import {
   Layers,
 } from "lucide-react";
 import StatsCard from "../../components/admin/common/StatsCard";
+import PrintButton from "../../components/admin/common/PrintButton";
+import { printTable, getSelectionSummary } from "../../utils/printUtils";
 import ingredientsService from "../../services/ingredientsService";
 import purchasesService from "../../services/purchasesService";
 import wastageService from "../../services/wastageService";
 import addonStockService from "../../services/addonStockService";
 import { useDispatch } from "react-redux";
 import { showNotification } from "../../store/slices/notificationSlice";
+
+const PRINT_COLUMNS = [
+  { header: "#", render: (_, i) => i + 1 },
+  { header: "Name", render: (r) => r.name },
+  { header: "Type", render: (r) => r.kind },
+  { header: "Category", render: (r) => r.subLabel },
+  { header: "Current Stock", render: (r) => `${r.currentStock} ${r.unit}` },
+  { header: "Min Stock", render: (r) => `${r.minimumStock} ${r.unit}` },
+  {
+    header: "Cost/Unit",
+    render: (r) => (r.costPerUnit != null ? `Rs. ${r.costPerUnit}` : "—"),
+  },
+  {
+    header: "Status",
+    render: (r) => {
+      if (r.currentStock === 0) return "Out of Stock";
+      if (r.currentStock <= r.minimumStock) return "Low Stock";
+      return "In Stock";
+    },
+  },
+];
 
 const TYPE_COLORS = {
   Drink: "bg-blue-100 text-blue-700",
@@ -40,6 +63,7 @@ const AdminStockReports = () => {
   const [sortBy, setSortBy] = useState("name");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [selectedIds, setSelectedIds] = useState([]);
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -70,9 +94,10 @@ const AdminStockReports = () => {
     loadData();
   }, [loadData]);
 
-  // Reset page when tab/sort changes
+  // Reset page + selection when tab/sort changes
   useEffect(() => {
     setCurrentPage(1);
+    setSelectedIds([]);
   }, [activeTab, sortBy]);
 
   // Ingredient stats
@@ -160,6 +185,24 @@ const AdminStockReports = () => {
     { key: "addons", label: `Addons (${addTotal})` },
   ];
 
+  const buildSubtitle = () => {
+    const parts = [];
+    if (activeTab !== "all") parts.push(`Type: ${activeTab}`);
+    parts.push(`Sort: ${sortBy}`);
+    return parts.join(" · ");
+  };
+
+  const handlePrint = (mode = 'print') => {
+    const rowsToPrint = getSelectionSummary(selectedIds, sorted);
+    printTable({
+      title: "Stock Report",
+      subtitle: buildSubtitle(),
+      columns: PRINT_COLUMNS,
+      rows: rowsToPrint,
+      mode,
+    });
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -177,13 +220,15 @@ const AdminStockReports = () => {
             </p>
           </div>
         </div>
-        <button
-          onClick={loadData}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-200 text-dark-gray hover:bg-gray-50 transition-colors"
-        >
-          <RefreshCw className="w-4 h-4" />
-          Refresh
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={loadData}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-200 text-dark-gray hover:bg-gray-50 transition-colors"
+          >
+            <RefreshCw className="w-4 h-4" />
+            Refresh
+          </button>
+        </div>
       </div>
 
       {/* Ingredients Stats */}
@@ -372,6 +417,11 @@ const AdminStockReports = () => {
                   <option value={20}>20</option>
                   <option value={50}>50</option>
                 </select>
+                <PrintButton
+                  selectedCount={selectedIds.length}
+                  totalCount={sorted.length}
+                  onPrint={handlePrint}
+                />
               </div>
             </div>
 
@@ -379,6 +429,28 @@ const AdminStockReports = () => {
               <table className="w-full min-w-[950px]">
                 <thead>
                   <tr className="border-b border-gray-100 bg-gray-50/50">
+                    <th className="px-3 py-4 text-center w-10">
+                      <input
+                        type="checkbox"
+                        checked={
+                          paginated.length > 0 &&
+                          paginated.every((r) => selectedIds.includes(r._id))
+                        }
+                        onChange={(e) => {
+                          const pageIds = paginated.map((r) => r._id);
+                          if (e.target.checked) {
+                            setSelectedIds((prev) => [
+                              ...prev,
+                              ...pageIds.filter((id) => !prev.includes(id)),
+                            ]);
+                          } else {
+                            setSelectedIds((prev) =>
+                              prev.filter((id) => !pageIds.includes(id)),
+                            );
+                          }
+                        }}
+                      />
+                    </th>
                     <th className="text-left px-4 py-3 text-xs font-semibold text-dark-gray uppercase tracking-wide">
                       Name
                     </th>
@@ -420,6 +492,19 @@ const AdminStockReports = () => {
                         key={row._id}
                         className="hover:bg-gray-50/50 transition-colors"
                       >
+                        <td className="px-3 py-4 text-center">
+                          <input
+                            type="checkbox"
+                            checked={selectedIds.includes(row._id)}
+                            onChange={(e) =>
+                              setSelectedIds((prev) =>
+                                e.target.checked
+                                  ? [...prev, row._id]
+                                  : prev.filter((x) => x !== row._id),
+                              )
+                            }
+                          />
+                        </td>
                         <td className="px-4 py-3 font-medium text-dark text-sm">
                           {row.name}
                         </td>

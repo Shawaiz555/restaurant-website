@@ -70,6 +70,12 @@ const reservationSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    // How the user chose their tables: 'custom' (manual pick) or 'stacked' (combine for large party)
+    tableSelectionMode: {
+      type: String,
+      enum: ['custom', 'stacked', null],
+      default: null,
+    },
     guestDetails: {
       hasGuestList: { type: Boolean, default: false },
       guests: [

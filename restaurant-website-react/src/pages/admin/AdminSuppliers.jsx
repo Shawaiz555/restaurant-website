@@ -28,6 +28,17 @@ import {
 import suppliersService from "../../services/suppliersService";
 import { showNotification } from "../../store/slices/notificationSlice";
 import ConfirmModal from "../../components/admin/common/ConfirmModal";
+import PrintButton from "../../components/admin/common/PrintButton";
+import { printTable, getSelectionSummary } from "../../utils/printUtils";
+
+const PRINT_COLUMNS = [
+  { header: "#", render: (_, i) => i + 1 },
+  { header: "Name", render: (r) => r.name },
+  { header: "Phone", render: (r) => r.phone || "—" },
+  { header: "Email", render: (r) => r.email || "—" },
+  { header: "Address", render: (r) => r.address || "—" },
+  { header: "Status", render: (r) => (r.isActive ? "Active" : "Inactive") },
+];
 
 const EMPTY_FORM = {
   name: "",
@@ -50,6 +61,7 @@ const AdminSuppliers = () => {
   const [saving, setSaving] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [selectedIds, setSelectedIds] = useState([]);
   const formRef = useRef(null);
 
   const loadData = useCallback(async () => {
@@ -81,6 +93,7 @@ const AdminSuppliers = () => {
 
   useEffect(() => {
     setCurrentPage(1);
+    setSelectedIds([]);
   }, [search]);
 
   const totalPages = Math.ceil(filtered.length / itemsPerPage);
@@ -180,6 +193,25 @@ const AdminSuppliers = () => {
     } finally {
       setDeleteTarget(null);
     }
+  };
+
+  const buildSubtitle = () => {
+    const parts = [];
+    if (search) parts.push(`Search: "${search}"`);
+    if (selectedIds.length > 0)
+      parts.push(`${selectedIds.length} rows selected`);
+    return parts.length > 0 ? parts.join(" · ") : "All records";
+  };
+
+  const handlePrint = (mode = 'print') => {
+    const rowsToPrint = getSelectionSummary(selectedIds, filtered);
+    printTable({
+      title: "Suppliers Report",
+      subtitle: buildSubtitle(),
+      columns: PRINT_COLUMNS,
+      rows: rowsToPrint,
+      mode,
+    });
   };
 
   return (
@@ -383,12 +415,45 @@ const AdminSuppliers = () => {
                   <option value={20}>20</option>
                   <option value={50}>50</option>
                 </select>
+                <PrintButton
+                  selectedCount={selectedIds.length}
+                  totalCount={filtered.length}
+                  onPrint={handlePrint}
+                />
               </div>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full min-w-[800px]">
                 <thead>
                   <tr className="border-b border-gray-100 bg-gray-50/50">
+                    <th className="px-4 py-3 text-center w-10">
+                      <input
+                        type="checkbox"
+                        className="w-4 h-4 rounded accent-primary cursor-pointer"
+                        checked={
+                          paginated.length > 0 &&
+                          paginated.every((r) =>
+                            selectedIds.includes(r._id || r.id),
+                          )
+                        }
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            const pageIds = paginated.map((r) => r._id || r.id);
+                            setSelectedIds((prev) => [
+                              ...new Set([...prev, ...pageIds]),
+                            ]);
+                          } else {
+                            const pageIds = new Set(
+                              paginated.map((r) => r._id || r.id),
+                            );
+                            setSelectedIds((prev) =>
+                              prev.filter((id) => !pageIds.has(id)),
+                            );
+                          }
+                        }}
+                        title="Select/deselect all on this page"
+                      />
+                    </th>
                     <th className="text-left px-4 py-3 text-xs font-semibold text-dark-gray uppercase tracking-wide">
                       Name
                     </th>
@@ -415,6 +480,21 @@ const AdminSuppliers = () => {
                       key={sup.id}
                       className="hover:bg-gray-50/50 transition-colors"
                     >
+                      <td className="px-4 py-3 text-center">
+                        <input
+                          type="checkbox"
+                          className="w-4 h-4 rounded accent-primary cursor-pointer"
+                          checked={selectedIds.includes(sup._id || sup.id)}
+                          onChange={(e) => {
+                            const id = sup._id || sup.id;
+                            setSelectedIds((prev) =>
+                              e.target.checked
+                                ? [...prev, id]
+                                : prev.filter((x) => x !== id),
+                            );
+                          }}
+                        />
+                      </td>
                       <td className="px-4 py-3 font-medium text-dark text-sm">
                         {sup.name}
                       </td>

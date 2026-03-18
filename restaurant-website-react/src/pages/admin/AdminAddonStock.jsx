@@ -30,6 +30,27 @@ import addonStockService from "../../services/addonStockService";
 import { showNotification } from "../../store/slices/notificationSlice";
 import StatsCard from "../../components/admin/common/StatsCard";
 import ConfirmModal from "../../components/admin/common/ConfirmModal";
+import PrintButton from "../../components/admin/common/PrintButton";
+import { printTable, getSelectionSummary } from "../../utils/printUtils";
+
+const PRINT_COLUMNS = [
+  { header: "#", render: (_, i) => i + 1 },
+  { header: "Name", render: (r) => r.name },
+  { header: "Type", render: (r) => r.addonType },
+  { header: "Unit", render: (r) => r.unit },
+  { header: "Current Stock", render: (r) => r.currentStock },
+  { header: "Min Stock", render: (r) => r.minimumStock },
+  { header: "Cost/Unit (Rs.)", render: (r) => r.costPerUnit },
+  {
+    header: "Status",
+    render: (r) =>
+      r.currentStock === 0
+        ? "Out of Stock"
+        : r.currentStock <= r.minimumStock
+          ? "Low Stock"
+          : "In Stock",
+  },
+];
 
 const EMPTY_FORM = {
   name: "",
@@ -55,6 +76,7 @@ const AdminAddonStock = () => {
   const [showForm, setShowForm] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [selectedIds, setSelectedIds] = useState([]);
   const formRef = useRef(null);
 
   const addonTypes = addonStockService.getAddonTypes();
@@ -93,6 +115,7 @@ const AdminAddonStock = () => {
 
   useEffect(() => {
     setCurrentPage(1);
+    setSelectedIds([]);
   }, [search, typeFilter]);
 
   const totalPages = Math.ceil(filtered.length / itemsPerPage);
@@ -202,6 +225,23 @@ const AdminAddonStock = () => {
     } finally {
       setDeleteTarget(null);
     }
+  };
+
+  const handlePrint = (mode = 'print') => {
+    const parts = [
+      search && `Search: "${search}"`,
+      typeFilter !== "All" && `Type: ${typeFilter}`,
+      selectedIds.length > 0 && `${selectedIds.length} rows selected`,
+    ].filter(Boolean);
+    const subtitle = parts.length > 0 ? parts.join(" · ") : "All records";
+    const rowsToPrint = getSelectionSummary(selectedIds, filtered);
+    printTable({
+      title: "Addon Stock Report",
+      subtitle,
+      columns: PRINT_COLUMNS,
+      rows: rowsToPrint,
+      mode,
+    });
   };
 
   const typeColor = {
@@ -484,6 +524,11 @@ const AdminAddonStock = () => {
                   {filtered.length}
                 </span>{" "}
                 addons
+                {selectedIds.length > 0 && (
+                  <span className="ml-2 text-primary font-semibold">
+                    · {selectedIds.length} selected
+                  </span>
+                )}
               </p>
               <div className="flex items-center gap-2">
                 <label className="text-sm text-dark-gray font-medium whitespace-nowrap">
@@ -502,12 +547,45 @@ const AdminAddonStock = () => {
                   <option value={20}>20</option>
                   <option value={50}>50</option>
                 </select>
+                <PrintButton
+                  selectedCount={selectedIds.length}
+                  totalCount={filtered.length}
+                  onPrint={handlePrint}
+                />
               </div>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full min-w-[900px]">
                 <thead>
                   <tr className="border-b border-gray-100 bg-gray-50/50">
+                    <th className="px-4 py-3 text-center w-10">
+                      <input
+                        type="checkbox"
+                        className="w-4 h-4 rounded accent-primary cursor-pointer"
+                        checked={
+                          paginated.length > 0 &&
+                          paginated.every((r) =>
+                            selectedIds.includes(r._id || r.id),
+                          )
+                        }
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            const pageIds = paginated.map((r) => r._id || r.id);
+                            setSelectedIds((prev) => [
+                              ...new Set([...prev, ...pageIds]),
+                            ]);
+                          } else {
+                            const pageIds = new Set(
+                              paginated.map((r) => r._id || r.id),
+                            );
+                            setSelectedIds((prev) =>
+                              prev.filter((id) => !pageIds.has(id)),
+                            );
+                          }
+                        }}
+                        title="Select/deselect all on this page"
+                      />
+                    </th>
                     <th className="text-left px-4 py-3 text-xs font-semibold text-dark-gray uppercase tracking-wide">
                       Name
                     </th>
@@ -540,6 +618,21 @@ const AdminAddonStock = () => {
                       key={a.id}
                       className="hover:bg-gray-50/50 transition-colors"
                     >
+                      <td className="px-4 py-3 text-center">
+                        <input
+                          type="checkbox"
+                          className="w-4 h-4 rounded accent-primary cursor-pointer"
+                          checked={selectedIds.includes(a._id || a.id)}
+                          onChange={(e) => {
+                            const id = a._id || a.id;
+                            setSelectedIds((prev) =>
+                              e.target.checked
+                                ? [...prev, id]
+                                : prev.filter((x) => x !== id),
+                            );
+                          }}
+                        />
+                      </td>
                       <td className="px-4 py-3 font-medium text-dark text-sm">
                         {a.name}
                       </td>

@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import SearchBar from "../../components/admin/common/SearchBar";
 import ConfirmModal from "../../components/admin/common/ConfirmModal";
 import StatsCard from "../../components/admin/common/StatsCard";
+import PrintButton from "../../components/admin/common/PrintButton";
+import { printTable, getSelectionSummary } from "../../utils/printUtils";
 import {
   setOrders,
   updateOrderStatus,
@@ -36,6 +38,130 @@ import {
   Trash2,
 } from "lucide-react";
 
+const PRINT_COLUMNS = [
+  { header: "#", render: (_, i) => i + 1 },
+  { header: "Order ID", render: (r) => r.orderId?.substring(0, 16) || "N/A" },
+  {
+    header: "Customer",
+    render: (r) => r.customerInfo?.name || r.customerInfo?.fullName || "N/A",
+  },
+  { header: "Email", render: (r) => r.customerInfo?.email || "N/A" },
+  { header: "Phone", render: (r) => r.customerInfo?.phone || "N/A" },
+  {
+    header: "Total",
+    render: (r) => `Rs ${parseFloat(r.total || 0).toFixed(2)}`,
+  },
+  { header: "Status", render: (r) => r.status },
+  { header: "Type", render: (r) => (r.isGuestOrder ? "Guest" : "Registered") },
+  {
+    header: "Date",
+    render: (r) =>
+      new Date(r.orderDate).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      }),
+  },
+];
+
+function escO(val) {
+  if (val == null) return "—";
+  return String(val)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+function orderDetailRenderer(order) {
+  const items = order.items || order.cartItems || [];
+  if (!items.length) return null;
+
+  const itemRows = items
+    .map((item) => {
+      // Addons: item.addOns.drinks / desserts / extras
+      const addOnParts = [];
+      const ao = item.addOns || {};
+      (ao.drinks || []).forEach((d) =>
+        addOnParts.push(
+          escO(`${d.name}${d.quantity > 1 ? " \xd7" + d.quantity : ""}`),
+        ),
+      );
+      (ao.desserts || []).forEach((d) =>
+        addOnParts.push(
+          escO(`${d.name}${d.quantity > 1 ? " \xd7" + d.quantity : ""}`),
+        ),
+      );
+      (ao.extras || []).forEach((e) =>
+        addOnParts.push(
+          escO(`${e.name}${e.quantity > 1 ? " \xd7" + e.quantity : ""}`),
+        ),
+      );
+      const addons = addOnParts.length ? addOnParts.join("<br/>") : "—";
+
+      // Customizations: item.size + item.spiceLevel
+      const custParts = [];
+      if (item.size) custParts.push(escO(`Size: ${item.size}`));
+      if (item.spiceLevel) {
+        const spice =
+          typeof item.spiceLevel === "object"
+            ? item.spiceLevel.name
+            : item.spiceLevel;
+        if (spice) custParts.push(escO(`Spice Level: ${spice}`));
+      }
+      const customizations = custParts.length ? custParts.join("<br/>") : "—";
+
+      // Deal items sub-list
+      const dealItemsHtml =
+        item.isDeal && (item.dealItems || []).length
+          ? '<br/><em style="font-size:9px;color:#777;">Includes: ' +
+            (item.dealItems || [])
+              .map((di) =>
+                escO(
+                  `${di.name}${di.quantity > 1 ? " \xd7" + di.quantity : ""}`,
+                ),
+              )
+              .join(", ") +
+            "</em>"
+          : "";
+
+      return `<tr>
+      <td>${escO(item.name)}${dealItemsHtml}</td>
+      <td style="text-align:center">${item.quantity || 1}</td>
+      <td style="text-align:right">Rs ${parseFloat(item.price || 0).toFixed(2)}</td>
+      <td>${addons}</td>
+      <td>${customizations}</td>
+    </tr>`;
+    })
+    .join("");
+
+  const paymentMethod = escO(order.paymentMethod);
+  const ci = order.customerInfo || {};
+  const deliveryInfo = escO(ci.address || null);
+  const additionalNotes = escO(ci.additionalNotes || null);
+
+  return `<div class="detail-box">
+    <div class="detail-title">Order Details</div>
+    <div style="display:flex;flex-wrap:wrap;gap:4px 20px;margin-bottom:8px;font-size:10px;">
+      <span><strong>Payment Method:</strong> ${paymentMethod}</span>
+      <span><strong>Delivery Address:</strong> ${deliveryInfo}</span>
+      ${additionalNotes !== "—" ? `<span><strong>Delivery Notes:</strong> ${additionalNotes}</span>` : ""}
+    </div>
+    <div class="detail-title" style="margin-top:8px;">Items Ordered</div>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:25%">Item</th>
+          <th style="width:8%;text-align:center">Qty</th>
+          <th style="width:12%;text-align:right">Price</th>
+          <th style="width:27%">Addons</th>
+          <th style="width:28%">Customizations</th>
+        </tr>
+      </thead>
+      <tbody>${itemRows}</tbody>
+    </table>
+  </div>`;
+}
+
 const AdminOrders = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -47,6 +173,7 @@ const AdminOrders = () => {
   const [orderToDelete, setOrderToDelete] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [selectedIds, setSelectedIds] = useState([]);
 
   const loadOrders = React.useCallback(async () => {
     const allOrders = await ordersService.getOrders();
@@ -119,13 +246,36 @@ const AdminOrders = () => {
   const endIndex = startIndex + itemsPerPage;
   const paginatedOrders = orders.slice(startIndex, endIndex);
 
-  // Reset to page 1 when filters change
+  // Reset to page 1 and clear selection when filters change
   useEffect(() => {
     setCurrentPage(1);
+    setSelectedIds([]);
   }, [filters.search, filters.status, filters.userType]);
 
   const formatCurrency = (amount) => {
     return `Rs ${parseFloat(amount || 0).toFixed(2)}`;
+  };
+
+  const buildSubtitle = () => {
+    const parts = [];
+    if (filters.status !== "All") parts.push(`Status: ${filters.status}`);
+    if (filters.userType !== "All") parts.push(`Type: ${filters.userType}`);
+    if (filters.search) parts.push(`Search: "${filters.search}"`);
+    if (selectedIds.length > 0)
+      parts.push(`${selectedIds.length} rows selected`);
+    return parts.length > 0 ? parts.join(" · ") : "All records";
+  };
+
+  const handlePrint = (mode = 'print') => {
+    const rowsToPrint = getSelectionSummary(selectedIds, orders);
+    printTable({
+      title: "Orders Report",
+      subtitle: buildSubtitle(),
+      columns: PRINT_COLUMNS,
+      rows: rowsToPrint,
+      detailRenderer: orderDetailRenderer,
+      mode,
+    });
   };
 
   return (
@@ -188,6 +338,17 @@ const AdminOrders = () => {
             <option value="Registered">Registered Users</option>
           </select>
         </div>
+        <div className="flex items-center justify-between mt-3">
+          <p className="text-sm text-dark-gray">
+            <span className="font-semibold text-dark">{orders.length}</span>{" "}
+            order{orders.length !== 1 ? "s" : ""}
+            {selectedIds.length > 0 && (
+              <span className="ml-2 text-primary font-semibold">
+                · {selectedIds.length} selected
+              </span>
+            )}
+          </p>
+        </div>
       </div>
 
       {/* Orders Table */}
@@ -228,6 +389,11 @@ const AdminOrders = () => {
                   <option value={20}>20</option>
                   <option value={50}>50</option>
                 </select>
+                <PrintButton
+                  selectedCount={selectedIds.length}
+                  totalCount={orders.length}
+                  onPrint={handlePrint}
+                />
               </div>
             </div>
           </div>
@@ -253,6 +419,34 @@ const AdminOrders = () => {
               <table className="w-full min-w-full">
                 <thead className="bg-gradient-to-r from-primary/5 via-primary-light/5 to-primary/5 border-b-2 border-primary/20">
                   <tr>
+                    <th className="px-3 lg:px-4 xl:px-6 py-4 text-center w-10">
+                      <input
+                        type="checkbox"
+                        className="w-4 h-4 rounded accent-primary cursor-pointer"
+                        checked={
+                          paginatedOrders.length > 0 &&
+                          paginatedOrders.every((r) =>
+                            selectedIds.includes(r._id),
+                          )
+                        }
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            const pageIds = paginatedOrders.map((r) => r._id);
+                            setSelectedIds((prev) => [
+                              ...new Set([...prev, ...pageIds]),
+                            ]);
+                          } else {
+                            const pageIds = new Set(
+                              paginatedOrders.map((r) => r._id),
+                            );
+                            setSelectedIds((prev) =>
+                              prev.filter((id) => !pageIds.has(id)),
+                            );
+                          }
+                        }}
+                        title="Select/deselect all on this page"
+                      />
+                    </th>
                     <th className="px-3 lg:px-4 xl:px-6 py-4 text-center text-xs font-bold uppercase tracking-wide text-dark whitespace-nowrap">
                       <div className="flex items-center justify-center gap-2">
                         <Hash className="w-4 h-4 text-primary" />
@@ -312,6 +506,23 @@ const AdminOrders = () => {
                       } hover:bg-cream-light/60 transition-all duration-200 cursor-pointer border-l-4 border-transparent hover:border-primary group`}
                       onClick={() => navigate(`/admin/orders/${order._id}`)}
                     >
+                      <td
+                        className="px-3 lg:px-4 xl:px-6 py-4 text-center"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <input
+                          type="checkbox"
+                          className="w-4 h-4 rounded accent-primary cursor-pointer"
+                          checked={selectedIds.includes(order._id)}
+                          onChange={(e) =>
+                            setSelectedIds((prev) =>
+                              e.target.checked
+                                ? [...prev, order._id]
+                                : prev.filter((x) => x !== order._id),
+                            )
+                          }
+                        />
+                      </td>
                       <td className="px-3 lg:px-4 xl:px-6 py-4 whitespace-nowrap">
                         <div className="flex flex-col items-center gap-1">
                           <span className="text-xs font-mono font-semibold text-dark group-hover:text-primary transition-colors">

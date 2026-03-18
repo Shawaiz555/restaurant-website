@@ -203,20 +203,22 @@ const AdminTables = () => {
             <span className="font-semibold text-dark">{tables.length}</span>{" "}
             table{tables.length !== 1 ? "s" : ""}
           </p>
-          {(filters.location !== "All" ||
-            filters.status !== "All" ||
-            filters.search) && (
-            <button
-              onClick={() =>
-                dispatch(
-                  setFilters({ location: "All", status: "All", search: "" }),
-                )
-              }
-              className="text-sm text-primary hover:text-primary-dark font-medium transition-colors"
-            >
-              Clear filters
-            </button>
-          )}
+          <div className="flex items-center gap-3">
+            {(filters.location !== "All" ||
+              filters.status !== "All" ||
+              filters.search) && (
+              <button
+                onClick={() =>
+                  dispatch(
+                    setFilters({ location: "All", status: "All", search: "" }),
+                  )
+                }
+                className="text-sm text-primary hover:text-primary-dark font-medium transition-colors"
+              >
+                Clear filters
+              </button>
+            )}
+          </div>
         </div>
       </div>
 

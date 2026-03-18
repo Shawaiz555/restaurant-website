@@ -30,6 +30,27 @@ import ingredientsService from "../../services/ingredientsService";
 import { showNotification } from "../../store/slices/notificationSlice";
 import StatsCard from "../../components/admin/common/StatsCard";
 import ConfirmModal from "../../components/admin/common/ConfirmModal";
+import PrintButton from "../../components/admin/common/PrintButton";
+import { printTable, getSelectionSummary } from "../../utils/printUtils";
+
+const PRINT_COLUMNS = [
+  { header: "#", render: (_, i) => i + 1 },
+  { header: "Name", render: (r) => r.name },
+  { header: "Category", render: (r) => r.category },
+  { header: "Unit", render: (r) => r.unit },
+  { header: "Current Stock", render: (r) => r.currentStock },
+  { header: "Min Stock", render: (r) => r.minimumStock },
+  { header: "Cost/Unit", render: (r) => `Rs. ${r.costPerUnit}` },
+  {
+    header: "Stock Status",
+    render: (r) =>
+      r.currentStock === 0
+        ? "Out of Stock"
+        : r.currentStock <= r.minimumStock
+          ? "Low Stock"
+          : "In Stock",
+  },
+];
 
 const EMPTY_FORM = {
   name: "",
@@ -50,6 +71,7 @@ const AdminIngredients = () => {
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [selectedIds, setSelectedIds] = useState([]);
   const [form, setForm] = useState(EMPTY_FORM);
   const [editingId, setEditingId] = useState(null);
   const [showForm, setShowForm] = useState(false);
@@ -94,6 +116,7 @@ const AdminIngredients = () => {
 
   useEffect(() => {
     setCurrentPage(1);
+    setSelectedIds([]);
   }, [search, categoryFilter]);
 
   const totalPages = Math.ceil(filtered.length / itemsPerPage);
@@ -206,6 +229,26 @@ const AdminIngredients = () => {
     } finally {
       setDeleteTarget(null);
     }
+  };
+
+  const buildSubtitle = () => {
+    const parts = [];
+    if (categoryFilter !== "All") parts.push(`Category: ${categoryFilter}`);
+    if (search) parts.push(`Search: "${search}"`);
+    if (selectedIds.length > 0)
+      parts.push(`${selectedIds.length} rows selected`);
+    return parts.length > 0 ? parts.join(" · ") : "All records";
+  };
+
+  const handlePrint = (mode = 'print') => {
+    const rowsToPrint = getSelectionSummary(selectedIds, filtered);
+    printTable({
+      title: "Ingredients Report",
+      subtitle: buildSubtitle(),
+      columns: PRINT_COLUMNS,
+      rows: rowsToPrint,
+      mode,
+    });
   };
 
   return (
@@ -502,12 +545,45 @@ const AdminIngredients = () => {
                   <option value={20}>20</option>
                   <option value={50}>50</option>
                 </select>
+                <PrintButton
+                  selectedCount={selectedIds.length}
+                  totalCount={filtered.length}
+                  onPrint={handlePrint}
+                />
               </div>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full min-w-[900px]">
                 <thead>
                   <tr className="border-b border-gray-100 bg-gray-50/50">
+                    <th className="px-4 py-3 text-center w-10">
+                      <input
+                        type="checkbox"
+                        className="w-4 h-4 rounded accent-primary cursor-pointer"
+                        checked={
+                          paginated.length > 0 &&
+                          paginated.every((r) =>
+                            selectedIds.includes(r._id || r.id),
+                          )
+                        }
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            const pageIds = paginated.map((r) => r._id || r.id);
+                            setSelectedIds((prev) => [
+                              ...new Set([...prev, ...pageIds]),
+                            ]);
+                          } else {
+                            const pageIds = new Set(
+                              paginated.map((r) => r._id || r.id),
+                            );
+                            setSelectedIds((prev) =>
+                              prev.filter((id) => !pageIds.has(id)),
+                            );
+                          }
+                        }}
+                        title="Select/deselect all on this page"
+                      />
+                    </th>
                     <th className="text-left px-4 py-3 text-xs font-semibold text-dark-gray uppercase tracking-wide">
                       Name
                     </th>
@@ -540,6 +616,21 @@ const AdminIngredients = () => {
                       key={ing.id}
                       className="hover:bg-gray-50/50 transition-colors"
                     >
+                      <td className="px-4 py-3 text-center">
+                        <input
+                          type="checkbox"
+                          className="w-4 h-4 rounded accent-primary cursor-pointer"
+                          checked={selectedIds.includes(ing._id || ing.id)}
+                          onChange={(e) => {
+                            const id = ing._id || ing.id;
+                            setSelectedIds((prev) =>
+                              e.target.checked
+                                ? [...prev, id]
+                                : prev.filter((x) => x !== id),
+                            );
+                          }}
+                        />
+                      </td>
                       <td className="px-4 py-3 font-medium text-dark text-sm">
                         {ing.name}
                       </td>

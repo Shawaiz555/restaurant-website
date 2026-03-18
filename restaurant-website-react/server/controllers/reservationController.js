@@ -26,8 +26,9 @@ const generateReservationId = () => {
 const createReservation = async (req, res) => {
   try {
     const {
-      tableId,      // legacy single-table field (kept for backward compat)
-      tableIds,     // new multi-table field (preferred)
+      tableId,              // legacy single-table field (kept for backward compat)
+      tableIds,             // new multi-table field (preferred)
+      tableSelectionMode,   // 'custom' | 'stacked' | null
       fullName,
       email,
       phone,
@@ -47,10 +48,14 @@ const createReservation = async (req, res) => {
     }
 
     // Validate required fields
-    if (resolvedTableIds.length === 0 || !fullName || !email || !phone || !reservationDate || !reservationTime || !partySize) {
+    // Stacked mode: tableIds intentionally empty — admin assigns tables later
+    const isStacked = tableSelectionMode === 'stacked';
+    if ((!isStacked && resolvedTableIds.length === 0) || !fullName || !email || !phone || !reservationDate || !reservationTime || !partySize) {
       return res.status(400).json({
         success: false,
-        message: 'Table(s), name, email, phone, date, time, and party size are required',
+        message: isStacked
+          ? 'Name, email, phone, date, time, and party size are required'
+          : 'Table(s), name, email, phone, date, time, and party size are required',
       });
     }
 
@@ -60,36 +65,57 @@ const createReservation = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Please provide a valid email address' });
     }
 
-    // Validate all tables exist and are active
-    const tables = await Table.find({ _id: { $in: resolvedTableIds } });
-    if (tables.length !== resolvedTableIds.length) {
-      return res.status(404).json({ success: false, message: 'One or more selected tables were not found' });
-    }
-    for (const t of tables) {
-      if (!t.isActive || t.status === 'Maintenance') {
-        return res.status(400).json({ success: false, message: `Table #${t.tableNumber} is not available` });
+    // Validate tables only when tables are provided (non-stacked or stacked with pre-assigned tables)
+    let tables = [];
+    let combinedCapacity = partySize; // fallback for stacked (no tables yet)
+    if (resolvedTableIds.length > 0) {
+      tables = await Table.find({ _id: { $in: resolvedTableIds } });
+      if (tables.length !== resolvedTableIds.length) {
+        return res.status(404).json({ success: false, message: 'One or more selected tables were not found' });
       }
-    }
+      for (const t of tables) {
+        if (!t.isActive || t.status === 'Maintenance') {
+          return res.status(400).json({ success: false, message: `Table #${t.tableNumber} is not available` });
+        }
+      }
 
-    // Check combined capacity >= party size
-    const combinedCapacity = tables.reduce((sum, t) => sum + t.capacity, 0);
-    if (parseInt(partySize, 10) > combinedCapacity) {
-      return res.status(400).json({
-        success: false,
-        message: `Party size exceeds combined table capacity (max ${combinedCapacity} for selected tables)`,
-      });
+      combinedCapacity = tables.reduce((sum, t) => sum + t.capacity, 0);
+      if (parseInt(partySize, 10) > combinedCapacity) {
+        return res.status(400).json({
+          success: false,
+          message: `Party size exceeds combined table capacity (max ${combinedCapacity} for selected tables)`,
+        });
+      }
+
+      // Check for conflicts on each table at same date+time
+      for (const tid of resolvedTableIds) {
+        const conflict = await Reservation.findOne({
+          tableIds: tid,
+          reservationDate,
+          reservationTime,
+          status: { $in: ['Pending', 'Confirmed'] },
+        });
+        const legacyConflict = !conflict && await Reservation.findOne({
+          tableId: tid,
+          tableIds: { $size: 0 },
+          reservationDate,
+          reservationTime,
+          status: { $in: ['Pending', 'Confirmed'] },
+        });
+        if (conflict || legacyConflict) {
+          const conflictTable = tables.find((t) => t._id.toString() === tid.toString());
+          return res.status(409).json({
+            success: false,
+            message: `Table #${conflictTable?.tableNumber || ''} is already reserved for the selected date and time`,
+          });
+        }
+      }
     }
 
     // Validate guest details if provided
     let sanitizedGuestDetails = { hasGuestList: false, guests: [] };
     if (guestDetails && guestDetails.hasGuestList) {
       const guests = Array.isArray(guestDetails.guests) ? guestDetails.guests : [];
-      if (guests.length > combinedCapacity) {
-        return res.status(400).json({
-          success: false,
-          message: `Cannot add more guests than combined table capacity (max ${combinedCapacity})`,
-        });
-      }
       for (const g of guests) {
         if (!g.name || !g.name.trim()) {
           return res.status(400).json({ success: false, message: 'Each guest must have a name' });
@@ -102,31 +128,6 @@ const createReservation = async (req, res) => {
           note: g.note ? g.note.trim() : '',
         })),
       };
-    }
-
-    // Check for conflicts on each table at same date+time
-    for (const tid of resolvedTableIds) {
-      const conflict = await Reservation.findOne({
-        tableIds: tid,
-        reservationDate,
-        reservationTime,
-        status: { $in: ['Pending', 'Confirmed'] },
-      });
-      // Also check legacy single-tableId reservations
-      const legacyConflict = !conflict && await Reservation.findOne({
-        tableId: tid,
-        tableIds: { $size: 0 },
-        reservationDate,
-        reservationTime,
-        status: { $in: ['Pending', 'Confirmed'] },
-      });
-      if (conflict || legacyConflict) {
-        const conflictTable = tables.find((t) => t._id.toString() === tid.toString());
-        return res.status(409).json({
-          success: false,
-          message: `Table #${conflictTable?.tableNumber || ''} is already reserved for the selected date and time`,
-        });
-      }
     }
 
     // Determine if guest or user reservation
@@ -151,6 +152,7 @@ const createReservation = async (req, res) => {
       specialRequests: specialRequests ? specialRequests.trim() : '',
       status: 'Pending',
       isGuestReservation,
+      tableSelectionMode: tableSelectionMode || null,
       guestDetails: sanitizedGuestDetails,
       statusHistory: [{ status: 'Pending', timestamp: new Date(), note: 'Reservation created' }],
     });
@@ -159,7 +161,9 @@ const createReservation = async (req, res) => {
     await Promise.all(resolvedTableIds.map((tid) => syncTableStatus(tid)));
 
     // Build table info for email
-    const primaryTable = tables.find((t) => t._id.toString() === primaryTableId.toString());
+    const primaryTable = tables.length > 0
+      ? tables.find((t) => t._id.toString() === (primaryTableId || '').toString()) || tables[0]
+      : null;
     const emailPayload = {
       reservationId,
       fullName: reservation.fullName,
@@ -171,11 +175,12 @@ const createReservation = async (req, res) => {
       specialRequests: reservation.specialRequests,
       status: reservation.status,
       // Legacy single-table fields (backward compat)
-      tableNumber: primaryTable.tableNumber,
-      tableName: primaryTable.name,
-      tableLocation: primaryTable.location,
+      tableNumber: primaryTable?.tableNumber || null,
+      tableName: primaryTable?.name || null,
+      tableLocation: primaryTable?.location || null,
       // Multi-table array for new email templates
       tables: tables.map((t) => ({ tableNumber: t.tableNumber, name: t.name, location: t.location })),
+      tableSelectionMode: reservation.tableSelectionMode,
       isGuestReservation,
       guestDetails: reservation.guestDetails,
     };
@@ -429,6 +434,105 @@ const deleteReservation = async (req, res) => {
   }
 };
 
+// @desc    Admin assigns tables to a stacked reservation
+// @route   PUT /api/reservations/:id/tables
+const assignStackedTables = async (req, res) => {
+  try {
+    const { tableIds: incomingTableIds } = req.body;
+
+    if (!Array.isArray(incomingTableIds) || incomingTableIds.length === 0) {
+      return res.status(400).json({ success: false, message: 'tableIds array is required' });
+    }
+
+    const reservation = await Reservation.findById(req.params.id);
+    if (!reservation) {
+      return res.status(404).json({ success: false, message: 'Reservation not found' });
+    }
+
+    if (reservation.tableSelectionMode !== 'stacked') {
+      return res.status(400).json({ success: false, message: 'Table assignment is only allowed for stacked reservations' });
+    }
+
+    // Validate tables exist and are active
+    const tables = await Table.find({ _id: { $in: incomingTableIds } });
+    if (tables.length !== incomingTableIds.length) {
+      return res.status(404).json({ success: false, message: 'One or more selected tables were not found' });
+    }
+    for (const t of tables) {
+      if (!t.isActive || t.status === 'Maintenance') {
+        return res.status(400).json({ success: false, message: `Table #${t.tableNumber} is not available` });
+      }
+    }
+
+    // Check combined capacity >= party size
+    const combinedCapacity = tables.reduce((sum, t) => sum + t.capacity, 0);
+    if (reservation.partySize > combinedCapacity) {
+      return res.status(400).json({
+        success: false,
+        message: `Party size (${reservation.partySize}) exceeds combined table capacity (${combinedCapacity})`,
+      });
+    }
+
+    // Check for conflicts — exclude self
+    for (const tid of incomingTableIds) {
+      const conflict = await Reservation.findOne({
+        _id: { $ne: reservation._id },
+        tableIds: tid,
+        reservationDate: reservation.reservationDate,
+        reservationTime: reservation.reservationTime,
+        status: { $in: ['Pending', 'Confirmed'] },
+      });
+      const legacyConflict = !conflict && await Reservation.findOne({
+        _id: { $ne: reservation._id },
+        tableId: tid,
+        tableIds: { $size: 0 },
+        reservationDate: reservation.reservationDate,
+        reservationTime: reservation.reservationTime,
+        status: { $in: ['Pending', 'Confirmed'] },
+      });
+      if (conflict || legacyConflict) {
+        const t = tables.find((tbl) => tbl._id.toString() === tid.toString());
+        return res.status(409).json({
+          success: false,
+          message: `Table #${t?.tableNumber || ''} is already reserved at that date and time`,
+        });
+      }
+    }
+
+    // Collect old tableIds so we can sync them too
+    const oldTableIds = reservation.tableIds?.length > 0
+      ? reservation.tableIds.map((id) => id.toString())
+      : reservation.tableId ? [reservation.tableId.toString()]
+      : [];
+
+    reservation.tableIds = incomingTableIds;
+    reservation.tableId = incomingTableIds[0];
+    reservation.statusHistory.push({
+      status: reservation.status,
+      timestamp: new Date(),
+      note: `Tables assigned by admin: ${tables.map((t) => `#${t.tableNumber}`).join(', ')}`,
+    });
+    await reservation.save();
+
+    // Sync statuses for old and new tables
+    const allIdsToSync = [...new Set([...oldTableIds, ...incomingTableIds.map((id) => id.toString())])];
+    await Promise.all(allIdsToSync.map((tid) => syncTableStatus(tid)));
+
+    const updatedReservation = await Reservation.findById(req.params.id)
+      .populate('tableId', 'tableNumber name capacity location')
+      .populate('tableIds', 'tableNumber name capacity location');
+
+    res.json({
+      success: true,
+      message: `Tables assigned: ${tables.map((t) => `#${t.tableNumber} ${t.name}`).join(', ')}`,
+      reservation: updatedReservation,
+    });
+  } catch (error) {
+    console.error('Assign stacked tables error:', error);
+    res.status(500).json({ success: false, message: 'Failed to assign tables' });
+  }
+};
+
 // @desc    Get booked time slots for a specific date (public)
 // @route   GET /api/reservations/booked-times?date=
 const getBookedTimes = async (req, res) => {
@@ -483,6 +587,7 @@ module.exports = {
   getMyReservations,
   getReservationById,
   updateReservationStatus,
+  assignStackedTables,
   cancelMyReservation,
   deleteReservation,
   getBookedTimes,

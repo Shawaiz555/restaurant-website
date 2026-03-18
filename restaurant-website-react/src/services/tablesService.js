@@ -13,12 +13,13 @@ class TablesService {
     }
   }
 
-  async getAvailableTables({ date, time, partySize } = {}) {
+  async getAvailableTables({ date, time, partySize, excludeReservationId } = {}) {
     try {
       const params = new URLSearchParams();
       if (date) params.append('date', date);
       if (time) params.append('time', time);
       if (partySize) params.append('partySize', partySize);
+      if (excludeReservationId) params.append('excludeReservationId', excludeReservationId);
       const response = await apiClient.get(`/tables/available?${params.toString()}`);
       return response.tables || [];
     } catch (error) {

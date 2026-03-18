@@ -15,6 +15,8 @@ import reservationsService from "../../services/reservationsService";
 import SearchBar from "../../components/admin/common/SearchBar";
 import ConfirmModal from "../../components/admin/common/ConfirmModal";
 import StatsCard from "../../components/admin/common/StatsCard";
+import PrintButton from "../../components/admin/common/PrintButton";
+import { printTable, getSelectionSummary } from "../../utils/printUtils";
 import {
   CalendarCheck,
   Users,
@@ -30,7 +32,112 @@ import {
   UserCheck,
   UserX,
   ClipboardList,
+  LayoutGrid,
+  Layers,
 } from "lucide-react";
+
+const PRINT_COLUMNS = [
+  { header: "#", render: (_, i) => i + 1 },
+  { header: "Res. ID", render: (r) => r.reservationId },
+  { header: "Guest Name", render: (r) => r.fullName },
+  {
+    header: "Date",
+    render: (r) =>
+      new Date(r.reservationDate).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      }),
+  },
+  {
+    header: "Time",
+    render: (r) => {
+      if (!r.reservationTime) return "—";
+      const [h, m] = r.reservationTime.split(":").map(Number);
+      const period = h >= 12 ? "PM" : "AM";
+      const hour = h % 12 || 12;
+      return `${hour}:${String(m).padStart(2, "0")} ${period}`;
+    },
+  },
+  { header: "Party Size", render: (r) => r.partySize },
+  {
+    header: "Tables",
+    render: (r) =>
+      (r.tableIds || (r.tableId ? [r.tableId] : []))
+        .map((t) => `#${t.tableNumber}`)
+        .join(", ") || "—",
+  },
+  { header: "Status", render: (r) => r.status },
+  {
+    header: "Type",
+    render: (r) => (r.isGuestReservation ? "Guest" : "Member"),
+  },
+];
+
+function esc(val) {
+  if (val == null) return "—";
+  return String(val)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+function reservationDetailRenderer(res) {
+  const tables =
+    res.tableIds?.length > 0 ? res.tableIds : res.tableId ? [res.tableId] : [];
+  const specialRequests = res.specialRequests || res.notes || res.note || null;
+
+  const tableRows = tables.length
+    ? tables
+        .map(
+          (t) => `<tr>
+        <td>${esc(t.tableNumber != null ? "#" + t.tableNumber : "—")}</td>
+        <td>${esc(t.name)}</td>
+        <td>${esc(t.location)}</td>
+        <td>${t.capacity != null ? t.capacity + " seats" : "—"}</td>
+      </tr>`,
+        )
+        .join("")
+    : '<tr><td colspan="4" style="color:#999;">No tables assigned</td></tr>';
+
+  const specialRow = specialRequests
+    ? `<p class="detail-note"><strong>Special Requests:</strong> ${esc(specialRequests)}</p>`
+    : "";
+
+  const guests = res.guestDetails?.hasGuestList && res.guestDetails?.guests?.length > 0
+    ? res.guestDetails.guests
+    : null;
+
+  const guestSection = guests
+    ? `<div class="detail-title" style="margin-top:8px;">Guest List (${guests.length})</div>
+    <table>
+      <thead><tr><th>#</th><th>Name</th><th>Note</th></tr></thead>
+      <tbody>
+        ${guests.map((g, i) => `<tr>
+          <td style="width:8%">${i + 1}</td>
+          <td style="width:40%">${esc(g.name)}</td>
+          <td>${esc(g.note || "—")}</td>
+        </tr>`).join("")}
+      </tbody>
+    </table>`
+    : "";
+
+  return `<div class="detail-box">
+    <div class="detail-title">Contact &amp; Reservation Details</div>
+    <div style="display:flex;flex-wrap:wrap;gap:4px 20px;margin-bottom:8px;font-size:10px;">
+      <span><strong>Email:</strong> ${esc(res.email)}</span>
+      <span><strong>Phone:</strong> ${esc(res.phone)}</span>
+      <span><strong>Selection Mode:</strong> ${esc(res.tableSelectionMode || "—")}</span>
+    </div>
+    <div class="detail-title" style="margin-top:8px;">Tables Assigned</div>
+    <table>
+      <thead><tr><th>No.</th><th>Name</th><th>Location</th><th>Capacity</th></tr></thead>
+      <tbody>${tableRows}</tbody>
+    </table>
+    ${guestSection}
+    ${specialRow}
+  </div>`;
+}
 
 const STATUS_OPTIONS = ["Pending", "Confirmed", "Cancelled", "Completed"];
 
@@ -54,6 +161,7 @@ const AdminReservations = () => {
   const [itemsPerPage] = useState(10);
   const [isLoading, setIsLoading] = useState(false);
   const [updatingId, setUpdatingId] = useState(null);
+  const [selectedIds, setSelectedIds] = useState([]);
 
   const loadReservations = useCallback(async () => {
     setIsLoading(true);
@@ -78,6 +186,7 @@ const AdminReservations = () => {
 
   useEffect(() => {
     setCurrentPage(1);
+    setSelectedIds([]);
   }, [filters.status, filters.date, filters.search]);
 
   const handleStatusChange = async (reservationId, newStatus) => {
@@ -135,6 +244,28 @@ const AdminReservations = () => {
       setShowDeleteConfirm(false);
       setReservationToDelete(null);
     }
+  };
+
+  const buildSubtitle = () => {
+    const parts = [];
+    if (filters.status !== "All") parts.push(`Status: ${filters.status}`);
+    if (filters.date) parts.push(`Date: ${filters.date}`);
+    if (filters.search) parts.push(`Search: "${filters.search}"`);
+    if (selectedIds.length > 0)
+      parts.push(`${selectedIds.length} rows selected`);
+    return parts.length > 0 ? parts.join(" · ") : "All records";
+  };
+
+  const handlePrint = (mode = 'print') => {
+    const rowsToPrint = getSelectionSummary(selectedIds, reservations);
+    printTable({
+      title: "Reservations Report",
+      subtitle: buildSubtitle(),
+      columns: PRINT_COLUMNS,
+      rows: rowsToPrint,
+      detailRenderer: reservationDetailRenderer,
+      mode,
+    });
   };
 
   // Pagination
@@ -224,17 +355,24 @@ const AdminReservations = () => {
               {reservations.length}
             </span>{" "}
             reservation{reservations.length !== 1 ? "s" : ""}
+            {selectedIds.length > 0 && (
+              <span className="ml-2 text-primary font-semibold">
+                · {selectedIds.length} selected
+              </span>
+            )}
           </p>
-          {(filters.status !== "All" || filters.date || filters.search) && (
-            <button
-              onClick={() =>
-                dispatch(setFilters({ status: "All", date: "", search: "" }))
-              }
-              className="text-sm text-primary hover:text-primary-dark font-medium transition-colors"
-            >
-              Clear filters
-            </button>
-          )}
+          <div className="flex items-center gap-3">
+            {(filters.status !== "All" || filters.date || filters.search) && (
+              <button
+                onClick={() =>
+                  dispatch(setFilters({ status: "All", date: "", search: "" }))
+                }
+                className="text-sm text-primary hover:text-primary-dark font-medium transition-colors"
+              >
+                Clear filters
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
@@ -265,10 +403,59 @@ const AdminReservations = () => {
       ) : (
         <>
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100">
+            <div className="px-4 py-3 border-b border-gray-100 bg-gray-50/50 flex items-center justify-between">
+              <p className="text-sm text-dark-gray">
+                Showing{" "}
+                <span className="font-semibold text-dark">
+                  {startIndex + 1}–
+                  {Math.min(startIndex + itemsPerPage, reservations.length)}
+                </span>{" "}
+                of{" "}
+                <span className="font-semibold text-dark">
+                  {reservations.length}
+                </span>{" "}
+                reservations
+              </p>
+              <PrintButton
+                selectedCount={selectedIds.length}
+                totalCount={reservations.length}
+                onPrint={handlePrint}
+              />
+            </div>
             <div className="overflow-x-auto rounded-2xl">
               <table className="w-full min-w-[900px]">
                 <thead>
                   <tr className="border-b border-gray-100 bg-gray-50">
+                    <th className="px-3 lg:px-4 xl:px-5 py-4 text-center w-10">
+                      <input
+                        type="checkbox"
+                        className="w-4 h-4 rounded accent-primary cursor-pointer"
+                        checked={
+                          paginatedReservations.length > 0 &&
+                          paginatedReservations.every((r) =>
+                            selectedIds.includes(r._id),
+                          )
+                        }
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            const pageIds = paginatedReservations.map(
+                              (r) => r._id,
+                            );
+                            setSelectedIds((prev) => [
+                              ...new Set([...prev, ...pageIds]),
+                            ]);
+                          } else {
+                            const pageIds = new Set(
+                              paginatedReservations.map((r) => r._id),
+                            );
+                            setSelectedIds((prev) =>
+                              prev.filter((id) => !pageIds.has(id)),
+                            );
+                          }
+                        }}
+                        title="Select/deselect all on this page"
+                      />
+                    </th>
                     <th className="text-left px-3 lg:px-4 xl:px-5 py-4 text-xs font-semibold text-dark-gray uppercase tracking-wider">
                       Reservation
                     </th>
@@ -306,6 +493,24 @@ const AdminReservations = () => {
                           navigate(`/admin/reservations/${res._id}`)
                         }
                       >
+                        {/* Checkbox */}
+                        <td
+                          className="px-3 lg:px-4 xl:px-5 py-4 text-center"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <input
+                            type="checkbox"
+                            className="w-4 h-4 rounded accent-primary cursor-pointer"
+                            checked={selectedIds.includes(res._id)}
+                            onChange={(e) =>
+                              setSelectedIds((prev) =>
+                                e.target.checked
+                                  ? [...prev, res._id]
+                                  : prev.filter((x) => x !== res._id),
+                              )
+                            }
+                          />
+                        </td>
                         {/* Reservation Info */}
                         <td className="px-3 lg:px-4 xl:px-5 py-4">
                           <div className="flex items-center gap-3">
@@ -345,9 +550,28 @@ const AdminReservations = () => {
 
                         {/* Table */}
                         <td className="px-3 lg:px-4 xl:px-5 py-4">
-                          {tables.length > 0 ? (
-                            <div className="space-y-1.5">
-                              {tables.map((t) => (
+                          <div className="space-y-1.5">
+                            {/* Selection mode badge — always shown for stacked */}
+                            {res.tableSelectionMode && (
+                              <div
+                                className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${
+                                  res.tableSelectionMode === "stacked"
+                                    ? "bg-amber-50 text-amber-700 border-amber-200"
+                                    : "bg-blue-50 text-blue-700 border-blue-200"
+                                }`}
+                              >
+                                {res.tableSelectionMode === "stacked" ? (
+                                  <Layers className="w-3 h-3" />
+                                ) : (
+                                  <LayoutGrid className="w-3 h-3" />
+                                )}
+                                {res.tableSelectionMode === "stacked"
+                                  ? "Stacked"
+                                  : "Custom"}
+                              </div>
+                            )}
+                            {tables.length > 0 ? (
+                              tables.map((t) => (
                                 <div
                                   key={t._id}
                                   className="flex items-center gap-1.5"
@@ -366,11 +590,15 @@ const AdminReservations = () => {
                                     </p>
                                   </div>
                                 </div>
-                              ))}
-                            </div>
-                          ) : (
-                            <span className="text-xs text-dark-gray">—</span>
-                          )}
+                              ))
+                            ) : res.tableSelectionMode === "stacked" ? (
+                              <p className="text-[10px] text-amber-600 font-semibold">
+                                Pending table assignment
+                              </p>
+                            ) : (
+                              <span className="text-xs text-dark-gray">—</span>
+                            )}
+                          </div>
                         </td>
 
                         {/* Party Size */}

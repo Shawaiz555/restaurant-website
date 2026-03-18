@@ -8,6 +8,7 @@ const {
   getMyReservations,
   getReservationById,
   updateReservationStatus,
+  assignStackedTables,
   cancelMyReservation,
   deleteReservation,
   getBookedTimes,
@@ -51,6 +52,7 @@ router.get('/stats', protect, adminOnly, getReservationStats);
 router.get('/', protect, adminOnly, getReservations);
 router.get('/:id', protect, adminOnly, getReservationById);
 router.put('/:id/status', protect, adminOnly, updateReservationStatus);
+router.put('/:id/tables', protect, adminOnly, assignStackedTables);
 router.delete('/:id', protect, adminOnly, deleteReservation);
 
 module.exports = router;

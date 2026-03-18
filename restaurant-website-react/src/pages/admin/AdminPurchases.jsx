@@ -31,6 +31,35 @@ import ingredientsService from "../../services/ingredientsService";
 import { showNotification } from "../../store/slices/notificationSlice";
 import StatsCard from "../../components/admin/common/StatsCard";
 import ConfirmModal from "../../components/admin/common/ConfirmModal";
+import PrintButton from "../../components/admin/common/PrintButton";
+import { printTable, getSelectionSummary } from "../../utils/printUtils";
+
+const PRINT_COLUMNS = [
+  { header: "#", render: (_, i) => i + 1 },
+  {
+    header: "Date",
+    render: (r) =>
+      new Date(r.purchaseDate).toLocaleDateString("en-PK", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      }),
+  },
+  { header: "Supplier", render: (r) => r.supplierName },
+  { header: "Items", render: (r) => r.items?.length || 0 },
+  {
+    header: "Items Detail",
+    render: (r) =>
+      (r.items || [])
+        .map((i) => `${i.ingredientName} ×${i.quantity}${i.unit}`)
+        .join("; ") || "—",
+  },
+  {
+    header: "Total Cost",
+    render: (r) => `Rs. ${(r.totalCost || 0).toLocaleString()}`,
+  },
+  { header: "Notes", render: (r) => r.notes || "—" },
+];
 
 const EMPTY_ITEM = {
   ingredientId: "",
@@ -54,6 +83,7 @@ const AdminPurchases = () => {
   const [expandedId, setExpandedId] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [selectedIds, setSelectedIds] = useState([]);
   const formRef = useRef(null);
 
   const [form, setForm] = useState({
@@ -201,6 +231,24 @@ const AdminPurchases = () => {
     } finally {
       setDeleteTarget(null);
     }
+  };
+
+  const buildSubtitle = () => {
+    const parts = [];
+    if (selectedIds.length > 0)
+      parts.push(`${selectedIds.length} rows selected`);
+    return parts.length > 0 ? parts.join(" · ") : "All records";
+  };
+
+  const handlePrint = (mode = 'print') => {
+    const rowsToPrint = getSelectionSummary(selectedIds, purchases);
+    printTable({
+      title: "Purchases Report",
+      subtitle: buildSubtitle(),
+      columns: PRINT_COLUMNS,
+      rows: rowsToPrint,
+      mode,
+    });
   };
 
   const totalPages = Math.ceil(purchases.length / itemsPerPage);
@@ -533,12 +581,45 @@ const AdminPurchases = () => {
                   <option value={20}>20</option>
                   <option value={50}>50</option>
                 </select>
+                <PrintButton
+                  selectedCount={selectedIds.length}
+                  totalCount={purchases.length}
+                  onPrint={handlePrint}
+                />
               </div>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-gray-100 bg-gray-50/50">
+                    <th className="px-4 py-3 text-center w-10">
+                      <input
+                        type="checkbox"
+                        className="w-4 h-4 rounded accent-primary cursor-pointer"
+                        checked={
+                          paginated.length > 0 &&
+                          paginated.every((r) =>
+                            selectedIds.includes(r._id || r.id),
+                          )
+                        }
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            const pageIds = paginated.map((r) => r._id || r.id);
+                            setSelectedIds((prev) => [
+                              ...new Set([...prev, ...pageIds]),
+                            ]);
+                          } else {
+                            const pageIds = new Set(
+                              paginated.map((r) => r._id || r.id),
+                            );
+                            setSelectedIds((prev) =>
+                              prev.filter((id) => !pageIds.has(id)),
+                            );
+                          }
+                        }}
+                        title="Select/deselect all on this page"
+                      />
+                    </th>
                     <th className="text-left px-4 py-3 text-xs font-semibold text-dark-gray uppercase tracking-wide">
                       Date
                     </th>
@@ -560,6 +641,21 @@ const AdminPurchases = () => {
                   {paginated.map((p) => (
                     <React.Fragment key={p.id}>
                       <tr className="hover:bg-gray-50/50 transition-colors">
+                        <td className="px-4 py-3 text-center">
+                          <input
+                            type="checkbox"
+                            className="w-4 h-4 rounded accent-primary cursor-pointer"
+                            checked={selectedIds.includes(p._id || p.id)}
+                            onChange={(e) => {
+                              const id = p._id || p.id;
+                              setSelectedIds((prev) =>
+                                e.target.checked
+                                  ? [...prev, id]
+                                  : prev.filter((x) => x !== id),
+                              );
+                            }}
+                          />
+                        </td>
                         <td className="px-4 py-3 text-sm text-dark">
                           {formatDate(p.purchaseDate)}
                         </td>
@@ -597,7 +693,7 @@ const AdminPurchases = () => {
                       </tr>
                       {expandedId === p.id && (
                         <tr>
-                          <td colSpan={5} className="px-4 pb-4">
+                          <td colSpan={6} className="px-4 pb-4">
                             <div className="bg-gray-50 rounded-xl p-4 mt-1">
                               {p.notes && (
                                 <p className="text-xs text-dark-gray mb-3 italic">
