@@ -162,7 +162,7 @@ const Reservations = () => {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  // Fetch booked times whenever the date changes
+  // Fetch booked times whenever the date or party size changes
   useEffect(() => {
     if (!selectedDate) {
       setBookedTimes([]);
@@ -170,7 +170,7 @@ const Reservations = () => {
     }
     setLoadingBookedTimes(true);
     reservationsService
-      .getBookedTimes(selectedDate)
+      .getBookedTimes(selectedDate, partySize)
       .then((times) => {
         setBookedTimes(times);
         // If the currently selected time just became booked, clear it
@@ -179,7 +179,7 @@ const Reservations = () => {
         }
       })
       .finally(() => setLoadingBookedTimes(false));
-  }, [selectedDate]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [selectedDate, partySize]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchAvailableTables = useCallback(async () => {
     if (!selectedDate || !selectedTime) return;
@@ -659,13 +659,17 @@ const Reservations = () => {
                           {
                             label: "🍽 Lunch (11:00 – 14:30)",
                             slots: TIME_SLOTS.filter(
-                              (t) => parseInt(t.split(":")[0]) < 17,
+                              (t) =>
+                                parseInt(t.split(":")[0]) < 17 &&
+                                !bookedTimes.includes(t),
                             ),
                           },
                           {
                             label: "🌙 Dinner (18:00 – 21:30)",
                             slots: TIME_SLOTS.filter(
-                              (t) => parseInt(t.split(":")[0]) >= 17,
+                              (t) =>
+                                parseInt(t.split(":")[0]) >= 17 &&
+                                !bookedTimes.includes(t),
                             ),
                           },
                         ].map(({ label, slots }) => (
@@ -673,38 +677,35 @@ const Reservations = () => {
                             <div className="px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-dark-gray/50 bg-gray-50 border-b border-gray-100 sticky top-0">
                               {label}
                             </div>
-                            {slots.map((t) => {
-                              const isBooked = bookedTimes.includes(t);
-                              const isSelected = selectedTime === t;
-                              return (
-                                <button
-                                  key={t}
-                                  type="button"
-                                  disabled={isBooked}
-                                  onClick={() => {
-                                    setSelectedTime(t);
-                                    setShowTimeDropdown(false);
-                                  }}
-                                  className={`w-full text-left px-5 py-3 text-sm transition-colors flex items-center justify-between ${
-                                    isBooked
-                                      ? "text-gray-300 cursor-not-allowed bg-white"
-                                      : isSelected
+                            {slots.length === 0 ? (
+                              <div className="px-5 py-3 text-sm text-gray-400 italic">
+                                No available slots
+                              </div>
+                            ) : (
+                              slots.map((t) => {
+                                const isSelected = selectedTime === t;
+                                return (
+                                  <button
+                                    key={t}
+                                    type="button"
+                                    onClick={() => {
+                                      setSelectedTime(t);
+                                      setShowTimeDropdown(false);
+                                    }}
+                                    className={`w-full text-left px-5 py-3 text-sm transition-colors flex items-center justify-between ${
+                                      isSelected
                                         ? "bg-primary/5 text-primary font-bold"
                                         : "text-dark hover:bg-gray-50"
-                                  }`}
-                                >
-                                  <span>{formatTimeDisplay(t)}</span>
-                                  {isBooked && (
-                                    <span className="text-[10px] font-bold uppercase tracking-widest text-gray-300">
-                                      Full
-                                    </span>
-                                  )}
-                                  {isSelected && !isBooked && (
-                                    <CheckCircle className="w-4 h-4 text-primary" />
-                                  )}
-                                </button>
-                              );
-                            })}
+                                    }`}
+                                  >
+                                    <span>{formatTimeDisplay(t)}</span>
+                                    {isSelected && (
+                                      <CheckCircle className="w-4 h-4 text-primary" />
+                                    )}
+                                  </button>
+                                );
+                              })
+                            )}
                           </div>
                         ))}
                       </div>

@@ -73,9 +73,9 @@ class ReservationsService {
     }
   }
 
-  async getBookedTimes(date) {
+  async getBookedTimes(date, partySize = 1) {
     try {
-      const response = await apiClient.get(`/reservations/booked-times?date=${date}`);
+      const response = await apiClient.get(`/reservations/booked-times?date=${date}&partySize=${partySize}`);
       return response.bookedTimes || [];
     } catch (error) {
       console.error('Get booked times error:', error);

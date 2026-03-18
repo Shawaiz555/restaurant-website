@@ -534,22 +534,39 @@ const assignStackedTables = async (req, res) => {
 };
 
 // @desc    Get booked time slots for a specific date (public)
-// @route   GET /api/reservations/booked-times?date=
+// @route   GET /api/reservations/booked-times?date=&partySize=
 const getBookedTimes = async (req, res) => {
   try {
-    const { date } = req.query;
+    const { date, partySize } = req.query;
     if (!date) {
       return res.status(400).json({ success: false, message: 'Date is required' });
     }
 
-    // Get total number of active tables
-    const totalActiveTables = await Table.countDocuments({ isActive: true, status: { $ne: 'Maintenance' } });
+    const size = parseInt(partySize, 10) || 1;
 
-    if (totalActiveTables === 0) {
+    // Get all active tables with sufficient capacity for the party size
+    const activeTables = await Table.find({
+      isActive: true,
+      status: { $ne: 'Maintenance' },
+    }).select('_id capacity');
+
+    if (activeTables.length === 0) {
+      // No tables at all — all slots are unavailable
+      const TIME_SLOTS = ['11:00','11:30','12:00','12:30','13:00','13:30','14:00','14:30','18:00','18:30','19:00','19:30','20:00','20:30','21:00','21:30'];
+      return res.json({ success: true, bookedTimes: TIME_SLOTS });
+    }
+
+    // Tables that could serve this party size
+    const suitableTableIds = new Set(
+      activeTables.filter((t) => t.capacity >= size).map((t) => t._id.toString())
+    );
+
+    // If no single table fits, all slots are available (user will use multi-table mode)
+    if (suitableTableIds.size === 0) {
       return res.json({ success: true, bookedTimes: [] });
     }
 
-    // For each time slot, count how many distinct tables are reserved
+    // Get reservations for this date
     const reservations = await Reservation.find({
       reservationDate: date,
       status: { $in: ['Pending', 'Confirmed'] },
@@ -560,7 +577,6 @@ const getBookedTimes = async (req, res) => {
     for (const r of reservations) {
       const time = r.reservationTime;
       if (!timeToReservedTables[time]) timeToReservedTables[time] = new Set();
-      // Check tableIds array (multi-table) and legacy tableId
       if (Array.isArray(r.tableIds) && r.tableIds.length > 0) {
         r.tableIds.forEach((id) => timeToReservedTables[time].add(id.toString()));
       } else if (r.tableId) {
@@ -568,9 +584,12 @@ const getBookedTimes = async (req, res) => {
       }
     }
 
-    // A time slot is "fully booked" when all active tables are reserved at that time
+    // A slot is "booked" when every suitable table is already reserved at that time
     const bookedTimes = Object.entries(timeToReservedTables)
-      .filter(([, tableSet]) => tableSet.size >= totalActiveTables)
+      .filter(([, reservedSet]) => {
+        // Check if all suitable tables are reserved at this time
+        return [...suitableTableIds].every((id) => reservedSet.has(id));
+      })
       .map(([time]) => time);
 
     res.json({ success: true, bookedTimes });
