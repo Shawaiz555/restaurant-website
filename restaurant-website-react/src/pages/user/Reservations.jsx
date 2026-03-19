@@ -33,9 +33,10 @@ import {
 } from "lucide-react";
 
 /**
- * Generates 30-minute time slots from openingTime up to (closingTime - slotDurationMins).
+ * Generates time slots from openingTime up to (closingTime - slotDurationMins),
+ * spaced slotDurationMins apart.
  * e.g. openingTime="11:00", closingTime="23:00", slotDurationMins=60
- *   → ["11:00","11:30","12:00", ..., "22:00"]
+ *   → ["11:00","12:00","13:00", ..., "22:00"]
  */
 function generateTimeSlots(openingTime, closingTime, slotDurationMins = 60) {
   if (!openingTime || !closingTime) return [];
@@ -45,7 +46,7 @@ function generateTimeSlots(openingTime, closingTime, slotDurationMins = 60) {
   const closeMins = closeH * 60 + closeM;
   const lastSlotMins = closeMins - slotDurationMins;
   const slots = [];
-  for (let t = openMins; t <= lastSlotMins && t < closeMins; t += 30) {
+  for (let t = openMins; t <= lastSlotMins && t < closeMins; t += slotDurationMins) {
     const h = Math.floor(t / 60);
     const m = t % 60;
     slots.push(`${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`);

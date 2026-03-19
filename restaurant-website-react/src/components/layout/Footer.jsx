@@ -21,7 +21,6 @@ const Footer = () => {
     restaurantPhone,
     restaurantEmail,
     restaurantAddress,
-    restaurantCity,
     openingTime,
     closingTime,
   } = useSettings();
@@ -35,9 +34,7 @@ const Footer = () => {
     return `${h12}:${String(m).padStart(2, "0")} ${ampm}`;
   };
 
-  const addressLine = [restaurantAddress, restaurantCity]
-    .filter(Boolean)
-    .join(", ");
+  const addressLine = [restaurantAddress].filter(Boolean).join(", ");
 
   const socialLinks = [
     {
@@ -236,7 +233,8 @@ const Footer = () => {
         <div className="border-t border-dark/10 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-dark-gray text-center md:text-left">
-              © {new Date().getFullYear()} {restaurantName}. All rights reserved.
+              © {new Date().getFullYear()} {restaurantName}. All rights
+              reserved.
             </p>
           </div>
         </div>
