@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import useSettings from "../../hooks/useSettings";
 import {
   ArrowRight,
   Check,
@@ -15,6 +16,29 @@ import {
 } from "lucide-react";
 
 const Footer = () => {
+  const {
+    restaurantName,
+    restaurantPhone,
+    restaurantEmail,
+    restaurantAddress,
+    restaurantCity,
+    openingTime,
+    closingTime,
+  } = useSettings();
+
+  // Format "09:00" → "9:00 AM", "23:00" → "11:00 PM"
+  const fmt12 = (t) => {
+    if (!t) return "";
+    const [h, m] = t.split(":").map(Number);
+    const ampm = h >= 12 ? "PM" : "AM";
+    const h12 = h % 12 || 12;
+    return `${h12}:${String(m).padStart(2, "0")} ${ampm}`;
+  };
+
+  const addressLine = [restaurantAddress, restaurantCity]
+    .filter(Boolean)
+    .join(", ");
+
   const socialLinks = [
     {
       name: "Facebook",
@@ -60,7 +84,7 @@ const Footer = () => {
             <Link to="/" className="max-w-xs mb-6">
               <img
                 src="/assets/images/BitesLogo.png"
-                alt="Bites Restaurant Logo"
+                alt={`${restaurantName} Logo`}
                 className="h-28 w-32 lg:w-52 lg:h-20 object-contain transition-all"
               />
             </Link>
@@ -170,34 +194,38 @@ const Footer = () => {
               Contact Us
             </h4>
             <ul className="space-y-4">
-              <li className="flex items-start gap-3">
-                <MapPin className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                <span className="text-dark-gray">
-                  123 Food Street, Flavor Town, FT 12345
-                </span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Mail className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                <a
-                  href="mailto:hello@bites.com"
-                  className="text-dark-gray hover:text-primary transition-colors"
-                >
-                  hello@bites.com
-                </a>
-              </li>
-              <li className="flex items-start gap-3">
-                <Phone className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                <a
-                  href="tel:+15551234567"
-                  className="text-dark-gray hover:text-primary transition-colors"
-                >
-                  +1 (555) 123-4567
-                </a>
-              </li>
+              {addressLine && (
+                <li className="flex items-start gap-3">
+                  <MapPin className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                  <span className="text-dark-gray">{addressLine}</span>
+                </li>
+              )}
+              {restaurantEmail && (
+                <li className="flex items-start gap-3">
+                  <Mail className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                  <a
+                    href={`mailto:${restaurantEmail}`}
+                    className="text-dark-gray hover:text-primary transition-colors"
+                  >
+                    {restaurantEmail}
+                  </a>
+                </li>
+              )}
+              {restaurantPhone && (
+                <li className="flex items-start gap-3">
+                  <Phone className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                  <a
+                    href={`tel:${restaurantPhone}`}
+                    className="text-dark-gray hover:text-primary transition-colors"
+                  >
+                    {restaurantPhone}
+                  </a>
+                </li>
+              )}
               <li className="flex items-start gap-3">
                 <Clock className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
                 <span className="text-dark-gray">
-                  Mon-Sun: 10:00 AM - 11:00 PM
+                  Mon-Sun: {fmt12(openingTime)} – {fmt12(closingTime)}
                 </span>
               </li>
             </ul>
@@ -208,7 +236,7 @@ const Footer = () => {
         <div className="border-t border-dark/10 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-dark-gray text-center md:text-left">
-              © 2026 Bites Restaurant. All rights reserved.
+              © {new Date().getFullYear()} {restaurantName}. All rights reserved.
             </p>
           </div>
         </div>

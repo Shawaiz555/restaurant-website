@@ -22,10 +22,23 @@ const userSchema = new mongoose.Schema({
     minlength: [6, 'Password must be at least 6 characters'],
     select: false // Don't return password by default
   },
+  phone: {
+    type: String,
+    trim: true,
+    default: ''
+  },
   role: {
     type: String,
-    enum: ['user', 'admin'],
+    enum: ['user', 'super_admin', 'manager', 'employee', 'chef'],
     default: 'user'
+  },
+  isActive: {
+    type: Boolean,
+    default: true
+  },
+  lastActive: {
+    type: Date,
+    default: null
   },
   cart: [{
     productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },

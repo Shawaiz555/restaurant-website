@@ -8,16 +8,16 @@ const {
   deleteProduct,
   getCategories
 } = require('../controllers/productController');
-const { protect, adminOnly } = require('../middleware/auth');
+const { protect, authorize } = require('../middleware/auth');
 
 // Public routes
 router.get('/', getProducts);
 router.get('/categories/list', getCategories);
 router.get('/:id', getProductById);
 
-// Admin routes
-router.post('/', protect, adminOnly, addProduct);
-router.put('/:id', protect, adminOnly, updateProduct);
-router.delete('/:id', protect, adminOnly, deleteProduct);
+// super_admin and manager can manage products
+router.post('/',    protect, authorize('super_admin', 'manager'), addProduct);
+router.put('/:id',  protect, authorize('super_admin', 'manager'), updateProduct);
+router.delete('/:id', protect, authorize('super_admin', 'manager'), deleteProduct);
 
 module.exports = router;

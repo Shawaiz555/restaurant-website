@@ -3,6 +3,7 @@
  * Utility for generating print-ready HTML and triggering window.print().
  * No React dependencies — pure JS, safe to call from any component.
  */
+import store from '../store/store';
 
 /**
  * Escapes a value for safe insertion into HTML.
@@ -25,8 +26,10 @@ function escape(val) {
  * @param {string}   [options.subtitle]      - Optional filter summary line shown below header
  * @param {Function} [options.detailRenderer] - (row) => HTML string appended as a full-width detail row
  * @param {string}   [options.mode]           - 'print' (default) or 'pdf' (opens Save as PDF dialog)
+ * @param {string}   [options.restaurantName] - Restaurant name shown in the header (default: 'Bites Restaurant')
  */
-export function printTable({ title, columns, rows, subtitle, detailRenderer, mode = 'print' }) {
+export function printTable({ title, columns, rows, subtitle, detailRenderer, mode = 'print', restaurantName }) {
+  const name = restaurantName || store.getState()?.settings?.restaurant?.name || 'Bites Restaurant';
   const win = window.open('', '_blank', 'width=1000,height=750');
   if (!win) {
     alert('Please allow pop-ups to use the print feature.');
@@ -65,7 +68,7 @@ export function printTable({ title, columns, rows, subtitle, detailRenderer, mod
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>${escape(title)} — Saveur Restaurant</title>
+  <title>${escape(title)} — ${escape(name)}</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -206,7 +209,7 @@ export function printTable({ title, columns, rows, subtitle, detailRenderer, mod
 <body>
   <div class="header">
     <div class="header-left">
-      <p class="restaurant">Bites Restaurant — Admin Report</p>
+      <p class="restaurant">${escape(name)} — Admin Report</p>
       <h1>${escape(title)}</h1>
     </div>
     <div class="header-right">
@@ -224,7 +227,7 @@ export function printTable({ title, columns, rows, subtitle, detailRenderer, mod
     </tbody>
   </table>
   <div class="footer">
-    <span>Saveur Restaurant — Confidential</span>
+    <span>${escape(name)} — Confidential</span>
     <span>${escape(title)} · ${generatedAt}</span>
   </div>
 </body>
@@ -234,7 +237,7 @@ export function printTable({ title, columns, rows, subtitle, detailRenderer, mod
   win.document.close();
   setTimeout(() => {
     if (mode === 'pdf') {
-      win.document.title = `${title} — Saveur Restaurant`;
+      win.document.title = `${title} — ${name}`;
     }
     win.print();
   }, 150);

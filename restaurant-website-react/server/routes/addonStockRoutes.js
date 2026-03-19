@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { protect, adminOnly } = require('../middleware/auth');
+const { protect, authorize } = require('../middleware/auth');
 const {
   getAddonStocks,
   getAddonStockStats,
@@ -10,7 +10,8 @@ const {
   deleteAddonStock,
 } = require('../controllers/addonStockController');
 
-router.use(protect, adminOnly);
+// Addon stock: super_admin and manager only
+router.use(protect, authorize('super_admin', 'manager'));
 
 router.get('/stats', getAddonStockStats);
 router.get('/', getAddonStocks);

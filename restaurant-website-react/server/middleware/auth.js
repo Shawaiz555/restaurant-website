@@ -1,9 +1,11 @@
 const { verifyAccessToken } = require('../utils/jwt');
 const User = require('../models/User');
 
+// All roles that are considered "staff" (non-regular users)
+const STAFF_ROLES = ['super_admin', 'manager', 'employee', 'chef'];
+
 const protect = async (req, res, next) => {
   try {
-    // Get token from header
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -16,10 +18,8 @@ const protect = async (req, res, next) => {
     const token = authHeader.split(' ')[1];
 
     try {
-      // Verify token
       const decoded = verifyAccessToken(token);
 
-      // Get user from token
       req.user = await User.findById(decoded.userId).select('-password');
 
       if (!req.user) {
@@ -28,6 +28,16 @@ const protect = async (req, res, next) => {
           message: 'User not found'
         });
       }
+
+      if (!req.user.isActive) {
+        return res.status(403).json({
+          success: false,
+          message: 'Your account has been deactivated. Contact a Super Admin.'
+        });
+      }
+
+      // Update lastActive timestamp (non-blocking)
+      User.findByIdAndUpdate(req.user._id, { lastActive: new Date() }).exec();
 
       next();
     } catch (error) {
@@ -44,15 +54,64 @@ const protect = async (req, res, next) => {
   }
 };
 
-const adminOnly = (req, res, next) => {
-  if (req.user && req.user.role === 'admin') {
+// Flexible role-based authorization — pass one or more allowed roles
+// Usage: authorize('super_admin', 'manager')
+const authorize = (...roles) => {
+  return (req, res, next) => {
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: 'Not authenticated'
+      });
+    }
+
+    if (!roles.includes(req.user.role)) {
+      return res.status(403).json({
+        success: false,
+        message: `Access denied. Required role(s): ${roles.join(', ')}`
+      });
+    }
+
     next();
-  } else {
-    res.status(403).json({
-      success: false,
-      message: 'Access denied. Admin only.'
-    });
+  };
+};
+
+// Backward-compatible alias — any staff role passes (replaces old adminOnly checks)
+const adminOnly = (req, res, next) => {
+  if (req.user && STAFF_ROLES.includes(req.user.role)) {
+    return next();
+  }
+  return res.status(403).json({
+    success: false,
+    message: 'Access denied. Staff only.'
+  });
+};
+
+// Optional auth — attaches user if token present, continues as guest if not
+const optionalAuth = async (req, res, next) => {
+  try {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return next();
+    }
+
+    const token = authHeader.split(' ')[1];
+
+    try {
+      const decoded = verifyAccessToken(token);
+      req.user = await User.findById(decoded.userId).select('-password');
+      if (req.user && req.user.isActive) {
+        User.findByIdAndUpdate(req.user._id, { lastActive: new Date() }).exec();
+      }
+    } catch {
+      // Invalid token — continue as guest
+    }
+
+    next();
+  } catch (error) {
+    next();
   }
 };
 
-module.exports = { protect, adminOnly };
+module.exports = { protect, adminOnly, authorize, optionalAuth, STAFF_ROLES };

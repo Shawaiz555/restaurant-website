@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { protect, adminOnly } = require('../middleware/auth');
+const { protect, authorize } = require('../middleware/auth');
 const {
   getWastage,
   createWastage,
@@ -8,10 +8,13 @@ const {
   getWastageStats
 } = require('../controllers/wastageController');
 
-router.use(protect, adminOnly);
+// All routes require authentication
+router.use(protect);
 
-router.get('/stats', getWastageStats);
-router.route('/').get(getWastage).post(createWastage);
-router.route('/:id').delete(deleteWastage);
+// Chef can view and log wastage; only super_admin and manager can delete
+router.get('/stats', authorize('super_admin', 'manager', 'chef'), getWastageStats);
+router.get('/',      authorize('super_admin', 'manager', 'chef'), getWastage);
+router.post('/',     authorize('super_admin', 'manager', 'chef'), createWastage);
+router.delete('/:id', authorize('super_admin', 'manager'), deleteWastage);
 
 module.exports = router;

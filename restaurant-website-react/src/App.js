@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import store from './store/store';
 import { loadCart, fetchCart } from './store/slices/cartSlice';
+import { fetchPublicSettings } from './store/slices/settingsSlice';
 import Loader from './components/common/Loader';
 import NotificationManager from './components/common/NotificationManager';
 
@@ -20,6 +21,7 @@ import Footer from './components/layout/Footer';
 
 // Admin Components
 import ProtectedRoute from './components/routing/ProtectedRoute';
+import RoleGuard from './components/routing/RoleGuard';
 import AdminLayout from './components/admin/layout/AdminLayout';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminOrders from './pages/admin/AdminOrders';
@@ -41,6 +43,13 @@ import AdminRecipes from './pages/admin/AdminRecipes';
 import AdminWastage from './pages/admin/AdminWastage';
 import AdminStockReports from './pages/admin/AdminStockReports';
 import AdminAddonStock from './pages/admin/AdminAddonStock';
+import AdminStaffManagement from './pages/admin/AdminStaffManagement';
+import AdminPayments from './pages/admin/AdminPayments';
+import AdminKitchenQueue from './pages/admin/AdminKitchenQueue';
+import AdminSystemSettings from './pages/admin/AdminSystemSettings';
+
+// Auth Pages
+import StaffLogin from './pages/StaffLogin';
 
 // User Pages
 import Reservations from './pages/user/Reservations';
@@ -54,13 +63,16 @@ function AppContent() {
   const location = useLocation();
   const [loading, setLoading] = useState(false);
 
+  // Fetch public settings once on app boot
+  useEffect(() => {
+    dispatch(fetchPublicSettings());
+  }, [dispatch]);
+
   // Load cart when app mounts or user changes
   useEffect(() => {
     if (currentUser) {
-      // For logged-in users, fetch cart from server
       dispatch(fetchCart());
     } else {
-      // For guests, load from localStorage
       dispatch(loadCart(null));
     }
   }, [dispatch, currentUser]);
@@ -71,8 +83,7 @@ function AppContent() {
     window.scrollTo(0, 0);
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 500); // Short loader for route transitions
-
+    }, 500);
     return () => clearTimeout(timer);
   }, [location.pathname]);
 
@@ -82,7 +93,7 @@ function AppContent() {
       {loading && <Loader />}
 
       <Routes>
-        {/* Admin Routes - Protected and using AdminLayout */}
+        {/* Admin Routes - any staff role can enter AdminLayout */}
         <Route
           path="/admin/*"
           element={
@@ -91,30 +102,159 @@ function AppContent() {
             </ProtectedRoute>
           }
         >
+          {/* Dashboard — all roles */}
           <Route index element={<AdminDashboard />} />
           <Route path="dashboard" element={<AdminDashboard />} />
+
+          {/* Orders — all roles */}
           <Route path="orders" element={<AdminOrders />} />
           <Route path="orders/:id" element={<AdminOrderDetail />} />
-          <Route path="products" element={<AdminProducts />} />
-          <Route path="products/new" element={<AdminProductForm />} />
-          <Route path="products/:id/edit" element={<AdminProductForm />} />
-          <Route path="tables" element={<AdminTables />} />
-          <Route path="tables/new" element={<AdminTableForm />} />
-          <Route path="tables/:id/edit" element={<AdminTableForm />} />
-          <Route path="reservations" element={<AdminReservations />} />
-          <Route path="reservations/:id" element={<AdminReservationDetail />} />
-          <Route path="deals" element={<AdminDeals />} />
-          <Route path="deals/new" element={<AdminDealForm />} />
-          <Route path="deals/:id/edit" element={<AdminDealForm />} />
-          <Route path="expenses" element={<AdminExpenses />} />
-          <Route path="analytics" element={<AdminAnalytics />} />
-          <Route path="ingredients" element={<AdminIngredients />} />
-          <Route path="suppliers" element={<AdminSuppliers />} />
-          <Route path="purchases" element={<AdminPurchases />} />
-          <Route path="recipes" element={<AdminRecipes />} />
-          <Route path="wastage" element={<AdminWastage />} />
-          <Route path="stock-reports" element={<AdminStockReports />} />
-          <Route path="addon-stock" element={<AdminAddonStock />} />
+
+          {/* Products — super_admin, manager */}
+          <Route path="products" element={
+            <RoleGuard allowedRoles={['super_admin', 'manager']}>
+              <AdminProducts />
+            </RoleGuard>
+          } />
+          <Route path="products/new" element={
+            <RoleGuard allowedRoles={['super_admin', 'manager']}>
+              <AdminProductForm />
+            </RoleGuard>
+          } />
+          <Route path="products/:id/edit" element={
+            <RoleGuard allowedRoles={['super_admin', 'manager']}>
+              <AdminProductForm />
+            </RoleGuard>
+          } />
+
+          {/* Tables — super_admin, manager, employee */}
+          <Route path="tables" element={
+            <RoleGuard allowedRoles={['super_admin', 'manager', 'employee']}>
+              <AdminTables />
+            </RoleGuard>
+          } />
+          <Route path="tables/new" element={
+            <RoleGuard allowedRoles={['super_admin', 'manager', 'employee']}>
+              <AdminTableForm />
+            </RoleGuard>
+          } />
+          <Route path="tables/:id/edit" element={
+            <RoleGuard allowedRoles={['super_admin', 'manager', 'employee']}>
+              <AdminTableForm />
+            </RoleGuard>
+          } />
+
+          {/* Reservations — super_admin, manager, employee */}
+          <Route path="reservations" element={
+            <RoleGuard allowedRoles={['super_admin', 'manager', 'employee']}>
+              <AdminReservations />
+            </RoleGuard>
+          } />
+          <Route path="reservations/:id" element={
+            <RoleGuard allowedRoles={['super_admin', 'manager', 'employee']}>
+              <AdminReservationDetail />
+            </RoleGuard>
+          } />
+
+          {/* Deals — super_admin, manager */}
+          <Route path="deals" element={
+            <RoleGuard allowedRoles={['super_admin', 'manager']}>
+              <AdminDeals />
+            </RoleGuard>
+          } />
+          <Route path="deals/new" element={
+            <RoleGuard allowedRoles={['super_admin', 'manager']}>
+              <AdminDealForm />
+            </RoleGuard>
+          } />
+          <Route path="deals/:id/edit" element={
+            <RoleGuard allowedRoles={['super_admin', 'manager']}>
+              <AdminDealForm />
+            </RoleGuard>
+          } />
+
+          {/* Expenses — super_admin, manager */}
+          <Route path="expenses" element={
+            <RoleGuard allowedRoles={['super_admin', 'manager']}>
+              <AdminExpenses />
+            </RoleGuard>
+          } />
+
+          {/* Analytics — super_admin, manager */}
+          <Route path="analytics" element={
+            <RoleGuard allowedRoles={['super_admin', 'manager']}>
+              <AdminAnalytics />
+            </RoleGuard>
+          } />
+
+          {/* Stock — Ingredients: super_admin, manager, chef */}
+          <Route path="ingredients" element={
+            <RoleGuard allowedRoles={['super_admin', 'manager', 'chef']}>
+              <AdminIngredients />
+            </RoleGuard>
+          } />
+
+          {/* Stock — Suppliers, Purchases, AddonStock, StockReports: super_admin, manager */}
+          <Route path="suppliers" element={
+            <RoleGuard allowedRoles={['super_admin', 'manager']}>
+              <AdminSuppliers />
+            </RoleGuard>
+          } />
+          <Route path="purchases" element={
+            <RoleGuard allowedRoles={['super_admin', 'manager']}>
+              <AdminPurchases />
+            </RoleGuard>
+          } />
+          <Route path="addon-stock" element={
+            <RoleGuard allowedRoles={['super_admin', 'manager']}>
+              <AdminAddonStock />
+            </RoleGuard>
+          } />
+          <Route path="stock-reports" element={
+            <RoleGuard allowedRoles={['super_admin', 'manager']}>
+              <AdminStockReports />
+            </RoleGuard>
+          } />
+
+          {/* Recipes, Wastage — super_admin, manager, chef */}
+          <Route path="recipes" element={
+            <RoleGuard allowedRoles={['super_admin', 'manager', 'chef']}>
+              <AdminRecipes />
+            </RoleGuard>
+          } />
+          <Route path="wastage" element={
+            <RoleGuard allowedRoles={['super_admin', 'manager', 'chef']}>
+              <AdminWastage />
+            </RoleGuard>
+          } />
+
+          {/* Staff Management — super_admin, manager */}
+          <Route path="staff" element={
+            <RoleGuard allowedRoles={['super_admin', 'manager']}>
+              <AdminStaffManagement />
+            </RoleGuard>
+          } />
+
+          {/* Payments — super_admin, manager, employee */}
+          <Route path="payments" element={
+            <RoleGuard allowedRoles={['super_admin', 'manager', 'employee']}>
+              <AdminPayments />
+            </RoleGuard>
+          } />
+
+          {/* Kitchen Queue — chef (also accessible to super_admin, manager) */}
+          <Route path="kitchen-queue" element={
+            <RoleGuard allowedRoles={['super_admin', 'manager', 'chef']}>
+              <AdminKitchenQueue />
+            </RoleGuard>
+          } />
+
+          {/* System Settings — super_admin only */}
+          <Route path="settings" element={
+            <RoleGuard allowedRoles={['super_admin']}>
+              <AdminSystemSettings />
+            </RoleGuard>
+          } />
         </Route>
 
         {/* Public Routes - Using standard layout */}
@@ -132,6 +272,7 @@ function AppContent() {
                   <Route path="/services" element={<Services />} />
                   <Route path="/product/:id" element={<ProductDetail />} />
                   <Route path="/login" element={<Login />} />
+                  <Route path="/staff/login" element={<StaffLogin />} />
                   <Route path="/signup" element={<Signup />} />
                   <Route path="/checkout" element={<Checkout />} />
                   <Route path="/reservations" element={<Reservations />} />
@@ -152,11 +293,9 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate initial load
     const timer = setTimeout(() => {
       setLoading(false);
     }, 1500);
-
     return () => clearTimeout(timer);
   }, []);
 

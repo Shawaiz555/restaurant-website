@@ -14,6 +14,8 @@ import purchasesReducer from './slices/purchasesSlice';
 import recipesReducer from './slices/recipesSlice';
 import wastageReducer from './slices/wastageSlice';
 import addonStockReducer from './slices/addonStockSlice';
+import staffReducer from './slices/staffSlice';
+import settingsReducer from './slices/settingsSlice';
 
 export const store = configureStore({
   reducer: {
@@ -32,6 +34,8 @@ export const store = configureStore({
     recipes: recipesReducer,
     wastage: wastageReducer,
     addonStock: addonStockReducer,
+    staff: staffReducer,
+    settings: settingsReducer,
   },
 });
 

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { protect, adminOnly } = require('../middleware/auth');
+const { protect, authorize } = require('../middleware/auth');
 const {
   getPurchases,
   getPurchaseById,
@@ -9,7 +9,8 @@ const {
   getPurchaseStats
 } = require('../controllers/purchaseController');
 
-router.use(protect, adminOnly);
+// Purchases: super_admin and manager only
+router.use(protect, authorize('super_admin', 'manager'));
 
 router.get('/stats', getPurchaseStats);
 router.route('/').get(getPurchases).post(createPurchase);

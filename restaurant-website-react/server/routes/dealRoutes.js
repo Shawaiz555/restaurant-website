@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { protect, adminOnly } = require('../middleware/auth');
+const { protect, authorize } = require('../middleware/auth');
 const {
   getDeals,
   getDealById,
@@ -14,10 +14,10 @@ const {
 router.get('/', getDeals);
 router.get('/:id', getDealById);
 
-// Admin only routes
-router.post('/', protect, adminOnly, createDeal);
-router.put('/:id', protect, adminOnly, updateDeal);
-router.patch('/:id/toggle', protect, adminOnly, toggleDealActive);
-router.delete('/:id', protect, adminOnly, deleteDeal);
+// super_admin and manager can manage deals
+router.post('/',            protect, authorize('super_admin', 'manager'), createDeal);
+router.put('/:id',          protect, authorize('super_admin', 'manager'), updateDeal);
+router.patch('/:id/toggle', protect, authorize('super_admin', 'manager'), toggleDealActive);
+router.delete('/:id',       protect, authorize('super_admin', 'manager'), deleteDeal);
 
 module.exports = router;

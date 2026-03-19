@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { protect, adminOnly } = require('../middleware/auth');
+const { protect, authorize } = require('../middleware/auth');
 const {
   getIngredients,
   getLowStockIngredients,
@@ -11,11 +11,16 @@ const {
   getIngredientStats
 } = require('../controllers/ingredientController');
 
-router.use(protect, adminOnly);
+// All routes require authentication
+router.use(protect);
 
-router.get('/low-stock', getLowStockIngredients);
-router.get('/stats', getIngredientStats);
-router.route('/').get(getIngredients).post(createIngredient);
-router.route('/:id').get(getIngredientById).put(updateIngredient).delete(deleteIngredient);
+// Chef can read stock levels; super_admin and manager can write
+router.get('/low-stock', authorize('super_admin', 'manager', 'chef'), getLowStockIngredients);
+router.get('/stats',     authorize('super_admin', 'manager', 'chef'), getIngredientStats);
+router.get('/',          authorize('super_admin', 'manager', 'chef'), getIngredients);
+router.post('/',         authorize('super_admin', 'manager'), createIngredient);
+router.get('/:id',       authorize('super_admin', 'manager', 'chef'), getIngredientById);
+router.put('/:id',       authorize('super_admin', 'manager'), updateIngredient);
+router.delete('/:id',    authorize('super_admin', 'manager'), deleteIngredient);
 
 module.exports = router;

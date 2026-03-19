@@ -5,12 +5,14 @@ import { logout } from "../../../store/slices/authSlice";
 import { useAuth } from "../../../hooks/useAuth";
 import { showNotification } from "../../../store/slices/notificationSlice";
 import { Menu, LogOut, ChevronDown } from "lucide-react";
+import { getRoleLabel } from "../../../hooks/usePermissions";
 
 const AdminHeader = ({ onMenuToggle }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { currentUser } = useAuth();
+  const { currentUser, userRole } = useAuth();
+  const roleLabel = getRoleLabel(userRole);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -126,7 +128,7 @@ const AdminHeader = ({ onMenuToggle }) => {
                   {currentUser?.name || "Admin"}
                 </span>
                 <span className="text-[11px] text-gray-500 font-medium tracking-wide">
-                  Manager
+                  {roleLabel}
                 </span>
               </div>
 

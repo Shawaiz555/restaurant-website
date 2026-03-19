@@ -7,9 +7,10 @@ const {
   deleteExpense,
   getExpenseSummary
 } = require('../controllers/expenseController');
-const { protect, adminOnly } = require('../middleware/auth');
+const { protect, authorize } = require('../middleware/auth');
 
-router.use(protect, adminOnly); // All expense routes are admin-only
+// Expenses: super_admin and manager only
+router.use(protect, authorize('super_admin', 'manager'));
 
 router.get('/', getExpenses);
 router.get('/stats/summary', getExpenseSummary);

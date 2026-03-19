@@ -2,14 +2,32 @@ import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import { loginUser } from "../store/slices/authSlice";
-import { fetchCart } from "../store/slices/cartSlice";
 import { showNotification } from "../store/slices/notificationSlice";
 import Loader from "../components/common/Loader";
-import { Mail, Lock, Eye, EyeOff, ArrowLeft, Utensils } from "lucide-react";
+import {
+  Mail,
+  Lock,
+  Eye,
+  EyeOff,
+  ArrowLeft,
+  ChefHat,
+  Shield,
+  Users,
+} from "lucide-react";
 
-const Login = () => {
+const STAFF_ROLES = ["super_admin", "manager", "employee", "chef"];
+
+const ROLE_LABELS = {
+  super_admin: "Super Admin",
+  manager: "Manager",
+  employee: "Employee",
+  chef: "Chef",
+};
+
+const StaffLogin = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -18,7 +36,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => setPageLoading(false), 800);
+    const timer = setTimeout(() => setPageLoading(false), 600);
     return () => clearTimeout(timer);
   }, []);
 
@@ -34,18 +52,25 @@ const Login = () => {
 
       if (loginUser.fulfilled.match(resultAction)) {
         const user = resultAction.payload;
-        await dispatch(fetchCart());
+
+        // Only allow staff roles through this portal
+        if (!STAFF_ROLES.includes(user.role)) {
+          setError(
+            "This portal is for staff only. Please use the main login page.",
+          );
+          setLoading(false);
+          return;
+        }
+
+        const roleLabel = ROLE_LABELS[user.role] || user.role;
         dispatch(
           showNotification({
-            message: `Welcome back, ${user.name}! 🎉`,
+            message: `Welcome back, ${user.name}! Logged in as ${roleLabel}.`,
             type: "success",
           }),
         );
         setNavigating(true);
-        setTimeout(() => {
-          const staffRoles = ["super_admin", "manager", "employee", "chef"];
-          navigate(staffRoles.includes(user.role) ? "/admin/dashboard" : "/");
-        }, 800);
+        setTimeout(() => navigate("/admin/dashboard"), 800);
       } else {
         const errorMessage = resultAction.payload || "Login failed";
         setError(errorMessage);
@@ -64,52 +89,77 @@ const Login = () => {
     }
   };
 
-  const handleBackToHome = () => {
-    setNavigating(true);
-    setTimeout(() => navigate("/"), 500);
-  };
-
   if (pageLoading || navigating) return <Loader />;
 
   return (
-    <div
-      className="bg-gradient-to-br from-orange-50 via-cream-light to-amber-50 flex items-center justify-center px-4"
-      style={{ minHeight: "calc(100vh - 5rem)", marginTop: "5rem" }}
-    >
-      <div className="w-full max-w-md my-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-primary/90 to-slate-800 flex items-center justify-center px-4 py-8">
+      <div className="w-full max-w-md">
         {/* Card */}
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-          {/* Top accent bar */}
+        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
+          {/* Top accent */}
           <div className="h-1.5 bg-gradient-to-r from-primary via-orange-400 to-amber-400" />
 
           <div className="px-9 pt-7 pb-8">
-            {/* Back button */}
+            {/* Back to main site */}
             <button
-              onClick={handleBackToHome}
+              onClick={() => navigate("/")}
               className="inline-flex items-center gap-2 text-gray-500 hover:text-primary transition-colors mb-7 group"
             >
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-              <span className="text-sm font-medium">Back to Home</span>
+              <span className="text-sm font-medium">Back to Website</span>
             </button>
 
             {/* Icon + heading */}
             <div className="text-center mb-7">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-primary rounded-2xl mb-4">
-                <Utensils className="w-8 h-8 text-white" />
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-primary to-primary-dark rounded-2xl mb-4 shadow-lg">
+                <ChefHat className="w-8 h-8 text-white" />
               </div>
               <h2 className="font-sans text-[1.75rem] font-bold text-dark mb-1.5 tracking-tight">
-                Welcome back
+                Staff Portal
               </h2>
               <p className="text-[0.9rem] text-gray-500">
-                Sign in to your{" "}
-                <span className="font-semibold text-primary">Bites</span>{" "}
-                account
+                Sign in to access your{" "}
+                <span className="font-semibold text-primary">dashboard</span>
               </p>
+            </div>
+
+            {/* Role chips */}
+            <div className="flex items-center justify-center gap-2 mb-6 flex-wrap">
+              {[
+                {
+                  label: "Super Admin",
+                  icon: Shield,
+                  color: "bg-purple-100 text-purple-700",
+                },
+                {
+                  label: "Manager",
+                  icon: Users,
+                  color: "bg-blue-100 text-blue-700",
+                },
+                {
+                  label: "Employee",
+                  icon: Users,
+                  color: "bg-green-100 text-green-700",
+                },
+                {
+                  label: "Chef",
+                  icon: ChefHat,
+                  color: "bg-orange-100 text-orange-700",
+                },
+              ].map(({ label, icon: Icon, color }) => (
+                <span
+                  key={label}
+                  className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold ${color}`}
+                >
+                  <Icon className="w-3 h-3" />
+                  {label}
+                </span>
+              ))}
             </div>
 
             {/* Error */}
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-5 flex items-center gap-2.5 animate-shake">
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-5 flex items-center gap-2.5">
                 <div className="w-2 h-2 bg-red-500 rounded-full flex-shrink-0" />
                 <p className="text-sm font-medium">{error}</p>
               </div>
@@ -133,7 +183,7 @@ const Login = () => {
                       setFormData({ ...formData, email: e.target.value })
                     }
                     className="w-full pl-11 pr-4 py-3.5 rounded-xl border-2 border-gray-200 focus:border-primary focus:ring-4 focus:ring-primary/10 focus:outline-none transition-all text-dark text-[0.9rem] placeholder:text-gray-400"
-                    placeholder="your@email.com"
+                    placeholder="staff@restaurant.com"
                     required
                   />
                 </div>
@@ -181,54 +231,34 @@ const Login = () => {
                 {loading ? (
                   <>
                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    Logging in...
+                    Signing in...
                   </>
                 ) : (
-                  "Login to Your Account"
+                  "Sign in to Dashboard"
                 )}
               </button>
             </form>
 
-            {/* Signup link */}
-            <p className="mt-6 text-center text-[0.875rem] text-gray-500">
-              Don't have an account?{" "}
+            {/* Footer note */}
+            <p className="mt-6 text-center text-xs text-gray-400">
+              Not a staff member?{" "}
               <Link
-                to="/signup"
-                className="text-primary font-semibold hover:text-primary-dark hover:underline transition-all"
+                to="/login"
+                className="text-primary font-semibold hover:underline"
               >
-                Sign up for free
+                Customer login
               </Link>
             </p>
           </div>
         </div>
-      </div>
 
-      <style jsx>{`
-        @keyframes shake {
-          0%,
-          100% {
-            transform: translateX(0);
-          }
-          10%,
-          30%,
-          50%,
-          70%,
-          90% {
-            transform: translateX(-5px);
-          }
-          20%,
-          40%,
-          60%,
-          80% {
-            transform: translateX(5px);
-          }
-        }
-        .animate-shake {
-          animation: shake 0.5s;
-        }
-      `}</style>
+        {/* Bottom label */}
+        <p className="text-center text-white/50 text-xs mt-4">
+          Staff portal — authorized access only
+        </p>
+      </div>
     </div>
   );
 };
 
-export default Login;
+export default StaffLogin;

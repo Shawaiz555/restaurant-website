@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { protect, adminOnly } = require('../middleware/auth');
+const { protect, authorize, optionalAuth } = require('../middleware/auth');
 const {
   createReservation,
   getReservations,
@@ -15,29 +15,6 @@ const {
 } = require('../controllers/reservationController');
 
 // Public route — guests and users can create reservations
-// Optionally attach user if token is present (soft auth)
-const optionalAuth = async (req, res, next) => {
-  try {
-    const authHeader = req.headers.authorization;
-    if (authHeader && authHeader.startsWith('Bearer ')) {
-      const { verifyAccessToken } = require('../utils/jwt');
-      const User = require('../models/User');
-      try {
-        const token = authHeader.split(' ')[1];
-        const decoded = verifyAccessToken(token);
-        req.user = await User.findById(decoded.userId).select('-password');
-      } catch (tokenErr) {
-        // Token invalid/expired — treat as guest, continue
-        console.warn('optionalAuth: token invalid, treating as guest:', tokenErr.message);
-        req.user = null;
-      }
-    }
-    next();
-  } catch {
-    next();
-  }
-};
-
 router.post('/', optionalAuth, createReservation);
 
 // Public route — get booked time slots for a date
@@ -47,12 +24,12 @@ router.get('/booked-times', getBookedTimes);
 router.get('/my', protect, getMyReservations);
 router.put('/:id/cancel', protect, cancelMyReservation);
 
-// Admin routes
-router.get('/stats', protect, adminOnly, getReservationStats);
-router.get('/', protect, adminOnly, getReservations);
-router.get('/:id', protect, adminOnly, getReservationById);
-router.put('/:id/status', protect, adminOnly, updateReservationStatus);
-router.put('/:id/tables', protect, adminOnly, assignStackedTables);
-router.delete('/:id', protect, adminOnly, deleteReservation);
+// Staff routes — super_admin, manager, employee can manage reservations
+router.get('/stats',       protect, authorize('super_admin', 'manager', 'employee'), getReservationStats);
+router.get('/',            protect, authorize('super_admin', 'manager', 'employee'), getReservations);
+router.get('/:id',         protect, authorize('super_admin', 'manager', 'employee'), getReservationById);
+router.put('/:id/status',  protect, authorize('super_admin', 'manager', 'employee'), updateReservationStatus);
+router.put('/:id/tables',  protect, authorize('super_admin', 'manager', 'employee'), assignStackedTables);
+router.delete('/:id',      protect, authorize('super_admin', 'manager'), deleteReservation);
 
 module.exports = router;

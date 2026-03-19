@@ -8,6 +8,7 @@ import React, {
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { showNotification } from "../../store/slices/notificationSlice";
+import useSettings from "../../hooks/useSettings";
 import tablesService from "../../services/tablesService";
 import reservationsService from "../../services/reservationsService";
 import {
@@ -31,25 +32,26 @@ import {
   Layers,
 } from "lucide-react";
 
-// Available time slots
-const TIME_SLOTS = [
-  "11:00",
-  "11:30",
-  "12:00",
-  "12:30",
-  "13:00",
-  "13:30",
-  "14:00",
-  "14:30",
-  "18:00",
-  "18:30",
-  "19:00",
-  "19:30",
-  "20:00",
-  "20:30",
-  "21:00",
-  "21:30",
-];
+/**
+ * Generates 30-minute time slots from openingTime up to (closingTime - slotDurationMins).
+ * e.g. openingTime="11:00", closingTime="23:00", slotDurationMins=60
+ *   → ["11:00","11:30","12:00", ..., "22:00"]
+ */
+function generateTimeSlots(openingTime, closingTime, slotDurationMins = 60) {
+  if (!openingTime || !closingTime) return [];
+  const [openH, openM] = openingTime.split(":").map(Number);
+  const [closeH, closeM] = closingTime.split(":").map(Number);
+  const openMins = openH * 60 + openM;
+  const closeMins = closeH * 60 + closeM;
+  const lastSlotMins = closeMins - slotDurationMins;
+  const slots = [];
+  for (let t = openMins; t <= lastSlotMins && t < closeMins; t += 30) {
+    const h = Math.floor(t / 60);
+    const m = t % 60;
+    slots.push(`${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`);
+  }
+  return slots;
+}
 
 const LOCATION_STYLES = {
   Indoor: {
@@ -83,6 +85,11 @@ const Reservations = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { currentUser, isAuthenticated } = useSelector((s) => s.auth);
+  const { acceptingReservations, maxPartySize, openingTime, closingTime, slotDurationMins } = useSettings();
+  const timeSlots = useMemo(
+    () => generateTimeSlots(openingTime, closingTime, slotDurationMins),
+    [openingTime, closingTime, slotDurationMins]
+  );
 
   const [step, setStep] = useState(1); // 1: Date/Time/Size, 2: Table, 3: Contact, 4: Confirmation
   const topRef = useRef(null);
@@ -582,6 +589,23 @@ const Reservations = () => {
               </p>
             </div>
             <div className="p-4 sm:p-8 space-y-8 sm:space-y-10">
+              {/* Not accepting reservations banner */}
+              {!acceptingReservations && (
+                <div className="bg-red-50 border border-red-200 rounded-2xl px-5 py-4 flex items-start gap-3">
+                  <span className="text-red-500 text-lg leading-none mt-0.5">
+                    ✕
+                  </span>
+                  <div>
+                    <p className="font-bold text-red-700 text-sm">
+                      Reservations Unavailable
+                    </p>
+                    <p className="text-red-600 text-xs mt-0.5">
+                      We are not accepting reservations at this time. Please
+                      check back later or call us directly.
+                    </p>
+                  </div>
+                </div>
+              )}
               {/* Date */}
               <div className="space-y-3 border-2 border-gray-100 rounded-2xl p-3">
                 <label className="block text-dark font-bold text-[10px] sm:text-xs tracking-wide uppercase px-1">
@@ -655,59 +679,40 @@ const Reservations = () => {
                   {showTimeDropdown && (
                     <div className="absolute left-0 right-0 top-full mt-2 z-50 bg-white border-2 border-gray-100 rounded-xl sm:rounded-2xl shadow-2xl shadow-black/10 overflow-hidden">
                       <div className="max-h-72 overflow-y-auto">
-                        {[
-                          {
-                            label: "🍽 Lunch (11:00 – 14:30)",
-                            slots: TIME_SLOTS.filter(
-                              (t) =>
-                                parseInt(t.split(":")[0]) < 17 &&
-                                !bookedTimes.includes(t),
-                            ),
-                          },
-                          {
-                            label: "🌙 Dinner (18:00 – 21:30)",
-                            slots: TIME_SLOTS.filter(
-                              (t) =>
-                                parseInt(t.split(":")[0]) >= 17 &&
-                                !bookedTimes.includes(t),
-                            ),
-                          },
-                        ].map(({ label, slots }) => (
-                          <div key={label}>
-                            <div className="px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-dark-gray/50 bg-gray-50 border-b border-gray-100 sticky top-0">
-                              {label}
-                            </div>
-                            {slots.length === 0 ? (
-                              <div className="px-5 py-3 text-sm text-gray-400 italic">
-                                No available slots
-                              </div>
-                            ) : (
-                              slots.map((t) => {
-                                const isSelected = selectedTime === t;
-                                return (
-                                  <button
-                                    key={t}
-                                    type="button"
-                                    onClick={() => {
-                                      setSelectedTime(t);
-                                      setShowTimeDropdown(false);
-                                    }}
-                                    className={`w-full text-left px-5 py-3 text-sm transition-colors flex items-center justify-between ${
-                                      isSelected
-                                        ? "bg-primary/5 text-primary font-bold"
-                                        : "text-dark hover:bg-gray-50"
-                                    }`}
-                                  >
-                                    <span>{formatTimeDisplay(t)}</span>
-                                    {isSelected && (
-                                      <CheckCircle className="w-4 h-4 text-primary" />
-                                    )}
-                                  </button>
-                                );
-                              })
-                            )}
+                        {timeSlots.length === 0 ? (
+                          <div className="px-5 py-4 text-sm text-gray-400 italic text-center">
+                            No time slots configured
                           </div>
-                        ))}
+                        ) : timeSlots.filter((t) => !bookedTimes.includes(t)).length === 0 ? (
+                          <div className="px-5 py-4 text-sm text-gray-400 italic text-center">
+                            No available slots for this date
+                          </div>
+                        ) : (
+                          timeSlots.map((t) => {
+                            if (bookedTimes.includes(t)) return null;
+                            const isSelected = selectedTime === t;
+                            return (
+                              <button
+                                key={t}
+                                type="button"
+                                onClick={() => {
+                                  setSelectedTime(t);
+                                  setShowTimeDropdown(false);
+                                }}
+                                className={`w-full text-left px-5 py-3 text-sm transition-colors flex items-center justify-between ${
+                                  isSelected
+                                    ? "bg-primary/5 text-primary font-bold"
+                                    : "text-dark hover:bg-gray-50"
+                                }`}
+                              >
+                                <span>{formatTimeDisplay(t)}</span>
+                                {isSelected && (
+                                  <CheckCircle className="w-4 h-4 text-primary" />
+                                )}
+                              </button>
+                            );
+                          })
+                        )}
                       </div>
                     </div>
                   )}
@@ -752,8 +757,11 @@ const Reservations = () => {
 
                     <button
                       type="button"
-                      onClick={() => setPartySize((p) => p + 1)}
-                      className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center shadow-md shadow-primary/30 hover:bg-primary-dark transition-all active:scale-95 flex-shrink-0"
+                      onClick={() =>
+                        setPartySize((p) => Math.min(maxPartySize, p + 1))
+                      }
+                      disabled={partySize >= maxPartySize}
+                      className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center shadow-md shadow-primary/30 hover:bg-primary-dark disabled:bg-gray-200 disabled:shadow-none disabled:cursor-not-allowed transition-all active:scale-95 flex-shrink-0"
                     >
                       <span className="text-xl font-bold leading-none mb-0.5">
                         +
@@ -764,20 +772,22 @@ const Reservations = () => {
 
                 {/* Quick-pick presets */}
                 <div className="flex flex-wrap justify-center gap-2 pt-1 border-t border-gray-50">
-                  {[1, 2, 3, 4, 5, 6, 8, 10, 12, 15, 20].map((n) => (
-                    <button
-                      key={n}
-                      type="button"
-                      onClick={() => setPartySize(n)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border-2 ${
-                        partySize === n
-                          ? "bg-primary border-primary text-white shadow-md shadow-primary/20"
-                          : "bg-white border-gray-100 text-dark-gray/40 hover:border-primary/30 hover:text-primary"
-                      }`}
-                    >
-                      {n}
-                    </button>
-                  ))}
+                  {[1, 2, 3, 4, 5, 6, 8, 10, 12, 15, 20]
+                    .filter((n) => n <= maxPartySize)
+                    .map((n) => (
+                      <button
+                        key={n}
+                        type="button"
+                        onClick={() => setPartySize(n)}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border-2 ${
+                          partySize === n
+                            ? "bg-primary border-primary text-white shadow-md shadow-primary/20"
+                            : "bg-white border-gray-100 text-dark-gray/40 hover:border-primary/30 hover:text-primary"
+                        }`}
+                      >
+                        {n}
+                      </button>
+                    ))}
                 </div>
               </div>
             </div>
@@ -788,7 +798,8 @@ const Reservations = () => {
               </p>
               <button
                 onClick={handleStep1Next}
-                className="group w-full sm:w-auto flex items-center justify-center gap-3 bg-primary text-white px-8 sm:px-10 py-4 sm:py-5 rounded-xl sm:rounded-2xl font-bold uppercase tracking-widest text-[10px] sm:text-xs hover:bg-primary-dark transition-all shadow-xl shadow-primary/20 hover:-translate-y-0.5"
+                disabled={!acceptingReservations}
+                className="group w-full sm:w-auto flex items-center justify-center gap-3 bg-primary text-white px-8 sm:px-10 py-4 sm:py-5 rounded-xl sm:rounded-2xl font-bold uppercase tracking-widest text-[10px] sm:text-xs hover:bg-primary-dark disabled:bg-gray-300 disabled:shadow-none disabled:cursor-not-allowed transition-all shadow-xl shadow-primary/20 hover:-translate-y-0.5"
               >
                 Find My Table
                 <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

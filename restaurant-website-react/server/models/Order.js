@@ -5,13 +5,11 @@ const orderSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    index: true
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     default: null, // null for guest orders
-    index: true
   },
   customerInfo: {
     fullName: { type: String, required: true },
@@ -59,7 +57,6 @@ const orderSchema = new mongoose.Schema({
     type: String,
     enum: ['Pending', 'Processing', 'Completed', 'Cancelled'],
     default: 'Pending',
-    index: true
   },
   statusHistory: [{
     status: String,

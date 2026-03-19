@@ -17,12 +17,14 @@ import {
 import ordersService from "../../services/ordersService";
 import cartService from "../../services/cartService";
 import productsService from "../../services/productsService";
+import useSettings from "../../hooks/useSettings";
 
 const Checkout = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { items, total, clearCart } = useCart();
   const { currentUser, isAuthenticated } = useAuth();
+  const { deliveryFee, currencySymbol, acceptingOrders } = useSettings();
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -122,8 +124,7 @@ const Checkout = () => {
     return () => clearTimeout(timer);
   }, [formData.address, formData.city]);
 
-  // Calculate delivery fee
-  const deliveryFee = 50.0;
+  // Calculate totals (deliveryFee from settings)
   const subtotal = total;
   const grandTotal = subtotal + deliveryFee;
 
@@ -591,7 +592,8 @@ const Checkout = () => {
                               Qty: {item.quantity}
                             </p>
                             <p className="text-sm font-semibold text-primary">
-                              Rs.{(item.price * item.quantity).toFixed(2)}
+                              {currencySymbol}.
+                              {(item.price * item.quantity).toFixed(2)}
                             </p>
                           </div>
                         </div>
@@ -645,7 +647,8 @@ const Checkout = () => {
                               Qty: {item.quantity}
                             </p>
                             <p className="text-sm font-semibold text-primary">
-                              Rs.{(item.price * item.quantity).toFixed(2)}
+                              {currencySymbol}.
+                              {(item.price * item.quantity).toFixed(2)}
                             </p>
                           </div>
                         </div>
@@ -689,7 +692,7 @@ const Checkout = () => {
                                         `x${drink.quantity}`}
                                     </span>
                                     <span className="text-xs text-primary font-medium">
-                                      +Rs.
+                                      +{currencySymbol}.
                                       {(drink.price * drink.quantity).toFixed(
                                         2,
                                       )}
@@ -715,7 +718,7 @@ const Checkout = () => {
                                         `x${dessert.quantity}`}
                                     </span>
                                     <span className="text-xs text-primary font-medium">
-                                      +Rs.
+                                      +{currencySymbol}.
                                       {(
                                         dessert.price * dessert.quantity
                                       ).toFixed(2)}
@@ -741,7 +744,7 @@ const Checkout = () => {
                                         `x${extra.quantity}`}
                                     </span>
                                     <span className="text-xs text-primary font-medium">
-                                      +Rs.
+                                      +{currencySymbol}.
                                       {(extra.price * extra.quantity).toFixed(
                                         2,
                                       )}
@@ -761,26 +764,38 @@ const Checkout = () => {
               <div className="border-t-2 border-gray-200 pt-4 space-y-3">
                 <div className="flex justify-between text-dark-gray">
                   <span>Subtotal</span>
-                  <span>Rs.{subtotal.toFixed(2)}</span>
+                  <span>
+                    {currencySymbol}.{subtotal.toFixed(2)}
+                  </span>
                 </div>
                 <div className="flex justify-between text-dark-gray">
                   <span>Delivery Fee</span>
-                  <span>Rs.{deliveryFee.toFixed(2)}</span>
+                  <span>
+                    {currencySymbol}.{deliveryFee.toFixed(2)}
+                  </span>
                 </div>
                 <div className="border-t-2 border-gray-200 pt-3 flex justify-between items-center">
                   <span className="font-sans text-xl text-dark">Total</span>
                   <span className="font-sans text-xl xl:text-2xl text-primary">
-                    Rs.{grandTotal.toFixed(2)}
+                    {currencySymbol}.{grandTotal.toFixed(2)}
                   </span>
                 </div>
               </div>
 
+              {/* Orders closed banner */}
+              {!acceptingOrders && (
+                <div className="mt-4 bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 text-sm font-semibold text-center">
+                  We are not accepting online orders right now. Please try again
+                  later.
+                </div>
+              )}
+
               {/* Place Order Button */}
               <button
                 onClick={handlePlaceOrder}
-                disabled={isProcessing}
+                disabled={isProcessing || !acceptingOrders}
                 className={`w-full mt-6 py-2 xl:py-4 rounded-2xl font-sans text-lg transition-all shadow-xl flex items-center justify-center gap-2 ${
-                  isProcessing
+                  isProcessing || !acceptingOrders
                     ? "bg-gray-400 cursor-not-allowed"
                     : "bg-gradient-to-r from-primary to-primary-dark hover:from-primary-dark hover:to-primary text-white hover:shadow-2xl hover:scale-105"
                 }`}
