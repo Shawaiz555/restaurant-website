@@ -202,6 +202,7 @@ const Checkout = () => {
         status: "Pending",
         orderDate: new Date().toISOString(),
         isGuestOrder: !isAuthenticated,
+        currencySymbol: currencySymbol,
       };
 
       // Place order via MongoDB API

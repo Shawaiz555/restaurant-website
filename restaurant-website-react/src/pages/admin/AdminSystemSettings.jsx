@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useDispatch } from "react-redux";
+import useSettings from "../../hooks/useSettings";
 import settingsService from "../../services/settingsService";
 import { applySettings } from "../../store/slices/settingsSlice";
 import {
@@ -15,8 +16,8 @@ import {
 
 // ─── Section wrapper ─────────────────────────────────────────────────────────
 const Section = ({ icon: Icon, title, children }) => (
-  <div className="bg-white rounded-2xl shadow-lg border border-gray-100">
-    <div className="flex items-center gap-3 px-6 py-4 border-b border-gray-100">
+  <div className="bg-white max-w-4xl rounded-2xl shadow-lg border border-gray-100">
+    <div className="flex items-center gap-3 px-6 py-6 border-b border-gray-100">
       <div className="w-9 h-9 bg-primary/10 rounded-xl flex items-center justify-center">
         <Icon className="w-5 h-5 text-primary" />
       </div>
@@ -29,7 +30,7 @@ const Section = ({ icon: Icon, title, children }) => (
 // ─── Field helpers ────────────────────────────────────────────────────────────
 const Field = ({ label, children, span }) => (
   <div className={span === 2 ? "sm:col-span-2" : ""}>
-    <label className="block text-sm font-semibold text-dark mb-1.5">
+    <label className="block text-sm font-semibold text-dark mb-2">
       {label}
     </label>
     {children}
@@ -90,6 +91,7 @@ const set = (obj, section, key, val) => ({
 const AdminSystemSettings = () => {
   const dispatch = useDispatch();
   const [form, setForm] = useState(null);
+  const { currencySymbol } = useSettings();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState(null); // { type: 'success'|'error', msg }
@@ -161,7 +163,7 @@ const AdminSystemSettings = () => {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Header */}
-      <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+      <div className="bg-white max-w-4xl rounded-2xl p-6 shadow-lg border border-gray-100">
         <div className="flex items-center justify-between flex-wrap gap-3">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 bg-gradient-to-br from-primary to-primary-dark rounded-2xl flex items-center justify-center">
@@ -299,13 +301,13 @@ const AdminSystemSettings = () => {
           value={o.acceptingOrders !== false}
           onChange={(v) => upd("ordering", "acceptingOrders", v)}
         />
-        <Field label="Delivery Fee (Rs)">
+        <Field label={`Delivery Fee (${currencySymbol})`}>
           <NumberInput
             value={o.deliveryFee ?? 50}
             onChange={(v) => upd("ordering", "deliveryFee", v)}
           />
         </Field>
-        <Field label="Minimum Order Amount (Rs)">
+        <Field label={`Minimum Order Amount (${currencySymbol})`}>
           <NumberInput
             value={o.minOrderAmount ?? 0}
             onChange={(v) => upd("ordering", "minOrderAmount", v)}
@@ -352,7 +354,7 @@ const AdminSystemSettings = () => {
       </Section>
 
       {/* Bottom save button for convenience */}
-      <div className="flex justify-end">
+      <div className=" max-w-4xl flex justify-end">
         <button
           type="submit"
           disabled={saving}

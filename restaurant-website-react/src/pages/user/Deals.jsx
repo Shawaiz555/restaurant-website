@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import useSettings from "../../hooks/useSettings";
 import dealsService from "../../services/dealsService";
 import DealsHeroSection from "../../components/deals/DealsHeroSection";
 import { addDealToCart, openCart } from "../../store/slices/cartSlice";
@@ -52,7 +53,7 @@ const SIZE_TYPES = [
   },
 ];
 
-const formatPrice = (price) => `Rs. ${Number(price).toFixed(0)}`;
+const formatPrice = (price, currencySymbol) => `${currencySymbol} ${Number(price).toFixed(0)}`;
 
 const formatDate = (dateStr) => {
   if (!dateStr) return null;
@@ -118,6 +119,7 @@ const AvailBadge = ({ deal }) => {
 ══════════════════════════════════════════════════════ */
 const SmCard = ({ deal, onClaim }) => {
   const item = deal.items?.[0];
+  const { currencySymbol } = useSettings();
 
   return (
     <div className="group relative bg-white rounded-2xl border border-cream-dark hover:border-primary/30 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 overflow-hidden h-full flex flex-col justify-between">
@@ -159,7 +161,7 @@ const SmCard = ({ deal, onClaim }) => {
           <div>
             <AvailBadge deal={deal} />
             <p className="text-primary font-black text-2xl leading-tight mt-0.5">
-              {formatPrice(deal.price)}
+              {formatPrice(deal.price, currencySymbol)}
             </p>
           </div>
           <button
@@ -179,6 +181,7 @@ const SmCard = ({ deal, onClaim }) => {
 ══════════════════════════════════════════════════════ */
 const MdCard = ({ deal, onClaim }) => {
   const items = deal.items || [];
+  const { currencySymbol } = useSettings();
 
   return (
     <div className="group relative bg-white rounded-2xl border border-cream-dark hover:border-primary/30 shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 overflow-hidden flex flex-col h-full">
@@ -255,7 +258,7 @@ const MdCard = ({ deal, onClaim }) => {
           <div>
             <AvailBadge deal={deal} />
             <p className="text-primary font-black text-2xl leading-tight mt-0.5">
-              {formatPrice(deal.price)}
+              {formatPrice(deal.price, currencySymbol)}
             </p>
           </div>
           <button
@@ -276,6 +279,7 @@ const MdCard = ({ deal, onClaim }) => {
 ══════════════════════════════════════════════════════ */
 const LgCard = ({ deal, onClaim }) => {
   const items = deal.items || [];
+  const { currencySymbol } = useSettings();
 
   return (
     <div className="group relative bg-white rounded-2xl border border-cream-dark hover:border-primary/40 shadow-md hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col-reverse sm:flex-row">
@@ -380,7 +384,7 @@ const LgCard = ({ deal, onClaim }) => {
             Deal Price
           </p>
           <p className="text-white font-black text-4xl leading-none">
-            {formatPrice(deal.price)}
+            {formatPrice(deal.price, currencySymbol)}
           </p>
         </div>
       </div>
@@ -393,6 +397,7 @@ const LgCard = ({ deal, onClaim }) => {
 ══════════════════════════════════════════════════════ */
 const XlCard = ({ deal, onClaim }) => {
   const items = deal.items || [];
+  const { currencySymbol } = useSettings();
 
   return (
     <div className="group relative bg-white rounded-2xl border border-cream-dark hover:border-primary/40 shadow-lg hover:shadow-2xl hover:-translate-y-0.5 transition-all duration-300 overflow-hidden">
@@ -438,7 +443,7 @@ const XlCard = ({ deal, onClaim }) => {
                 Total Value
               </p>
               <p className="text-white font-black text-4xl sm:text-5xl xl:text-6xl leading-none">
-                {formatPrice(deal.price)}
+                {formatPrice(deal.price, currencySymbol)}
               </p>
               <p className="text-white/50 text-[10px] mt-1">
                 Inclusive of all items

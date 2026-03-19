@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
+import useSettings from "../../hooks/useSettings";
 import {
   BarChart3,
   RefreshCw,
@@ -23,7 +24,7 @@ import addonStockService from "../../services/addonStockService";
 import { useDispatch } from "react-redux";
 import { showNotification } from "../../store/slices/notificationSlice";
 
-const PRINT_COLUMNS = [
+const getPrintColumns = (currencySymbol) => [
   { header: "#", render: (_, i) => i + 1 },
   { header: "Name", render: (r) => r.name },
   { header: "Type", render: (r) => r.kind },
@@ -32,7 +33,7 @@ const PRINT_COLUMNS = [
   { header: "Min Stock", render: (r) => `${r.minimumStock} ${r.unit}` },
   {
     header: "Cost/Unit",
-    render: (r) => (r.costPerUnit != null ? `Rs. ${r.costPerUnit}` : "—"),
+    render: (r) => (r.costPerUnit != null ? `${currencySymbol} ${r.costPerUnit}` : "—"),
   },
   {
     header: "Status",
@@ -54,6 +55,7 @@ const AdminStockReports = () => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [ingredients, setIngredients] = useState([]);
+  const { currencySymbol } = useSettings();
   const [addonStocks, setAddonStocks] = useState([]);
   const [purchaseStats, setPurchaseStats] = useState({});
   const [wastageStats, setWastageStats] = useState({});
@@ -164,7 +166,7 @@ const AdminStockReports = () => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginated = sorted.slice(startIndex, startIndex + itemsPerPage);
 
-  const formatCurrency = (n) => `Rs. ${(n || 0).toLocaleString()}`;
+  const formatCurrency = (n) => `${currencySymbol} ${(n || 0).toLocaleString()}`;
 
   const getStatusInfo = (row) => {
     if (row.currentStock === 0)
@@ -197,7 +199,7 @@ const AdminStockReports = () => {
     printTable({
       title: "Stock Report",
       subtitle: buildSubtitle(),
-      columns: PRINT_COLUMNS,
+      columns: getPrintColumns(currencySymbol),
       rows: rowsToPrint,
       mode,
     });
@@ -526,7 +528,7 @@ const AdminStockReports = () => {
                         </td>
                         <td className="px-4 py-3 text-right text-sm text-dark-gray">
                           {row.costPerUnit != null
-                            ? `Rs. ${row.costPerUnit}`
+                            ? `${currencySymbol} ${row.costPerUnit}`
                             : "—"}
                         </td>
                         <td className="px-4 py-3">

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import useSettings from "../../hooks/useSettings";
 import {
   ShoppingCart,
   Plus,
@@ -34,7 +35,7 @@ import ConfirmModal from "../../components/admin/common/ConfirmModal";
 import PrintButton from "../../components/admin/common/PrintButton";
 import { printTable, getSelectionSummary } from "../../utils/printUtils";
 
-const PRINT_COLUMNS = [
+const getPrintColumns = (currencySymbol) => [
   { header: "#", render: (_, i) => i + 1 },
   {
     header: "Date",
@@ -56,7 +57,7 @@ const PRINT_COLUMNS = [
   },
   {
     header: "Total Cost",
-    render: (r) => `Rs. ${(r.totalCost || 0).toLocaleString()}`,
+    render: (r) => `${currencySymbol} ${(r.totalCost || 0).toLocaleString()}`,
   },
   { header: "Notes", render: (r) => r.notes || "—" },
 ];
@@ -74,6 +75,7 @@ const AdminPurchases = () => {
   const purchases = useSelector(selectAllPurchases);
   const stats = useSelector(selectPurchaseStats);
   const loading = useSelector(selectPurchasesLoading);
+  const { currencySymbol } = useSettings();
 
   const [suppliers, setSuppliers] = useState([]);
   const [ingredients, setIngredients] = useState([]);
@@ -245,7 +247,7 @@ const AdminPurchases = () => {
     printTable({
       title: "Purchases Report",
       subtitle: buildSubtitle(),
-      columns: PRINT_COLUMNS,
+      columns: getPrintColumns(currencySymbol),
       rows: rowsToPrint,
       mode,
     });
@@ -262,7 +264,7 @@ const AdminPurchases = () => {
       month: "short",
       year: "numeric",
     });
-  const formatCurrency = (n) => `Rs. ${(n || 0).toLocaleString()}`;
+  const formatCurrency = (n) => `${currencySymbol} ${(n || 0).toLocaleString()}`;
 
   return (
     <div className="space-y-6">
@@ -476,7 +478,7 @@ const AdminPurchases = () => {
                     <div className="col-span-3">
                       {idx === 0 && (
                         <label className="block text-xs text-dark-gray mb-1">
-                          Price/Unit (Rs.)
+                          Price/Unit ({currencySymbol})
                         </label>
                       )}
                       <input

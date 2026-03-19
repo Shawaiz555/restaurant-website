@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import paymentService from "../../services/paymentService";
 import ordersService from "../../services/ordersService";
 import { useAuth } from "../../hooks/useAuth";
+import useSettings from "../../hooks/useSettings";
 import StatsCard from "../../components/admin/common/StatsCard";
 import StatusBadge from "../../components/admin/common/StatusBadge";
 import ConfirmModal from "../../components/admin/common/ConfirmModal";
@@ -23,8 +24,6 @@ import {
   ChevronsRight,
 } from "lucide-react";
 
-const formatCurrency = (amount) => `Rs ${parseFloat(amount || 0).toFixed(2)}`;
-
 const METHOD_OPTIONS = ["Cash", "Card", "Online", "Bank Transfer"];
 const STATUS_OPTIONS = ["Pending", "Paid", "Refunded", "Failed"];
 
@@ -35,11 +34,11 @@ const STATUS_COLORS = {
   Failed: "bg-red-100 text-red-700",
 };
 
-const PRINT_COLUMNS = [
+const getPrintColumns = (currencySymbol) => [
   { header: "#", render: (_, i) => i + 1 },
   { header: "Order ID", render: (p) => p.orderId || "—" },
   { header: "Method", render: (p) => p.method || "—" },
-  { header: "Amount", render: (p) => `Rs ${parseFloat(p.amount || 0).toFixed(2)}` },
+  { header: "Amount", render: (p) => `${currencySymbol} ${parseFloat(p.amount || 0).toFixed(2)}` },
   { header: "Status", render: (p) => p.status || "—" },
   { header: "Transaction Ref", render: (p) => p.transactionRef || "—" },
   { header: "Processed By", render: (p) => p.processedBy?.name || "—" },
@@ -64,6 +63,7 @@ const PRINT_COLUMNS = [
 const CreatePaymentModal = ({ onClose, onCreated }) => {
   const [orders, setOrders] = useState([]);
   const [search, setSearch] = useState("");
+  const { formatPrice: formatCurrency } = useSettings();
   const [selectedOrders, setSelectedOrders] = useState([]);
   const [method, setMethod] = useState("Cash");
   const [transRef, setTransRef] = useState("");
@@ -360,6 +360,7 @@ const CreatePaymentModal = ({ onClose, onCreated }) => {
 // ─── Main Page ───────────────────────────────────────────────────────────────
 const AdminPayments = () => {
   const { userRole } = useAuth();
+  const { currencySymbol, formatPrice: formatCurrency } = useSettings();
   const canDelete = userRole === "super_admin";
   const canUpdate = userRole === "super_admin" || userRole === "manager";
 
@@ -441,7 +442,7 @@ const AdminPayments = () => {
     printTable({
       title: "Payments Report",
       subtitle: buildSubtitle(),
-      columns: PRINT_COLUMNS,
+      columns: getPrintColumns(currencySymbol),
       rows: rowsToPrint,
       mode,
     });

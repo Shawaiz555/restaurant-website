@@ -3,11 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { showNotification } from "../../store/slices/notificationSlice";
 import { useCart } from "../../hooks/useCart";
+import useSettings from "../../hooks/useSettings";
 import productsService from "../../services/productsService";
 
 const CartDrawer = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { currencySymbol } = useSettings();
   const {
     items,
     isOpen,
@@ -146,7 +148,7 @@ const CartDrawer = () => {
                         </div>
                       )}
                       <p className="text-primary font-semibold mt-1">
-                        Rs.{item.price.toFixed(2)}
+                        {currencySymbol}{item.price.toFixed(2)}
                       </p>
                     </div>
                     <button
@@ -183,7 +185,7 @@ const CartDrawer = () => {
                     </div>
                     <div className="text-right">
                       <p className="font-sans text-lg text-dark">
-                        Rs.{(item.price * item.quantity).toFixed(2)}
+                        {currencySymbol}{(item.price * item.quantity).toFixed(2)}
                       </p>
                     </div>
                   </div>
@@ -199,13 +201,13 @@ const CartDrawer = () => {
             <div className="flex justify-between items-center mb-3">
               <span className="text-dark-gray font-medium">Subtotal</span>
               <span className="font-sans text-xl text-dark">
-                Rs.{total.toFixed(2)}
+                {currencySymbol}{total.toFixed(2)}
               </span>
             </div>
             <div className="flex justify-between items-center mb-6 pt-3 border-t border-gray-300">
               <span className="font-sans text-lg text-dark">Total</span>
               <span className="font-sans text-2xl text-primary">
-                Rs.{total.toFixed(2)}
+                {currencySymbol}{total.toFixed(2)}
               </span>
             </div>
             <button

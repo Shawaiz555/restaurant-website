@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import useSettings from "../../hooks/useSettings";
 import SearchBar from "../../components/admin/common/SearchBar";
 import ConfirmModal from "../../components/admin/common/ConfirmModal";
 import StatsCard from "../../components/admin/common/StatsCard";
@@ -38,7 +39,7 @@ import {
   Trash2,
 } from "lucide-react";
 
-const PRINT_COLUMNS = [
+const getPrintColumns = (currencySymbol) => [
   { header: "#", render: (_, i) => i + 1 },
   { header: "Order ID", render: (r) => r.orderId?.substring(0, 16) || "N/A" },
   {
@@ -49,7 +50,7 @@ const PRINT_COLUMNS = [
   { header: "Phone", render: (r) => r.customerInfo?.phone || "N/A" },
   {
     header: "Total",
-    render: (r) => `Rs ${parseFloat(r.total || 0).toFixed(2)}`,
+    render: (r) => `${currencySymbol} ${parseFloat(r.total || 0).toFixed(2)}`,
   },
   { header: "Status", render: (r) => r.status },
   { header: "Type", render: (r) => (r.isGuestOrder ? "Guest" : "Registered") },
@@ -72,7 +73,7 @@ function escO(val) {
     .replace(/>/g, "&gt;");
 }
 
-function orderDetailRenderer(order) {
+function orderDetailRenderer(order, currencySymbol = "") {
   const items = order.items || order.cartItems || [];
   if (!items.length) return null;
 
@@ -127,7 +128,7 @@ function orderDetailRenderer(order) {
       return `<tr>
       <td>${escO(item.name)}${dealItemsHtml}</td>
       <td style="text-align:center">${item.quantity || 1}</td>
-      <td style="text-align:right">Rs ${parseFloat(item.price || 0).toFixed(2)}</td>
+      <td style="text-align:right">${currencySymbol} ${parseFloat(item.price || 0).toFixed(2)}</td>
       <td>${addons}</td>
       <td>${customizations}</td>
     </tr>`;
@@ -166,6 +167,7 @@ const AdminOrders = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const orders = useSelector(selectFilteredOrders);
+  const { currencySymbol, formatPrice: formatCurrency } = useSettings();
   const stats = useSelector(selectOrderStats);
   const filters = useSelector((state) => state.orders.filters);
 
@@ -252,9 +254,7 @@ const AdminOrders = () => {
     setSelectedIds([]);
   }, [filters.search, filters.status, filters.userType]);
 
-  const formatCurrency = (amount) => {
-    return `Rs ${parseFloat(amount || 0).toFixed(2)}`;
-  };
+
 
   const buildSubtitle = () => {
     const parts = [];
@@ -271,9 +271,9 @@ const AdminOrders = () => {
     printTable({
       title: "Orders Report",
       subtitle: buildSubtitle(),
-      columns: PRINT_COLUMNS,
+      columns: getPrintColumns(currencySymbol),
       rows: rowsToPrint,
-      detailRenderer: orderDetailRenderer,
+      detailRenderer: (order) => orderDetailRenderer(order, currencySymbol),
       mode,
     });
   };

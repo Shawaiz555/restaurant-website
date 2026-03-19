@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import useSettings from "../../hooks/useSettings";
 import productsService from "../../services/productsService";
 import ingredientsService from "../../services/ingredientsService";
 import recipesService from "../../services/recipesService";
@@ -37,6 +38,7 @@ const AdminProductForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { id } = useParams();
+  const { currencySymbol } = useSettings();
   const isEditMode = Boolean(id);
 
   const [formData, setFormData] = useState({
@@ -654,7 +656,7 @@ const AdminProductForm = () => {
               <div>
                 <label className="text-sm font-bold text-dark mb-2 flex items-center gap-2">
                   <DollarSign className="w-4 h-4 text-primary" />
-                  Base Price * (Rs)
+                  Base Price * ({currencySymbol})
                 </label>
                 <input
                   type="number"
@@ -761,7 +763,7 @@ const AdminProductForm = () => {
                   Size Name
                 </span>
                 <span className="text-xs font-bold text-dark-gray uppercase tracking-wider">
-                  Price (Rs)
+                  Price ({currencySymbol})
                 </span>
                 <span className="text-xs font-bold text-dark-gray uppercase tracking-wider">
                   Description
@@ -809,11 +811,11 @@ const AdminProductForm = () => {
                   {/* Price */}
                   <div>
                     <label className="sm:hidden block text-xs font-bold text-dark-gray mb-1.5 uppercase tracking-wider">
-                      Price (Rs)
+                      Price ({currencySymbol})
                     </label>
                     <div className="relative">
                       <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-primary pointer-events-none select-none">
-                        Rs
+                        {currencySymbol}
                       </span>
                       <input
                         type="number"

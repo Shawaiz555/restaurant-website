@@ -2,10 +2,12 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../hooks/useCart";
 import productsService from "../../services/productsService";
+import useSettings from "../../hooks/useSettings";
 
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
   const { addToCart } = useCart();
+  const { currencySymbol } = useSettings();
 
   const handleAddToCart = (e) => {
     e.stopPropagation();
@@ -51,7 +53,7 @@ const ProductCard = ({ product }) => {
       </p>
       <div className="flex flex-wrap items-center justify-between gap-2">
         <span className="font-sans text-xl font-semibold text-dark whitespace-nowrap">
-          Rs.{product.basePrice.toFixed(2)}
+          {currencySymbol}{product.basePrice.toFixed(2)}
         </span>
         <button
           onClick={handleAddToCart}

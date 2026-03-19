@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import useSettings from "../../../hooks/useSettings";
 import StatsCard from "../../../components/admin/common/StatsCard";
 import StatusBadge from "../../../components/admin/common/StatusBadge";
 import ordersService from "../../../services/ordersService";
@@ -17,8 +18,6 @@ import {
   Users,
 } from "lucide-react";
 
-const formatCurrency = (amount) => `Rs ${parseFloat(amount || 0).toFixed(2)}`;
-
 const STATUS_CONFIG = {
   Pending: { color: "bg-yellow-100 text-yellow-700", icon: Clock },
   Processing: { color: "bg-blue-100 text-blue-700", icon: RefreshCw },
@@ -28,6 +27,7 @@ const STATUS_CONFIG = {
 
 const EmployeeDashboard = () => {
   const navigate = useNavigate();
+  const { formatPrice: formatCurrency } = useSettings();
 
   const [stats, setStats] = useState({
     pendingOrders: 0,

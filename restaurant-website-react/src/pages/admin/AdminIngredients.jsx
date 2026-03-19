@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import useSettings from "../../hooks/useSettings";
 import {
   ShoppingBasket,
   Plus,
@@ -33,14 +34,14 @@ import ConfirmModal from "../../components/admin/common/ConfirmModal";
 import PrintButton from "../../components/admin/common/PrintButton";
 import { printTable, getSelectionSummary } from "../../utils/printUtils";
 
-const PRINT_COLUMNS = [
+const getPrintColumns = (currencySymbol) => [
   { header: "#", render: (_, i) => i + 1 },
   { header: "Name", render: (r) => r.name },
   { header: "Category", render: (r) => r.category },
   { header: "Unit", render: (r) => r.unit },
   { header: "Current Stock", render: (r) => r.currentStock },
   { header: "Min Stock", render: (r) => r.minimumStock },
-  { header: "Cost/Unit", render: (r) => `Rs. ${r.costPerUnit}` },
+  { header: "Cost/Unit", render: (r) => `${currencySymbol} ${r.costPerUnit}` },
   {
     header: "Stock Status",
     render: (r) =>
@@ -66,6 +67,7 @@ const AdminIngredients = () => {
   const ingredients = useSelector(selectAllIngredients);
   const stats = useSelector(selectIngredientStats);
   const loading = useSelector(selectIngredientsLoading);
+  const { currencySymbol } = useSettings();
 
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All");
@@ -245,7 +247,7 @@ const AdminIngredients = () => {
     printTable({
       title: "Ingredients Report",
       subtitle: buildSubtitle(),
-      columns: PRINT_COLUMNS,
+      columns: getPrintColumns(currencySymbol),
       rows: rowsToPrint,
       mode,
     });
@@ -458,7 +460,7 @@ const AdminIngredients = () => {
             </div>
             <div>
               <label className="block text-sm font-medium text-dark-gray mb-1">
-                Cost per Unit (Rs.)
+                Cost per Unit ({currencySymbol})
               </label>
               <input
                 type="number"
@@ -647,7 +649,7 @@ const AdminIngredients = () => {
                         {ing.minimumStock}
                       </td>
                       <td className="px-4 py-3 text-right text-sm text-dark-gray">
-                        Rs. {ing.costPerUnit}
+                        {currencySymbol} {ing.costPerUnit}
                       </td>
                       <td className="px-4 py-3 text-center">
                         <span

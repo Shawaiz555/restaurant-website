@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import useSettings from "../../../hooks/useSettings";
 import StatsCard from "../../../components/admin/common/StatsCard";
 import StatusBadge from "../../../components/admin/common/StatusBadge";
 import { setOrders } from "../../../store/slices/ordersSlice";
@@ -19,12 +20,10 @@ import {
   XCircle, Plus, Package, AlertTriangle, Settings, UserCheck,
 } from "lucide-react";
 
-const formatCurrency = (amount) =>
-  `Rs ${parseFloat(amount || 0).toFixed(2)}`;
-
 const SuperAdminDashboard = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { formatPrice: formatCurrency } = useSettings();
 
   const [stats, setStats] = useState({
     revenue: 0, orders: 0, pendingOrders: 0,
@@ -216,7 +215,7 @@ const SuperAdminDashboard = () => {
                 return (
                   <div key={i} className="flex-1 flex flex-col items-center gap-1">
                     <span className="text-[10px] font-bold text-primary">
-                      {day.revenue > 0 ? `Rs ${day.revenue.toFixed(0)}` : ""}
+                      {day.revenue > 0 ? formatCurrency(day.revenue) : ""}
                     </span>
                     <div className="w-full bg-gradient-to-t from-primary to-primary-light rounded-t-lg relative group"
                       style={{ height: `${Math.max(h, 4)}%` }}>

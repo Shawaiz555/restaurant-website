@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import ordersService from "../../services/ordersService";
+import useSettings from "../../hooks/useSettings";
 import { updateOrderStatus } from "../../store/slices/ordersSlice";
 import { showNotification } from "../../store/slices/notificationSlice";
 import StatusBadge from "../../components/admin/common/StatusBadge";
@@ -44,8 +45,6 @@ const STATUS_BAR = {
   Cancelled: "from-red-400 to-red-500",
 };
 
-const formatCurrency = (amount) => `Rs ${parseFloat(amount || 0).toFixed(2)}`;
-
 const formatDate = (dateString) =>
   new Date(dateString).toLocaleDateString("en-US", {
     month: "short",
@@ -59,6 +58,7 @@ const AdminOrderDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { formatPrice: formatCurrency } = useSettings();
 
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);

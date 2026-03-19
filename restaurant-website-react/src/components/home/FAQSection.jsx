@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import useSettings from "../../hooks/useSettings";
 import {
   Clock,
   Truck,
@@ -15,6 +16,7 @@ import {
 
 const FAQSection = () => {
   const [openIndex, setOpenIndex] = useState(null);
+  const { currencySymbol, minOrderAmount } = useSettings();
 
   const faqs = [
     {
@@ -26,7 +28,7 @@ const FAQSection = () => {
     {
       question: "Do you offer delivery services?",
       answer:
-        "Yes! We offer fast delivery within a 10km radius. Orders typically arrive within 30-45 minutes. You can track your order in real-time through our website or mobile app. Delivery is free for orders above Rs. 500.",
+        `Yes! We offer fast delivery within a 10km radius. Orders typically arrive within 30-45 minutes. You can track your order in real-time through our website or mobile app. Delivery is free for orders above ${currencySymbol} ${minOrderAmount}.`,
       icon: Truck,
     },
     {

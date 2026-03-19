@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import useSettings from "../../../hooks/useSettings";
 import StatsCard from "../../../components/admin/common/StatsCard";
 import StatusBadge from "../../../components/admin/common/StatusBadge";
 import ordersService from "../../../services/ordersService";
@@ -23,10 +24,9 @@ import {
   BarChart2,
 } from "lucide-react";
 
-const formatCurrency = (amount) => `Rs ${parseFloat(amount || 0).toFixed(2)}`;
-
 const ManagerDashboard = () => {
   const navigate = useNavigate();
+  const { formatPrice: formatCurrency } = useSettings();
 
   const [stats, setStats] = useState({
     orders: 0,

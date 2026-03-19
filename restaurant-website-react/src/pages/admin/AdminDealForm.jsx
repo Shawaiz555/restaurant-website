@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import useSettings from "../../hooks/useSettings";
 import { addDeal, updateDeal } from "../../store/slices/dealsSlice";
 import { showNotification } from "../../store/slices/notificationSlice";
 import dealsService from "../../services/dealsService";
@@ -21,6 +22,7 @@ const AdminDealForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { id } = useParams();
+  const { currencySymbol } = useSettings();
   const isEdit = Boolean(id);
   const pickerRef = useRef(null);
 
@@ -341,7 +343,7 @@ const AdminDealForm = () => {
               </div>
               <div className="flex-shrink-0 text-right">
                 <div className="bg-primary text-white px-4 py-2 rounded-xl font-bold text-lg">
-                  Rs. {formData.price ? Number(formData.price).toFixed(0) : "0"}
+                  {currencySymbol} {formData.price ? Number(formData.price).toFixed(0) : "0"}
                 </div>
                 {formData.items.length > 0 && (
                   <div className="flex justify-end mt-2">
@@ -422,11 +424,11 @@ const AdminDealForm = () => {
               {/* Price */}
               <div>
                 <label className="block text-sm font-medium text-dark mb-1.5">
-                  Deal Price (Rs.) <span className="text-red-500">*</span>
+                  Deal Price ({currencySymbol}) <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-dark-gray font-medium text-sm">
-                    Rs.
+                    {currencySymbol}
                   </span>
                   <input
                     type="number"
@@ -607,7 +609,7 @@ const AdminDealForm = () => {
                                   <span className="bg-gray-100 px-1.5 py-0.5 rounded-full">
                                     {product.category}
                                   </span>
-                                  <span>Rs. {product.basePrice}</span>
+                                  <span>{currencySymbol} {product.basePrice}</span>
                                 </p>
                               </div>
                               {selected && (

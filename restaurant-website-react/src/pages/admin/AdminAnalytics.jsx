@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import useSettings from "../../hooks/useSettings";
 import {
   LineChart,
   Line,
@@ -28,6 +29,7 @@ import analyticsService from "../../services/analyticsService";
 import ordersService from "../../services/ordersService";
 
 const AdminAnalytics = () => {
+  const { formatPrice: formatCurrency } = useSettings();
   const [stats, setStats] = useState({
     revenue: 0,
     expenses: 0,
@@ -92,9 +94,7 @@ const AdminAnalytics = () => {
     loadAnalytics();
   }, [loadAnalytics]);
 
-  const formatCurrency = (value) => {
-    return `Rs ${parseFloat(value || 0).toFixed(2)}`;
-  };
+
 
   return (
     <div className="space-y-6">

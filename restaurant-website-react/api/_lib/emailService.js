@@ -16,7 +16,7 @@ const getAbsoluteImageUrl = (imagePath) => {
   return `${baseUrl}${imagePath.startsWith('/') ? '' : '/'}${imagePath}`;
 };
 
-const formatOrderItems = (items) => {
+const formatOrderItems = (items, currencySymbol) => {
   return items
     .map((item) => {
       if (item.isDeal) {
@@ -46,7 +46,7 @@ const formatOrderItems = (items) => {
                   <div style="display:inline-block; background:#E67E22; color:#fff; font-size:10px; font-weight:800; letter-spacing:1px; text-transform:uppercase; padding:3px 10px; border-radius:20px; margin-bottom:6px;">Deal</div>
                   <h4 style="margin: 0 0 5px 0; color: #1f2937; font-size: 15px; font-weight: 700;">${item.name}</h4>
                   <p style="margin: 0 0 4px 0; color: #6b7280; font-size: 13px;">Qty: ${item.quantity}</p>
-                  <p style="margin: 0; color: #E67E22; font-weight: bold; font-size: 15px;">Rs.${(item.price * item.quantity).toFixed(2)}</p>
+                  <p style="margin: 0; color: #E67E22; font-weight: bold; font-size: 15px;">${currencySymbol}${(item.price * item.quantity).toFixed(2)}</p>
                 </td>
               </tr>
               ${packageItems ? `
@@ -79,7 +79,7 @@ const formatOrderItems = (items) => {
                   <h4 style="margin: 0 0 5px 0; color: #1f2937; font-size: 15px; font-weight: 600;">${item.name}</h4>
                   ${item.size ? `<p style="margin: 0 0 4px 0; color: #6b7280; font-size: 13px;">Size: ${item.size}</p>` : ''}
                   <p style="margin: 0 0 4px 0; color: #6b7280; font-size: 13px;">Qty: ${item.quantity}</p>
-                  <p style="margin: 0; color: #E67E22; font-weight: bold; font-size: 15px;">Rs.${(item.price * item.quantity).toFixed(2)}</p>
+                  <p style="margin: 0; color: #E67E22; font-weight: bold; font-size: 15px;">${currencySymbol}${(item.price * item.quantity).toFixed(2)}</p>
                 </td>
               </tr>
       `;
@@ -106,21 +106,21 @@ const formatOrderItems = (items) => {
         if (item.addOns.drinks?.length > 0) {
           itemText += `<p style="margin: 5px 0 2px 0; color: #6b7280; font-size: 13px; font-weight: 600;">Drinks:</p>`;
           item.addOns.drinks.forEach((drink) => {
-            itemText += `<p style="margin: 0 0 3px 0; color: #4b5563; font-size: 13px; padding-left: 15px;">• ${drink.name} ${drink.quantity > 1 ? `x${drink.quantity}` : ''} - Rs.${(drink.price * drink.quantity).toFixed(2)}</p>`;
+            itemText += `<p style="margin: 0 0 3px 0; color: #4b5563; font-size: 13px; padding-left: 15px;">• ${drink.name} ${drink.quantity > 1 ? `x${drink.quantity}` : ''} - ${currencySymbol}${(drink.price * drink.quantity).toFixed(2)}</p>`;
           });
         }
 
         if (item.addOns.desserts?.length > 0) {
           itemText += `<p style="margin: 5px 0 2px 0; color: #6b7280; font-size: 13px; font-weight: 600;">Desserts:</p>`;
           item.addOns.desserts.forEach((dessert) => {
-            itemText += `<p style="margin: 0 0 3px 0; color: #4b5563; font-size: 13px; padding-left: 15px;">• ${dessert.name} ${dessert.quantity > 1 ? `x${dessert.quantity}` : ''} - Rs.${(dessert.price * dessert.quantity).toFixed(2)}</p>`;
+            itemText += `<p style="margin: 0 0 3px 0; color: #4b5563; font-size: 13px; padding-left: 15px;">• ${dessert.name} ${dessert.quantity > 1 ? `x${dessert.quantity}` : ''} - ${currencySymbol}${(dessert.price * dessert.quantity).toFixed(2)}</p>`;
           });
         }
 
         if (item.addOns.extras?.length > 0) {
           itemText += `<p style="margin: 5px 0 2px 0; color: #6b7280; font-size: 13px; font-weight: 600;">Extras:</p>`;
           item.addOns.extras.forEach((extra) => {
-            itemText += `<p style="margin: 0 0 3px 0; color: #4b5563; font-size: 13px; padding-left: 15px;">• ${extra.name} ${extra.quantity > 1 ? `x${extra.quantity}` : ''} - Rs.${(extra.price * extra.quantity).toFixed(2)}</p>`;
+            itemText += `<p style="margin: 0 0 3px 0; color: #4b5563; font-size: 13px; padding-left: 15px;">• ${extra.name} ${extra.quantity > 1 ? `x${extra.quantity}` : ''} - ${currencySymbol}${(extra.price * extra.quantity).toFixed(2)}</p>`;
           });
         }
 
@@ -207,7 +207,7 @@ const getCustomerEmailTemplate = (order) => `
                 <td class="email-section" style="padding: 16px 20px;">
                   <h3 class="section-title" style="margin: 0 0 12px 0; color: #1f2937; font-size: 18px; border-bottom: 2px solid #E67E22; padding-bottom: 8px;">Order Items</h3>
                   <table width="100%" cellpadding="0" cellspacing="0" style="border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;">
-                    ${formatOrderItems(order.items)}
+                    ${formatOrderItems(order.items, order.currencySymbol || 'Rs')}
                   </table>
                 </td>
               </tr>
@@ -215,9 +215,9 @@ const getCustomerEmailTemplate = (order) => `
                 <td class="email-section" style="padding: 16px 20px;">
                   <h3 class="section-title" style="margin: 0 0 12px 0; color: #1f2937; font-size: 18px; border-bottom: 2px solid #E67E22; padding-bottom: 8px;">Order Summary</h3>
                   <table width="100%" cellpadding="0" cellspacing="0">
-                    <tr><td style="padding: 7px 0; color: #6b7280; font-size: 14px;">Subtotal</td><td align="right" style="padding: 7px 0; color: #1f2937; font-size: 14px; font-weight: 600;">Rs.${order.subtotal.toFixed(2)}</td></tr>
-                    <tr><td style="padding: 7px 0; color: #6b7280; font-size: 14px;">Delivery Fee</td><td align="right" style="padding: 7px 0; color: #1f2937; font-size: 14px; font-weight: 600;">Rs.${order.deliveryFee.toFixed(2)}</td></tr>
-                    <tr style="border-top: 2px solid #E67E22;"><td class="summary-total-label" style="padding: 10px 0; color: #1f2937; font-size: 16px; font-weight: bold;">Total</td><td align="right" class="summary-total-value" style="padding: 10px 0; color: #E67E22; font-size: 20px; font-weight: bold;">Rs.${order.total.toFixed(2)}</td></tr>
+                    <tr><td style="padding: 7px 0; color: #6b7280; font-size: 14px;">Subtotal</td><td align="right" style="padding: 7px 0; color: #1f2937; font-size: 14px; font-weight: 600;">${order.currencySymbol || 'Rs'}${order.subtotal.toFixed(2)}</td></tr>
+                    <tr><td style="padding: 7px 0; color: #6b7280; font-size: 14px;">Delivery Fee</td><td align="right" style="padding: 7px 0; color: #1f2937; font-size: 14px; font-weight: 600;">${order.currencySymbol || 'Rs'}${order.deliveryFee.toFixed(2)}</td></tr>
+                    <tr style="border-top: 2px solid #E67E22;"><td class="summary-total-label" style="padding: 10px 0; color: #1f2937; font-size: 16px; font-weight: bold;">Total</td><td align="right" class="summary-total-value" style="padding: 10px 0; color: #E67E22; font-size: 20px; font-weight: bold;">${order.currencySymbol || 'Rs'}${order.total.toFixed(2)}</td></tr>
                   </table>
                 </td>
               </tr>
@@ -320,7 +320,7 @@ const getAdminEmailTemplate = (order) => `
                 <td class="email-section" style="padding: 16px 20px;">
                   <h3 class="section-title" style="margin: 0 0 12px 0; color: #1f2937; font-size: 18px; border-bottom: 2px solid #E67E22; padding-bottom: 8px;">Order Details</h3>
                   <table width="100%" cellpadding="0" cellspacing="0" style="border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;">
-                    ${formatOrderItems(order.items)}
+                    ${formatOrderItems(order.items, order.currencySymbol || 'Rs')}
                   </table>
                 </td>
               </tr>
@@ -328,9 +328,9 @@ const getAdminEmailTemplate = (order) => `
                 <td class="email-section" style="padding: 16px 20px;">
                   <h3 class="section-title" style="margin: 0 0 12px 0; color: #1f2937; font-size: 18px; border-bottom: 2px solid #E67E22; padding-bottom: 8px;">Financial Summary</h3>
                   <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f9fafb; border-radius: 8px; padding: 12px;">
-                    <tr><td style="padding: 7px 0; color: #6b7280; font-size: 14px;">Subtotal</td><td align="right" style="padding: 7px 0; color: #1f2937; font-size: 14px; font-weight: 600;">Rs.${order.subtotal.toFixed(2)}</td></tr>
-                    <tr><td style="padding: 7px 0; color: #6b7280; font-size: 14px;">Delivery Fee</td><td align="right" style="padding: 7px 0; color: #1f2937; font-size: 14px; font-weight: 600;">Rs.${order.deliveryFee.toFixed(2)}</td></tr>
-                    <tr style="border-top: 2px solid #E67E22;"><td class="summary-total-label" style="padding: 10px 0; color: #1f2937; font-size: 15px; font-weight: bold;">Total Amount to Collect</td><td align="right" class="summary-total-value" style="padding: 10px 0; color: #E67E22; font-size: 20px; font-weight: bold;">Rs.${order.total.toFixed(2)}</td></tr>
+                    <tr><td style="padding: 7px 0; color: #6b7280; font-size: 14px;">Subtotal</td><td align="right" style="padding: 7px 0; color: #1f2937; font-size: 14px; font-weight: 600;">${order.currencySymbol || 'Rs'}${order.subtotal.toFixed(2)}</td></tr>
+                    <tr><td style="padding: 7px 0; color: #6b7280; font-size: 14px;">Delivery Fee</td><td align="right" style="padding: 7px 0; color: #1f2937; font-size: 14px; font-weight: 600;">${order.currencySymbol || 'Rs'}${order.deliveryFee.toFixed(2)}</td></tr>
+                    <tr style="border-top: 2px solid #E67E22;"><td class="summary-total-label" style="padding: 10px 0; color: #1f2937; font-size: 15px; font-weight: bold;">Total Amount to Collect</td><td align="right" class="summary-total-value" style="padding: 10px 0; color: #E67E22; font-size: 20px; font-weight: bold;">${order.currencySymbol || 'Rs'}${order.total.toFixed(2)}</td></tr>
                   </table>
                 </td>
               </tr>
@@ -349,7 +349,7 @@ const getAdminEmailTemplate = (order) => `
                     <li>Call customer at ${order.customerInfo.phone} for order confirmation</li>
                     <li>Prepare order items as listed above</li>
                     <li>Assign delivery rider</li>
-                    <li>Ensure rider has exact change for Rs.${order.total.toFixed(2)}</li>
+                    <li>Ensure rider has exact change for ${order.currencySymbol || 'Rs'}${order.total.toFixed(2)}</li>
                     <li>Update order status in system</li>
                   </ul>
                 </td>
@@ -418,7 +418,7 @@ const sendAdminEmail = async (order) => {
               Name: 'Restaurant Admin',
             },
           ],
-          Subject: `🔔 New Order - ${order.orderId} - Rs.${order.total.toFixed(2)}`,
+          Subject: `🔔 New Order - ${order.orderId} - ${order.currencySymbol || 'Rs'}${order.total.toFixed(2)}`,
           HTMLPart: getAdminEmailTemplate(order),
         },
       ],
@@ -479,7 +479,7 @@ const sendOrderEmails = async (order) => {
               Name: 'Restaurant Admin',
             },
           ],
-          Subject: `🔔 New Order - ${order.orderId} - Rs.${order.total.toFixed(2)}`,
+          Subject: `🔔 New Order - ${order.orderId} - ${order.currencySymbol || 'Rs'}${order.total.toFixed(2)}`,
           HTMLPart: getAdminEmailTemplate(order),
         },
       ],

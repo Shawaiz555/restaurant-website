@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import useSettings from "../../hooks/useSettings";
 import {
   Trash2,
   Plus,
@@ -61,6 +62,7 @@ const AdminWastage = () => {
   const dispatch = useDispatch();
   const records = useSelector(selectAllWastage);
   const stats = useSelector(selectWastageStats);
+  const { currencySymbol } = useSettings();
   const loading = useSelector(selectWastageLoading);
 
   const [ingredients, setIngredients] = useState([]);
@@ -193,7 +195,7 @@ const AdminWastage = () => {
       month: "short",
       year: "numeric",
     });
-  const formatCurrency = (n) => `Rs. ${(n || 0).toFixed(0)}`;
+  const formatCurrency = (n) => `${currencySymbol} ${(n || 0).toFixed(0)}`;
 
   const reasonColor = {
     Spoilage: "bg-red-100 text-red-700",

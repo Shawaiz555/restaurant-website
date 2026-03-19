@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import ordersService from "../../services/ordersService";
+import useSettings from "../../hooks/useSettings";
 import StatsCard from "../../components/admin/common/StatsCard";
 import {
   Flame,
@@ -12,8 +13,6 @@ import {
   ListOrdered,
   Utensils,
 } from "lucide-react";
-
-const formatCurrency = (amount) => `Rs ${parseFloat(amount || 0).toFixed(2)}`;
 
 const getOrderAge = (orderDate) => {
   const mins = Math.floor((Date.now() - new Date(orderDate)) / 60000);
@@ -48,6 +47,7 @@ const OrderCard = ({ order, onStatusChange, updating }) => {
   const isPending = order.status === "Pending";
   const isUrgentNow = isUrgent(order.orderDate);
   const next = STATUS_NEXT[order.status];
+  const { formatPrice: formatCurrency } = useSettings();
   const NextIcon = next?.icon;
 
   return (

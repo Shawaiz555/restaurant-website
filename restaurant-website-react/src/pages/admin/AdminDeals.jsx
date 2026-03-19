@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import useSettings from "../../hooks/useSettings";
 import {
   setDeals,
   deleteDeal,
@@ -31,6 +32,7 @@ const AdminDeals = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const deals = useSelector(selectFilteredDeals);
+  const { currencySymbol } = useSettings();
   const stats = useSelector(selectDealStats);
   const filters = useSelector(selectDealsFilters);
 
@@ -329,7 +331,7 @@ const AdminDeals = () => {
                     {/* Price */}
                     <td className="px-6 py-4">
                       <span className="font-bold text-primary text-base">
-                        Rs. {Number(deal.price).toFixed(0)}
+                        {currencySymbol} {Number(deal.price).toFixed(0)}
                       </span>
                     </td>
 

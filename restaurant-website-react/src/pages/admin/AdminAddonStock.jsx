@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import useSettings from "../../hooks/useSettings";
 import {
   CupSoda,
   Plus,
@@ -33,14 +34,14 @@ import ConfirmModal from "../../components/admin/common/ConfirmModal";
 import PrintButton from "../../components/admin/common/PrintButton";
 import { printTable, getSelectionSummary } from "../../utils/printUtils";
 
-const PRINT_COLUMNS = [
+const getPrintColumns = (currencySymbol) => [
   { header: "#", render: (_, i) => i + 1 },
   { header: "Name", render: (r) => r.name },
   { header: "Type", render: (r) => r.addonType },
   { header: "Unit", render: (r) => r.unit },
   { header: "Current Stock", render: (r) => r.currentStock },
   { header: "Min Stock", render: (r) => r.minimumStock },
-  { header: "Cost/Unit (Rs.)", render: (r) => r.costPerUnit },
+  { header: `Cost/Unit (${currencySymbol})`, render: (r) => r.costPerUnit },
   {
     header: "Status",
     render: (r) =>
@@ -65,6 +66,7 @@ const AdminAddonStock = () => {
   const dispatch = useDispatch();
   const addonStocks = useSelector(selectAllAddonStocks);
   const stats = useSelector(selectAddonStockStats);
+  const { currencySymbol } = useSettings();
   const loading = useSelector(selectAddonStockLoading);
 
   const [search, setSearch] = useState("");
@@ -238,7 +240,7 @@ const AdminAddonStock = () => {
     printTable({
       title: "Addon Stock Report",
       subtitle,
-      columns: PRINT_COLUMNS,
+      columns: getPrintColumns(currencySymbol),
       rows: rowsToPrint,
       mode,
     });
@@ -455,7 +457,7 @@ const AdminAddonStock = () => {
             </div>
             <div>
               <label className="block text-sm font-medium text-dark-gray mb-1">
-                Cost per Unit (Rs.)
+                Cost per Unit ({currencySymbol})
               </label>
               <input
                 type="number"
@@ -653,7 +655,7 @@ const AdminAddonStock = () => {
                         {a.minimumStock}
                       </td>
                       <td className="px-4 py-3 text-right text-sm text-dark-gray">
-                        Rs. {a.costPerUnit}
+                        {currencySymbol} {a.costPerUnit}
                       </td>
                       <td className="px-4 py-3 text-center">
                         <span

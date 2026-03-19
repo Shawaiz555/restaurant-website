@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import useSettings from "../../hooks/useSettings";
 import {
   setExpenses,
   addExpense as addExpenseAction,
@@ -34,7 +35,7 @@ import {
   Wrench,
 } from "lucide-react";
 
-const PRINT_COLUMNS = [
+const getPrintColumns = (currencySymbol) => [
   { header: "#", render: (_, i) => i + 1 },
   {
     header: "Date",
@@ -49,7 +50,7 @@ const PRINT_COLUMNS = [
   { header: "Description", render: (r) => r.description },
   {
     header: "Amount",
-    render: (r) => `Rs ${parseFloat(r.amount || 0).toFixed(2)}`,
+    render: (r) => `${currencySymbol} ${parseFloat(r.amount || 0).toFixed(2)}`,
   },
   { header: "Payment Method", render: (r) => r.paymentMethod },
 ];
@@ -58,6 +59,7 @@ const AdminExpenses = () => {
   const dispatch = useDispatch();
   const expenses = useSelector(selectAllExpenses);
   const summary = useSelector(selectExpenseSummary);
+  const { currencySymbol, formatPrice: formatCurrency } = useSettings();
   const categories = useSelector(selectExpenseCategories);
 
   const [showAddForm, setShowAddForm] = useState(false);
@@ -251,9 +253,7 @@ const AdminExpenses = () => {
     })
     .sort((a, b) => new Date(b.date) - new Date(a.date));
 
-  const formatCurrency = (amount) => {
-    return `Rs ${parseFloat(amount || 0).toFixed(2)}`;
-  };
+
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -280,7 +280,7 @@ const AdminExpenses = () => {
     printTable({
       title: "Expenses Report",
       subtitle: buildSubtitle(),
-      columns: PRINT_COLUMNS,
+      columns: getPrintColumns(currencySymbol),
       rows: rowsToPrint,
       mode,
     });
@@ -444,7 +444,7 @@ const AdminExpenses = () => {
 
               <div>
                 <label className="block text-sm font-semibold text-dark mb-2">
-                  Amount (Rs) *
+                  Amount ({currencySymbol}) *
                 </label>
                 <input
                   type="number"

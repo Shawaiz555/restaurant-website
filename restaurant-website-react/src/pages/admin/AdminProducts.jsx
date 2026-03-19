@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import useSettings from "../../hooks/useSettings";
 import SearchBar from "../../components/admin/common/SearchBar";
 import ConfirmModal from "../../components/admin/common/ConfirmModal";
 import StatsCard from "../../components/admin/common/StatsCard";
@@ -34,6 +35,7 @@ const AdminProducts = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const products = useSelector(selectAllProducts);
+  const { formatPrice: formatCurrency } = useSettings();
   const categories = useSelector(selectCategories);
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -114,9 +116,7 @@ const AdminProducts = () => {
     setCurrentPage(1);
   }, [searchTerm, selectedCategory]);
 
-  const formatCurrency = (amount) => {
-    return `Rs ${parseFloat(amount || 0).toFixed(2)}`;
-  };
+
 
   return (
     <div className="space-y-6">

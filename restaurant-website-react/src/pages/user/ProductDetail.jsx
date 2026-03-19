@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import productsService from "../../services/productsService";
 import { useCart } from "../../hooks/useCart";
+import useSettings from "../../hooks/useSettings";
 import Loader from "../../components/common/Loader";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
@@ -13,6 +14,7 @@ const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { addToCart } = useCart();
+  const { currencySymbol } = useSettings();
   const [product, setProduct] = useState(null);
   const [selectedSizeIndex, setSelectedSizeIndex] = useState(0);
   const [relatedProducts, setRelatedProducts] = useState([]);
@@ -333,7 +335,7 @@ const ProductDetail = () => {
                               backgroundColor: "#FFF8F0",
                             }}
                           >
-                            {size.name} • Rs.{size.price.toFixed(2)} •{" "}
+                            {size.name} • {currencySymbol}{size.price.toFixed(2)} •{" "}
                             {size.description}
                           </option>
                         ))}
@@ -487,7 +489,7 @@ const ProductDetail = () => {
                       </div>
                       <div className="text-right flex-shrink-0">
                         <span className="font-sans text-lg sm:text-2xl text-primary font-bold">
-                          Rs.{calculateTotalPrice().toFixed(2)}
+                          {currencySymbol}{calculateTotalPrice().toFixed(2)}
                         </span>
                       </div>
                     </div>
@@ -705,7 +707,7 @@ const ProductDetail = () => {
                                 {/* Row 2: price on left, action on right */}
                                 <div className="flex items-center justify-between pl-8">
                                   <span className="text-primary font-bold text-sm">
-                                    +Rs.{(drinkWithId.price * (isSelected ? quantity : 1)).toFixed(2)}
+                                    +{currencySymbol}{(drinkWithId.price * (isSelected ? quantity : 1)).toFixed(2)}
                                   </span>
                                   {isSelected ? (
                                     <div className="flex items-center bg-white rounded-lg border-2 border-primary shadow-sm">
@@ -806,7 +808,7 @@ const ProductDetail = () => {
                                     {/* Row 2: price on left, action on right */}
                                     <div className="flex items-center justify-between pl-8">
                                       <span className="text-primary font-bold text-sm">
-                                        +Rs.{(dessertWithId.price * (isSelected ? quantity : 1)).toFixed(2)}
+                                        +{currencySymbol}{(dessertWithId.price * (isSelected ? quantity : 1)).toFixed(2)}
                                       </span>
                                       {isSelected ? (
                                         <div className="flex items-center bg-white rounded-lg border-2 border-primary shadow-sm">
@@ -905,7 +907,7 @@ const ProductDetail = () => {
                                 {/* Row 2: price on left, action on right */}
                                 <div className="flex items-center justify-between pl-8">
                                   <span className="text-primary font-bold text-sm">
-                                    +Rs.{(extraWithId.price * (isSelected ? quantity : 1)).toFixed(2)}
+                                    +{currencySymbol}{(extraWithId.price * (isSelected ? quantity : 1)).toFixed(2)}
                                   </span>
                                   {isSelected ? (
                                     <div className="flex items-center bg-white rounded-lg border-2 border-primary shadow-sm">
@@ -1026,7 +1028,7 @@ const ProductDetail = () => {
                         </div>
                         <div className="text-center">
                           <span className="font-sans text-2xl text-dark">
-                            Rs.{relatedProduct.basePrice.toFixed(2)}
+                            {currencySymbol}{relatedProduct.basePrice.toFixed(2)}
                           </span>
                         </div>
                       </div>
