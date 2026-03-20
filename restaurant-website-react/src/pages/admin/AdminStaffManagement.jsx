@@ -3,6 +3,7 @@ import staffService from "../../services/staffService";
 import { useAuth } from "../../hooks/useAuth";
 import ConfirmModal from "../../components/admin/common/ConfirmModal";
 import StatsCard from "../../components/admin/common/StatsCard";
+import { TablePageSkeleton } from "../../components/admin/common/SkeletonLoader";
 import {
   Users,
   Plus,
@@ -385,26 +386,7 @@ const AdminStaffManagement = () => {
   const roleCount = (role) => staff.filter((m) => m.role === role).length;
   const activeCount = staff.filter((m) => m.isActive !== false).length;
 
-  if (loading) {
-    return (
-      <div className="space-y-6">
-        <div className="bg-white rounded-2xl p-6 shadow-lg animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-1/3 mb-2" />
-          <div className="h-4 bg-gray-100 rounded w-1/2" />
-        </div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {Array(4)
-            .fill(0)
-            .map((_, i) => (
-              <div
-                key={i}
-                className="bg-white rounded-2xl p-6 animate-pulse h-24"
-              />
-            ))}
-        </div>
-      </div>
-    );
-  }
+  if (loading) return <TablePageSkeleton stats={4} cols={5} rows={8} />;
 
   return (
     <div className="space-y-6">

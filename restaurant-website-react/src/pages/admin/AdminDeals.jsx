@@ -16,6 +16,7 @@ import dealsService from "../../services/dealsService";
 import SearchBar from "../../components/admin/common/SearchBar";
 import ConfirmModal from "../../components/admin/common/ConfirmModal";
 import StatsCard from "../../components/admin/common/StatsCard";
+import { TablePageSkeleton } from "../../components/admin/common/SkeletonLoader";
 import {
   Plus,
   Edit,
@@ -134,6 +135,8 @@ const AdminDeals = () => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedDeals = deals.slice(startIndex, startIndex + itemsPerPage);
 
+  if (isLoading) return <TablePageSkeleton stats={3} cols={6} rows={8} />;
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -207,14 +210,7 @@ const AdminDeals = () => {
       </div>
 
       {/* Table */}
-      {isLoading ? (
-        <div className="flex items-center justify-center py-24">
-          <div className="flex flex-col items-center gap-4">
-            <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-            <p className="text-dark-gray font-medium">Loading deals...</p>
-          </div>
-        </div>
-      ) : paginatedDeals.length === 0 ? (
+      {paginatedDeals.length === 0 ? (
         <div className="bg-white rounded-2xl p-16 shadow-sm border border-gray-100 text-center">
           <div className="w-20 h-20 bg-cream rounded-full flex items-center justify-center mx-auto mb-4">
             <Tag className="w-10 h-10 text-primary/60" />

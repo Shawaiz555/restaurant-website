@@ -15,6 +15,7 @@ import reservationsService from "../../services/reservationsService";
 import SearchBar from "../../components/admin/common/SearchBar";
 import ConfirmModal from "../../components/admin/common/ConfirmModal";
 import StatsCard from "../../components/admin/common/StatsCard";
+import { TablePageSkeleton } from "../../components/admin/common/SkeletonLoader";
 import PrintButton from "../../components/admin/common/PrintButton";
 import { printTable, getSelectionSummary } from "../../utils/printUtils";
 import {
@@ -276,6 +277,8 @@ const AdminReservations = () => {
     startIndex + itemsPerPage,
   );
 
+  if (isLoading) return <TablePageSkeleton stats={4} cols={7} rows={8} />;
+
   return (
     <div className="space-y-6">
       <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
@@ -377,16 +380,7 @@ const AdminReservations = () => {
       </div>
 
       {/* Table */}
-      {isLoading ? (
-        <div className="flex items-center justify-center py-24">
-          <div className="flex flex-col items-center gap-4">
-            <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-            <p className="text-dark-gray font-medium">
-              Loading reservations...
-            </p>
-          </div>
-        </div>
-      ) : paginatedReservations.length === 0 ? (
+      {paginatedReservations.length === 0 ? (
         <div className="bg-white rounded-2xl p-16 shadow-sm border border-gray-100 text-center">
           <div className="w-20 h-20 bg-cream rounded-full flex items-center justify-center mx-auto mb-4">
             <CalendarCheck className="w-10 h-10 text-primary/60" />

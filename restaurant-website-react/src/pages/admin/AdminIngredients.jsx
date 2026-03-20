@@ -30,6 +30,7 @@ import {
 import ingredientsService from "../../services/ingredientsService";
 import { showNotification } from "../../store/slices/notificationSlice";
 import StatsCard from "../../components/admin/common/StatsCard";
+import { TablePageSkeleton } from "../../components/admin/common/SkeletonLoader";
 import ConfirmModal from "../../components/admin/common/ConfirmModal";
 import PrintButton from "../../components/admin/common/PrintButton";
 import { printTable, getSelectionSummary } from "../../utils/printUtils";
@@ -252,6 +253,8 @@ const AdminIngredients = () => {
       mode,
     });
   };
+
+  if (loading) return <TablePageSkeleton stats={3} cols={7} rows={8} />;
 
   return (
     <div className="space-y-6">
@@ -506,11 +509,7 @@ const AdminIngredients = () => {
 
       {/* Table */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm">
-        {loading ? (
-          <div className="p-12 text-center text-dark-gray">
-            Loading ingredients...
-          </div>
-        ) : filtered.length === 0 ? (
+        {filtered.length === 0 ? (
           <div className="p-12 text-center">
             <ShoppingBasket className="w-12 h-12 text-gray-300 mx-auto mb-3" />
             <p className="text-dark-gray">No ingredients found</p>

@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback, useRef } from "react";
 import ordersService from "../../services/ordersService";
 import useSettings from "../../hooks/useSettings";
 import StatsCard from "../../components/admin/common/StatsCard";
+import { SplitPageSkeleton } from "../../components/admin/common/SkeletonLoader";
 import {
   Flame,
   Clock,
@@ -202,26 +203,7 @@ const AdminKitchenQueue = () => {
     (o) => o.status === "Pending" && isUrgent(o.orderDate),
   ).length;
 
-  if (loading) {
-    return (
-      <div className="space-y-6">
-        <div className="bg-white rounded-2xl p-6 shadow-lg animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-1/3 mb-2" />
-          <div className="h-4 bg-gray-100 rounded w-1/2" />
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {Array(6)
-            .fill(0)
-            .map((_, i) => (
-              <div
-                key={i}
-                className="bg-white rounded-2xl p-6 animate-pulse h-52"
-              />
-            ))}
-        </div>
-      </div>
-    );
-  }
+  if (loading) return <SplitPageSkeleton stats={3} />;
 
   return (
     <div className="space-y-6">
@@ -262,7 +244,7 @@ const AdminKitchenQueue = () => {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 lg::grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
         <StatsCard
           icon={ListOrdered}
           label="Total Active"
@@ -280,7 +262,7 @@ const AdminKitchenQueue = () => {
 
       {/* Filter Tabs */}
       <div className="flex gap-2">
-        {["All", "Pending", "Processing"].map((tab) => (
+        {["All", "Pending", "Preparing"].map((tab) => (
           <button
             key={tab}
             onClick={() => setFilter(tab)}

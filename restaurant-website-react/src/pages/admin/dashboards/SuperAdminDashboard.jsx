@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import useSettings from "../../../hooks/useSettings";
 import StatsCard from "../../../components/admin/common/StatsCard";
+import { DashboardSkeleton } from "../../../components/admin/common/SkeletonLoader";
 import StatusBadge from "../../../components/admin/common/StatusBadge";
 import { setOrders } from "../../../store/slices/ordersSlice";
 import { setProducts } from "../../../store/slices/productsSlice";
@@ -179,26 +180,7 @@ const SuperAdminDashboard = () => {
     load();
   }, [load]);
 
-  if (loading) {
-    return (
-      <div className="space-y-6">
-        <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-1/3 mb-2" />
-          <div className="h-4 bg-gray-100 rounded w-1/2" />
-        </div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-          {Array(5)
-            .fill(0)
-            .map((_, i) => (
-              <div
-                key={i}
-                className="bg-white rounded-2xl p-6 shadow animate-pulse h-40"
-              />
-            ))}
-        </div>
-      </div>
-    );
-  }
+  if (loading) return <DashboardSkeleton stats={5} />;
 
   return (
     <div className="space-y-6">

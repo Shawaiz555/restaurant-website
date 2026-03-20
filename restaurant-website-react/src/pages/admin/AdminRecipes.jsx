@@ -10,6 +10,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { setRecipes, upsertRecipe } from "../../store/slices/recipesSlice";
+import { InlineTableSkeleton } from "../../components/admin/common/SkeletonLoader";
 import recipesService from "../../services/recipesService";
 import ingredientsService from "../../services/ingredientsService";
 import productsService from "../../services/productsService";
@@ -186,9 +187,7 @@ const AdminRecipes = () => {
           </div>
           <div className="overflow-y-auto max-h-[500px] divide-y divide-gray-50">
             {loading ? (
-              <div className="p-8 text-center text-dark-gray text-sm">
-                Loading dishes...
-              </div>
+              <InlineTableSkeleton cols={2} rows={7} />
             ) : filteredProducts.length === 0 ? (
               <div className="p-8 text-center text-dark-gray text-sm">
                 No dishes found

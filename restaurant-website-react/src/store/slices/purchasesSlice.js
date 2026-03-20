@@ -5,7 +5,7 @@ const purchasesSlice = createSlice({
   initialState: {
     purchases: [],
     stats: { totalPurchases: 0, thisMonthTotal: 0, thisMonthCount: 0, allTimeTotal: 0 },
-    loading: false,
+    loading: true,
     error: null
   },
   reducers: {

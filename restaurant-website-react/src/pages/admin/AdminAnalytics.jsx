@@ -25,11 +25,13 @@ import {
   Pizza,
 } from "lucide-react";
 import StatsCard from "../../components/admin/common/StatsCard";
+import { AnalyticsPageSkeleton } from "../../components/admin/common/SkeletonLoader";
 import analyticsService from "../../services/analyticsService";
 import ordersService from "../../services/ordersService";
 
 const AdminAnalytics = () => {
   const { formatPrice: formatCurrency } = useSettings();
+  const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
     revenue: 0,
     expenses: 0,
@@ -42,6 +44,7 @@ const AdminAnalytics = () => {
   const [dateRange, setDateRange] = useState("week");
 
   const loadAnalytics = React.useCallback(async () => {
+    setLoading(true);
     try {
       // Revenue vs Expenses
       const comparison = await analyticsService.getRevenueVsExpenses(dateRange);
@@ -87,6 +90,8 @@ const AdminAnalytics = () => {
       setOrderStatusData(statusData);
     } catch (error) {
       console.error("Analytics load error:", error);
+    } finally {
+      setLoading(false);
     }
   }, [dateRange]);
 
@@ -94,7 +99,7 @@ const AdminAnalytics = () => {
     loadAnalytics();
   }, [loadAnalytics]);
 
-
+  if (loading) return <AnalyticsPageSkeleton stats={4} />;
 
   return (
     <div className="space-y-6">

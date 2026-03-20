@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import reservationsService from "../../services/reservationsService";
+import { FormPageSkeleton } from "../../components/admin/common/SkeletonLoader";
 import tablesService from "../../services/tablesService";
 import { updateReservationStatus } from "../../store/slices/reservationsSlice";
 import { showNotification } from "../../store/slices/notificationSlice";
@@ -275,16 +276,7 @@ const AdminReservationDetail = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-32">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-          <p className="text-dark-gray font-medium">Loading reservation...</p>
-        </div>
-      </div>
-    );
-  }
+  if (loading) return <FormPageSkeleton />;
 
   if (error || !reservation) {
     return (

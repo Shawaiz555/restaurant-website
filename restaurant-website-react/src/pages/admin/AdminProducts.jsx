@@ -5,6 +5,7 @@ import useSettings from "../../hooks/useSettings";
 import SearchBar from "../../components/admin/common/SearchBar";
 import ConfirmModal from "../../components/admin/common/ConfirmModal";
 import StatsCard from "../../components/admin/common/StatsCard";
+import { TablePageSkeleton } from "../../components/admin/common/SkeletonLoader";
 import { setProducts, deleteProduct } from "../../store/slices/productsSlice";
 import {
   selectAllProducts,
@@ -44,13 +45,17 @@ const AdminProducts = () => {
   const [productToDelete, setProductToDelete] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [loading, setLoading] = useState(true);
 
   const loadProducts = React.useCallback(async () => {
+    setLoading(true);
     try {
       const allProducts = (await productsService.fetchProducts()) || [];
       dispatch(setProducts(allProducts));
     } catch (error) {
       console.error("Failed to load products:", error);
+    } finally {
+      setLoading(false);
     }
   }, [dispatch]);
 
@@ -117,6 +122,8 @@ const AdminProducts = () => {
   }, [searchTerm, selectedCategory]);
 
 
+
+  if (loading) return <TablePageSkeleton stats={4} cols={6} rows={8} />;
 
   return (
     <div className="space-y-6">

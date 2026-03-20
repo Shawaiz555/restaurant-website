@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useLayoutEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import store from './store/store';
@@ -61,7 +61,6 @@ function AppContent() {
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.auth.currentUser);
   const location = useLocation();
-  const [loading, setLoading] = useState(false);
 
   // Fetch public settings once on app boot
   useEffect(() => {
@@ -77,20 +76,22 @@ function AppContent() {
     }
   }, [dispatch, currentUser]);
 
-  // Show loader on route change and scroll to top
-  useEffect(() => {
-    setLoading(true);
+  // Show loader instantly on route change, hide after new page renders
+  const [routeLoading, setRouteLoading] = useState(false);
+
+  useLayoutEffect(() => {
+    setRouteLoading(true);
     window.scrollTo(0, 0);
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 500);
-    return () => clearTimeout(timer);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    setRouteLoading(false);
   }, [location.pathname]);
 
   return (
     <>
       <NotificationManager />
-      {loading && <Loader />}
+      {routeLoading && <Loader />}
 
       <Routes>
         {/* Admin Routes - any staff role can enter AdminLayout */}
@@ -290,19 +291,6 @@ function AppContent() {
 }
 
 function App() {
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 1500);
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (loading) {
-    return <Loader />;
-  }
-
   return (
     <Provider store={store}>
       <Router>

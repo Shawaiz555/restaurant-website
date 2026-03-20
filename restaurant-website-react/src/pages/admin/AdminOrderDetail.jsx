@@ -6,6 +6,7 @@ import useSettings from "../../hooks/useSettings";
 import { updateOrderStatus } from "../../store/slices/ordersSlice";
 import { showNotification } from "../../store/slices/notificationSlice";
 import StatusBadge from "../../components/admin/common/StatusBadge";
+import { FormPageSkeleton } from "../../components/admin/common/SkeletonLoader";
 import {
   ArrowLeft,
   Package,
@@ -113,16 +114,7 @@ const AdminOrderDetail = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-32">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-          <p className="text-dark-gray font-medium">Loading order...</p>
-        </div>
-      </div>
-    );
-  }
+  if (loading) return <FormPageSkeleton />;
 
   if (error || !order) {
     return (

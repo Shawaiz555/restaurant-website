@@ -5,7 +5,7 @@ const ingredientsSlice = createSlice({
   initialState: {
     ingredients: [],
     stats: { total: 0, lowStock: 0, outOfStock: 0, categoryBreakdown: [] },
-    loading: false,
+    loading: true,
     error: null
   },
   reducers: {

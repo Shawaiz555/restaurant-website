@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import useSettings from "../../../hooks/useSettings";
 import StatsCard from "../../../components/admin/common/StatsCard";
+import { DashboardSkeleton } from "../../../components/admin/common/SkeletonLoader";
 import ordersService from "../../../services/ordersService";
 import analyticsService from "../../../services/analyticsService";
 import ingredientsService from "../../../services/ingredientsService";
@@ -81,26 +82,7 @@ const ChefDashboard = () => {
     return `${Math.floor(mins / 60)}h ${mins % 60}m ago`;
   };
 
-  if (loading) {
-    return (
-      <div className="space-y-6">
-        <div className="bg-white rounded-2xl p-6 shadow-lg animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-1/3 mb-2" />
-          <div className="h-4 bg-gray-100 rounded w-1/2" />
-        </div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {Array(4)
-            .fill(0)
-            .map((_, i) => (
-              <div
-                key={i}
-                className="bg-white rounded-2xl p-6 animate-pulse h-40"
-              />
-            ))}
-        </div>
-      </div>
-    );
-  }
+  if (loading) return <DashboardSkeleton stats={4} />;
 
   return (
     <div className="space-y-6">

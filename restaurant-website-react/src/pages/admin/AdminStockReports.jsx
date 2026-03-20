@@ -15,6 +15,7 @@ import {
   Layers,
 } from "lucide-react";
 import StatsCard from "../../components/admin/common/StatsCard";
+import { TablePageSkeleton } from "../../components/admin/common/SkeletonLoader";
 import PrintButton from "../../components/admin/common/PrintButton";
 import { printTable, getSelectionSummary } from "../../utils/printUtils";
 import ingredientsService from "../../services/ingredientsService";
@@ -53,7 +54,7 @@ const TYPE_COLORS = {
 
 const AdminStockReports = () => {
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [ingredients, setIngredients] = useState([]);
   const { currencySymbol } = useSettings();
   const [addonStocks, setAddonStocks] = useState([]);
@@ -204,6 +205,8 @@ const AdminStockReports = () => {
       mode,
     });
   };
+
+  if (loading) return <TablePageSkeleton stats={4} cols={6} rows={8} />;
 
   return (
     <div className="space-y-6">
@@ -382,9 +385,7 @@ const AdminStockReports = () => {
           </select>
         </div>
 
-        {loading ? (
-          <div className="p-12 text-center text-dark-gray">Loading...</div>
-        ) : sorted.length === 0 ? (
+        {sorted.length === 0 ? (
           <div className="p-12 text-center text-dark-gray">
             No stock records found.
           </div>

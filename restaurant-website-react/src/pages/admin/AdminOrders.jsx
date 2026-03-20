@@ -5,6 +5,7 @@ import useSettings from "../../hooks/useSettings";
 import SearchBar from "../../components/admin/common/SearchBar";
 import ConfirmModal from "../../components/admin/common/ConfirmModal";
 import StatsCard from "../../components/admin/common/StatsCard";
+import { TablePageSkeleton } from "../../components/admin/common/SkeletonLoader";
 import PrintButton from "../../components/admin/common/PrintButton";
 import { printTable, getSelectionSummary } from "../../utils/printUtils";
 import {
@@ -176,10 +177,16 @@ const AdminOrders = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [selectedIds, setSelectedIds] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const loadOrders = React.useCallback(async () => {
-    const allOrders = await ordersService.getOrders();
-    dispatch(setOrders(allOrders));
+    setLoading(true);
+    try {
+      const allOrders = await ordersService.getOrders();
+      dispatch(setOrders(allOrders));
+    } finally {
+      setLoading(false);
+    }
   }, [dispatch]);
 
   useEffect(() => {
@@ -276,6 +283,8 @@ const AdminOrders = () => {
     });
   };
 
+  if (loading) return <TablePageSkeleton stats={4} cols={7} rows={8} />;
+
   return (
     <div className="space-y-6">
       {/* Page Header */}
@@ -353,7 +362,7 @@ const AdminOrders = () => {
       <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
         {/* Pagination Controls - Top */}
         {orders.length > 0 && (
-          <div className="px-4 sm:px-6 lg:px-8 py-5 border-b-2 border-gray-200 bg-gradient-to-r from-gray-50 to-cream-light/50">
+          <div className="px-3 lg:px-4 py-5 border-b-2 border-gray-200 bg-gradient-to-r from-gray-50 to-cream-light/50">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
@@ -363,14 +372,14 @@ const AdminOrders = () => {
                   <p className="text-md lg:text-xl font-bold text-dark">
                     Orders List
                   </p>
-                  <p className="text-xs text-dark-gray">
+                  <p className="text-[10px] text-dark-gray">
                     Showing {startIndex + 1} to{" "}
                     {Math.min(endIndex, orders.length)} of {orders.length}{" "}
                     orders
                   </p>
                 </div>
               </div>
-              <div className="w-full flex flex-col sm:flex-row items-center gap-3 bg-white px-4 py-2 rounded-xl border-2 border-gray-200 shadow-sm">
+              <div className="w-full flex flex-col sm:flex-row justify-end items-center gap-3 px-4 py-2 rounded-xl border-2 border-gray-200 shadow-sm">
                 <label className="text-sm text-dark-gray font-semibold whitespace-nowrap">
                   Items per page:
                 </label>

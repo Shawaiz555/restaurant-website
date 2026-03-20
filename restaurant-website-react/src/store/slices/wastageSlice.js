@@ -10,7 +10,7 @@ const wastageSlice = createSlice({
       thisMonth: { count: 0, estimatedCost: 0 },
       byReason: []
     },
-    loading: false,
+    loading: true,
     error: null
   },
   reducers: {

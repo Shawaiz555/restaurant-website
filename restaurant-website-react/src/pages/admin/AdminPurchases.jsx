@@ -31,6 +31,7 @@ import suppliersService from "../../services/suppliersService";
 import ingredientsService from "../../services/ingredientsService";
 import { showNotification } from "../../store/slices/notificationSlice";
 import StatsCard from "../../components/admin/common/StatsCard";
+import { TablePageSkeleton } from "../../components/admin/common/SkeletonLoader";
 import ConfirmModal from "../../components/admin/common/ConfirmModal";
 import PrintButton from "../../components/admin/common/PrintButton";
 import { printTable, getSelectionSummary } from "../../utils/printUtils";
@@ -266,6 +267,8 @@ const AdminPurchases = () => {
     });
   const formatCurrency = (n) =>
     `${currencySymbol} ${(n || 0).toLocaleString()}`;
+
+  if (loading) return <TablePageSkeleton stats={4} cols={6} rows={8} />;
 
   return (
     <div className="space-y-6">
@@ -546,11 +549,7 @@ const AdminPurchases = () => {
 
       {/* Purchases Table */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-        {loading ? (
-          <div className="p-12 text-center text-dark-gray">
-            Loading purchases...
-          </div>
-        ) : purchases.length === 0 ? (
+        {purchases.length === 0 ? (
           <div className="p-12 text-center">
             <ShoppingCart className="w-12 h-12 text-gray-300 mx-auto mb-3" />
             <p className="text-dark-gray">No purchases recorded yet</p>

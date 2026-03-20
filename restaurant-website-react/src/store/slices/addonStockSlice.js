@@ -5,7 +5,7 @@ const addonStockSlice = createSlice({
   initialState: {
     addonStocks: [],
     stats: { total: 0, lowStock: 0, outOfStock: 0, typeBreakdown: [] },
-    loading: false,
+    loading: true,
     error: null,
   },
   reducers: {

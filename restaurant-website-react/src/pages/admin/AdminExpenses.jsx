@@ -16,6 +16,7 @@ import {
 import expensesService from "../../services/expensesService";
 import { showNotification } from "../../store/slices/notificationSlice";
 import ConfirmModal from "../../components/admin/common/ConfirmModal";
+import { TablePageSkeleton } from "../../components/admin/common/SkeletonLoader";
 import PrintButton from "../../components/admin/common/PrintButton";
 import { printTable, getSelectionSummary } from "../../utils/printUtils";
 import {
@@ -68,6 +69,7 @@ const AdminExpenses = () => {
   const [expenseToDelete, setExpenseToDelete] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedIds, setSelectedIds] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   // Ref for expense form section
   const expenseFormRef = useRef(null);
@@ -81,6 +83,7 @@ const AdminExpenses = () => {
   });
 
   const loadExpenses = useCallback(async () => {
+    setLoading(true);
     try {
       const allExpenses = await expensesService.getExpenses();
       dispatch(setExpenses(allExpenses));
@@ -92,6 +95,8 @@ const AdminExpenses = () => {
           message: "Failed to load expenses",
         }),
       );
+    } finally {
+      setLoading(false);
     }
   }, [dispatch]);
 
@@ -283,6 +288,8 @@ const AdminExpenses = () => {
       mode,
     });
   };
+
+  if (loading) return <TablePageSkeleton stats={4} cols={5} rows={8} hasFilter={false} />;
 
   return (
     <div className="space-y-6">

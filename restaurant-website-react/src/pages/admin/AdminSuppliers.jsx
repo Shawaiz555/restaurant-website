@@ -28,6 +28,7 @@ import {
 import suppliersService from "../../services/suppliersService";
 import { showNotification } from "../../store/slices/notificationSlice";
 import ConfirmModal from "../../components/admin/common/ConfirmModal";
+import { TablePageSkeleton } from "../../components/admin/common/SkeletonLoader";
 import PrintButton from "../../components/admin/common/PrintButton";
 import { printTable, getSelectionSummary } from "../../utils/printUtils";
 
@@ -214,6 +215,8 @@ const AdminSuppliers = () => {
     });
   };
 
+  if (loading) return <TablePageSkeleton stats={0} cols={6} rows={8} hasFilter={false} />;
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -374,11 +377,7 @@ const AdminSuppliers = () => {
 
       {/* Table */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm">
-        {loading ? (
-          <div className="p-12 text-center text-dark-gray">
-            Loading suppliers...
-          </div>
-        ) : filtered.length === 0 ? (
+        {filtered.length === 0 ? (
           <div className="p-12 text-center">
             <Truck className="w-12 h-12 text-gray-300 mx-auto mb-3" />
             <p className="text-dark-gray">No suppliers found</p>

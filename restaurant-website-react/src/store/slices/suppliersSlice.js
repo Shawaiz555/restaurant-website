@@ -4,7 +4,7 @@ const suppliersSlice = createSlice({
   name: 'suppliers',
   initialState: {
     suppliers: [],
-    loading: false,
+    loading: true,
     error: null
   },
   reducers: {

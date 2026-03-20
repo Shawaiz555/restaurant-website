@@ -45,8 +45,9 @@ const AboutHeroSection = () => {
 
           {/* Enhanced Heading */}
           <div className="space-y-3 mb-5">
-            <h1 className="font-sans font-bold text-3xl sm:text-6xl lg:text-7xl xl:text-8xl text-primary drop-shadow-lg animate-slide-up leading-tight">
-              About Bites Restaurant
+            <h1 className="font-sans font-bold text-4xl sm:text-6xl lg:text-7xl xl:text-8xl text-primary drop-shadow-lg animate-slide-up leading-tight">
+              About
+              <br className="sm:hidden" /> Bites Restaurant
             </h1>
 
             {/* Decorative underline */}
