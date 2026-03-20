@@ -33,10 +33,10 @@ const SpecialServicesSection = () => {
     <section className="py-20">
       <div className="container mx-auto px-3 sm:px-6 lg:px-10 xl:px-16">
         <div className="text-center mb-16">
-          <h2 className="font-sans font-bold text-4xl lg:text-5xl text-dark mb-4">
+          <h2 className="font-sans font-bold text-3xl sm:text-4xl lg:text-5xl text-dark mb-4">
             Special Services
           </h2>
-          <p className="text-dark-gray text-xl">
+          <p className="text-dark-gray text-sm sm:text-xl">
             Exclusive offerings for enhanced experiences
           </p>
         </div>
@@ -55,14 +55,14 @@ const SpecialServicesSection = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
 
               <div className="absolute inset-0 p-8 flex flex-col justify-end">
-                <service.icon className="w-16 h-16 mb-4 text-white" />
-                <h3 className="font-sans font-bold text-3xl text-white mb-3">
+                <service.icon className="w-10 h-10 sm:w-16 sm:h-16 mb-4 text-white" />
+                <h3 className="font-sans font-bold text-xl sm:text-3xl text-white mb-3">
                   {service.title}
                 </h3>
-                <p className="text-white/90 text-lg mb-4">
+                <p className="text-white/90 text-sm sm:text-lg mb-4">
                   {service.description}
                 </p>
-                <button className="bg-white text-primary px-6 py-3 rounded-xl font-semibold hover:bg-primary hover:text-white transition-all w-fit">
+                <button className="bg-white text-primary px-6 py-3 text-sm sm:text-base rounded-xl font-semibold hover:bg-primary hover:text-white transition-all w-fit">
                   Explore
                 </button>
               </div>

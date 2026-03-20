@@ -33,10 +33,10 @@ const ValuesSection = () => {
     <section className="py-20 bg-gradient-to-br from-cream-light to-cream">
       <div className="container mx-auto px-3 sm:px-6 lg:px-10 xl:px-16">
         <div className="text-center mb-16">
-          <h2 className="font-sans font-bold text-4xl lg:text-5xl text-dark mb-4">
+          <h2 className="font-sans font-bold text-3xl sm:text-4xl lg:text-5xl text-dark mb-4">
             Our Core Values
           </h2>
-          <p className="text-dark-gray text-xl max-w-2xl mx-auto">
+          <p className="text-dark-gray text-md sm:text-xl max-w-2xl mx-auto">
             The principles that guide everything we do, from sourcing
             ingredients to serving our guests
           </p>
@@ -48,13 +48,13 @@ const ValuesSection = () => {
               key={index}
               className="bg-white rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border-2 border-transparent hover:border-primary/20"
             >
-              <div className="w-20 h-20 bg-gradient-to-br from-primary/10 to-primary/5 rounded-2xl flex items-center justify-center mb-6 transform group-hover:scale-110 transition-transform">
-                <value.icon className="w-10 h-10 text-primary" />
+              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-primary/10 to-primary/5 rounded-2xl flex items-center justify-center mb-6 transform group-hover:scale-110 transition-transform">
+                <value.icon className="w-8 h-8 sm:w-10 sm:h-10 text-primary" />
               </div>
-              <h3 className="font-sans font-bold text-2xl text-dark mb-3">
+              <h3 className="font-sans font-bold text-xl sm:text-2xl text-dark mb-3">
                 {value.title}
               </h3>
-              <p className="text-dark-gray leading-relaxed">
+              <p className="text-dark-gray text-sm sm:text-base leading-relaxed">
                 {value.description}
               </p>
             </div>

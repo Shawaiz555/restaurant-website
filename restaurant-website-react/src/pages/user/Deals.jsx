@@ -53,7 +53,8 @@ const SIZE_TYPES = [
   },
 ];
 
-const formatPrice = (price, currencySymbol) => `${currencySymbol} ${Number(price).toFixed(0)}`;
+const formatPrice = (price, currencySymbol) =>
+  `${currencySymbol} ${Number(price).toFixed(0)}`;
 
 const formatDate = (dateStr) => {
   if (!dateStr) return null;
@@ -98,7 +99,7 @@ const AvailBadge = ({ deal }) => {
   const hasDate = deal.startDate || deal.endDate;
   if (hasDate) {
     return (
-      <div className="flex items-center gap-1 text-[10px] font-bold text-dark-gray/60">
+      <div className="flex items-center gap-1 text-[9px] font-bold text-dark-gray/60 mt-1">
         <Clock className="w-3 h-3 text-primary" />
         {deal.endDate
           ? `Ends ${formatDate(deal.endDate)}`
@@ -107,7 +108,7 @@ const AvailBadge = ({ deal }) => {
     );
   }
   return (
-    <div className="flex items-center gap-1 text-[10px] font-bold text-green-600">
+    <div className="flex items-center gap-1 text-[9px] font-bold text-green-600 mt-1">
       <CheckCircle2 className="w-3 h-3" />
       Always Available
     </div>
@@ -133,15 +134,15 @@ const SmCard = ({ deal, onClaim }) => {
             <ItemImage item={item} className="w-16 h-16 flex-shrink-0" />
           )}
           <div className="flex-1 min-w-0">
-            <span className="inline-flex items-center gap-1 bg-primary/10 text-primary text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full mb-1">
+            <span className="inline-flex items-center gap-1 bg-primary/10 text-primary text-[9px] font-black tracking-widest px-2 py-0.5 rounded-full mb-1">
               <Zap className="w-2.5 h-2.5" />
               Solo Pick
             </span>
-            <h3 className="font-bold text-dark text-base leading-snug group-hover:text-primary transition-colors">
+            <h3 className="font-bold text-dark text-sm sm:text-base leading-snug group-hover:text-primary transition-colors">
               {deal.title}
             </h3>
             {item && (
-              <p className="text-dark-gray/60 text-xs font-medium truncate mt-0.5">
+              <p className="text-dark-gray/60 text-[10px] sm:text-xs font-medium truncate mt-0.5">
                 {(item.quantity || 1) > 1 ? `${item.quantity}× ` : ""}
                 {item.name}
               </p>
@@ -151,7 +152,7 @@ const SmCard = ({ deal, onClaim }) => {
 
         {/* Description if any */}
         {deal.description && (
-          <p className="text-dark-gray/60 text-xs leading-relaxed line-clamp-2">
+          <p className="text-dark-gray/60 text-[10px] sm:text-xs leading-relaxed line-clamp-2">
             {deal.description}
           </p>
         )}
@@ -160,15 +161,15 @@ const SmCard = ({ deal, onClaim }) => {
         <div className="mt-auto pt-3 border-t border-cream flex items-center justify-between">
           <div>
             <AvailBadge deal={deal} />
-            <p className="text-primary font-black text-2xl leading-tight mt-0.5">
+            <p className="text-primary font-black text-lg sm:text-2xl leading-tight mt-0.5">
               {formatPrice(deal.price, currencySymbol)}
             </p>
           </div>
           <button
             onClick={() => onClaim(deal)}
-            className="flex items-center gap-2 bg-primary hover:bg-primary-dark text-white font-bold text-xs uppercase tracking-wider px-5 py-3 rounded-xl shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
+            className="flex items-center gap-2 bg-primary hover:bg-primary-dark text-white font-bold text-[10px] sm:text-xs uppercase tracking-wider px-4 py-2 sm:px-5 sm:py-3 rounded-xl shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
           >
-            Claim <ArrowRight className="w-4 h-4" />
+            Claim <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4" />
           </button>
         </div>
       </div>
@@ -206,7 +207,7 @@ const MdCard = ({ deal, onClaim }) => {
 
         {/* Type badge */}
         <div className="absolute top-3 left-3 z-20">
-          <span className="inline-flex items-center gap-1 bg-white/90 backdrop-blur text-primary text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full shadow border border-primary/20">
+          <span className="inline-flex items-center gap-1 bg-white/90 backdrop-blur text-primary text-[9px] font-black tracking-widest px-2.5 py-1 rounded-full shadow border border-primary/20">
             <Package className="w-2.5 h-2.5" />
             Value Bundle
           </span>
@@ -223,11 +224,11 @@ const MdCard = ({ deal, onClaim }) => {
       {/* Content */}
       <div className="p-5 flex flex-col flex-1 gap-3">
         <div>
-          <h3 className="font-bold text-dark text-lg leading-tight group-hover:text-primary transition-colors">
+          <h3 className="font-bold text-dark text-md sm:text-lg leading-tight group-hover:text-primary transition-colors">
             {deal.title}
           </h3>
           {deal.description && (
-            <p className="text-dark-gray/70 text-xs mt-1.5 line-clamp-2 leading-relaxed">
+            <p className="text-dark-gray/70 text-[10px] sm:text-xs mt-1.5 line-clamp-2 leading-relaxed">
               {deal.description}
             </p>
           )}
@@ -238,7 +239,7 @@ const MdCard = ({ deal, onClaim }) => {
           {items.map((item, idx) => (
             <div
               key={idx}
-              className="flex items-center gap-2 text-xs font-medium text-dark-gray"
+              className="flex items-center gap-2 text-[10px] sm:text-xs font-medium text-dark-gray"
             >
               <div className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
               <span className="truncate">
@@ -257,13 +258,13 @@ const MdCard = ({ deal, onClaim }) => {
         <div className="mt-auto pt-3 border-t border-cream flex items-center justify-between">
           <div>
             <AvailBadge deal={deal} />
-            <p className="text-primary font-black text-2xl leading-tight mt-0.5">
+            <p className="text-primary font-black text-md sm:text-2xl leading-tight mt-0.5">
               {formatPrice(deal.price, currencySymbol)}
             </p>
           </div>
           <button
             onClick={() => onClaim(deal)}
-            className="flex items-center gap-2 bg-primary hover:bg-primary-dark text-white font-bold text-xs uppercase tracking-wider px-5 py-3 rounded-xl shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
+            className="flex items-center gap-2 bg-primary hover:bg-primary-dark text-white font-bold text-[10px] sm:text-xs uppercase tracking-wider px-4 py-2 sm:px-5 sm:py-3 rounded-xl shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
           >
             Claim Deal
             <ArrowRight className="w-4 h-4" />
@@ -287,11 +288,11 @@ const LgCard = ({ deal, onClaim }) => {
       <div className="flex flex-col flex-1 p-6 sm:p-8 gap-4">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <span className="inline-flex items-center gap-1.5 bg-primary/10 text-primary text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full mb-2">
+            <span className="inline-flex items-center gap-1.5 bg-primary/10 text-primary text-[8px] font-black tracking-widest px-3 py-1 rounded-full mb-2">
               <Flame className="w-3 h-3" />
               Featured Deal · {items.length} items
             </span>
-            <h3 className="font-bold text-dark text-2xl sm:text-3xl leading-tight group-hover:text-primary transition-colors">
+            <h3 className="font-bold text-dark text-lg sm:text-3xl leading-tight group-hover:text-primary transition-colors">
               {deal.title}
             </h3>
           </div>
@@ -299,14 +300,14 @@ const LgCard = ({ deal, onClaim }) => {
         </div>
 
         {deal.description && (
-          <p className="text-dark-gray/70 text-sm leading-relaxed line-clamp-2">
+          <p className="text-dark-gray/70 text-[10px] sm:text-sm leading-relaxed line-clamp-2">
             {deal.description}
           </p>
         )}
 
         {/* Items */}
         <div>
-          <p className="text-[9px] font-black uppercase tracking-widest text-dark-gray/40 mb-2.5 flex items-center gap-1.5">
+          <p className="text-[9px] font-black tracking-widest text-dark-gray/40 mb-2.5 flex items-center gap-1.5">
             <Package className="w-3 h-3" />
             Package Includes
           </p>
@@ -314,7 +315,7 @@ const LgCard = ({ deal, onClaim }) => {
             {items.map((item, idx) => (
               <div
                 key={idx}
-                className="flex items-center gap-2 bg-cream-light rounded-lg px-3 py-2 text-xs font-medium text-dark-gray"
+                className="flex items-center gap-2 bg-cream-light rounded-lg px-3 py-2 text-[10px] sm:text-xs font-medium text-dark-gray"
               >
                 <div className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
                 <span className="truncate">
@@ -334,7 +335,7 @@ const LgCard = ({ deal, onClaim }) => {
         <div className="mt-auto">
           <button
             onClick={() => onClaim(deal)}
-            className="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-primary to-primary-dark text-white font-bold text-sm uppercase tracking-wider py-4 rounded-xl shadow-lg hover:shadow-primary/30 hover:-translate-y-0.5 transition-all duration-200"
+            className="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-primary to-primary-dark text-white font-bold text-xs sm:text-sm uppercase tracking-wider py-3 sm:py-4 rounded-xl shadow-lg hover:shadow-primary/30 hover:-translate-y-0.5 transition-all duration-200"
           >
             <Flame className="w-5 h-5" />
             Claim This Deal
@@ -351,7 +352,7 @@ const LgCard = ({ deal, onClaim }) => {
 
         {/* Badge */}
         <div className="absolute top-4 left-4">
-          <span className="inline-flex items-center gap-1 bg-white/20 text-white text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full border border-white/30">
+          <span className="inline-flex items-center gap-1 bg-white/20 text-white text-[9px] font-black tracking-widest px-2.5 py-1 rounded-full border border-white/30">
             <Flame className="w-2.5 h-2.5" />
             Featured
           </span>
@@ -380,10 +381,10 @@ const LgCard = ({ deal, onClaim }) => {
 
         {/* Price */}
         <div className="relative z-10 mt-5 text-center">
-          <p className="text-white/60 text-[10px] font-black uppercase tracking-widest">
+          <p className="text-white/60 text-[9px] font-black uppercase tracking-widest">
             Deal Price
           </p>
-          <p className="text-white font-black text-4xl leading-none">
+          <p className="text-white font-black text-2xl sm:text-4xl leading-none">
             {formatPrice(deal.price, currencySymbol)}
           </p>
         </div>
@@ -414,23 +415,23 @@ const XlCard = ({ deal, onClaim }) => {
           {/* Left: text */}
           <div className="flex-1">
             <div className="flex flex-wrap items-center gap-2 mb-3">
-              <span className="inline-flex items-center gap-1.5 bg-white/20 backdrop-blur text-white text-[9px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full border border-white/30">
+              <span className="inline-flex items-center gap-1.5 bg-white/20 backdrop-blur text-white text-[9px] font-black tracking-widest px-3 py-1.5 rounded-full border border-white/30">
                 <Crown className="w-3 h-3" />
                 Mega Bundle
               </span>
-              <span className="inline-flex items-center gap-1.5 bg-white/20 text-white text-[9px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full border border-white/30">
+              <span className="inline-flex items-center gap-1.5 bg-white/20 text-white text-[9px] font-black tracking-widest px-3 py-1.5 rounded-full border border-white/30">
                 <Sparkles className="w-3 h-3" />
                 {items.length} Items
               </span>
               <AvailBadge deal={{ ...deal, _overrideStyle: "light" }} />
             </div>
 
-            <h3 className="font-black text-white text-3xl sm:text-4xl lg:text-4xl xl:text-5xl leading-tight">
+            <h3 className="font-black text-white text-2xl sm:text-4xl lg:text-4xl xl:text-5xl leading-tight">
               {deal.title}
             </h3>
 
             {deal.description && (
-              <p className="text-white/80 text-sm sm:text-base mt-3 max-w-xl leading-relaxed">
+              <p className="text-white/80 text-[10px] sm:text-base mt-3 max-w-xl leading-relaxed">
                 {deal.description}
               </p>
             )}
@@ -439,21 +440,21 @@ const XlCard = ({ deal, onClaim }) => {
           {/* Right: price + CTA */}
           <div className="flex flex-col items-start lg:items-end gap-4 flex-shrink-0">
             <div className="lg:text-right">
-              <p className="text-white/60 text-[10px] font-black uppercase tracking-widest">
+              <p className="text-white/60 text-[9px] font-black tracking-widest">
                 Total Value
               </p>
-              <p className="text-white font-black text-4xl sm:text-5xl xl:text-6xl leading-none">
+              <p className="text-white font-black text-2xl sm:text-5xl xl:text-6xl leading-none">
                 {formatPrice(deal.price, currencySymbol)}
               </p>
-              <p className="text-white/50 text-[10px] mt-1">
+              <p className="text-white/50 text-[9px] mt-1">
                 Inclusive of all items
               </p>
             </div>
             <button
               onClick={() => onClaim(deal)}
-              className="flex items-center gap-2.5 bg-white text-primary hover:bg-cream font-black text-sm uppercase tracking-wider px-8 py-4 rounded-xl shadow-2xl hover:scale-105 hover:shadow-white/30 transition-all duration-200"
+              className="flex items-center gap-2.5 bg-white text-primary hover:bg-cream font-black text-xs sm:text-sm tracking-wider px-6 py-3 sm:py-4 rounded-xl shadow-2xl hover:scale-105 hover:shadow-white/30 transition-all duration-200"
             >
-              <ShoppingCart className="w-5 h-5" />
+              <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5" />
               Claim Mega Bundle
             </button>
           </div>
@@ -478,7 +479,7 @@ const XlCard = ({ deal, onClaim }) => {
 
       {/* Items tag row */}
       <div className="px-8 sm:px-10 py-5 bg-cream-light border-t border-cream-dark">
-        <p className="text-[9px] font-black uppercase tracking-widest text-dark-gray/40 mb-3 flex items-center gap-1.5">
+        <p className="text-[9px] font-black tracking-widest text-dark-gray/40 mb-3 flex items-center gap-1.5">
           <Package className="w-3 h-3" />
           Full Package Contents
         </p>
@@ -486,7 +487,7 @@ const XlCard = ({ deal, onClaim }) => {
           {items.map((item, idx) => (
             <span
               key={idx}
-              className="inline-flex items-center gap-1.5 bg-white border border-cream-dark text-dark-gray text-xs font-medium px-3 py-1.5 rounded-lg"
+              className="inline-flex items-center gap-1.5 bg-white border border-cream-dark text-dark-gray text-[10px] sm:text-xs font-medium px-3 py-1.5 rounded-lg"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
               {(item.quantity || 1) > 1 && (
@@ -645,10 +646,10 @@ const Deals = () => {
             {/* Header + type filter tabs */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b-2 border-primary/20 pb-6">
               <div>
-                <h2 className="text-4xl lg:text-5xl font-bold text-primary">
+                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-primary">
                   Today's Deals
                 </h2>
-                <p className="text-dark-gray/60 text-sm mt-3">
+                <p className="text-dark-gray/60 text-xs sm:text-sm mt-3">
                   {deals.length} deal{deals.length !== 1 ? "s" : ""} available
                   {typeGroups.length > 1 && ` · ${typeGroups.length} types`}
                 </p>
@@ -659,7 +660,7 @@ const Deals = () => {
                 <div className="flex flex-wrap gap-2 border border-primary/40 rounded-xl p-3">
                   <button
                     onClick={() => setActiveType("all")}
-                    className={`inline-flex items-center gap-1.5 text-xs font-bold px-4 py-2 rounded-xl border transition-all duration-200 ${
+                    className={`inline-flex items-center gap-1.5 text-[10px] sm:text-xs font-bold px-4 py-2 rounded-xl border transition-all duration-200 ${
                       activeType === "all"
                         ? "bg-primary border-primary text-white shadow-md shadow-primary/20"
                         : "bg-white border-cream-dark text-dark-gray hover:border-primary/40 hover:text-primary"
@@ -674,7 +675,7 @@ const Deals = () => {
                       <button
                         key={g.key}
                         onClick={() => setActiveType(g.key)}
-                        className={`inline-flex items-center gap-1.5 text-xs font-bold px-4 py-2 rounded-xl border transition-all duration-200 ${
+                        className={`inline-flex items-center gap-1.5 text-[10px] sm:text-xs font-bold px-4 py-2 rounded-xl border transition-all duration-200 ${
                           activeType === g.key
                             ? "bg-primary border-primary text-white shadow-md shadow-primary/20"
                             : "bg-white border-cream-dark text-dark-gray hover:border-primary/40 hover:text-primary"
@@ -703,15 +704,15 @@ const Deals = () => {
                             <Icon className="w-5 h-5 text-primary" />
                           </div>
                           <div>
-                            <h3 className="text-lg font-bold text-dark leading-none">
+                            <h3 className="text-sm sm:text-lg font-bold text-dark leading-none">
                               {g.label}
                             </h3>
-                            <p className="text-xs text-dark-gray/50 mt-0.5">
+                            <p className="text-[10px] sm:text-xs text-dark-gray/50 mt-0.5">
                               {g.desc}
                             </p>
                           </div>
                         </div>
-                        <span className="text-[10px] font-black uppercase tracking-widest text-dark-gray/40 bg-cream px-2.5 py-1 rounded-full flex-shrink-0">
+                        <span className="text-[9px] font-black tracking-widest text-dark-gray/40 bg-cream px-2.5 py-1 rounded-full flex-shrink-0">
                           {g.deals.length} deal{g.deals.length !== 1 ? "s" : ""}
                         </span>
                         <div className="flex-1 h-px bg-cream-dark" />

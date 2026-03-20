@@ -157,11 +157,11 @@ const MenuSection = () => {
         <div className="text-center mb-5 space-y-3">
           <div className="inline-flex items-center gap-2 bg-primary/10 px-4 py-2 rounded-full border border-primary/20 animate-fade-in translate-y-[-10px]">
             <Sparkles className="w-4 h-4 text-primary" />
-            <span className="text-primary font-bold text-xs tracking-widest uppercase">
+            <span className="text-primary font-bold text-[10px] sm:text-xs tracking-widest uppercase">
               Special Selection
             </span>
           </div>
-          <h2 className="font-sans font-bold text-4xl lg:text-5xl xl:text-6xl text-dark leading-tight">
+          <h2 className="font-sans font-bold text-2xl sm:text-4xl lg:text-5xl xl:text-6xl text-dark leading-tight">
             Our Regular <span className="text-primary italic">Menu Pack</span>
           </h2>
           <div className="w-24 h-1.5 bg-primary/20 mx-auto rounded-full mt-4 flex overflow-hidden">
@@ -178,7 +178,7 @@ const MenuSection = () => {
               className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-3 mb-8"
               ref={dropdownRef}
             >
-              <span className="font-bold text-base text-dark whitespace-nowrap">
+              <span className="font-bold text-sm sm:text-base text-dark whitespace-nowrap">
                 Select Category:
               </span>
 
@@ -190,10 +190,10 @@ const MenuSection = () => {
                   className="w-full flex items-center justify-between gap-3 px-4 py-2.5 bg-white border-2 border-primary/20 rounded-2xl shadow-md hover:border-primary/50 hover:shadow-lg transition-all duration-300"
                 >
                   <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <div className="w-6 h-6 sm:w-8 sm:h-8 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
                       <ActiveIcon className="w-4 h-4 text-primary" />
                     </div>
-                    <span className="font-bold text-dark text-sm">
+                    <span className="font-bold text-dark text-xs sm:text-sm">
                       {activeCat?.label || "Select Category"}
                     </span>
                   </div>
@@ -231,7 +231,7 @@ const MenuSection = () => {
                                 className={`w-4 h-4 ${isActive ? "text-white" : "text-primary"}`}
                               />
                             </div>
-                            <span className="font-semibold text-sm">
+                            <span className="font-semibold text-xs sm:text-sm">
                               {category.label}
                             </span>
                           </button>
@@ -265,9 +265,9 @@ const MenuSection = () => {
             className="group relative bg-primary text-white hover:bg-primary-dark px-12 py-4 rounded-2xl font-bold text-md transition-all shadow-2xl hover:shadow-primary/40 hover:scale-95 flex items-center gap-3 mx-auto overflow-hidden"
           >
             <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
-            <UtensilsCrossed className="w-6 h-6" />
-            <span className="relative">View Menu</span>
-            <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+            <UtensilsCrossed className="w-5 h-5 sm:w-6 sm:h-6" />
+            <span className="relative text-xs sm:text-sm">View Menu</span>
+            <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-1 transition-transform" />
           </button>
         </div>
       </div>

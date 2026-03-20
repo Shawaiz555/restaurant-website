@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Autoplay } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import ProductCard from '../common/ProductCard';
-import productsService from '../../services/productsService';
+import React, { useState, useEffect } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Autoplay } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import ProductCard from "../common/ProductCard";
+import productsService from "../../services/productsService";
 
 const PopularDishes = () => {
   const [popularDishes, setPopularDishes] = useState([]);
 
   useEffect(() => {
     const loadPopularDishes = async () => {
-      const products = await productsService.fetchProductsByCategory('Popular Dishes');
+      const products =
+        await productsService.fetchProductsByCategory("Popular Dishes");
       setPopularDishes(products.slice(0, 8)); // Show top 8 products
     };
     loadPopularDishes();
@@ -21,12 +22,14 @@ const PopularDishes = () => {
     <section className="py-16 lg:py-24">
       <div className="container mx-auto px-3 sm:px-6 lg:px-8 xl:px-16">
         <div className="flex items-center justify-between mb-12">
-          <h2 className="font-sans font-bold text-4xl lg:text-5xl">Popular Dishes</h2>
+          <h2 className="font-sans font-bold text-2xl sm:text-4xl lg:text-5xl">
+            Popular Dishes
+          </h2>
           <div className="flex gap-2">
-            <button className="swiper-button-prev-custom w-12 h-12 rounded-full bg-white border-2 border-dark/10 flex items-center justify-center hover:bg-primary hover:border-primary hover:text-white transition-all">
+            <button className="swiper-button-prev-custom w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white border-2 border-dark/10 flex items-center justify-center hover:bg-primary hover:border-primary hover:text-white transition-all">
               ←
             </button>
-            <button className="swiper-button-next-custom w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center hover:bg-primary-dark transition-all">
+            <button className="swiper-button-next-custom w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-primary text-white flex items-center justify-center hover:bg-primary-dark transition-all">
               →
             </button>
           </div>
@@ -42,8 +45,8 @@ const PopularDishes = () => {
             disableOnInteraction: false,
           }}
           navigation={{
-            nextEl: '.swiper-button-next-custom',
-            prevEl: '.swiper-button-prev-custom',
+            nextEl: ".swiper-button-next-custom",
+            prevEl: ".swiper-button-prev-custom",
           }}
           breakpoints={{
             640: {

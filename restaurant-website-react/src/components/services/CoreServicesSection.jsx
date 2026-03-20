@@ -95,10 +95,10 @@ const CoreServicesSection = () => {
     <section className="py-20">
       <div className="container mx-auto px-3 sm:px-6 lg:px-10 xl:px-16">
         <div className="text-center mb-16">
-          <h2 className="font-sans font-bold text-4xl lg:text-5xl text-dark mb-4">
+          <h2 className="font-sans font-bold text-3xl sm:text-4xl lg:text-5xl text-dark mb-4">
             Core Services
           </h2>
-          <p className="text-dark-gray text-base lg:text-lg xl:text-xl max-w-2xl mx-auto">
+          <p className="text-dark-gray text-sm sm:text-base lg:text-lg xl:text-xl max-w-2xl mx-auto">
             Comprehensive solutions tailored to your dining needs
           </p>
         </div>
@@ -132,7 +132,9 @@ const CoreServicesSection = () => {
                       <div className="w-5 h-5 lg:w-6 lg:h-6 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
                         <Check className="w-3 h-3 lg:w-4 lg:h-4 text-primary" />
                       </div>
-                      <span className="text-dark text-xs lg:text-sm">{feature}</span>
+                      <span className="text-dark text-xs lg:text-sm">
+                        {feature}
+                      </span>
                     </div>
                   ))}
                 </div>

@@ -92,7 +92,7 @@ const StaffLogin = () => {
   if (pageLoading || navigating) return <Loader />;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-primary/90 to-slate-800 flex items-center justify-center px-4 py-8">
+    <div className="min-h-screen bg-white flex items-center justify-center pt-32 pb-20 px-3">
       <div className="w-full max-w-md">
         {/* Card */}
         <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
@@ -106,25 +106,27 @@ const StaffLogin = () => {
               className="inline-flex items-center gap-2 text-gray-500 hover:text-primary transition-colors mb-7 group"
             >
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-              <span className="text-sm font-medium">Back to Website</span>
+              <span className="text-xs sm:text-sm font-medium">
+                Back to Website
+              </span>
             </button>
 
             {/* Icon + heading */}
             <div className="text-center mb-7">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-primary to-primary-dark rounded-2xl mb-4 shadow-lg">
-                <ChefHat className="w-8 h-8 text-white" />
+              <div className="inline-flex items-center justify-center sm:w-16 sm:h-16 w-12 h-12 bg-gradient-to-br from-primary to-primary-dark rounded-2xl mb-4 shadow-lg">
+                <ChefHat className="sm:w-8 sm:h-8 w-6 h-6 text-white" />
               </div>
-              <h2 className="font-sans text-[1.75rem] font-bold text-dark mb-1.5 tracking-tight">
+              <h2 className="font-sans sm:text-[1.75rem] text-xl font-bold text-dark mb-1.5 tracking-tight">
                 Staff Portal
               </h2>
-              <p className="text-[0.9rem] text-gray-500">
+              <p className="sm:text-[0.9rem] text-xs text-gray-500">
                 Sign in to access your{" "}
                 <span className="font-semibold text-primary">dashboard</span>
               </p>
             </div>
 
             {/* Role chips */}
-            <div className="flex items-center justify-center gap-2 mb-6 flex-wrap">
+            <div className="grid grid-cols-2 items-center justify-center gap-2 mb-6">
               {[
                 {
                   label: "Super Admin",
@@ -144,12 +146,12 @@ const StaffLogin = () => {
                 {
                   label: "Chef",
                   icon: ChefHat,
-                  color: "bg-orange-100 text-orange-700",
+                  color: "bg-gray-300 text-dark",
                 },
               ].map(({ label, icon: Icon, color }) => (
                 <span
                   key={label}
-                  className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold ${color}`}
+                  className={`inline-flex items-center gap-1 px-3 py-2 rounded-full text-[10px] sm:text-xs font-semibold ${color}`}
                 >
                   <Icon className="w-3 h-3" />
                   {label}
@@ -169,12 +171,12 @@ const StaffLogin = () => {
             <form onSubmit={handleSubmit} className="space-y-5">
               {/* Email */}
               <div className="space-y-1.5">
-                <label className="block text-dark font-semibold text-[0.875rem]">
+                <label className="block text-dark font-semibold text-xs sm:text-[0.875rem]">
                   Email Address
                 </label>
                 <div className="relative group">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <Mail className="w-[1.05rem] h-[1.05rem] text-gray-400 group-focus-within:text-primary transition-colors" />
+                    <Mail className="w-4 h-4 text-gray-400 group-focus-within:text-primary transition-colors" />
                   </div>
                   <input
                     type="email"
@@ -182,7 +184,7 @@ const StaffLogin = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, email: e.target.value })
                     }
-                    className="w-full pl-11 pr-4 py-3.5 rounded-xl border-2 border-gray-200 focus:border-primary focus:ring-4 focus:ring-primary/10 focus:outline-none transition-all text-dark text-[0.9rem] placeholder:text-gray-400"
+                    className="w-full pl-11 pr-4 py-3.5 rounded-xl border-2 border-gray-200 focus:border-primary focus:ring-4 focus:ring-primary/10 focus:outline-none transition-all text-dark text-xs sm:text-[0.9rem] placeholder:text-gray-400"
                     placeholder="staff@restaurant.com"
                     required
                   />
@@ -191,12 +193,12 @@ const StaffLogin = () => {
 
               {/* Password */}
               <div className="space-y-1.5">
-                <label className="block text-dark font-semibold text-[0.875rem]">
+                <label className="block text-dark font-semibold text-xs sm:text-[0.875rem]">
                   Password
                 </label>
                 <div className="relative group">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <Lock className="w-[1.05rem] h-[1.05rem] text-gray-400 group-focus-within:text-primary transition-colors" />
+                    <Lock className="w-4 h-4 text-gray-400 group-focus-within:text-primary transition-colors" />
                   </div>
                   <input
                     type={showPassword ? "text" : "password"}
@@ -204,7 +206,7 @@ const StaffLogin = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, password: e.target.value })
                     }
-                    className="w-full pl-11 pr-12 py-3.5 rounded-xl border-2 border-gray-200 focus:border-primary focus:ring-4 focus:ring-primary/10 focus:outline-none transition-all text-dark text-[0.9rem] placeholder:text-gray-400"
+                    className="w-full pl-11 pr-12 py-3.5 rounded-xl border-2 border-gray-200 focus:border-primary focus:ring-4 focus:ring-primary/10 focus:outline-none transition-all text-dark text-xs sm:text-[0.9rem] placeholder:text-gray-400"
                     placeholder="••••••••"
                     required
                   />
@@ -214,9 +216,9 @@ const StaffLogin = () => {
                     className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-primary transition-colors"
                   >
                     {showPassword ? (
-                      <EyeOff className="w-[1.05rem] h-[1.05rem]" />
+                      <EyeOff className="w-4 h-4" />
                     ) : (
-                      <Eye className="w-[1.05rem] h-[1.05rem]" />
+                      <Eye className="w-4 h-4" />
                     )}
                   </button>
                 </div>
@@ -226,7 +228,7 @@ const StaffLogin = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-primary hover:bg-primary-dark text-white py-3.5 rounded-xl text-[0.95rem] font-semibold transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2 mt-1"
+                className="w-full bg-primary hover:bg-primary-dark text-white py-2.5 sm:py-3.5 rounded-xl text-xs sm:text-[0.95rem] font-semibold transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2 mt-1"
               >
                 {loading ? (
                   <>
@@ -240,7 +242,7 @@ const StaffLogin = () => {
             </form>
 
             {/* Footer note */}
-            <p className="mt-6 text-center text-xs text-gray-400">
+            <p className="mt-6 text-center text-[10px] sm:text-xs text-gray-400">
               Not a staff member?{" "}
               <Link
                 to="/login"

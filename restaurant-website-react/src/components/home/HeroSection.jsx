@@ -41,7 +41,7 @@ const HeroSection = () => {
             {/* Enhanced Decorative Badge */}
             <div className="inline-flex items-center gap-2 bg-gradient-to-r from-primary/20 to-primary-light/20 backdrop-blur-md px-4 py-2 rounded-full border-2 border-primary/40 shadow-lg animate-fade-in group">
               <Utensils className="w-5 h-5 text-primary" />
-              <span className="text-dark font-bold text-xs tracking-wide uppercase">
+              <span className="text-dark font-bold text-[10px] sm:text-xs tracking-wide uppercase">
                 Welcome to Bites Restaurant
               </span>
               <span className="flex h-1.5 w-1.5">
@@ -52,7 +52,7 @@ const HeroSection = () => {
 
             {/* Enhanced Heading */}
             <div className="space-y-3">
-              <h1 className="font-sans font-bold text-5xl sm:text-6xl lg:text-6xl xl:text-7xl 2xl:text-8xl leading-[1.1] text-primary drop-shadow-lg animate-slide-up">
+              <h1 className="font-sans font-bold text-4xl sm:text-6xl lg:text-6xl xl:text-7xl 2xl:text-8xl leading-[1.1] text-primary drop-shadow-lg animate-slide-up">
                 We Serve The
                 <span className="block text-primary-dark mt-1">
                   Taste You Love
@@ -68,7 +68,7 @@ const HeroSection = () => {
             </div>
 
             {/* Enhanced Description */}
-            <p className="text-dark-gray text-lg lg:text-xl max-w-xl leading-relaxed animate-slide-up-delay-2">
+            <p className="text-dark-gray text-sm sm:text-lg lg:text-xl max-w-xl leading-relaxed animate-slide-up-delay-2">
               Experience authentic flavors crafted with passion and served with
               love. From traditional favorites to innovative dishes, every bite
               tells a story of culinary excellence.
@@ -79,14 +79,16 @@ const HeroSection = () => {
               <Link to="/menu">
                 <button className="group relative bg-gradient-to-r from-primary to-primary-light text-white hover:from-primary-dark hover:to-primary px-8 py-4 lg:px-10 lg:py-4 rounded-2xl font-bold text-base transition-all duration-300 shadow-2xl hover:shadow-primary/50 hover:scale-105 flex items-center gap-2 overflow-hidden">
                   <span className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
-                  <span className="relative">Explore Menu</span>
+                  <span className="relative text-xs sm:text-base">
+                    Explore Menu
+                  </span>
                   <ArrowRight className="relative w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
                 </button>
               </Link>
               <Link to="/menu">
                 <button className="group bg-white text-primary border-3 border-primary hover:bg-primary hover:text-white px-8 py-4 lg:px-10 lg:py-4 rounded-2xl font-bold text-base transition-all duration-300 hover:scale-105 shadow-xl hover:shadow-2xl flex items-center gap-2">
                   <ShoppingCart className="w-5 h-5 group-hover:animate-bounce" />
-                  <span>Order Now</span>
+                  <span className="text-xs sm:text-base">Order Now</span>
                 </button>
               </Link>
             </div>
@@ -94,32 +96,32 @@ const HeroSection = () => {
             {/* Enhanced Stats with Icons */}
             <div className="mt-8 grid grid-cols-3 gap-4 lg:gap-6 max-w-xl animate-slide-up-delay-4">
               <div className="group text-center p-2 rounded-xl bg-white/50 backdrop-blur-sm border border-primary/20 hover:border-primary/40 transition-all duration-300 hover:scale-105 hover:shadow-xl">
-                <div className="text-primary text-3xl lg:text-4xl font-sans mb-1 group-hover:scale-110 transition-transform">
+                <div className="text-primary text-xl sm:text-3xl lg:text-4xl font-sans mb-1 group-hover:scale-110 transition-transform">
                   50K+
                 </div>
-                <div className="text-dark-gray text-xs font-semibold">
+                <div className="text-dark-gray text-[10px] sm:text-xs">
                   Happy Customers
                 </div>
-                <Users className="w-6 h-6 mx-auto mt-2 text-primary" />
+                <Users className="w-5 h-5 sm:w-6 sm:h-6 mx-auto mt-2 text-primary" />
               </div>
               <div className="group text-center p-2 rounded-xl bg-white/50 backdrop-blur-sm border border-primary/20 hover:border-primary/40 transition-all duration-300 hover:scale-105 hover:shadow-xl">
-                <div className="text-primary text-3xl lg:text-4xl font-sans mb-1 group-hover:scale-110 transition-transform flex items-center justify-center gap-1">
+                <div className="text-primary text-xl sm:text-3xl lg:text-4xl font-sans mb-1 group-hover:scale-110 transition-transform flex items-center justify-center gap-1">
                   4.9
                   <Star className="w-5 h-5 text-yellow-500 fill-current" />
                 </div>
-                <div className="text-dark-gray text-xs font-semibold">
+                <div className="text-dark-gray text-[10px] sm:text-xs">
                   Average Rating
                 </div>
-                <Trophy className="w-6 h-6 mx-auto mt-2 text-primary" />
+                <Trophy className="w-5 h-5 sm:w-6 sm:h-6 mx-auto mt-2 text-primary" />
               </div>
               <div className="group text-center p-2 rounded-xl bg-white/50 backdrop-blur-sm border border-primary/20 hover:border-primary/40 transition-all duration-300 hover:scale-105 hover:shadow-xl">
-                <div className="text-primary text-3xl lg:text-4xl font-sans mb-1 group-hover:scale-110 transition-transform">
+                <div className="text-primary text-xl sm:text-3xl lg:text-4xl font-sans mb-1 group-hover:scale-110 transition-transform">
                   200+
                 </div>
-                <div className="text-dark-gray text-xs font-semibold">
+                <div className="text-dark-gray text-[10px] sm:text-xs font-semibold">
                   Menu Items
                 </div>
-                <Package className="w-6 h-6 mx-auto mt-2 text-primary" />
+                <Package className="w-5 h-5 sm:w-6 sm:h-6 mx-auto mt-2 text-primary" />
               </div>
             </div>
           </div>
@@ -224,8 +226,8 @@ const HeroSection = () => {
                       item.active ? "border-primary-dark" : "border-primary/30"
                     }`}
                   >
-                    <item.icon className="w-5 h-5" />
-                    <span className="font-bold text-sm">{item.label}</span>
+                    <item.icon className="w-4 h-4" />
+                    <span className="font-bold text-xs">{item.label}</span>
                   </div>
                 ))}
               </div>

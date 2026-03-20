@@ -46,10 +46,10 @@ const BenefitsSection = () => {
     <section className="py-20 bg-white">
       <div className="container mx-auto px-3 sm:px-6 lg:px-10 xl:px-16">
         <div className="text-center mb-16">
-          <h2 className="font-sans font-bold text-4xl lg:text-5xl text-dark mb-4">
+          <h2 className="font-sans font-bold text-3xl sm:text-4xl lg:text-5xl text-dark mb-4">
             Why Choose Us
           </h2>
-          <p className="text-dark-gray text-xl">
+          <p className="text-dark-gray text-sm sm:text-xl">
             Benefits that make us stand out
           </p>
         </div>
@@ -60,11 +60,13 @@ const BenefitsSection = () => {
               key={index}
               className="bg-gradient-to-br from-cream-light to-cream rounded-2xl p-6 text-center shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 border-2 border-primary/10"
             >
-              <benefit.icon className="w-12 h-12 mx-auto mb-3 text-primary" />
+              <benefit.icon className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-3 text-primary" />
               <h3 className="font-semibold text-dark mb-2 text-sm">
                 {benefit.title}
               </h3>
-              <p className="text-dark-gray text-xs">{benefit.description}</p>
+              <p className="text-dark-gray text-[10px] sm:text-xs">
+                {benefit.description}
+              </p>
             </div>
           ))}
         </div>

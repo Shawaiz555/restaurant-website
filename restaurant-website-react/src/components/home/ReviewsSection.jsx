@@ -36,14 +36,14 @@ const ReviewsSection = () => {
     <section id="reviews" className="py-16 lg:py-24">
       <div className="container mx-auto px-3 sm:px-6 lg:px-10 xl:px-16">
         <div className="flex items-center justify-between mb-12">
-          <h2 className="font-sans font-bold text-4xl lg:text-5xl">
+          <h2 className="font-sans font-bold text-2xl sm:text-4xl lg:text-5xl">
             What Our Customer Says?
           </h2>
           <div className="flex gap-2">
-            <button className="swiper-button-prev-reviews w-12 h-12 rounded-full bg-white border-2 border-dark/10 flex items-center justify-center hover:bg-primary hover:border-primary hover:text-white transition-all">
+            <button className="swiper-button-prev-reviews w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-white border-2 border-dark/10 flex items-center justify-center hover:bg-primary hover:border-primary hover:text-white transition-all">
               ←
             </button>
-            <button className="swiper-button-next-reviews w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center hover:bg-primary-dark transition-all">
+            <button className="swiper-button-next-reviews w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-primary text-white flex items-center justify-center hover:bg-primary-dark transition-all">
               →
             </button>
           </div>
@@ -77,7 +77,7 @@ const ReviewsSection = () => {
           {reviews.map((review, idx) => (
             <SwiperSlide key={idx}>
               <div className="bg-white rounded-3xl p-8 shadow-lg my-10">
-                <p className="text-dark-gray text-md mb-6 leading-relaxed">
+                <p className="text-dark-gray text-sm sm:text-md mb-6 leading-relaxed">
                   "{review.text}"
                 </p>
                 <div className="flex items-center gap-4">
@@ -87,7 +87,9 @@ const ReviewsSection = () => {
                     className="w-16 h-16 rounded-full object-cover"
                   />
                   <div>
-                    <h4 className="font-semibold text-lg">{review.name}</h4>
+                    <h4 className="font-semibold text-sm sm:text-lg">
+                      {review.name}
+                    </h4>
                     <div className="flex gap-1 mt-1">
                       {Array.from({ length: 5 }).map((_, i) => (
                         <span key={i} className="text-primary text-sm">

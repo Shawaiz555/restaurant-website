@@ -39,8 +39,10 @@ const HowItWorksSection = () => {
     <section className="py-20 bg-gradient-to-br from-cream to-cream-light">
       <div className="container mx-auto px-3 sm:px-6 lg:px-10 xl:px-16">
         <div className="text-center mb-16">
-          <h2 className="font-sans font-bold text-4xl lg:text-5xl text-dark mb-4">How It Works</h2>
-          <p className="text-dark-gray text-xl">
+          <h2 className="font-sans font-bold text-3xl sm:text-4xl lg:text-5xl text-dark mb-4">
+            How It Works
+          </h2>
+          <p className="text-dark-gray text-sm sm:text-xl">
             Simple steps to enjoy our delicious food
           </p>
         </div>
@@ -49,14 +51,16 @@ const HowItWorksSection = () => {
           {process.map((item, index) => (
             <div key={index} className="relative">
               <div className="bg-white rounded-3xl p-8 shadow-xl text-center h-full border-2 border-primary/10 hover:border-primary/30 transition-all">
-                <div className="w-20 h-20 bg-gradient-to-br from-primary to-primary-dark rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-6 shadow-lg">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-primary to-primary-dark rounded-full flex items-center justify-center text-white text-xl sm:text-2xl font-bold mx-auto mb-6 shadow-lg">
                   {item.step}
                 </div>
-                <item.icon className="w-12 h-12 mx-auto mb-4 text-primary" />
-                <h3 className="font-sans font-bold text-2xl text-dark mb-3">
+                <item.icon className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-4 text-primary" />
+                <h3 className="font-sans font-bold text-xl sm:text-2xl text-dark mb-3">
                   {item.title}
                 </h3>
-                <p className="text-dark-gray">{item.description}</p>
+                <p className="text-dark-gray text-sm sm:text-base">
+                  {item.description}
+                </p>
               </div>
 
               {index < process.length - 1 && (

@@ -27,8 +27,7 @@ const FAQSection = () => {
     },
     {
       question: "Do you offer delivery services?",
-      answer:
-        `Yes! We offer fast delivery within a 10km radius. Orders typically arrive within 30-45 minutes. You can track your order in real-time through our website or mobile app. Delivery is free for orders above ${currencySymbol} ${minOrderAmount}.`,
+      answer: `Yes! We offer fast delivery within a 10km radius. Orders typically arrive within 30-45 minutes. You can track your order in real-time through our website or mobile app. Delivery is free for orders above ${currencySymbol} ${minOrderAmount}.`,
       icon: Truck,
     },
     {
@@ -71,14 +70,14 @@ const FAQSection = () => {
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 bg-primary/10 px-5 py-2 rounded-full mb-6">
             <HelpCircle className="w-6 h-6 text-primary" />
-            <span className="text-primary font-semibold text-sm">
+            <span className="text-primary font-semibold text-xs sm:text-sm">
               Got Questions?
             </span>
           </div>
-          <h2 className="font-sans font-bold text-4xl lg:text-5xl text-dark mb-4">
+          <h2 className="font-sans font-bold text-3xl sm:text-4xl lg:text-5xl text-dark mb-4">
             Frequently Asked Questions
           </h2>
-          <p className="text-dark-gray text-lg lg:text-xl max-w-2xl mx-auto">
+          <p className="text-dark-gray text-sm sm:text-lg lg:text-xl max-w-2xl mx-auto">
             Find answers to common questions about our services, ordering, and
             more
           </p>
@@ -143,7 +142,7 @@ const FAQSection = () => {
                   <div className="px-3 lg:px-8 pb-3 lg:pb-8">
                     <div className="lg:pl-6 lg:pr-4">
                       <div className="bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl p-6">
-                        <p className="text-dark-gray text-sm sm:text-md leading-relaxed">
+                        <p className="text-dark-gray text-xs sm:text-md leading-relaxed">
                           {faq.answer}
                         </p>
                       </div>
@@ -166,10 +165,10 @@ const FAQSection = () => {
             <div className="flex justify-center mb-4 text-white">
               <Lightbulb className="w-16 h-16 animate-pulse" />
             </div>
-            <h3 className="font-sans font-bold text-3xl lg:text-4xl text-white mb-4">
+            <h3 className="font-sans font-bold text-2xl sm:text-3xl lg:text-4xl text-white mb-4">
               Still Have Questions?
             </h3>
-            <p className="text-white/90 text-lg mb-6 max-w-2xl mx-auto">
+            <p className="text-white/90 text-sm sm:text-lg mb-6 max-w-2xl mx-auto">
               Our friendly support team is here to help! Reach out anytime.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

@@ -51,8 +51,8 @@ const ServicesHeroSection = () => {
         <div className="max-w-5xl mx-auto text-center">
           {/* Enhanced Badge */}
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-primary/20 to-primary-light/20 backdrop-blur-md px-4 py-2 rounded-full border-2 border-primary/40 shadow-lg animate-fade-in mb-5">
-            <Sparkles className="w-5 h-5 text-primary" />
-            <span className="text-dark font-bold text-xs tracking-wide uppercase">
+            <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+            <span className="text-dark font-bold text-[10px] sm:text-xs tracking-wide uppercase">
               What We Offer
             </span>
             <span className="flex h-1.5 w-1.5">
@@ -63,7 +63,7 @@ const ServicesHeroSection = () => {
 
           {/* Enhanced Heading */}
           <div className="space-y-3 mb-5">
-            <h1 className="font-sans font-bold text-5xl sm:text-6xl lg:text-7xl xl:text-8xl text-primary drop-shadow-lg animate-slide-up leading-tight">
+            <h1 className="font-sans font-bold text-3xl sm:text-6xl lg:text-7xl xl:text-8xl text-primary drop-shadow-lg animate-slide-up leading-tight">
               Our Services
             </h1>
 
@@ -75,7 +75,7 @@ const ServicesHeroSection = () => {
             </div>
           </div>
 
-          <p className="text-dark-gray text-lg lg:text-xl leading-relaxed max-w-3xl mx-auto animate-slide-up-delay-2 mb-10">
+          <p className="text-dark-gray text-sm sm:text-lg lg:text-xl leading-relaxed max-w-3xl mx-auto animate-slide-up-delay-2 mb-10">
             From dine-in excellence to doorstep delivery, we offer comprehensive
             services designed to make every meal memorable
           </p>
@@ -95,11 +95,11 @@ const ServicesHeroSection = () => {
                 ></div>
                 <div className="relative bg-white rounded-2xl p-5 lg:p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 border-2 border-primary/20 hover:border-primary/40">
                   <div
-                    className={`w-14 h-14 lg:w-16 lg:h-16 mx-auto mb-3 bg-gradient-to-br ${service.color} rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform`}
+                    className={`w-11 h-11 sm:w-14 sm:h-14 lg:w-16 lg:h-16 mx-auto mb-3 bg-gradient-to-br ${service.color} rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform`}
                   >
-                    <service.icon className="w-8 h-8 lg:w-9 lg:h-9 text-white" />
+                    <service.icon className="w-6 h-6 sm:w-8 sm:h-8 lg:w-9 lg:h-9 text-white" />
                   </div>
-                  <div className="text-dark font-bold text-sm lg:text-base">
+                  <div className="text-dark font-bold text-xs sm:text-sm lg:text-base">
                     {service.label}
                   </div>
                 </div>
@@ -146,12 +146,12 @@ const ServicesHeroSection = () => {
               Ready to experience our services?
             </p>
             <div className="flex flex-wrap justify-center gap-3">
-              <button className="group relative bg-gradient-to-r from-primary to-primary-light text-white hover:from-primary-dark hover:to-primary px-8 py-3 rounded-xl font-bold text-sm transition-all duration-300 shadow-xl hover:shadow-primary/50 hover:scale-105 flex items-center gap-2 overflow-hidden">
+              <button className="group relative bg-gradient-to-r from-primary to-primary-light text-white hover:from-primary-dark hover:to-primary px-8 py-3 rounded-xl font-bold text-xs sm:text-sm transition-all duration-300 shadow-xl hover:shadow-primary/50 hover:scale-105 flex items-center gap-2 overflow-hidden">
                 <span className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
                 <span className="relative">Book a Table</span>
-                <ArrowRight className="relative w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="relative w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
               </button>
-              <button className="bg-white text-primary border-2 border-primary hover:bg-primary hover:text-white px-8 py-3 rounded-xl font-bold text-sm transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl">
+              <button className="bg-white text-primary border-2 border-primary hover:bg-primary hover:text-white px-8 py-3 rounded-xl font-bold text-xs sm:text-sm transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl">
                 View Menu
               </button>
             </div>

@@ -9,7 +9,7 @@ const MobileAppSection = () => {
             <h2 className="font-sans font-bold text-3xl lg:text-4xl xl:text-5xl mb-6">
               Never Feel Hungry! Download Our Mobile App Enjoy Delicious Foods
             </h2>
-            <p className="text-dark-gray text-lg mb-8">
+            <p className="text-dark-gray text-sm sm:text-lg mb-8">
               Get your favourite food delivered right to your doorstep. Download
               our app and explore thousands of delicious dishes from the best
               restaurants.
@@ -19,8 +19,12 @@ const MobileAppSection = () => {
                 <button className="bg-dark hover:bg-dark-gray text-white px-8 py-4 rounded-2xl font-medium transition-all flex items-center gap-3">
                   <span className="text-2xl">📱</span>
                   <div className="text-left">
-                    <div className="text-xs opacity-80">Download on the</div>
-                    <div className="text-lg font-semibold">App Store</div>
+                    <div className="text-[10px] sm:text-xs opacity-80">
+                      Download on the
+                    </div>
+                    <div className="text-sm sm:text-lg font-semibold">
+                      App Store
+                    </div>
                   </div>
                 </button>
               </div>
@@ -28,8 +32,12 @@ const MobileAppSection = () => {
                 <button className="bg-dark hover:bg-dark-gray text-white px-8 py-4 rounded-2xl font-medium transition-all flex items-center gap-3">
                   <span className="text-2xl">▶️</span>
                   <div className="text-left">
-                    <div className="text-xs opacity-80">GET IT ON</div>
-                    <div className="text-lg font-semibold">Google Play</div>
+                    <div className="text-[10px] sm:text-xs opacity-80">
+                      GET IT ON
+                    </div>
+                    <div className="text-sm sm:text-lg font-semibold">
+                      Google Play
+                    </div>
                   </div>
                 </button>
               </div>

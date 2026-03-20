@@ -32,7 +32,7 @@ const MenuHeroSection = ({ searchTerm, setSearchTerm, setActiveCategory }) => {
           {/* Enhanced Badge */}
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-primary/20 to-primary-light/20 backdrop-blur-md px-4 py-2 rounded-full border-2 border-primary/40 shadow-lg animate-fade-in mb-5">
             <Utensils className="w-5 h-5 text-primary" />
-            <span className="text-dark font-bold text-xs tracking-wide uppercase">
+            <span className="text-dark font-bold text-[9px] sm:text-xs tracking-wide uppercase">
               Discover Amazing Flavors
             </span>
             <span className="flex h-1.5 w-1.5">
@@ -43,7 +43,7 @@ const MenuHeroSection = ({ searchTerm, setSearchTerm, setActiveCategory }) => {
 
           {/* Enhanced Heading */}
           <div className="space-y-3 mb-5">
-            <h1 className="font-sans font-bold text-5xl sm:text-6xl lg:text-7xl xl:text-8xl text-primary drop-shadow-lg animate-slide-up leading-tight">
+            <h1 className="font-sans font-bold text-3xl sm:text-6xl lg:text-7xl xl:text-8xl text-primary drop-shadow-lg animate-slide-up leading-tight">
               Our Complete Menu
             </h1>
 
@@ -55,7 +55,7 @@ const MenuHeroSection = ({ searchTerm, setSearchTerm, setActiveCategory }) => {
             </div>
           </div>
 
-          <p className="text-dark-gray text-lg lg:text-xl mb-8 max-w-2xl mx-auto leading-relaxed animate-slide-up-delay-2">
+          <p className="text-dark-gray text-sm sm:text-lg lg:text-xl mb-8 max-w-2xl mx-auto leading-relaxed animate-slide-up-delay-2">
             Explore our delicious selection of carefully crafted dishes, made
             with fresh ingredients and passion
           </p>
@@ -67,21 +67,21 @@ const MenuHeroSection = ({ searchTerm, setSearchTerm, setActiveCategory }) => {
               <div className="relative bg-white rounded-2xl shadow-2xl overflow-hidden border-2 border-primary/20 hover:border-primary/40 transition-all">
                 <div className="flex items-center">
                   <div className="pl-5 pr-2">
-                    <Search className="w-6 h-6 text-primary/60 animate-pulse" />
+                    <Search className="w-5 h-5 sm:w-6 sm:h-6 text-primary/60 animate-pulse" />
                   </div>
                   <input
                     type="text"
                     placeholder="Search for dishes, ingredients, or categories..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="flex-1 px-3 py-4 text-base border-0 focus:ring-0 focus:outline-none bg-transparent placeholder-gray-400 font-medium"
+                    className="flex-1 px-3 py-2 sm:py-4 text-xs sm:text-base border-0 focus:ring-0 focus:outline-none bg-transparent placeholder-gray-400 font-medium"
                   />
                   {searchTerm && (
                     <button
                       onClick={() => setSearchTerm("")}
-                      className="mr-4 w-9 h-9 flex items-center justify-center bg-primary/10 hover:bg-primary/20 rounded-full transition-all hover:scale-110"
+                      className="mr-4 w-6 h-6 sm:w-9 sm:h-9 flex items-center justify-center bg-primary/10 hover:bg-primary/20 rounded-full transition-all hover:scale-110"
                     >
-                      <X className="w-4 h-4 text-primary font-bold" />
+                      <X className="w-3 h-3 sm:w-4 sm:h-4 text-primary font-bold" />
                     </button>
                   )}
                 </div>
@@ -105,7 +105,7 @@ const MenuHeroSection = ({ searchTerm, setSearchTerm, setActiveCategory }) => {
                   className="group px-4 py-2 bg-gradient-to-r from-white to-cream-light hover:from-primary hover:to-primary-light backdrop-blur-sm text-primary hover:text-white text-sm font-bold rounded-full border-2 border-primary/30 hover:border-primary transition-all hover:scale-105 shadow-md hover:shadow-xl flex items-center gap-1.5"
                 >
                   <tag.icon className="w-4 h-4 group-hover:scale-125 transition-transform" />
-                  <span>{tag.name}</span>
+                  <span className="text-xs sm:text-base">{tag.name}</span>
                 </button>
               ))}
             </div>
@@ -114,27 +114,27 @@ const MenuHeroSection = ({ searchTerm, setSearchTerm, setActiveCategory }) => {
           {/* Stats Pills */}
           <div className="mt-8 flex flex-wrap justify-center gap-4 animate-slide-up-delay-4">
             <div className="bg-white/60 backdrop-blur-sm px-5 py-2.5 rounded-xl border border-primary/20 shadow-lg">
-              <span className="text-primary font-sans text-2xl font-bold">
+              <span className="text-primary font-sans text-xl sm:text-2xl font-bold">
                 200+
               </span>
-              <span className="text-dark-gray text-sm font-semibold ml-2">
+              <span className="text-dark-gray text-xs sm:text-sm font-semibold ml-2">
                 Dishes
               </span>
             </div>
             <div className="bg-white/60 backdrop-blur-sm px-5 py-2.5 rounded-xl border border-primary/20 shadow-lg">
-              <span className="text-primary font-sans text-2xl font-bold">
+              <span className="text-primary font-sans text-xl sm:text-2xl font-bold">
                 8
               </span>
-              <span className="text-dark-gray text-sm font-semibold ml-2">
+              <span className="text-dark-gray text-xs sm:text-sm font-semibold ml-2">
                 Categories
               </span>
             </div>
             <div className="bg-white/60 backdrop-blur-sm px-5 py-2.5 rounded-xl border border-primary/20 shadow-lg flex items-center">
               <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
-              <span className="text-primary font-sans text-2xl font-bold ml-1">
+              <span className="text-primary font-sans text-xl sm:text-2xl font-bold ml-1">
                 4.9
               </span>
-              <span className="text-dark-gray text-sm font-semibold ml-2">
+              <span className="text-dark-gray text-xs sm:text-sm font-semibold ml-2">
                 Rating
               </span>
             </div>

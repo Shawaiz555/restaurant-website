@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
-import { loginUser } from "../store/slices/authSlice";
+import { loginUser, logout } from "../store/slices/authSlice";
 import { fetchCart } from "../store/slices/cartSlice";
 import { showNotification } from "../store/slices/notificationSlice";
 import Loader from "../components/common/Loader";
@@ -34,7 +34,18 @@ const Login = () => {
 
       if (loginUser.fulfilled.match(resultAction)) {
         const user = resultAction.payload;
-        await dispatch(fetchCart());
+
+        // Block staff from using the customer login page
+        const staffRoles = ["super_admin", "manager", "employee", "chef"];
+        if (staffRoles.includes(user.role)) {
+          // Log them back out (we don't want staff session started here)
+          dispatch(logout());
+          setError("Staff members must use the Staff Portal to sign in.");
+          setLoading(false);
+          return;
+        }
+
+        dispatch(fetchCart());
         dispatch(
           showNotification({
             message: `Welcome back, ${user.name}! 🎉`,
@@ -42,10 +53,7 @@ const Login = () => {
           }),
         );
         setNavigating(true);
-        setTimeout(() => {
-          const staffRoles = ["super_admin", "manager", "employee", "chef"];
-          navigate(staffRoles.includes(user.role) ? "/admin/dashboard" : "/");
-        }, 800);
+        setTimeout(() => navigate("/"), 800);
       } else {
         const errorMessage = resultAction.payload || "Login failed";
         setError(errorMessage);
@@ -89,18 +97,20 @@ const Login = () => {
               className="inline-flex items-center gap-2 text-gray-500 hover:text-primary transition-colors mb-7 group"
             >
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-              <span className="text-sm font-medium">Back to Home</span>
+              <span className="text-xs sm:text-sm font-medium">
+                Back to Home
+              </span>
             </button>
 
             {/* Icon + heading */}
             <div className="text-center mb-7">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-primary rounded-2xl mb-4">
-                <Utensils className="w-8 h-8 text-white" />
+              <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-primary rounded-2xl mb-4">
+                <Utensils className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
               </div>
-              <h2 className="font-sans text-[1.75rem] font-bold text-dark mb-1.5 tracking-tight">
+              <h2 className="font-sans text-xl sm:text-[1.75rem] font-bold text-dark mb-1.5 tracking-tight">
                 Welcome back
               </h2>
-              <p className="text-[0.9rem] text-gray-500">
+              <p className="text-sm sm:text-[0.9rem] text-gray-500">
                 Sign in to your{" "}
                 <span className="font-semibold text-primary">Bites</span>{" "}
                 account
@@ -111,7 +121,7 @@ const Login = () => {
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-5 flex items-center gap-2.5 animate-shake">
                 <div className="w-2 h-2 bg-red-500 rounded-full flex-shrink-0" />
-                <p className="text-sm font-medium">{error}</p>
+                <p className="text-xs sm:text-sm font-medium">{error}</p>
               </div>
             )}
 
@@ -119,7 +129,7 @@ const Login = () => {
             <form onSubmit={handleSubmit} className="space-y-5">
               {/* Email */}
               <div className="space-y-1.5">
-                <label className="block text-dark font-semibold text-[0.875rem]">
+                <label className="block text-dark font-semibold text-xs sm:text-[0.875rem]">
                   Email Address
                 </label>
                 <div className="relative group">
@@ -132,7 +142,7 @@ const Login = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, email: e.target.value })
                     }
-                    className="w-full pl-11 pr-4 py-3.5 rounded-xl border-2 border-gray-200 focus:border-primary focus:ring-4 focus:ring-primary/10 focus:outline-none transition-all text-dark text-[0.9rem] placeholder:text-gray-400"
+                    className="w-full pl-11 pr-4 py-3.5 rounded-xl border-2 border-gray-200 focus:border-primary focus:ring-4 focus:ring-primary/10 focus:outline-none transition-all text-dark text-xs sm:text-[0.9rem] placeholder:text-gray-400"
                     placeholder="your@email.com"
                     required
                   />
@@ -141,7 +151,7 @@ const Login = () => {
 
               {/* Password */}
               <div className="space-y-1.5">
-                <label className="block text-dark font-semibold text-[0.875rem]">
+                <label className="block text-dark font-semibold text-xs sm:text-[0.875rem]">
                   Password
                 </label>
                 <div className="relative group">
@@ -154,7 +164,7 @@ const Login = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, password: e.target.value })
                     }
-                    className="w-full pl-11 pr-12 py-3.5 rounded-xl border-2 border-gray-200 focus:border-primary focus:ring-4 focus:ring-primary/10 focus:outline-none transition-all text-dark text-[0.9rem] placeholder:text-gray-400"
+                    className="w-full pl-11 pr-12 py-3.5 rounded-xl border-2 border-gray-200 focus:border-primary focus:ring-4 focus:ring-primary/10 focus:outline-none transition-all text-dark text-xs sm:text-[0.9rem] placeholder:text-gray-400"
                     placeholder="••••••••"
                     required
                   />
@@ -176,7 +186,7 @@ const Login = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-primary hover:bg-primary-dark text-white py-3.5 rounded-xl text-[0.95rem] font-semibold transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2 mt-1"
+                className="w-full bg-primary hover:bg-primary-dark text-white py-2.5 sm:py-3.5 rounded-xl text-xs sm:text-[0.95rem] font-semibold transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2 mt-1"
               >
                 {loading ? (
                   <>
@@ -190,13 +200,24 @@ const Login = () => {
             </form>
 
             {/* Signup link */}
-            <p className="mt-6 text-center text-[0.875rem] text-gray-500">
+            <p className="mt-6 text-center text-xs sm:text-[0.875rem] text-gray-500">
               Don't have an account?{" "}
               <Link
                 to="/signup"
                 className="text-primary font-semibold hover:text-primary-dark hover:underline transition-all"
               >
                 Sign up for free
+              </Link>
+            </p>
+
+            {/* Staff portal link */}
+            <p className="mt-3 text-center text-[10px] sm:text-xs text-gray-400">
+              Staff member?{" "}
+              <Link
+                to="/staff/login"
+                className="text-gray-500 font-semibold hover:text-primary hover:underline transition-all"
+              >
+                Go to Staff Portal
               </Link>
             </p>
           </div>

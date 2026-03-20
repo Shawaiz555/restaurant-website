@@ -35,7 +35,7 @@ const ProductCard = ({ product }) => {
           }}
         />
       </div>
-      <h3 className="font-sans font-bold text-xl mb-2 text-center">
+      <h3 className="font-sans font-bold text-lg sm:text-xl mb-2 text-center">
         {product.name}
       </h3>
       <div className="flex justify-center gap-1 mb-2">
@@ -48,16 +48,17 @@ const ProductCard = ({ product }) => {
           </span>
         ))}
       </div>
-      <p className="text-dark-gray text-sm text-center mb-4 line-clamp-2">
+      <p className="text-dark-gray text-xs sm:text-sm text-center mb-4 line-clamp-2">
         {product.description}
       </p>
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <span className="font-sans text-xl font-semibold text-dark whitespace-nowrap">
-          {currencySymbol}{product.basePrice.toFixed(2)}
+        <span className="font-sans text-lg sm:text-xl font-semibold text-dark whitespace-nowrap">
+          {currencySymbol}
+          {product.basePrice.toFixed(2)}
         </span>
         <button
           onClick={handleAddToCart}
-          className="bg-primary text-white hover:bg-primary-dark px-4 py-2 rounded-full font-medium transition-all shadow-md hover:shadow-lg text-sm whitespace-nowrap"
+          className="bg-primary text-white hover:bg-primary-dark px-4 py-2 rounded-full font-medium transition-all shadow-md hover:shadow-lg text-xs sm:text-sm whitespace-nowrap"
         >
           Add to Cart
         </button>

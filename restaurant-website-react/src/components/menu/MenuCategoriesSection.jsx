@@ -30,9 +30,9 @@ const MenuCategoriesSection = ({
               {/* Attention-grabbing header */}
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                  <div className="w-6 h-6 sm:w-8 sm:h-8 bg-primary rounded-lg flex items-center justify-center">
                     <svg
-                      className="w-5 h-5 text-white"
+                      className="w-4 h-4 sm:w-5 sm:h-5 text-white"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -45,7 +45,7 @@ const MenuCategoriesSection = ({
                       />
                     </svg>
                   </div>
-                  <h3 className="font-sans font-bold text-lg text-dark">
+                  <h3 className="font-sans font-bold text-md sm:text-lg text-dark">
                     Browse Categories
                   </h3>
                 </div>
@@ -57,15 +57,15 @@ const MenuCategoriesSection = ({
               {/* Main Toggle Button */}
               <button
                 onClick={() => setShowMobileCategories(!showMobileCategories)}
-                className="w-full bg-gradient-to-r from-primary to-primary-dark rounded-2xl px-5 py-4 flex items-center justify-between shadow-2xl hover:shadow-3xl transition-all transform hover:scale-[1.02] active:scale-[0.98] relative overflow-hidden"
+                className="w-full bg-gradient-to-r from-primary to-primary-dark rounded-2xl px-5 py-3 sm:py-4 flex items-center justify-between shadow-2xl hover:shadow-3xl transition-all transform hover:scale-[1.02] active:scale-[0.98] relative overflow-hidden"
               >
                 {/* Animated shine effect */}
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shine"></div>
 
                 <div className="flex items-center gap-3 relative z-10">
-                  <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm border border-white/30 shadow-lg">
+                  <div className="w-11 h-11 sm:w-14 sm:h-14 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm border border-white/30 shadow-lg">
                     {React.createElement(getCategoryIcon(activeCategory), {
-                      className: "w-7 h-7 text-white",
+                      className: "w-6 h-6 sm:w-7 sm:h-7 text-white",
                     })}
                   </div>
                   <div className="text-left">
@@ -82,7 +82,7 @@ const MenuCategoriesSection = ({
                 </div>
 
                 <div className="flex flex-col items-end gap-2 relative z-10">
-                  <span className="bg-white text-primary px-3 py-1.5 rounded-lg text-sm font-bold shadow-md">
+                  <span className="bg-white text-primary px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold shadow-md">
                     {categories.find((cat) => cat.id === activeCategory)
                       ?.count || 0}{" "}
                     items
@@ -122,7 +122,7 @@ const MenuCategoriesSection = ({
                           activeCategory === category.id
                             ? "bg-primary text-white shadow-lg"
                             : "bg-white text-dark hover:bg-cream-light border border-gray-200"
-                        } px-5 py-2.5 rounded-xl font-medium text-sm transition-all flex items-center gap-2.5 shadow-sm hover:shadow-md`}
+                        } px-5 py-2.5 rounded-xl font-medium text-xs sm:text-sm transition-all flex items-center gap-2.5 shadow-sm hover:shadow-md`}
                       >
                         <category.icon className="w-4 h-4" />
                         <span>{category.label}</span>
@@ -139,9 +139,9 @@ const MenuCategoriesSection = ({
             >
               <div className="p-5 lg:p-6 bg-gradient-to-br from-cream-light to-white border-b border-gray-200">
                 <div className="flex items-center gap-3 mb-2">
-                  <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary rounded-lg flex items-center justify-center">
                     <svg
-                      className="w-5 h-5 text-white"
+                      className="w-4 h-4 sm:w-5 sm:h-5 text-white"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -154,11 +154,11 @@ const MenuCategoriesSection = ({
                       />
                     </svg>
                   </div>
-                  <h2 className="font-sans font-bold text-xl lg:text-2xl text-dark">
+                  <h2 className="font-sans font-bold text-md sm:text-xl lg:text-2xl text-dark">
                     Categories
                   </h2>
                 </div>
-                <p className="text-dark-gray text-sm">
+                <p className="text-dark-gray text-[10px] sm:text-sm">
                   Browse {categories.length} delicious categories
                 </p>
               </div>
@@ -172,22 +172,22 @@ const MenuCategoriesSection = ({
                       activeCategory === category.id
                         ? "bg-primary text-white shadow-md border border-primary"
                         : "bg-white text-dark hover:bg-cream-light border border-gray-200 hover:border-primary/30"
-                    } w-full px-4 py-3.5 rounded-xl mb-2.5 transition-all duration-200 flex items-center justify-between group`}
+                    } w-full px-4 py-2 sm:py-3.5 rounded-xl mb-2.5 transition-all duration-200 flex items-center justify-between group`}
                     style={{ animationDelay: `${index * 0.05}s` }}
                   >
                     <div className="flex items-center gap-3 relative z-10">
                       <div
-                        className={`w-11 h-11 ${
+                        className={`w-8 h-8 sm:w-11 sm:h-11 ${
                           activeCategory === category.id
                             ? "bg-white/20"
                             : "bg-primary/10"
                         } rounded-lg flex items-center justify-center transition-all`}
                       >
                         <category.icon
-                          className={`w-5 h-5 ${activeCategory === category.id ? "text-white" : "text-primary"}`}
+                          className={`w-4 h-4 sm:w-5 sm:h-5 ${activeCategory === category.id ? "text-white" : "text-primary"}`}
                         />
                       </div>
-                      <span className="font-medium text-[15px] text-left">
+                      <span className="font-medium text-xs sm:text-[15px] text-left">
                         {category.label}
                       </span>
                     </div>
@@ -196,7 +196,7 @@ const MenuCategoriesSection = ({
                         activeCategory === category.id
                           ? "bg-white text-primary"
                           : "bg-primary/10 text-primary"
-                      } px-3 py-1.5 rounded-lg text-sm font-semibold transition-all min-w-[2.5rem] text-center`}
+                      } px-2 py-1 sm:px-3 sm:py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all min-w-[2.5rem] text-center`}
                     >
                       {category.count}
                     </div>
@@ -234,15 +234,15 @@ const MenuCategoriesSection = ({
             <div className="bg-gradient-to-r from-white via-cream-light to-white rounded-2xl px-4 lg:px-6 xl:px-8 py-5 lg:py-6 mb-6 lg:mb-8 shadow-xl border-2 border-primary/10">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="flex items-start gap-4">
-                  <div className="w-14 h-14 bg-gradient-to-br from-primary to-primary-dark rounded-2xl flex items-center justify-center shadow-lg transform rotate-3 hover:rotate-0 transition-transform">
+                  <div className="w-11 h-11 sm:w-14 sm:h-14 bg-gradient-to-br from-primary to-primary-dark rounded-2xl flex items-center justify-center shadow-lg transform rotate-3 hover:rotate-0 transition-transform">
                     {React.createElement(getCategoryIcon(activeCategory), {
-                      className: "w-7 h-7 text-white",
+                      className: "w-6 h-6 sm:w-7 sm:h-7 text-white",
                     })}
                   </div>
                   <div>
-                    <h3 className="font-sans font-bold text-2xl xl:text-3xl text-dark mb-2 flex items-center gap-3 flex-wrap">
+                    <h3 className="font-sans font-bold text-xl sm:text-2xl xl:text-3xl text-dark mb-2 flex items-center gap-3 flex-wrap">
                       {activeCategoryName}
-                      <span className="text-sm font-normal bg-primary/10 text-primary px-3 py-1 rounded-full">
+                      <span className="text-xs sm:text-sm font-normal bg-primary/10 text-primary px-3 py-1 rounded-full">
                         {filteredProducts.length}{" "}
                         {filteredProducts.length === 1 ? "item" : "items"}
                       </span>
@@ -256,7 +256,9 @@ const MenuCategoriesSection = ({
                           </span>
                         </span>
                       ) : (
-                        <span>Handpicked delicious dishes just for you</span>
+                        <span className="text-xs sm:text-base">
+                          Handpicked delicious dishes just for you
+                        </span>
                       )}
                     </p>
                   </div>
@@ -328,7 +330,7 @@ const MenuCategoriesSection = ({
               <div className="bg-gradient-to-br from-white via-cream-light to-white rounded-3xl shadow-2xl p-16 text-center border-2 border-primary/10">
                 <div className="relative inline-block mb-6">
                   <svg
-                    className="w-24 h-24 text-primary/30 mx-auto"
+                    className="w-20 h-20 sm:w-24 sm:h-24 text-primary/30 mx-auto"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -341,10 +343,10 @@ const MenuCategoriesSection = ({
                     />
                   </svg>
                 </div>
-                <h3 className="font-sans font-bold text-4xl text-dark mb-4">
+                <h3 className="font-sans font-bold text-2xl sm:text-4xl text-dark mb-4">
                   No items found
                 </h3>
-                <p className="text-dark-gray text-lg mb-8 max-w-md mx-auto leading-relaxed">
+                <p className="text-dark-gray text-sm sm:text-lg mb-8 max-w-md mx-auto leading-relaxed">
                   {searchTerm
                     ? `We couldn't find any items matching "${searchTerm}". Try different keywords or browse our categories.`
                     : `No items available in this category at the moment. Check back soon for new additions!`}
@@ -373,10 +375,10 @@ const MenuCategoriesSection = ({
                   )}
                   <button
                     onClick={() => handleCategoryChange("all")}
-                    className="bg-white text-primary border-2 border-primary px-8 py-4 rounded-2xl hover:bg-primary hover:text-white transition-all font-semibold flex items-center gap-2 hover:scale-105"
+                    className="bg-white text-primary border-2 border-primary px-6 py-3 text-sm sm:text-base sm:px-8 sm:py-4 rounded-2xl hover:bg-primary hover:text-white transition-all font-semibold flex items-center gap-2 hover:scale-105"
                   >
                     <svg
-                      className="w-5 h-5"
+                      className="w-4 h-4 sm:w-5 sm:h-5"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"

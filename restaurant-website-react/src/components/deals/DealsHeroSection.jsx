@@ -24,8 +24,8 @@ const DealsHeroSection = ({ deals, isLoading, error }) => {
         <div className="max-w-6xl mx-auto text-center">
           {/* Enhanced Badge */}
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-primary/20 to-primary-light/20 backdrop-blur-md px-4 py-2 rounded-full border-2 border-primary/40 shadow-lg animate-fade-in mb-5">
-            <Tag className="w-5 h-5 text-primary" />
-            <span className="text-dark font-bold text-xs tracking-wide uppercase">
+            <Tag className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+            <span className="text-dark font-bold text-[9px] sm:text-xs tracking-wide uppercase">
               Limited Time Offers
             </span>
             <span className="flex h-1.5 w-1.5">
@@ -36,7 +36,7 @@ const DealsHeroSection = ({ deals, isLoading, error }) => {
 
           {/* Enhanced Heading */}
           <div className="space-y-3 mb-5">
-            <h1 className="font-sans font-bold text-5xl sm:text-6xl lg:text-7xl xl:text-8xl text-primary drop-shadow-lg animate-slide-up leading-tight">
+            <h1 className="font-sans font-bold text-3xl sm:text-6xl lg:text-7xl xl:text-8xl text-primary drop-shadow-lg animate-slide-up leading-tight">
               Our Special <span className="text-primary-dark">Deals</span>
             </h1>
 
@@ -48,7 +48,7 @@ const DealsHeroSection = ({ deals, isLoading, error }) => {
             </div>
           </div>
 
-          <p className="text-dark-gray text-lg lg:text-xl max-w-3xl mx-auto leading-relaxed animate-slide-up-delay-2 mb-10">
+          <p className="text-dark-gray text-xs sm:text-lg lg:text-xl max-w-3xl mx-auto leading-relaxed animate-slide-up-delay-2 mb-10">
             Handcrafted combinations at unbeatable prices. Enjoy our chef's
             curated bundles for the perfect meal, perfectly balanced for your
             satisfying dining experience.
@@ -58,32 +58,32 @@ const DealsHeroSection = ({ deals, isLoading, error }) => {
           {!isLoading && !error && deals.length > 0 && (
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 lg:gap-6 max-w-4xl mx-auto mb-10 animate-slide-up-delay-3">
               <div className="group bg-white/70 backdrop-blur-sm rounded-2xl p-5 lg:p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 border-2 border-primary/20 hover:border-primary/40 text-center">
-                <Gift className="w-10 h-10 mx-auto mb-3 text-primary group-hover:scale-110 transition-transform" />
-                <div className="text-primary font-sans text-3xl lg:text-4xl font-bold mb-1">
+                <Gift className="w-8 h-8 sm:w-10 sm:h-10 mx-auto mb-3 text-primary group-hover:scale-110 transition-transform" />
+                <div className="text-primary font-sans text-2xl sm:text-3xl lg:text-4xl font-bold mb-1">
                   {deals.length}
                 </div>
-                <div className="text-dark-gray text-sm font-semibold">
+                <div className="text-dark-gray text-xs sm:text-sm font-semibold">
                   Active Deals
                 </div>
               </div>
 
               <div className="group bg-white/70 backdrop-blur-sm rounded-2xl p-5 lg:p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 border-2 border-primary/20 hover:border-primary/40 text-center">
-                <Zap className="w-10 h-10 mx-auto mb-3 text-primary group-hover:scale-110 transition-transform" />
-                <div className="text-primary font-sans text-3xl lg:text-4xl font-bold mb-1">
+                <Zap className="w-8 h-8 sm:w-10 sm:h-10 mx-auto mb-3 text-primary group-hover:scale-110 transition-transform" />
+                <div className="text-primary font-sans text-2xl sm:text-3xl lg:text-4xl font-bold mb-1">
                   {Math.max(...deals.map((d) => d.items?.length || 0))}
                 </div>
-                <div className="text-dark-gray text-sm font-semibold">
+                <div className="text-dark-gray text-xs sm:text-sm font-semibold">
                   Max Items/Deal
                 </div>
               </div>
 
               <div className="group bg-white/70 backdrop-blur-sm rounded-2xl p-5 lg:p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 border-2 border-primary/20 hover:border-primary/40 text-center">
-                <TrendingUp className="w-10 h-10 mx-auto mb-3 text-primary group-hover:scale-110 transition-transform" />
-                <div className="text-primary font-sans text-3xl lg:text-4xl font-bold mb-1 font-numeric">
+                <TrendingUp className="w-8 h-8 sm:w-10 sm:h-10 mx-auto mb-3 text-primary group-hover:scale-110 transition-transform" />
+                <div className="text-primary font-sans text-2xl sm:text-3xl lg:text-4xl font-bold mb-1 font-numeric">
                   <span className="text-xl mr-1">{currencySymbol}</span>
                   {Math.min(...deals.map((d) => d.price || 0))}
                 </div>
-                <div className="text-dark-gray text-sm font-semibold">
+                <div className="text-dark-gray text-xs sm:text-sm font-semibold">
                   Starting From
                 </div>
               </div>
@@ -101,8 +101,8 @@ const DealsHeroSection = ({ deals, isLoading, error }) => {
                 key={idx}
                 className="group bg-gradient-to-r from-white to-cream-light hover:from-primary hover:to-primary-light px-6 py-3 rounded-full border-2 border-primary/30 hover:border-primary shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center gap-2"
               >
-                <feature.icon className="w-5 h-5 text-primary group-hover:text-white group-hover:scale-110 transition-all" />
-                <span className="text-primary group-hover:text-white text-sm font-bold transition-colors">
+                <feature.icon className="w-4 h-4 sm:w-5 sm:h-5 text-primary group-hover:text-white group-hover:scale-110 transition-all" />
+                <span className="text-primary group-hover:text-white text-xs sm:text-sm font-bold transition-colors">
                   {feature.label}
                 </span>
               </div>

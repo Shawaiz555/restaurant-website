@@ -5,12 +5,20 @@ import { logout } from "../../store/slices/authSlice";
 import { toggleCart } from "../../store/slices/cartSlice";
 import { showNotification } from "../../store/slices/notificationSlice";
 import Loader from "../common/Loader";
-import { Settings, LogOut, X, CalendarCheck } from "lucide-react";
+import {
+  Settings,
+  LogOut,
+  X,
+  CalendarCheck,
+  LayoutDashboard,
+} from "lucide-react";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { currentUser, isAuthenticated } = useSelector((state) => state.auth);
+  const STAFF_ROLES = ["super_admin", "manager", "employee", "chef"];
+  const isStaff = isAuthenticated && STAFF_ROLES.includes(currentUser?.role);
   const { items } = useSelector((state) => state.cart);
 
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
@@ -64,7 +72,7 @@ const Navbar = () => {
               <img
                 src="/assets/images/BitesLogo.png"
                 alt="Bites Restaurant Logo"
-                className="h-16 w-auto sm:h-20 sm:w-auto lg:w-40 lg:h-16 xl:w-48 xl:h-20 object-contain transition-all"
+                className="h-14 w-auto sm:h-20 sm:w-auto lg:w-40 lg:h-16 xl:w-48 xl:h-20 object-contain transition-all"
               />
             </Link>
 
@@ -121,16 +129,16 @@ const Navbar = () => {
                     isAuthenticated
                       ? "bg-gradient-to-br from-primary to-primary-dark"
                       : "bg-white border-2 border-gray-200"
-                  } w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-md hover:scale-95 relative`}
+                  } w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all shadow-md hover:scale-95 relative`}
                 >
                   {isAuthenticated ? (
                     <div className="w-full h-full rounded-full bg-white/20 flex items-center justify-center text-white text-lg font-bold">
                       {currentUser?.name?.charAt(0).toUpperCase() || (
-                        <p className="text-xl">👤</p>
+                        <p className="text-md sm:text-xl">👤</p>
                       )}
                     </div>
                   ) : (
-                    <p className="text-xl">👤</p>
+                    <p className="text-md sm:text-xl">👤</p>
                   )}
                   {isAuthenticated && (
                     <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
@@ -150,16 +158,16 @@ const Navbar = () => {
                           </div>
 
                           <div className="relative flex items-center gap-3">
-                            <div className="w-14 h-14 rounded-full text-primary-dark backdrop-blur-sm border-2 border-white/50 flex items-center justify-center text-3xl font-bold shadow-lg">
+                            <div className="w-11 h-11 sm:w-14 sm:h-14 rounded-full text-primary-dark backdrop-blur-sm border-2 border-white/50 flex items-center justify-center text-3xl font-bold shadow-lg">
                               {currentUser?.name?.charAt(0).toUpperCase() || (
-                                <p className="text-3xl">👤</p>
+                                <p className="text-xl sm:text-3xl">👤</p>
                               )}
                             </div>
                             <div className="flex-1 min-w-0">
-                              <p className="font-sans text-lg text-primary-dark tracking-wide truncate">
+                              <p className="font-sans text-sm sm:text-lg text-primary-dark tracking-wide truncate">
                                 {currentUser?.name}
                               </p>
-                              <p className="text-sm text-primary-dark truncate">
+                              <p className="text-xs sm:text-sm text-primary-dark truncate">
                                 {currentUser?.email}
                               </p>
                             </div>
@@ -177,28 +185,48 @@ const Navbar = () => {
                               <CalendarCheck className="w-5 h-5 text-primary group-hover:text-white" />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <div className="font-semibold text-sm">
+                              <div className="font-semibold text-xs sm:text-sm">
                                 My Reservations
                               </div>
-                              <div className="text-xs text-dark-gray truncate">
+                              <div className="text-[10px] sm:text-xs text-dark-gray truncate">
                                 View your bookings
                               </div>
                             </div>
                           </Link>
 
-                          <button className="w-full text-left px-5 py-3 sm:py-3 text-dark hover:bg-gradient-to-r hover:from-cream-light hover:to-cream transition-all flex items-center gap-3 group active:bg-cream">
-                            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all flex-shrink-0">
-                              <Settings className="w-5 h-5 text-primary group-hover:text-white" />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <div className="font-semibold text-sm">
-                                Settings
+                          {isStaff ? (
+                            <Link
+                              to="/admin/dashboard"
+                              onClick={() => setShowProfileDropdown(false)}
+                              className="w-full text-left px-5 py-3 sm:py-3 text-dark hover:bg-gradient-to-r hover:from-cream-light hover:to-cream transition-all flex items-center gap-3 group active:bg-cream"
+                            >
+                              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all flex-shrink-0">
+                                <LayoutDashboard className="w-5 h-5 text-primary group-hover:text-white" />
                               </div>
-                              <div className="text-xs text-dark-gray truncate">
-                                Manage your account
+                              <div className="flex-1 min-w-0">
+                                <div className="font-semibold text-xs sm:text-sm">
+                                  Admin Dashboard
+                                </div>
+                                <div className="text-[10px] sm:text-xs text-dark-gray truncate">
+                                  Go to staff portal
+                                </div>
                               </div>
-                            </div>
-                          </button>
+                            </Link>
+                          ) : (
+                            <button className="w-full text-left px-5 py-3 sm:py-3 text-dark hover:bg-gradient-to-r hover:from-cream-light hover:to-cream transition-all flex items-center gap-3 group active:bg-cream">
+                              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all flex-shrink-0">
+                                <Settings className="w-5 h-5 text-primary group-hover:text-white" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="font-semibold text-xs sm:text-sm">
+                                  Settings
+                                </div>
+                                <div className="text-[10px] sm:text-xs text-dark-gray truncate">
+                                  Manage your account
+                                </div>
+                              </div>
+                            </button>
+                          )}
 
                           <hr className="my-2 border-gray-200" />
 
@@ -210,10 +238,10 @@ const Navbar = () => {
                               <LogOut className="w-5 h-5 text-red-500" />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <div className="font-semibold text-sm">
+                              <div className="font-semibold text-xs sm:text-sm">
                                 Logout
                               </div>
-                              <div className="text-xs text-red-400 truncate">
+                              <div className="text-[10px] sm:text-xs text-red-400 truncate">
                                 Sign out of your account
                               </div>
                             </div>
@@ -224,38 +252,49 @@ const Navbar = () => {
                       <div className="p-4 pb-6 sm:pb-4">
                         {/* Guest Header */}
                         <div className="text-center mb-4 py-6 bg-cream rounded-xl">
-                          <div className="w-16 h-16 mx-auto mb-3 rounded-full flex items-center justify-center shadow-lg">
-                            <p className="text-3xl">👤</p>
+                          <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-3 rounded-full flex items-center justify-center shadow-lg">
+                            <p className="text-xl sm:text-3xl">👤</p>
                           </div>
-                          <h3 className="font-sans font-bold text-xl text-dark mb-1">
+                          <h3 className="font-sans font-bold text-lg sm:text-xl text-dark mb-1">
                             Welcome!
                           </h3>
-                          <p className="text-sm text-dark-gray px-4">
+                          <p className="text-xs sm:text-sm text-dark-gray px-4">
                             Sign in to access your account
                           </p>
                         </div>
 
                         {/* Auth Buttons */}
-                        <div className="space-y-3 sm:space-y-2">
+                        <div className="space-y-3 flex flex-col items-center text-center sm:space-y-2">
                           <Link
                             to="/login"
-                            className="block w-full bg-gradient-to-r from-primary to-primary-dark text-white text-center px-4 py-4 sm:py-3 rounded-xl font-semibold hover:shadow-lg transition-all active:scale-95 sm:hover:scale-105"
+                            className="inline-flex items-center gap-1.5 bg-gradient-to-r from-primary to-primary-dark text-sm sm:text-base text-white text-center px-14 py-2 sm:py-3 rounded-xl font-semibold hover:shadow-lg transition-all active:scale-95 sm:hover:scale-105"
                             onClick={() => setShowProfileDropdown(false)}
                           >
                             Login
                           </Link>
                           <Link
                             to="/signup"
-                            className="block w-full bg-white text-primary border-2 border-primary text-center px-4 py-4 sm:py-3 rounded-xl font-semibold hover:bg-primary hover:text-white transition-all active:scale-95 sm:hover:scale-105"
+                            className="inline-flex items-center gap-1.5 bg-white text-primary border-2 border-primary text-sm sm:text-base text-center px-5 py-2 sm:py-3 rounded-xl font-semibold hover:bg-primary hover:text-white transition-all active:scale-95 sm:hover:scale-105"
                             onClick={() => setShowProfileDropdown(false)}
                           >
                             Create Account
                           </Link>
                         </div>
 
-                        <p className="text-xs text-center text-dark-gray mt-4 px-4">
+                        <p className="text-[9px] sm:text-xs text-center text-dark-gray mt-4 px-4">
                           New to Bites? Sign up and get exclusive offers!
                         </p>
+
+                        <div className="mt-3 pt-3 border-t border-gray-100 text-center">
+                          <Link
+                            to="/staff/login"
+                            onClick={() => setShowProfileDropdown(false)}
+                            className="inline-flex items-center gap-1.5 bg-primary px-6 py-2 text-xs text-white hover:bg-primary-dark rounded-xl transition-colors font-medium"
+                          >
+                            <LayoutDashboard className="w-3 h-3" />
+                            Staff Portal
+                          </Link>
+                        </div>
                       </div>
                     )}
                   </div>
@@ -265,11 +304,11 @@ const Navbar = () => {
               {/* Cart Button */}
               <button
                 onClick={() => dispatch(toggleCart())}
-                className="relative w-10 h-10 rounded-full border-2 border-dark/10 flex items-center justify-center hover:scale-95 transition-all text-dark"
+                className="relative w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-dark/10 flex items-center justify-center hover:scale-95 transition-all text-dark"
               >
                 <span>🛒</span>
                 {cartItemCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-primary text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 bg-primary text-white text-[10px] sm:text-xs font-bold rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center">
                     {cartItemCount}
                   </span>
                 )}
@@ -281,13 +320,13 @@ const Navbar = () => {
                 className="lg:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5"
               >
                 <span
-                  className={`w-6 h-0.5 bg-dark transition-all ${showMobileMenu ? "rotate-45 translate-y-2" : ""}`}
+                  className={`w-5 h-0.5 sm:w-6 bg-dark transition-all ${showMobileMenu ? "rotate-45 translate-y-2" : ""}`}
                 ></span>
                 <span
-                  className={`w-6 h-0.5 bg-dark transition-all ${showMobileMenu ? "opacity-0" : ""}`}
+                  className={`w-5 h-0.5 sm:w-6 bg-dark transition-all ${showMobileMenu ? "opacity-0" : ""}`}
                 ></span>
                 <span
-                  className={`w-6 h-0.5 bg-dark transition-all ${showMobileMenu ? "-rotate-45 -translate-y-2" : ""}`}
+                  className={`w-5 h-0.5 sm:w-6 bg-dark transition-all ${showMobileMenu ? "-rotate-45 -translate-y-2" : ""}`}
                 ></span>
               </button>
             </div>
@@ -317,9 +356,9 @@ const Navbar = () => {
           />
           <button
             onClick={() => setShowMobileMenu(false)}
-            className="w-8 h-8 flex items-center justify-center text-dark"
+            className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center text-dark"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
         </div>
 
@@ -327,42 +366,42 @@ const Navbar = () => {
           <Link
             to="/"
             onClick={() => setShowMobileMenu(false)}
-            className="text-dark hover:text-primary transition-colors font-medium text-md text-left"
+            className="text-dark hover:text-primary transition-colors font-medium text-sm sm:text-md text-left"
           >
             Home
           </Link>
           <Link
             to="/menu"
             onClick={() => setShowMobileMenu(false)}
-            className="text-dark hover:text-primary transition-colors font-medium text-md text-left"
+            className="text-dark hover:text-primary transition-colors font-medium text-sm sm:text-md text-left"
           >
             Menu
           </Link>
           <Link
             to="/about"
             onClick={() => setShowMobileMenu(false)}
-            className="text-dark hover:text-primary transition-colors font-medium text-md text-left"
+            className="text-dark hover:text-primary transition-colors font-medium text-sm sm:text-md text-left"
           >
             About
           </Link>
           <Link
             to="/services"
             onClick={() => setShowMobileMenu(false)}
-            className="text-dark hover:text-primary transition-colors font-medium text-md text-left"
+            className="text-dark hover:text-primary transition-colors font-medium text-sm sm:text-md text-left"
           >
             Services
           </Link>
           <Link
             to="/deals"
             onClick={() => setShowMobileMenu(false)}
-            className="text-dark hover:text-primary transition-colors font-medium text-md text-left"
+            className="text-dark hover:text-primary transition-colors font-medium text-sm sm:text-md text-left"
           >
             Deals
           </Link>
           <Link
             to="/reservations"
             onClick={() => setShowMobileMenu(false)}
-            className="flex items-center gap-2 bg-gradient-to-r from-primary to-primary-dark text-white px-5 py-3 rounded-xl font-semibold hover:shadow-lg transition-all text-base max-w-md justify-center"
+            className="flex items-center gap-2 bg-gradient-to-r from-primary to-primary-dark text-white px-5 py-3 rounded-xl font-semibold hover:shadow-lg transition-all text-sm sm:text-base max-w-md justify-center"
           >
             <CalendarCheck className="w-5 h-5" />
             Reserve a Table

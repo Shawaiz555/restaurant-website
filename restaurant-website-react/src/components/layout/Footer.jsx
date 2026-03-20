@@ -85,7 +85,7 @@ const Footer = () => {
                 className="h-28 w-32 lg:w-52 lg:h-20 object-contain transition-all"
               />
             </Link>
-            <p className="text-dark-gray mb-6 leading-relaxed">
+            <p className="text-dark-gray text-sm sm:text-base mb-6 leading-relaxed">
               Enjoy delicious food from the best restaurants. Order online and
               get it delivered to your door.
             </p>
@@ -120,7 +120,7 @@ const Footer = () => {
               <li>
                 <Link
                   to="/"
-                  className="text-dark-gray hover:text-primary transition-colors flex items-center gap-2"
+                  className="text-dark-gray text-sm sm:text-base hover:text-primary transition-colors flex items-center gap-2"
                 >
                   <ArrowRight className="w-4 h-4 text-primary" /> Home
                 </Link>
@@ -128,7 +128,7 @@ const Footer = () => {
               <li>
                 <Link
                   to="/menu"
-                  className="text-dark-gray hover:text-primary transition-colors flex items-center gap-2"
+                  className="text-dark-gray text-sm sm:text-base hover:text-primary transition-colors flex items-center gap-2"
                 >
                   <ArrowRight className="w-4 h-4 text-primary" /> Menu
                 </Link>
@@ -136,7 +136,7 @@ const Footer = () => {
               <li>
                 <Link
                   to="/about"
-                  className="text-dark-gray hover:text-primary transition-colors flex items-center gap-2"
+                  className="text-dark-gray text-sm sm:text-base hover:text-primary transition-colors flex items-center gap-2"
                 >
                   <ArrowRight className="w-4 h-4 text-primary" /> About Us
                 </Link>
@@ -144,7 +144,7 @@ const Footer = () => {
               <li>
                 <Link
                   to="/services"
-                  className="text-dark-gray hover:text-primary transition-colors flex items-center gap-2"
+                  className="text-dark-gray text-sm sm:text-base hover:text-primary transition-colors flex items-center gap-2"
                 >
                   <ArrowRight className="w-4 h-4 text-primary" /> Services
                 </Link>
@@ -152,7 +152,7 @@ const Footer = () => {
               <li>
                 <a
                   href="/#faq"
-                  className="text-dark-gray hover:text-primary transition-colors flex items-center gap-2"
+                  className="text-dark-gray text-sm sm:text-base hover:text-primary transition-colors flex items-center gap-2"
                 >
                   <ArrowRight className="w-4 h-4 text-primary" /> FAQ
                 </a>
@@ -166,20 +166,20 @@ const Footer = () => {
               Our Services
             </h4>
             <ul className="space-y-3">
-              <li className="text-dark-gray flex items-start gap-2">
+              <li className="text-dark-gray text-sm sm:text-base flex items-start gap-2">
                 <Check className="w-4 h-4 text-primary mt-1" /> Fast Delivery
               </li>
-              <li className="text-dark-gray flex items-start gap-2">
+              <li className="text-dark-gray text-sm sm:text-base flex items-start gap-2">
                 <Check className="w-4 h-4 text-primary mt-1" /> Dine-In
                 Experience
               </li>
-              <li className="text-dark-gray flex items-start gap-2">
+              <li className="text-dark-gray text-sm sm:text-base flex items-start gap-2">
                 <Check className="w-4 h-4 text-primary mt-1" /> Takeaway Service
               </li>
-              <li className="text-dark-gray flex items-start gap-2">
+              <li className="text-dark-gray text-sm sm:text-base flex items-start gap-2">
                 <Check className="w-4 h-4 text-primary mt-1" /> Event Catering
               </li>
-              <li className="text-dark-gray flex items-start gap-2">
+              <li className="text-dark-gray text-sm sm:text-base flex items-start gap-2">
                 <Check className="w-4 h-4 text-primary mt-1" /> Private Chef
               </li>
             </ul>
@@ -194,7 +194,9 @@ const Footer = () => {
               {addressLine && (
                 <li className="flex items-start gap-3">
                   <MapPin className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                  <span className="text-dark-gray">{addressLine}</span>
+                  <span className="text-dark-gray text-sm sm:text-base">
+                    {addressLine}
+                  </span>
                 </li>
               )}
               {restaurantEmail && (
@@ -202,7 +204,7 @@ const Footer = () => {
                   <Mail className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
                   <a
                     href={`mailto:${restaurantEmail}`}
-                    className="text-dark-gray hover:text-primary transition-colors"
+                    className="text-dark-gray text-sm sm:text-base hover:text-primary transition-colors"
                   >
                     {restaurantEmail}
                   </a>
@@ -213,7 +215,7 @@ const Footer = () => {
                   <Phone className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
                   <a
                     href={`tel:${restaurantPhone}`}
-                    className="text-dark-gray hover:text-primary transition-colors"
+                    className="text-dark-gray text-sm sm:text-base hover:text-primary transition-colors"
                   >
                     {restaurantPhone}
                   </a>
@@ -221,7 +223,7 @@ const Footer = () => {
               )}
               <li className="flex items-start gap-3">
                 <Clock className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                <span className="text-dark-gray">
+                <span className="text-dark-gray text-sm sm:text-base">
                   Mon-Sun: {fmt12(openingTime)} – {fmt12(closingTime)}
                 </span>
               </li>
@@ -232,7 +234,7 @@ const Footer = () => {
         {/* Bottom Footer */}
         <div className="border-t border-dark/10 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-dark-gray text-center md:text-left">
+            <p className="text-dark-gray text-center text-sm sm:text-base">
               © {new Date().getFullYear()} {restaurantName}. All rights
               reserved.
             </p>

@@ -14,20 +14,20 @@ const ServicesCTASection = () => {
           </div>
 
           <div className="relative z-10">
-            <h2 className="font-sans font-bold text-4xl lg:text-5xl text-white mb-6">
+            <h2 className="font-sans font-bold text-2xl sm:text-4xl lg:text-5xl text-white mb-6">
               Ready to Get Started?
             </h2>
-            <p className="text-white/90 text-xl mb-8 max-w-2xl mx-auto">
+            <p className="text-white/90 text-sm sm:text-xl mb-8 max-w-2xl mx-auto">
               Experience the convenience and quality of our services today
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button
-                onClick={() => navigate('/menu')}
-                className="bg-primary text-white hover:bg-primary-dark px-10 py-5 rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all hover:scale-105"
+                onClick={() => navigate("/menu")}
+                className="bg-primary text-white hover:bg-primary-dark px-6 py-3 text-sm sm:text-base sm:px-10 sm:py-5 rounded-2xl font-bold shadow-xl hover:shadow-2xl transition-all hover:scale-105"
               >
                 Order Now
               </button>
-              <button className="bg-white text-primary border-2 border-primary hover:bg-primary hover:text-white px-10 py-5 rounded-2xl font-bold text-lg transition-all hover:scale-105">
+              <button className="bg-white text-primary border-2 border-primary hover:bg-primary hover:text-white px-6 py-3 text-sm sm:text-base sm:px-10 sm:py-5 rounded-2xl font-bold transition-all hover:scale-105">
                 Contact Us
               </button>
             </div>

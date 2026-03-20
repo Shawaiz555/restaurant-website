@@ -33,8 +33,8 @@ const AboutHeroSection = () => {
         <div className="max-w-6xl mx-auto text-center">
           {/* Enhanced Badge */}
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-primary/20 to-primary-light/20 backdrop-blur-md px-4 py-2 rounded-full border-2 border-primary/40 shadow-lg animate-fade-in mb-5">
-            <BookOpen className="w-5 h-5 text-primary" />
-            <span className="text-dark font-bold text-xs tracking-wide uppercase">
+            <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+            <span className="text-dark font-bold text-[9px] sm:text-xs tracking-wide uppercase">
               Our Story
             </span>
             <span className="flex h-1.5 w-1.5">
@@ -45,7 +45,7 @@ const AboutHeroSection = () => {
 
           {/* Enhanced Heading */}
           <div className="space-y-3 mb-5">
-            <h1 className="font-sans font-bold text-5xl sm:text-6xl lg:text-7xl xl:text-8xl text-primary drop-shadow-lg animate-slide-up leading-tight">
+            <h1 className="font-sans font-bold text-3xl sm:text-6xl lg:text-7xl xl:text-8xl text-primary drop-shadow-lg animate-slide-up leading-tight">
               About Bites Restaurant
             </h1>
 
@@ -57,7 +57,7 @@ const AboutHeroSection = () => {
             </div>
           </div>
 
-          <p className="text-dark-gray text-lg lg:text-xl max-w-3xl mx-auto leading-relaxed animate-slide-up-delay-2 mb-10">
+          <p className="text-dark-gray text-sm sm:text-lg lg:text-xl max-w-3xl mx-auto leading-relaxed animate-slide-up-delay-2 mb-10">
             Where passion meets flavor, and every meal tells a story of
             tradition, innovation, and love for great food.
           </p>
@@ -65,41 +65,41 @@ const AboutHeroSection = () => {
           {/* Stats Grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6 max-w-5xl mx-auto mb-10 animate-slide-up-delay-3">
             <div className="group bg-white/70 backdrop-blur-sm rounded-2xl p-5 lg:p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 border-2 border-primary/20 hover:border-primary/40 text-center">
-              <Trophy className="w-10 h-10 mx-auto mb-3 text-primary group-hover:scale-110 transition-transform" />
-              <div className="text-primary font-sans text-3xl lg:text-4xl font-bold mb-1">
+              <Trophy className="w-8 h-8 sm:w-10 sm:h-10 mx-auto mb-3 text-primary group-hover:scale-110 transition-transform" />
+              <div className="text-primary font-sans text-2xl sm:text-3xl lg:text-4xl font-bold mb-1">
                 15+
               </div>
-              <div className="text-dark-gray text-sm font-semibold">
+              <div className="text-dark-gray text-xs sm:text-sm font-semibold">
                 Years Experience
               </div>
             </div>
 
             <div className="group bg-white/70 backdrop-blur-sm rounded-2xl p-5 lg:p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 border-2 border-primary/20 hover:border-primary/40 text-center">
-              <Users className="w-10 h-10 mx-auto mb-3 text-primary group-hover:scale-110 transition-transform" />
-              <div className="text-primary font-sans text-3xl lg:text-4xl font-bold mb-1">
+              <Users className="w-8 h-8 sm:w-10 sm:h-10 mx-auto mb-3 text-primary group-hover:scale-110 transition-transform" />
+              <div className="text-primary font-sans text-2xl sm:text-3xl lg:text-4xl font-bold mb-1">
                 50K+
               </div>
-              <div className="text-dark-gray text-sm font-semibold">
+              <div className="text-dark-gray text-xs sm:text-sm font-semibold">
                 Happy Customers
               </div>
             </div>
 
             <div className="group bg-white/70 backdrop-blur-sm rounded-2xl p-5 lg:p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 border-2 border-primary/20 hover:border-primary/40 text-center">
-              <Star className="w-10 h-10 mx-auto mb-3 text-primary group-hover:scale-110 transition-transform fill-current" />
-              <div className="text-primary font-sans text-3xl lg:text-4xl font-bold mb-1">
+              <Star className="w-8 h-8 sm:w-10 sm:h-10 mx-auto mb-3 text-primary group-hover:scale-110 transition-transform fill-current" />
+              <div className="text-primary font-sans text-2xl sm:text-3xl lg:text-4xl font-bold mb-1">
                 4.9
               </div>
-              <div className="text-dark-gray text-sm font-semibold">
+              <div className="text-dark-gray text-xs sm:text-sm font-semibold">
                 Average Rating
               </div>
             </div>
 
             <div className="group bg-white/70 backdrop-blur-sm rounded-2xl p-5 lg:p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 border-2 border-primary/20 hover:border-primary/40 text-center">
-              <Utensils className="w-10 h-10 mx-auto mb-3 text-primary group-hover:scale-110 transition-transform" />
-              <div className="text-primary font-sans text-3xl lg:text-4xl font-bold mb-1">
+              <Utensils className="w-8 h-8 sm:w-10 sm:h-10 mx-auto mb-3 text-primary group-hover:scale-110 transition-transform" />
+              <div className="text-primary font-sans text-2xl sm:text-3xl lg:text-4xl font-bold mb-1">
                 200+
               </div>
-              <div className="text-dark-gray text-sm font-semibold">
+              <div className="text-dark-gray text-xs sm:text-sm font-semibold">
                 Menu Items
               </div>
             </div>
@@ -118,8 +118,8 @@ const AboutHeroSection = () => {
                 key={idx}
                 className="group bg-gradient-to-r from-white to-cream-light hover:from-primary hover:to-primary-light px-6 py-3 rounded-full border-2 border-primary/30 hover:border-primary shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center gap-2"
               >
-                <feature.icon className="w-5 h-5 text-primary group-hover:text-white group-hover:scale-110 transition-all" />
-                <span className="text-primary group-hover:text-white text-sm font-bold transition-colors">
+                <feature.icon className="w-4 h-4 sm:w-5 sm:h-5 text-primary group-hover:text-white group-hover:scale-110 transition-all" />
+                <span className="text-primary group-hover:text-white text-xs sm:text-sm font-bold transition-colors">
                   {feature.label}
                 </span>
               </div>

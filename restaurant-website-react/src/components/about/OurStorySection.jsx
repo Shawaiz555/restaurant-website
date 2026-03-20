@@ -10,12 +10,14 @@ const OurStorySection = () => {
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-10 xl:gap-12 items-center">
           <div className="space-y-6">
             <div className="inline-block bg-primary/10 px-4 py-2 rounded-full">
-              <span className="text-primary font-semibold">Est. 2009</span>
+              <span className="text-primary text-sm sm:text-base font-semibold">
+                Est. 2009
+              </span>
             </div>
-            <h2 className="font-sans font-bold text-4xl lg:text-5xl xl:text-6xl text-dark leading-tight">
+            <h2 className="font-sans font-bold text-3xl sm:text-4xl lg:text-5xl xl:text-6xl text-dark leading-tight">
               A Journey of Flavor & Passion
             </h2>
-            <div className="space-y-4 text-dark-gray text-lg leading-relaxed">
+            <div className="space-y-4 text-dark-gray text-sm sm:text-lg leading-relaxed">
               <p>
                 What started as a humble family kitchen has blossomed into a
                 beloved culinary destination. Our journey began with a simple
@@ -37,13 +39,13 @@ const OurStorySection = () => {
             <div className="flex gap-4 pt-4">
               <button
                 onClick={() => navigate("/menu")}
-                className="bg-gradient-to-r from-primary to-primary-dark text-white px-8 py-4 rounded-2xl font-semibold shadow-xl hover:shadow-2xl transition-all hover:scale-105"
+                className="bg-gradient-to-r from-primary to-primary-dark text-white px-6 text-xs sm:text-base sm:px-8 py-3 sm:py-4 rounded-2xl font-semibold shadow-xl hover:shadow-2xl transition-all hover:scale-105"
               >
                 View Our Menu
               </button>
               <button
                 onClick={() => navigate("/services")}
-                className="bg-white text-primary border-2 border-primary px-8 py-4 rounded-2xl font-semibold hover:bg-primary hover:text-white transition-all hover:scale-105"
+                className="bg-white text-primary border-2 border-primary px-6 text-xs sm:text-base sm:px-8 py-3 sm:py-4 rounded-2xl font-semibold hover:bg-primary hover:text-white transition-all hover:scale-105"
               >
                 Our Services
               </button>

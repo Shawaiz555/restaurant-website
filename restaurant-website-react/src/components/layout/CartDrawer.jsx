@@ -52,14 +52,16 @@ const CartDrawer = () => {
       >
         {/* Header */}
         <div className="p-5 border-b border-gray-200 flex items-center justify-between bg-cream-light">
-          <h2 className="font-sans font-bold text-2xl text-dark flex items-center gap-2">
+          <h2 className="font-sans font-bold text-lg sm:text-2xl text-dark flex items-center gap-2">
             <span>🛒</span>
             <span>Your Cart</span>
-            <span className="text-lg text-primary">({itemCount})</span>
+            <span className="text-sm sm:text-lg text-primary">
+              ({itemCount})
+            </span>
           </h2>
           <button
             onClick={closeCart}
-            className="w-10 h-10 rounded-full hover:bg-cream transition-all flex items-center justify-center text-2xl"
+            className="w-10 h-10 rounded-full hover:bg-cream transition-all flex items-center justify-center text-lg sm:text-2xl"
           >
             ✕
           </button>
@@ -147,13 +149,14 @@ const CartDrawer = () => {
                           )}
                         </div>
                       )}
-                      <p className="text-primary font-semibold mt-1">
-                        {currencySymbol}{item.price.toFixed(2)}
+                      <p className="text-primary text-sm sm:text-base font-semibold mt-1">
+                        {currencySymbol}
+                        {item.price.toFixed(2)}
                       </p>
                     </div>
                     <button
                       onClick={() => removeFromCart(item.cartItemId)}
-                      className="text-xl opacity-60 hover:opacity-100 hover:text-red-600 transition-all flex-shrink-0"
+                      className="text-lg sm:text-xl opacity-60 hover:opacity-100 hover:text-red-600 transition-all flex-shrink-0"
                       title="Remove item"
                     >
                       🗑️
@@ -184,8 +187,9 @@ const CartDrawer = () => {
                       </button>
                     </div>
                     <div className="text-right">
-                      <p className="font-sans text-lg text-dark">
-                        {currencySymbol}{(item.price * item.quantity).toFixed(2)}
+                      <p className="font-sans text-sm sm:text-lg text-dark">
+                        {currencySymbol}
+                        {(item.price * item.quantity).toFixed(2)}
                       </p>
                     </div>
                   </div>
@@ -199,23 +203,29 @@ const CartDrawer = () => {
         {items.length > 0 && (
           <div className="border-t border-gray-200 bg-cream-light p-6">
             <div className="flex justify-between items-center mb-3">
-              <span className="text-dark-gray font-medium">Subtotal</span>
-              <span className="font-sans text-xl text-dark">
-                {currencySymbol}{total.toFixed(2)}
+              <span className="text-dark-gray text-sm sm:text-base font-medium">
+                Subtotal
+              </span>
+              <span className="font-sans text-sm sm:text-xl text-dark">
+                {currencySymbol}
+                {total.toFixed(2)}
               </span>
             </div>
             <div className="flex justify-between items-center mb-6 pt-3 border-t border-gray-300">
-              <span className="font-sans text-lg text-dark">Total</span>
-              <span className="font-sans text-2xl text-primary">
-                {currencySymbol}{total.toFixed(2)}
+              <span className="font-sans text-sm sm:text-lg text-dark">
+                Total
+              </span>
+              <span className="font-sans text-sm sm:text-2xl text-primary">
+                {currencySymbol}
+                {total.toFixed(2)}
               </span>
             </div>
             <button
               onClick={handleCheckout}
-              className="w-full bg-gradient-to-r from-primary to-primary-dark hover:from-primary-dark hover:to-primary text-white py-4 rounded-2xl font-sans text-lg transition-all shadow-xl hover:shadow-2xl hover:scale-105 flex items-center justify-center gap-2"
+              className="w-full bg-gradient-to-r from-primary to-primary-dark hover:from-primary-dark hover:to-primary text-white py-4 rounded-2xl font-sans text-sm sm:text-lg transition-all shadow-xl hover:shadow-2xl hover:scale-105 flex items-center justify-center gap-2"
             >
               <span>Proceed to Checkout</span>
-              <span className="text-xl">→</span>
+              <span className="text-sm sm:text-xl">→</span>
             </button>
           </div>
         )}
