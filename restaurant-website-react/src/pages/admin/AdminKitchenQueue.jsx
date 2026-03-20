@@ -262,7 +262,7 @@ const AdminKitchenQueue = () => {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 lg::grid-cols-3 gap-4">
         <StatsCard
           icon={ListOrdered}
           label="Total Active"
@@ -275,11 +275,7 @@ const AdminKitchenQueue = () => {
           change={urgentCount > 0 ? `${urgentCount} urgent` : null}
           trend={urgentCount > 0 ? "down" : "neutral"}
         />
-        <StatsCard
-          icon={Utensils}
-          label="Preparing"
-          value={processingCount}
-        />
+        <StatsCard icon={Utensils} label="Preparing" value={processingCount} />
       </div>
 
       {/* Filter Tabs */}

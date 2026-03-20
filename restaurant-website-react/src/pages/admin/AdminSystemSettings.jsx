@@ -354,11 +354,11 @@ const AdminSystemSettings = () => {
       </Section>
 
       {/* Bottom save button for convenience */}
-      <div className=" max-w-4xl flex justify-end">
+      <div className="max-w-4xl flex justify-end">
         <button
           type="submit"
           disabled={saving}
-          className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-xl font-semibold hover:bg-primary-dark disabled:opacity-50 transition-all shadow-sm"
+          className="flex items-center gap-2 px-6 py-3 bg-primary text-white text-xs sm:text-base rounded-xl font-semibold hover:bg-primary-dark disabled:opacity-50 transition-all shadow-sm"
         >
           <Save className="w-4 h-4" />
           {saving ? "Saving…" : "Save All Settings"}

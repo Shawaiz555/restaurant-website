@@ -254,8 +254,6 @@ const AdminOrders = () => {
     setSelectedIds([]);
   }, [filters.search, filters.status, filters.userType]);
 
-
-
   const buildSubtitle = () => {
     const parts = [];
     if (filters.status !== "All") parts.push(`Status: ${filters.status}`);
@@ -266,7 +264,7 @@ const AdminOrders = () => {
     return parts.length > 0 ? parts.join(" · ") : "All records";
   };
 
-  const handlePrint = (mode = 'print') => {
+  const handlePrint = (mode = "print") => {
     const rowsToPrint = getSelectionSummary(selectedIds, orders);
     printTable({
       title: "Orders Report",
@@ -372,7 +370,7 @@ const AdminOrders = () => {
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-3 bg-white px-4 py-2 rounded-xl border-2 border-gray-200 shadow-sm">
+              <div className="w-full flex flex-col sm:flex-row items-center gap-3 bg-white px-4 py-2 rounded-xl border-2 border-gray-200 shadow-sm">
                 <label className="text-sm text-dark-gray font-semibold whitespace-nowrap">
                   Items per page:
                 </label>

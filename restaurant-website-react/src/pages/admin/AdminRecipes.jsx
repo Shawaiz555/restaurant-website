@@ -79,7 +79,10 @@ const AdminRecipes = () => {
     // Scroll to recipe editor on mobile (below lg breakpoint)
     if (window.innerWidth < 1024) {
       setTimeout(() => {
-        recipeEditorRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+        recipeEditorRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
       }, 50);
     }
   };
@@ -152,14 +155,16 @@ const AdminRecipes = () => {
               Recipes
             </h1>
             <p className="text-sm text-dark-gray mt-0.5">
-              Define ingredient usage per dish — enables automatic stock deduction on orders
+              Define ingredient usage per dish — enables automatic stock
+              deduction on orders
             </p>
           </div>
         </div>
         <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-primary/5 border border-primary/10 self-start sm:self-auto">
           <CheckCircle className="w-4 h-4 text-primary flex-shrink-0" />
           <span className="text-xs font-semibold text-primary whitespace-nowrap">
-            {recipes.filter(r => r.ingredients?.length > 0).length} / {products.length} dishes configured
+            {recipes.filter((r) => r.ingredients?.length > 0).length} /{" "}
+            {products.length} dishes configured
           </span>
         </div>
       </div>
@@ -234,7 +239,10 @@ const AdminRecipes = () => {
         </div>
 
         {/* Recipe Editor */}
-        <div ref={recipeEditorRef} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+        <div
+          ref={recipeEditorRef}
+          className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5"
+        >
           {!selectedProduct ? (
             <div className="h-full flex flex-col items-center justify-center text-center py-12">
               <ChefHat className="w-14 h-14 text-gray-200 mb-4" />
@@ -254,7 +262,10 @@ const AdminRecipes = () => {
                     src={productsService.getImageUrl(selectedProduct)}
                     alt={selectedProduct.name}
                     className="w-12 h-12 rounded-xl object-cover flex-shrink-0 border border-gray-100"
-                    onError={(e) => { e.target.style.display = "none"; e.target.nextSibling.style.display = "flex"; }}
+                    onError={(e) => {
+                      e.target.style.display = "none";
+                      e.target.nextSibling.style.display = "flex";
+                    }}
                   />
                   <div className="w-12 h-12 rounded-xl bg-gray-100 items-center justify-center flex-shrink-0 hidden">
                     <ChefHat className="w-5 h-5 text-gray-400" />
@@ -266,8 +277,14 @@ const AdminRecipes = () => {
                     <p className="text-xs text-dark-gray mt-0.5">
                       {selectedProduct.category}
                     </p>
-                    <span className={`inline-flex items-center gap-1 mt-1.5 text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full ${existingRecipeId ? "bg-green-100 text-green-700" : "bg-amber-100 text-amber-700"}`}>
-                      {existingRecipeId ? <CheckCircle className="w-3 h-3" /> : <AlertCircle className="w-3 h-3" />}
+                    <span
+                      className={`inline-flex items-center gap-1 mt-1.5 text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full ${existingRecipeId ? "bg-green-100 text-green-700" : "bg-amber-100 text-amber-700"}`}
+                    >
+                      {existingRecipeId ? (
+                        <CheckCircle className="w-3 h-3" />
+                      ) : (
+                        <AlertCircle className="w-3 h-3" />
+                      )}
                       {existingRecipeId ? "Recipe saved" : "No recipe yet"}
                     </span>
                   </div>
@@ -293,7 +310,7 @@ const AdminRecipes = () => {
                   {recipeIngredients.map((row, idx) => (
                     <div
                       key={idx}
-                      className="grid grid-cols-12 gap-2 items-end"
+                      className="grid grid-col-1 lg:grid-cols-12 gap-2 items-end"
                     >
                       <div className="col-span-6">
                         {idx === 0 && (
@@ -370,14 +387,14 @@ const AdminRecipes = () => {
                 <button
                   onClick={handleSave}
                   disabled={saving}
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-primary to-primary-dark text-white font-medium shadow-sm hover:shadow-md transition-all disabled:opacity-60"
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-primary to-primary-dark text-white text-xs sm:text-base font-medium shadow-sm hover:shadow-md transition-all disabled:opacity-60"
                 >
                   <Save className="w-4 h-4" />
                   {saving ? "Saving..." : "Save Recipe"}
                 </button>
                 <button
                   onClick={() => setSelectedProduct(null)}
-                  className="px-5 py-2.5 rounded-xl border border-gray-200 text-dark-gray hover:bg-gray-50"
+                  className="px-5 py-2.5 rounded-xl border border-gray-200 text-xs sm:text-base text-dark-gray hover:bg-gray-50"
                 >
                   Cancel
                 </button>

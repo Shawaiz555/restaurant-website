@@ -253,8 +253,6 @@ const AdminExpenses = () => {
     })
     .sort((a, b) => new Date(b.date) - new Date(a.date));
 
-
-
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString("en-US", {
       month: "short",
@@ -271,7 +269,7 @@ const AdminExpenses = () => {
     return parts.length > 0 ? parts.join(" · ") : "All records";
   };
 
-  const handlePrint = (mode = 'print') => {
+  const handlePrint = (mode = "print") => {
     const rowsToPrint = getSelectionSummary(
       selectedIds,
       filteredExpenses,
@@ -533,7 +531,7 @@ const AdminExpenses = () => {
       {/* Category Breakdown */}
       {summary.byCategory && Object.keys(summary.byCategory).length > 0 && (
         <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex flex-col sm:flex-row gap-3 items-center justify-between mb-6">
             <div>
               <h2 className="text-xl font-bold text-dark">
                 Expense by Category

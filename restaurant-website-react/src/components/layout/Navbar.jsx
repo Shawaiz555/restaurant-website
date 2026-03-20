@@ -267,14 +267,14 @@ const Navbar = () => {
                         <div className="space-y-3 flex flex-col items-center text-center sm:space-y-2">
                           <Link
                             to="/login"
-                            className="inline-flex items-center gap-1.5 bg-gradient-to-r from-primary to-primary-dark text-sm sm:text-base text-white text-center px-14 py-2 sm:py-3 rounded-xl font-semibold hover:shadow-lg transition-all active:scale-95 sm:hover:scale-105"
+                            className="inline-flex sm:w-full justify-center items-center gap-1.5 bg-gradient-to-r from-primary to-primary-dark text-sm sm:text-base text-white text-center px-14 py-2 sm:py-3 rounded-xl font-semibold hover:shadow-lg transition-all active:scale-95 sm:hover:scale-105"
                             onClick={() => setShowProfileDropdown(false)}
                           >
                             Login
                           </Link>
                           <Link
                             to="/signup"
-                            className="inline-flex items-center gap-1.5 bg-white text-primary border-2 border-primary text-sm sm:text-base text-center px-5 py-2 sm:py-3 rounded-xl font-semibold hover:bg-primary hover:text-white transition-all active:scale-95 sm:hover:scale-105"
+                            className="inline-flex sm:w-full justify-center items-center gap-1.5 bg-white text-primary border-2 border-primary text-sm sm:text-base text-center px-5 py-2 sm:py-3 rounded-xl font-semibold hover:bg-primary hover:text-white transition-all active:scale-95 sm:hover:scale-105"
                             onClick={() => setShowProfileDropdown(false)}
                           >
                             Create Account

@@ -45,15 +45,17 @@ const EmployeeDashboard = () => {
     try {
       const today = new Date().toISOString().split("T")[0];
 
-      const [orders, reservations, tablesRes] =
-        await Promise.allSettled([
-          ordersService.getOrders(),
-          reservationsService.getReservations(),
-          tablesService.getTables(),
-        ]);
+      const [orders, reservations, tablesRes] = await Promise.allSettled([
+        ordersService.getOrders(),
+        reservationsService.getReservations(),
+        tablesService.getTables(),
+      ]);
 
-      const ordersData = orders.status === "fulfilled" ? (orders.value || []) : [];
-      const reservationsData = Array.isArray(reservations.value) ? reservations.value : [];
+      const ordersData =
+        orders.status === "fulfilled" ? orders.value || [] : [];
+      const reservationsData = Array.isArray(reservations.value)
+        ? reservations.value
+        : [];
       const tablesData = tablesRes.value?.tables || tablesRes.value || [];
 
       // Today's reservations — field is reservationDate ("YYYY-MM-DD" string)
@@ -72,8 +74,12 @@ const EmployeeDashboard = () => {
       ).length;
 
       // Compute stats from orders data directly (employees cannot call /stats/summary)
-      const pendingOrders = ordersData.filter((o) => o.status === "Pending").length;
-      const processingOrders = ordersData.filter((o) => o.status === "Processing").length;
+      const pendingOrders = ordersData.filter(
+        (o) => o.status === "Pending",
+      ).length;
+      const processingOrders = ordersData.filter(
+        (o) => o.status === "Processing",
+      ).length;
 
       setStats({
         pendingOrders,
@@ -220,7 +226,7 @@ const EmployeeDashboard = () => {
             <button
               key={path}
               onClick={() => navigate(path)}
-              className={`flex items-center gap-2 p-3 rounded-xl transition-all shadow-sm hover:shadow-md hover:scale-105 font-semibold text-sm ${style}`}
+              className={`flex items-center gap-2 p-3 rounded-xl transition-all shadow-sm hover:shadow-md hover:scale-105 font-semibold text-xs sm:text-sm ${style}`}
             >
               <Icon className="w-4 h-4" />
               {label}
@@ -354,7 +360,9 @@ const EmployeeDashboard = () => {
           <div className="text-center py-6 text-dark-gray">
             <TableIcon className="w-10 h-10 mx-auto mb-2 opacity-30" />
             <p className="text-sm font-medium">No active tables</p>
-            <p className="text-xs mt-1 opacity-70">Tables will appear here once added by an admin</p>
+            <p className="text-xs mt-1 opacity-70">
+              Tables will appear here once added by an admin
+            </p>
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">

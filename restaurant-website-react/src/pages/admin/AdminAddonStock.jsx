@@ -229,7 +229,7 @@ const AdminAddonStock = () => {
     }
   };
 
-  const handlePrint = (mode = 'print') => {
+  const handlePrint = (mode = "print") => {
     const parts = [
       search && `Search: "${search}"`,
       typeFilter !== "All" && `Type: ${typeFilter}`,
@@ -477,7 +477,7 @@ const AdminAddonStock = () => {
               <button
                 type="submit"
                 disabled={saving}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-primary to-primary-dark text-white font-medium shadow-sm hover:shadow-md transition-all disabled:opacity-60"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-primary to-primary-dark text-xs sm:text-base text-white font-medium shadow-sm hover:shadow-md transition-all disabled:opacity-60"
               >
                 <Save className="w-4 h-4" />
                 {saving
@@ -492,7 +492,7 @@ const AdminAddonStock = () => {
                   setShowForm(false);
                   setEditingId(null);
                 }}
-                className="px-5 py-2.5 rounded-xl border border-gray-200 text-dark-gray hover:bg-gray-50 transition-colors"
+                className="px-5 py-2.5 rounded-xl border border-gray-200 text-dark-gray text-xs sm:text-base hover:bg-gray-50 transition-colors"
               >
                 Cancel
               </button>

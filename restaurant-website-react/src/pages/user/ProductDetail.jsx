@@ -99,7 +99,13 @@ const ProductDetail = () => {
 
     if (Array.isArray(raw)) {
       return raw
-        .filter((item) => item && (item.label || item.name) && item.value !== "" && item.value != null)
+        .filter(
+          (item) =>
+            item &&
+            (item.label || item.name) &&
+            item.value !== "" &&
+            item.value != null,
+        )
         .map((item) => {
           const label = item.label || item.name;
           const valueStr = String(item.value).trim();
@@ -114,7 +120,10 @@ const ProductDetail = () => {
     // Old object format
     return ["calories", "protein", "carbs", "fat"]
       .filter((k) => raw[k] != null && raw[k] !== "")
-      .map((k) => ({ label: k.charAt(0).toUpperCase() + k.slice(1), display: String(raw[k]) }));
+      .map((k) => ({
+        label: k.charAt(0).toUpperCase() + k.slice(1),
+        display: String(raw[k]),
+      }));
   })();
 
   // Toggle add-on selection with quantity
@@ -261,7 +270,7 @@ const ProductDetail = () => {
               <div className="space-y-5 lg:space-y-6 xl:space-y-8">
                 {/* Product Name and Category */}
                 <div>
-                  <p className="text-primary font-medium mb-2">
+                  <p className="text-primary text-sm sm:text-base font-medium mb-2">
                     {product.category}
                   </p>
                   <h1 className="font-sans font-bold text-3xl lg:text-4xl xl:text-5xl mb-4">
@@ -275,8 +284,8 @@ const ProductDetail = () => {
                         key={i}
                         className={
                           i < product.rating
-                            ? "text-primary text-xl"
-                            : "text-gray-300 text-xl"
+                            ? "text-primary text-lg sm:text-xl"
+                            : "text-gray-300 text-lg sm:text-xl"
                         }
                       >
                         ⭐
@@ -287,8 +296,10 @@ const ProductDetail = () => {
 
                 {/* Description */}
                 <div>
-                  <h3 className="font-sans font-bold text-2xl mb-4">Description</h3>
-                  <p className="text-dark-gray leading-relaxed">
+                  <h3 className="font-sans font-bold text-lg sm:text-2xl mb-4">
+                    Description
+                  </h3>
+                  <p className="text-dark-gray text-sm sm:text-base leading-relaxed">
                     {product.description}
                   </p>
                 </div>
@@ -296,12 +307,14 @@ const ProductDetail = () => {
                 {/* Ingredients */}
                 {product.ingredients && product.ingredients.length > 0 && (
                   <div>
-                    <h3 className="font-sans font-bold text-2xl mb-4">Ingredients</h3>
+                    <h3 className="font-sans font-bold text-xl sm:text-2xl mb-4">
+                      Ingredients
+                    </h3>
                     <div className="flex flex-wrap gap-2">
                       {product.ingredients.map((ingredient, idx) => (
                         <span
                           key={idx}
-                          className="bg-cream-light px-4 py-2 rounded-full text-dark-gray text-sm border-2 border-primary hover:bg-primary hover:text-white transition-all cursor-pointer"
+                          className="bg-cream-light px-4 py-2 rounded-full text-dark-gray text-[10px] sm:text-sm border-2 border-primary hover:bg-primary hover:text-white transition-all cursor-pointer"
                         >
                           {ingredient}
                         </span>
@@ -314,7 +327,7 @@ const ProductDetail = () => {
                 <div className="rounded-3xl p-5 lg:p-6 xl:p-8 bg-cream-light border border-gray-200 shadow-xl">
                   {/* Size Selection - Dropdown */}
                   <div className="mb-6">
-                    <label className="flex items-center gap-2 font-sans text-lg mb-3 text-dark">
+                    <label className="flex items-center gap-2 font-sans text-sm sm:text-lg mb-3 text-dark">
                       Select Size{" "}
                     </label>
                     <div className="relative group">
@@ -323,20 +336,20 @@ const ProductDetail = () => {
                         onChange={(e) =>
                           setSelectedSizeIndex(Number(e.target.value))
                         }
-                        className="w-full px-3 sm:px-5 py-3 sm:py-4 pr-10 sm:pr-12 border-2 border-primary/30 rounded-xl focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all bg-cream-light hover:border-primary/60 hover:bg-cream-light font-sans text-sm sm:text-base appearance-none cursor-pointer shadow-sm hover:shadow-md text-dark leading-tight"
+                        className="w-full px-3 sm:px-5 py-3 sm:py-4 pr-10 sm:pr-12 border-2 border-primary/30 rounded-xl focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10 transition-all bg-cream-light hover:border-primary/60 hover:bg-cream-light font-sans text-xs sm:text-base appearance-none cursor-pointer shadow-sm hover:shadow-md text-dark leading-tight"
                       >
                         {product.sizes.map((size, index) => (
                           <option
                             key={index}
                             value={index}
-                            className="py-3 sm:py-4 px-3 sm:px-4 bg-cream text-dark text-xs sm:text-base"
+                            className="py-3 sm:py-4 px-3 sm:px-4 bg-cream text-dark text-[10px] sm:text-base"
                             style={{
                               padding: "10px 12px",
                               backgroundColor: "#FFF8F0",
                             }}
                           >
-                            {size.name} • {currencySymbol}{size.price.toFixed(2)} •{" "}
-                            {size.description}
+                            {size.name} • {currencySymbol}
+                            {size.price.toFixed(2)} • {size.description}
                           </option>
                         ))}
                       </select>
@@ -357,7 +370,7 @@ const ProductDetail = () => {
                       </div>
                     </div>
                     {/* Helper text */}
-                    <p className="mt-2 text-xs text-dark-gray flex items-center gap-1 flex-wrap">
+                    <p className="mt-2 text-[10px] sm:text-xs text-dark-gray flex items-center gap-1 flex-wrap">
                       <svg
                         className="w-3 h-3 flex-shrink-0"
                         fill="currentColor"
@@ -380,9 +393,9 @@ const ProductDetail = () => {
                     product.spiceLevels &&
                     product.spiceLevels.length > 0 && (
                       <div className="mb-6">
-                        <label className="flex items-center gap-2 font-sans text-lg mb-3 text-dark">
+                        <label className="flex items-center gap-2 font-sans text-sm sm:text-lg mb-3 text-dark">
                           Spice Level{" "}
-                          <span className="text-xs text-dark-gray font-normal bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
+                          <span className="text-[10px] sm:text-xs text-dark font-normal bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
                             Optional
                           </span>
                         </label>
@@ -399,7 +412,7 @@ const ProductDetail = () => {
                           >
                             <option
                               value=""
-                              className="py-3 sm:py-4 px-3 sm:px-4 bg-cream-light text-dark text-xs sm:text-xs"
+                              className="py-3 sm:py-4 px-3 sm:px-4 bg-cream-light text-dark text-[10px] sm:text-xs"
                               style={{
                                 padding: "10px 12px",
                                 backgroundColor: "#FFF8F0",
@@ -411,7 +424,7 @@ const ProductDetail = () => {
                               <option
                                 key={spiceIndex}
                                 value={spice.name}
-                                className="py-3 sm:py-4 px-3 sm:px-4 bg-cream-light text-dark text-xs sm:text-base"
+                                className="py-3 sm:py-4 px-3 sm:px-4 bg-cream-light text-dark text-[10px] sm:text-base"
                                 style={{
                                   padding: "10px 12px",
                                   backgroundColor: "#FFF8F0",
@@ -439,7 +452,7 @@ const ProductDetail = () => {
                         </div>
                         {/* Helper text */}
                         {selectedSpiceLevel && (
-                          <p className="mt-2 text-xs text-dark-gray flex items-center gap-1 flex-wrap">
+                          <p className="mt-2 text-[10px] sm:text-xs text-dark-gray flex items-center gap-1 flex-wrap">
                             <svg
                               className="w-3 h-3 flex-shrink-0"
                               fill="currentColor"
@@ -488,8 +501,9 @@ const ProductDetail = () => {
                         </div>
                       </div>
                       <div className="text-right flex-shrink-0">
-                        <span className="font-sans text-lg sm:text-2xl text-primary font-bold">
-                          {currencySymbol}{calculateTotalPrice().toFixed(2)}
+                        <span className="font-sans text-md sm:text-xl text-primary font-bold">
+                          {currencySymbol}
+                          {calculateTotalPrice().toFixed(2)}
                         </span>
                       </div>
                     </div>
@@ -498,7 +512,7 @@ const ProductDetail = () => {
                   {/* Add to Cart Button */}
                   <button
                     onClick={handleAddToCart}
-                    className="w-full bg-gradient-to-r from-primary to-primary-dark hover:from-primary-dark hover:to-primary text-white py-5 px-6 rounded-2xl font-sans text-md sm:text-lg transition-all shadow-xl hover:shadow-2xl transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3 group"
+                    className="w-full bg-gradient-to-r from-primary to-primary-dark hover:from-primary-dark hover:to-primary text-white py-3 sm:py-5 px-6 rounded-2xl font-sans text-sm sm:text-lg transition-all shadow-xl hover:shadow-2xl transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3 group"
                   >
                     <svg
                       className="w-6 h-6 transition-transform group-hover:scale-110"
@@ -554,11 +568,11 @@ const ProductDetail = () => {
                         />
                       </svg>
                     </div>
-                    <h2 className="font-sans font-bold text-2xl lg:text-3xl xl:text-4xl text-dark">
+                    <h2 className="font-sans font-bold text-lg lg:text-3xl xl:text-4xl text-dark">
                       Customize Your Order
                     </h2>
                   </div>
-                  <p className="text-dark-gray text-sm lg:text-base xl:text-lg mb-5 lg:mb-6 xl:mb-8 pl-12 lg:pl-14 xl:pl-16">
+                  <p className="text-dark-gray text-xs sm:text-sm lg:text-base xl:text-lg mb-5 lg:mb-6 xl:mb-8 pl-12 lg:pl-14 xl:pl-16">
                     Add drinks, desserts, or extras to complete your meal
                   </p>
 
@@ -574,10 +588,10 @@ const ProductDetail = () => {
                         }`}
                       >
                         <span className="flex items-center gap-1 sm:gap-2 lg:gap-3">
-                          <span className="text-base sm:text-lg">
-                            🥤
+                          <span className="text-md sm:text-lg">🥤</span>
+                          <span className="hidden xs:inline text-[8px] sm:text-base">
+                            Drinks
                           </span>
-                          <span className="hidden xs:inline">Drinks</span>
                           <span className="xs:hidden">Drinks</span>
                           {selectedAddOns.drinks.length > 0 && (
                             <span className="inline-flex items-center justify-center min-w-[20px] sm:min-w-[22px] h-5 sm:h-5.5 px-1.5 sm:px-2 text-[10px] sm:text-xs font-bold text-white bg-gradient-to-r from-primary to-primary-dark rounded-full shadow-md">
@@ -600,10 +614,11 @@ const ProductDetail = () => {
                         }`}
                       >
                         <span className="flex items-center gap-1 sm:gap-2 lg:gap-3">
-                          <span className="text-base sm:text-lg">
-                            🍰
+                          <span className="text-md sm:text-lg">🍰</span>
+                          <span className="hidden xs:inline text-[8px] sm:text-base">
+                            Desserts
                           </span>
-                          <span>Desserts</span>
+                          <span className="xs:hidden">Desserts</span>
                           {selectedAddOns.desserts.length > 0 && (
                             <span className="inline-flex items-center justify-center min-w-[20px] sm:min-w-[22px] h-5 sm:h-5.5 px-1.5 sm:px-2 text-[10px] sm:text-xs font-bold text-white bg-gradient-to-r from-primary to-primary-dark rounded-full shadow-md">
                               {selectedAddOns.desserts.length}
@@ -625,10 +640,11 @@ const ProductDetail = () => {
                         }`}
                       >
                         <span className="flex items-center gap-1 sm:gap-2 lg:gap-3">
-                          <span className="text-base sm:text-lg">
-                            ✨
+                          <span className="text-md sm:text-lg">✨</span>
+                          <span className="hidden xs:inline text-[8px] sm:text-base">
+                            Extras
                           </span>
-                          <span>Extras</span>
+                          <span className="xs:hidden">Extras</span>
                           {selectedAddOns.extras.length > 0 && (
                             <span className="inline-flex items-center justify-center min-w-[20px] sm:min-w-[22px] h-5 sm:h-5.5 px-1.5 sm:px-2 text-[10px] sm:text-xs font-bold text-white bg-gradient-to-r from-primary to-primary-dark rounded-full shadow-md">
                               {selectedAddOns.extras.length}
@@ -671,7 +687,8 @@ const ProductDetail = () => {
                               <div
                                 key={drinkWithId.id}
                                 onClick={() => {
-                                  if (!isSelected) toggleAddOn("drinks", drinkWithId);
+                                  if (!isSelected)
+                                    toggleAddOn("drinks", drinkWithId);
                                 }}
                                 className={`group relative flex flex-col p-3 sm:p-4 border-2 rounded-xl transition-all duration-200 cursor-pointer gap-2 ${
                                   isSelected
@@ -682,7 +699,10 @@ const ProductDetail = () => {
                                 {/* Row 1: checkbox + name + description */}
                                 <div className="flex items-start gap-3">
                                   <div
-                                    onClick={(e) => { e.stopPropagation(); toggleAddOn("drinks", drinkWithId); }}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      toggleAddOn("drinks", drinkWithId);
+                                    }}
                                     className={`w-5 h-5 rounded-lg border-2 flex items-center justify-center transition-all cursor-pointer flex-shrink-0 mt-0.5 ${
                                       isSelected
                                         ? "bg-primary border-primary"
@@ -690,7 +710,11 @@ const ProductDetail = () => {
                                     }`}
                                   >
                                     {isSelected && (
-                                      <svg viewBox="0 0 16 16" fill="white" className="w-3 h-3">
+                                      <svg
+                                        viewBox="0 0 16 16"
+                                        fill="white"
+                                        className="w-3 h-3"
+                                      >
                                         <path d="M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z" />
                                       </svg>
                                     )}
@@ -707,12 +731,25 @@ const ProductDetail = () => {
                                 {/* Row 2: price on left, action on right */}
                                 <div className="flex items-center justify-between pl-8">
                                   <span className="text-primary font-bold text-sm">
-                                    +{currencySymbol}{(drinkWithId.price * (isSelected ? quantity : 1)).toFixed(2)}
+                                    +{currencySymbol}
+                                    {(
+                                      drinkWithId.price *
+                                      (isSelected ? quantity : 1)
+                                    ).toFixed(2)}
                                   </span>
                                   {isSelected ? (
                                     <div className="flex items-center bg-white rounded-lg border-2 border-primary shadow-sm">
                                       <button
-                                        onClick={(e) => { e.stopPropagation(); quantity === 1 ? toggleAddOn("drinks", drinkWithId) : updateAddOnQuantity("drinks", drinkWithId.id, quantity - 1); }}
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          quantity === 1
+                                            ? toggleAddOn("drinks", drinkWithId)
+                                            : updateAddOnQuantity(
+                                                "drinks",
+                                                drinkWithId.id,
+                                                quantity - 1,
+                                              );
+                                        }}
                                         className="text-primary hover:text-white hover:bg-primary font-bold text-base w-8 h-8 flex items-center justify-center rounded-l-md transition-all active:scale-95"
                                       >
                                         {quantity === 1 ? "✕" : "−"}
@@ -721,7 +758,14 @@ const ProductDetail = () => {
                                         {quantity}
                                       </span>
                                       <button
-                                        onClick={(e) => { e.stopPropagation(); updateAddOnQuantity("drinks", drinkWithId.id, quantity + 1); }}
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          updateAddOnQuantity(
+                                            "drinks",
+                                            drinkWithId.id,
+                                            quantity + 1,
+                                          );
+                                        }}
                                         className="text-primary hover:text-white hover:bg-primary font-bold text-base w-8 h-8 flex items-center justify-center rounded-r-md transition-all active:scale-95"
                                       >
                                         +
@@ -729,7 +773,10 @@ const ProductDetail = () => {
                                     </div>
                                   ) : (
                                     <button
-                                      onClick={(e) => { e.stopPropagation(); toggleAddOn("drinks", drinkWithId); }}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        toggleAddOn("drinks", drinkWithId);
+                                      }}
                                       className="px-4 py-1.5 bg-primary/10 hover:bg-primary text-primary hover:text-white rounded-lg font-bold text-xs transition-all active:scale-95 border-2 border-primary/20 hover:border-primary"
                                     >
                                       Add
@@ -772,7 +819,8 @@ const ProductDetail = () => {
                                   <div
                                     key={dessertWithId.id}
                                     onClick={() => {
-                                      if (!isSelected) toggleAddOn("desserts", dessertWithId);
+                                      if (!isSelected)
+                                        toggleAddOn("desserts", dessertWithId);
                                     }}
                                     className={`group relative flex flex-col p-3 sm:p-4 border-2 rounded-xl transition-all duration-200 cursor-pointer gap-2 ${
                                       isSelected
@@ -783,7 +831,13 @@ const ProductDetail = () => {
                                     {/* Row 1: checkbox + name + description */}
                                     <div className="flex items-start gap-3">
                                       <div
-                                        onClick={(e) => { e.stopPropagation(); toggleAddOn("desserts", dessertWithId); }}
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          toggleAddOn(
+                                            "desserts",
+                                            dessertWithId,
+                                          );
+                                        }}
                                         className={`w-5 h-5 rounded-lg border-2 flex items-center justify-center transition-all cursor-pointer flex-shrink-0 mt-0.5 ${
                                           isSelected
                                             ? "bg-primary border-primary"
@@ -791,7 +845,11 @@ const ProductDetail = () => {
                                         }`}
                                       >
                                         {isSelected && (
-                                          <svg viewBox="0 0 16 16" fill="white" className="w-3 h-3">
+                                          <svg
+                                            viewBox="0 0 16 16"
+                                            fill="white"
+                                            className="w-3 h-3"
+                                          >
                                             <path d="M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z" />
                                           </svg>
                                         )}
@@ -808,12 +866,28 @@ const ProductDetail = () => {
                                     {/* Row 2: price on left, action on right */}
                                     <div className="flex items-center justify-between pl-8">
                                       <span className="text-primary font-bold text-sm">
-                                        +{currencySymbol}{(dessertWithId.price * (isSelected ? quantity : 1)).toFixed(2)}
+                                        +{currencySymbol}
+                                        {(
+                                          dessertWithId.price *
+                                          (isSelected ? quantity : 1)
+                                        ).toFixed(2)}
                                       </span>
                                       {isSelected ? (
                                         <div className="flex items-center bg-white rounded-lg border-2 border-primary shadow-sm">
                                           <button
-                                            onClick={(e) => { e.stopPropagation(); quantity === 1 ? toggleAddOn("desserts", dessertWithId) : updateAddOnQuantity("desserts", dessertWithId.id, quantity - 1); }}
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              quantity === 1
+                                                ? toggleAddOn(
+                                                    "desserts",
+                                                    dessertWithId,
+                                                  )
+                                                : updateAddOnQuantity(
+                                                    "desserts",
+                                                    dessertWithId.id,
+                                                    quantity - 1,
+                                                  );
+                                            }}
                                             className="text-primary hover:text-white hover:bg-primary font-bold text-base w-8 h-8 flex items-center justify-center rounded-l-md transition-all active:scale-95"
                                           >
                                             {quantity === 1 ? "✕" : "−"}
@@ -822,7 +896,14 @@ const ProductDetail = () => {
                                             {quantity}
                                           </span>
                                           <button
-                                            onClick={(e) => { e.stopPropagation(); updateAddOnQuantity("desserts", dessertWithId.id, quantity + 1); }}
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              updateAddOnQuantity(
+                                                "desserts",
+                                                dessertWithId.id,
+                                                quantity + 1,
+                                              );
+                                            }}
                                             className="text-primary hover:text-white hover:bg-primary font-bold text-base w-8 h-8 flex items-center justify-center rounded-r-md transition-all active:scale-95"
                                           >
                                             +
@@ -830,7 +911,13 @@ const ProductDetail = () => {
                                         </div>
                                       ) : (
                                         <button
-                                          onClick={(e) => { e.stopPropagation(); toggleAddOn("desserts", dessertWithId); }}
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            toggleAddOn(
+                                              "desserts",
+                                              dessertWithId,
+                                            );
+                                          }}
                                           className="px-4 py-1.5 bg-primary/10 hover:bg-primary text-primary hover:text-white rounded-lg font-bold text-xs transition-all active:scale-95 border-2 border-primary/20 hover:border-primary"
                                         >
                                           Add
@@ -871,7 +958,8 @@ const ProductDetail = () => {
                               <div
                                 key={extraWithId.id}
                                 onClick={() => {
-                                  if (!isSelected) toggleAddOn("extras", extraWithId);
+                                  if (!isSelected)
+                                    toggleAddOn("extras", extraWithId);
                                 }}
                                 className={`group relative flex flex-col p-3 sm:p-4 border-2 rounded-xl transition-all duration-200 cursor-pointer gap-2 ${
                                   isSelected
@@ -882,7 +970,10 @@ const ProductDetail = () => {
                                 {/* Row 1: checkbox + name + description */}
                                 <div className="flex items-start gap-3">
                                   <div
-                                    onClick={(e) => { e.stopPropagation(); toggleAddOn("extras", extraWithId); }}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      toggleAddOn("extras", extraWithId);
+                                    }}
                                     className={`w-5 h-5 rounded-lg border-2 flex items-center justify-center transition-all cursor-pointer flex-shrink-0 mt-0.5 ${
                                       isSelected
                                         ? "bg-primary border-primary"
@@ -890,7 +981,11 @@ const ProductDetail = () => {
                                     }`}
                                   >
                                     {isSelected && (
-                                      <svg viewBox="0 0 16 16" fill="white" className="w-3 h-3">
+                                      <svg
+                                        viewBox="0 0 16 16"
+                                        fill="white"
+                                        className="w-3 h-3"
+                                      >
                                         <path d="M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z" />
                                       </svg>
                                     )}
@@ -907,12 +1002,25 @@ const ProductDetail = () => {
                                 {/* Row 2: price on left, action on right */}
                                 <div className="flex items-center justify-between pl-8">
                                   <span className="text-primary font-bold text-sm">
-                                    +{currencySymbol}{(extraWithId.price * (isSelected ? quantity : 1)).toFixed(2)}
+                                    +{currencySymbol}
+                                    {(
+                                      extraWithId.price *
+                                      (isSelected ? quantity : 1)
+                                    ).toFixed(2)}
                                   </span>
                                   {isSelected ? (
                                     <div className="flex items-center bg-white rounded-lg border-2 border-primary shadow-sm">
                                       <button
-                                        onClick={(e) => { e.stopPropagation(); quantity === 1 ? toggleAddOn("extras", extraWithId) : updateAddOnQuantity("extras", extraWithId.id, quantity - 1); }}
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          quantity === 1
+                                            ? toggleAddOn("extras", extraWithId)
+                                            : updateAddOnQuantity(
+                                                "extras",
+                                                extraWithId.id,
+                                                quantity - 1,
+                                              );
+                                        }}
                                         className="text-primary hover:text-white hover:bg-primary font-bold text-base w-8 h-8 flex items-center justify-center rounded-l-md transition-all active:scale-95"
                                       >
                                         {quantity === 1 ? "✕" : "−"}
@@ -921,7 +1029,14 @@ const ProductDetail = () => {
                                         {quantity}
                                       </span>
                                       <button
-                                        onClick={(e) => { e.stopPropagation(); updateAddOnQuantity("extras", extraWithId.id, quantity + 1); }}
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          updateAddOnQuantity(
+                                            "extras",
+                                            extraWithId.id,
+                                            quantity + 1,
+                                          );
+                                        }}
                                         className="text-primary hover:text-white hover:bg-primary font-bold text-base w-8 h-8 flex items-center justify-center rounded-r-md transition-all active:scale-95"
                                       >
                                         +
@@ -929,7 +1044,10 @@ const ProductDetail = () => {
                                     </div>
                                   ) : (
                                     <button
-                                      onClick={(e) => { e.stopPropagation(); toggleAddOn("extras", extraWithId); }}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        toggleAddOn("extras", extraWithId);
+                                      }}
                                       className="px-4 py-1.5 bg-primary/10 hover:bg-primary text-primary hover:text-white rounded-lg font-bold text-xs transition-all active:scale-95 border-2 border-primary/20 hover:border-primary"
                                     >
                                       Add
@@ -951,14 +1069,14 @@ const ProductDetail = () => {
             {relatedProducts.length > 0 && (
               <div className="mt-16 lg:mt-20 px-4 lg:px-6">
                 <div className="flex items-center justify-between mb-8 lg:mb-12">
-                  <h2 className="font-sans font-bold text-3xl lg:text-4xl xl:text-5xl">
+                  <h2 className="font-sans font-bold text-2xl sm:text-3xl lg:text-4xl xl:text-5xl">
                     Related Products
                   </h2>
                   <div className="flex gap-2">
-                    <button className="swiper-button-prev-related w-12 h-12 rounded-full bg-white border-2 border-dark/10 flex items-center justify-center hover:bg-primary hover:border-primary hover:text-white transition-all">
+                    <button className="swiper-button-prev-related w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white border-2 border-dark/10 flex items-center justify-center hover:bg-primary hover:border-primary hover:text-white transition-all">
                       ←
                     </button>
-                    <button className="swiper-button-next-related w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center hover:bg-primary-dark transition-all">
+                    <button className="swiper-button-next-related w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-primary text-white flex items-center justify-center hover:bg-primary-dark transition-all">
                       →
                     </button>
                   </div>
@@ -1027,8 +1145,9 @@ const ProductDetail = () => {
                           ))}
                         </div>
                         <div className="text-center">
-                          <span className="font-sans text-2xl text-dark">
-                            {currencySymbol}{relatedProduct.basePrice.toFixed(2)}
+                          <span className="font-sans text-xl sm:text-2xl text-dark">
+                            {currencySymbol}
+                            {relatedProduct.basePrice.toFixed(2)}
                           </span>
                         </div>
                       </div>

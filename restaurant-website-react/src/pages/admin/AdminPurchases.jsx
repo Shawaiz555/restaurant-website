@@ -242,7 +242,7 @@ const AdminPurchases = () => {
     return parts.length > 0 ? parts.join(" · ") : "All records";
   };
 
-  const handlePrint = (mode = 'print') => {
+  const handlePrint = (mode = "print") => {
     const rowsToPrint = getSelectionSummary(selectedIds, purchases);
     printTable({
       title: "Purchases Report",
@@ -264,7 +264,8 @@ const AdminPurchases = () => {
       month: "short",
       year: "numeric",
     });
-  const formatCurrency = (n) => `${currencySymbol} ${(n || 0).toLocaleString()}`;
+  const formatCurrency = (n) =>
+    `${currencySymbol} ${(n || 0).toLocaleString()}`;
 
   return (
     <div className="space-y-6">
@@ -415,7 +416,10 @@ const AdminPurchases = () => {
               </div>
               <div className="space-y-2">
                 {form.items.map((item, idx) => (
-                  <div key={idx} className="grid grid-cols-12 gap-2 items-end">
+                  <div
+                    key={idx}
+                    className="grid grid-col-1 lg:grid-cols-12 gap-2 items-end"
+                  >
                     <div className="col-span-4">
                       {idx === 0 && (
                         <label className="block text-xs text-dark-gray mb-1">
@@ -511,7 +515,7 @@ const AdminPurchases = () => {
               </div>
             </div>
 
-            <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+            <div className="flex flex-col sm:flex-row gap-3 items-center justify-between pt-2 border-t border-gray-100">
               <div className="text-sm font-semibold text-dark">
                 Total:{" "}
                 <span className="text-primary text-base">
@@ -522,7 +526,7 @@ const AdminPurchases = () => {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-primary to-primary-dark text-white font-medium shadow-sm hover:shadow-md transition-all disabled:opacity-60"
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-primary to-primary-dark text-white text-xs sm:text-base font-medium shadow-sm hover:shadow-md transition-all disabled:opacity-60"
                 >
                   <Save className="w-4 h-4" />
                   {saving ? "Saving..." : "Record Purchase"}
@@ -530,7 +534,7 @@ const AdminPurchases = () => {
                 <button
                   type="button"
                   onClick={() => setShowForm(false)}
-                  className="px-5 py-2.5 rounded-xl border border-gray-200 text-dark-gray hover:bg-gray-50"
+                  className="px-5 py-2.5 rounded-xl border border-gray-200 text-xs sm:text-base text-dark-gray hover:bg-gray-50"
                 >
                   Cancel
                 </button>

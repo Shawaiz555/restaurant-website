@@ -213,7 +213,7 @@ const AdminWastage = () => {
     return parts.length > 0 ? parts.join(" · ") : "All records";
   };
 
-  const handlePrint = (mode = 'print') => {
+  const handlePrint = (mode = "print") => {
     const rowsToPrint = getSelectionSummary(selectedIds, filtered);
     printTable({
       title: "Wastage Report",
@@ -387,7 +387,7 @@ const AdminWastage = () => {
               <button
                 type="submit"
                 disabled={saving}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-primary to-primary-dark text-white font-medium shadow-sm hover:shadow-md transition-all disabled:opacity-60"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-primary to-primary-dark text-white text-xs sm:text-base font-medium shadow-sm hover:shadow-md transition-all disabled:opacity-60"
               >
                 <Save className="w-4 h-4" />
                 {saving ? "Saving..." : "Record Wastage"}
@@ -395,7 +395,7 @@ const AdminWastage = () => {
               <button
                 type="button"
                 onClick={() => setShowForm(false)}
-                className="px-5 py-2.5 rounded-xl border border-gray-200 text-dark-gray hover:bg-gray-50"
+                className="px-5 py-2.5 rounded-xl border border-gray-200 text-dark-gray text-xs sm:text-base hover:bg-gray-50"
               >
                 Cancel
               </button>

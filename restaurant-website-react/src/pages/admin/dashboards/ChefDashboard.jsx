@@ -200,7 +200,7 @@ const ChefDashboard = () => {
             <button
               key={path}
               onClick={() => navigate(path)}
-              className={`flex items-center gap-2 p-3 rounded-xl transition-all shadow-sm hover:shadow-md hover:scale-105 font-semibold text-sm ${style}`}
+              className={`flex items-center gap-2 p-3 rounded-xl transition-all shadow-sm hover:shadow-md hover:scale-105 font-semibold text-xs sm:text-sm ${style}`}
             >
               <Icon className="w-4 h-4" />
               {label}
