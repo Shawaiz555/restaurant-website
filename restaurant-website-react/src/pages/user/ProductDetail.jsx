@@ -242,7 +242,7 @@ const ProductDetail = () => {
                 {/* Nutrition Info */}
                 {nutritionRows.length > 0 && (
                   <div className="rounded-3xl p-3 lg:p-5">
-                    <h3 className="font-sans font-bold text-2xl lg:text-3xl mb-4">
+                    <h3 className="font-sans font-bold text-xl sm:text-2xl lg:text-3xl mb-4">
                       Nutrition Information
                     </h3>
                     <div className="bg-cream-light border-2 border-gray-200 rounded-2xl p-6 py-3 shadow-sm">
@@ -252,10 +252,10 @@ const ProductDetail = () => {
                             key={idx}
                             className={`flex items-center justify-between py-1 ${idx < nutritionRows.length - 1 ? "border-b border-gray-200" : ""}`}
                           >
-                            <span className="font-sans text-md lg:text-lg text-dark">
+                            <span className="font-sans text-sm sm:text-md lg:text-lg text-dark">
                               {row.label}
                             </span>
-                            <span className="font-semibold text-lg text-primary">
+                            <span className="font-semibold text-sm sm:text-md lg:text-lg text-primary">
                               {row.display}
                             </span>
                           </div>
@@ -550,8 +550,8 @@ const ProductDetail = () => {
             {(addOnsConfig.showDrinks ||
               addOnsConfig.showDesserts ||
               addOnsConfig.showExtras) && (
-              <div className="mb-20 px-4 lg:px-6 xl:px-8">
-                <div className="bg-cream-light rounded-3xl p-5 lg:p-6 xl:p-8 shadow-xl border border-gray-200 max-w-8xl mx-auto">
+              <div className="mb-20 lg:px-6 xl:px-8">
+                <div className="bg-cream-light rounded-3xl p-2 py-4 lg:py-6 xl:py-8 lg:p-6 xl:p-8 shadow-xl border border-gray-200 max-w-8xl mx-auto">
                   <div className="flex items-center gap-3 mb-3 lg:mb-4">
                     <div className="w-9 h-9 lg:w-10 lg:h-10 xl:w-12 xl:h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
                       <svg
@@ -690,14 +690,14 @@ const ProductDetail = () => {
                                   if (!isSelected)
                                     toggleAddOn("drinks", drinkWithId);
                                 }}
-                                className={`group relative flex flex-col p-3 sm:p-4 border-2 rounded-xl transition-all duration-200 cursor-pointer gap-2 ${
+                                className={`group relative flex flex-col lg:flex-row lg:items-center p-3 sm:p-4 border-2 rounded-xl transition-all duration-200 cursor-pointer gap-2 ${
                                   isSelected
                                     ? "border-primary bg-gradient-to-br from-primary/5 to-primary/10 shadow-lg ring-2 ring-primary/20"
                                     : "border-gray-200 hover:border-primary/60 hover:bg-cream-light/50 hover:shadow-md"
                                 }`}
                               >
                                 {/* Row 1: checkbox + name + description */}
-                                <div className="flex items-start gap-3">
+                                <div className="flex items-start gap-3 flex-1 min-w-0">
                                   <div
                                     onClick={(e) => {
                                       e.stopPropagation();
@@ -729,7 +729,7 @@ const ProductDetail = () => {
                                   </div>
                                 </div>
                                 {/* Row 2: price on left, action on right */}
-                                <div className="flex items-center justify-between pl-8">
+                                <div className="flex items-center justify-between pl-8 lg:pl-0 lg:gap-3 lg:flex-shrink-0">
                                   <span className="text-primary font-bold text-sm">
                                     +{currencySymbol}
                                     {(
@@ -822,14 +822,14 @@ const ProductDetail = () => {
                                       if (!isSelected)
                                         toggleAddOn("desserts", dessertWithId);
                                     }}
-                                    className={`group relative flex flex-col p-3 sm:p-4 border-2 rounded-xl transition-all duration-200 cursor-pointer gap-2 ${
+                                    className={`group relative flex flex-col lg:flex-row lg:items-center p-3 sm:p-4 border-2 rounded-xl transition-all duration-200 cursor-pointer gap-2 ${
                                       isSelected
                                         ? "border-primary bg-gradient-to-br from-primary/5 to-primary/10 shadow-lg ring-2 ring-primary/20"
                                         : "border-gray-200 hover:border-primary/60 hover:bg-cream-light/50 hover:shadow-md"
                                     }`}
                                   >
                                     {/* Row 1: checkbox + name + description */}
-                                    <div className="flex items-start gap-3">
+                                    <div className="flex items-start gap-3 flex-1 min-w-0">
                                       <div
                                         onClick={(e) => {
                                           e.stopPropagation();
@@ -864,7 +864,7 @@ const ProductDetail = () => {
                                       </div>
                                     </div>
                                     {/* Row 2: price on left, action on right */}
-                                    <div className="flex items-center justify-between pl-8">
+                                    <div className="flex items-center justify-between pl-8 lg:pl-0 lg:gap-3 lg:flex-shrink-0">
                                       <span className="text-primary font-bold text-sm">
                                         +{currencySymbol}
                                         {(
@@ -961,14 +961,14 @@ const ProductDetail = () => {
                                   if (!isSelected)
                                     toggleAddOn("extras", extraWithId);
                                 }}
-                                className={`group relative flex flex-col p-3 sm:p-4 border-2 rounded-xl transition-all duration-200 cursor-pointer gap-2 ${
+                                className={`group relative flex flex-col lg:flex-row lg:items-center p-3 sm:p-4 border-2 rounded-xl transition-all duration-200 cursor-pointer gap-2 ${
                                   isSelected
                                     ? "border-primary bg-gradient-to-br from-primary/5 to-primary/10 shadow-lg ring-2 ring-primary/20"
                                     : "border-gray-200 hover:border-primary/60 hover:bg-cream-light/50 hover:shadow-md"
                                 }`}
                               >
                                 {/* Row 1: checkbox + name + description */}
-                                <div className="flex items-start gap-3">
+                                <div className="flex items-start gap-3 flex-1 min-w-0">
                                   <div
                                     onClick={(e) => {
                                       e.stopPropagation();
@@ -1000,7 +1000,7 @@ const ProductDetail = () => {
                                   </div>
                                 </div>
                                 {/* Row 2: price on left, action on right */}
-                                <div className="flex items-center justify-between pl-8">
+                                <div className="flex items-center justify-between pl-8 lg:pl-0 lg:gap-3 lg:flex-shrink-0">
                                   <span className="text-primary font-bold text-sm">
                                     +{currencySymbol}
                                     {(

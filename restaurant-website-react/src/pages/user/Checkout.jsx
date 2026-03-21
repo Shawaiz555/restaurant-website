@@ -277,10 +277,10 @@ const Checkout = () => {
       <div className="container mx-auto px-3 sm:px-6 lg:px-10 xl:px-16">
         {/* Header */}
         <div className="mb-8 lg:ml-2">
-          <h1 className="font-sans font-bold text-4xl xl:text-5xl text-primary mb-2">
+          <h1 className="font-sans font-bold text-3xl sm:text-4xl xl:text-5xl text-primary mb-2">
             Checkout
           </h1>
-          <p className="text-dark-gray">
+          <p className="text-dark-gray text-xs sm:text-base">
             Complete your order and get delicious food delivered to your door
           </p>
         </div>
@@ -296,7 +296,7 @@ const Checkout = () => {
                 <h3 className="text-sm font-semibold text-blue-900 mb-1">
                   Checking out as Guest
                 </h3>
-                <p className="text-sm text-blue-800">
+                <p className="text-xs sm:text-sm text-blue-800">
                   You can complete your order without creating an account. Just
                   fill in your details below.{" "}
                   <span
@@ -318,17 +318,17 @@ const Checkout = () => {
               {/* Customer Information */}
               <div className="bg-cream-light rounded-3xl p-6 md:p-8 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
                 <div className="mb-6 pb-4 border-b-2 border-cream">
-                  <h2 className="font-sans font-bold text-2xl text-dark mb-1">
+                  <h2 className="font-sans font-bold text-xl sm:text-2xl text-dark mb-1">
                     Customer Information
                   </h2>
-                  <p className="text-sm text-dark-gray">
+                  <p className="text-xs sm:text-sm text-dark-gray">
                     Please provide your contact details
                   </p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="relative group">
-                    <label className="block text-sm font-semibold text-dark mb-2">
+                    <label className="block text-xs sm:text-sm font-semibold text-dark mb-2">
                       Full Name <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -337,13 +337,13 @@ const Checkout = () => {
                       value={formData.fullName}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-cream-light hover:bg-cream-light/50"
+                      className="w-full px-4 py-3 text-xs sm:text-base rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-cream-light hover:bg-cream-light/50"
                       placeholder="John Doe"
                     />
                   </div>
 
                   <div className="relative group">
-                    <label className="block text-sm font-semibold text-dark mb-2">
+                    <label className="block text-xs sm:text-sm font-semibold text-dark mb-2">
                       Email Address{" "}
                       {!isAuthenticated && (
                         <span className="text-red-500">*</span>
@@ -355,18 +355,18 @@ const Checkout = () => {
                       value={formData.email}
                       onChange={handleInputChange}
                       required={!isAuthenticated}
-                      className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-cream-light hover:bg-cream-light/50"
+                      className="w-full px-4 py-3 text-xs sm:text-base rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-cream-light hover:bg-cream-light/50"
                       placeholder="john@example.com"
                     />
                     {!isAuthenticated && (
-                      <p className="text-xs text-dark-gray mt-2">
+                      <p className="text-[10px] sm:text-xs text-dark-gray mt-2">
                         Required for order confirmation email
                       </p>
                     )}
                   </div>
 
                   <div className="md:col-span-2 relative group">
-                    <label className="block text-sm font-semibold text-dark mb-2">
+                    <label className="block text-xs sm:text-sm font-semibold text-dark mb-2">
                       Phone Number <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -375,10 +375,10 @@ const Checkout = () => {
                       value={formData.phone}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-cream-light hover:bg-cream-light/50"
+                      className="w-full px-4 py-3 text-xs sm:text-base rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-cream-light hover:bg-cream-light/50"
                       placeholder="+92 300 1234567"
                     />
-                    <p className="text-xs text-dark-gray mt-2">
+                    <p className="text-[10px] sm:text-xs text-dark-gray mt-2">
                       We'll call you for order confirmation
                     </p>
                   </div>
@@ -388,17 +388,17 @@ const Checkout = () => {
               {/* Delivery Address */}
               <div className="bg-cream-light rounded-3xl p-6 md:p-8 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
                 <div className="mb-6 pb-4 border-b-2 border-cream">
-                  <h2 className="font-sans font-bold text-2xl text-dark mb-1">
+                  <h2 className="font-sans font-bold text-xl sm:text-2xl text-dark mb-1">
                     Delivery Address
                   </h2>
-                  <p className="text-sm text-dark-gray">
+                  <p className="text-xs sm:text-sm text-dark-gray">
                     Where should we deliver your order?
                   </p>
                 </div>
 
                 <div className="space-y-6">
                   <div className="relative group">
-                    <label className="block text-sm font-semibold text-dark mb-2">
+                    <label className="block text-xs sm:text-sm font-semibold text-dark mb-2">
                       Street Address <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -407,14 +407,14 @@ const Checkout = () => {
                       value={formData.address}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-cream-light hover:bg-cream-light/50"
+                      className="w-full px-4 py-3 text-xs sm:text-base rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-cream-light hover:bg-cream-light/50"
                       placeholder="House #, Street name, Area"
                     />
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="relative group">
-                      <label className="block text-sm font-semibold text-dark mb-2">
+                      <label className="block text-xs sm:text-sm font-semibold text-dark mb-2">
                         City <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -423,13 +423,13 @@ const Checkout = () => {
                         value={formData.city}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-cream-light hover:bg-cream-light/50"
+                        className="w-full px-4 py-3 text-xs sm:text-base rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-cream-light hover:bg-cream-light/50"
                         placeholder="Lahore"
                       />
                     </div>
 
                     <div className="relative group">
-                      <label className="block text-sm font-semibold text-dark mb-2">
+                      <label className="block text-xs sm:text-sm font-semibold text-dark mb-2">
                         Postal Code
                       </label>
                       <input
@@ -437,16 +437,16 @@ const Checkout = () => {
                         name="postalCode"
                         value={formData.postalCode}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-cream-light hover:bg-cream-light/50"
+                        className="w-full px-4 py-3 text-xs sm:text-base rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-cream-light hover:bg-cream-light/50"
                         placeholder="54000"
                       />
                     </div>
                   </div>
 
                   <div className="relative group">
-                    <label className="block text-sm font-semibold text-dark mb-2">
+                    <label className="block text-xs sm:text-sm font-semibold text-dark mb-2">
                       Delivery Instructions{" "}
-                      <span className="text-xs text-dark-gray font-normal">
+                      <span className="text-[10px] sm:text-xs text-dark-gray font-normal">
                         (Optional)
                       </span>
                     </label>
@@ -455,10 +455,10 @@ const Checkout = () => {
                       value={formData.additionalNotes}
                       onChange={handleInputChange}
                       rows="3"
-                      className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all resize-none bg-cream-light hover:bg-cream-light/50"
+                      className="w-full px-4 py-3 text-xs sm:text-base rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all resize-none bg-cream-light hover:bg-cream-light/50"
                       placeholder="e.g., Ring the doorbell, leave at the gate, etc."
                     />
-                    <p className="text-xs text-dark-gray mt-2">
+                    <p className="text-[10px] sm:text-xs text-dark-gray mt-2">
                       Any special instructions for our delivery rider
                     </p>
                   </div>
@@ -467,11 +467,11 @@ const Checkout = () => {
                 {/* Map Display */}
                 <div className="mt-6">
                   <div className="flex items-center justify-between mb-3">
-                    <label className="block text-sm font-semibold text-dark">
+                    <label className="block text-xs sm:text-sm font-semibold text-dark">
                       Delivery Location on Map
                     </label>
                     {isGeocoding && (
-                      <span className="text-xs text-primary font-semibold animate-pulse bg-primary/10 px-3 py-1 rounded-full">
+                      <span className="text-[10px] sm:text-xs text-primary font-semibold animate-pulse bg-primary/10 px-3 py-1 rounded-full">
                         Locating...
                       </span>
                     )}
@@ -485,10 +485,10 @@ const Checkout = () => {
                     {!formData.address && !formData.city && (
                       <div className="absolute inset-0 bg-white/90 backdrop-blur-sm rounded-2xl flex items-center justify-center z-30">
                         <div className="text-center p-6">
-                          <p className="text-dark-gray font-semibold mb-1">
+                          <p className="text-dark-gray text-xs sm:text-sm font-semibold mb-1">
                             Enter your address
                           </p>
-                          <p className="text-sm text-dark-gray">
+                          <p className="text-[10px] sm:text-md text-dark-gray">
                             The map will show your location automatically
                           </p>
                         </div>
@@ -496,10 +496,13 @@ const Checkout = () => {
                     )}
                   </div>
                   <div className="mt-3 bg-blue-50 rounded-lg p-3 border-l-4 border-blue-400">
-                    <p className="text-xs text-blue-900">
-                      <span className="font-semibold">Note:</span> Map shows
-                      approximate location based on your address. Our delivery
-                      rider will use the exact address you provided above.
+                    <p className="text-[10px] sm:text-xs text-blue-900">
+                      <span className="font-semibold text-xs sm:text-sm">
+                        Note:
+                      </span>{" "}
+                      Map shows approximate location based on your address. Our
+                      delivery rider will use the exact address you provided
+                      above.
                     </p>
                   </div>
                 </div>
@@ -508,10 +511,10 @@ const Checkout = () => {
               {/* Payment Method */}
               <div className="bg-cream-light rounded-3xl p-6 md:p-8 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
                 <div className="mb-6 pb-4 border-b-2 border-cream">
-                  <h2 className="font-sans font-bold text-2xl text-dark mb-1">
+                  <h2 className="font-sans font-bold text-xl sm:text-2xl text-dark mb-1">
                     Payment Method
                   </h2>
-                  <p className="text-sm text-dark-gray">
+                  <p className="text-xs sm:text-sm text-dark-gray">
                     Choose how you want to pay
                   </p>
                 </div>
@@ -519,19 +522,19 @@ const Checkout = () => {
                 <div className="relative">
                   <div className="bg-gradient-to-br from-cream to-cream-light rounded-2xl p-6 border-2 border-primary shadow-md hover:shadow-lg transition-all">
                     <div className="flex items-center gap-4">
-                      <div className="w-14 h-14 bg-gradient-to-br from-primary to-primary-dark rounded-full flex items-center justify-center shadow-lg">
-                        <CreditCard className="w-7 h-7 text-white" />
+                      <div className="w-10 h-10 sm:w-14 sm:h-14 bg-gradient-to-br from-primary to-primary-dark rounded-full flex items-center justify-center shadow-lg">
+                        <CreditCard className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
                       </div>
                       <div className="flex-1">
-                        <h3 className="font-sans font-bold text-lg text-dark mb-1">
+                        <h3 className="font-sans font-bold text-sm sm:text-lg text-dark mb-1">
                           Cash on Delivery
                         </h3>
-                        <p className="text-sm text-dark-gray">
+                        <p className="text-xs sm:text-sm text-dark-gray">
                           Pay with cash when your order arrives at your doorstep
                         </p>
                       </div>
-                      <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center shadow-md">
-                        <Check className="w-5 h-5 text-white" />
+                      <div className="w-5 h-5 sm:w-8 sm:h-8 bg-primary rounded-full flex items-center justify-center shadow-md">
+                        <Check className="w-3 h-3 sm:w-5 sm:h-5 text-white" />
                       </div>
                     </div>
                   </div>
@@ -542,10 +545,10 @@ const Checkout = () => {
                 </div>
 
                 <div className="mt-6 bg-blue-50 border-l-4 border-blue-400 rounded-lg p-4">
-                  <p className="text-sm font-semibold text-blue-900 mb-1">
+                  <p className="text-xs sm:text-sm font-semibold text-blue-900 mb-1">
                     Payment Instructions
                   </p>
-                  <p className="text-sm text-blue-800">
+                  <p className="text-xs sm:text-sm text-blue-800">
                     Please keep exact change ready for a smooth delivery
                     experience.
                     <span className="font-semibold">
@@ -562,7 +565,7 @@ const Checkout = () => {
           <div className="lg:col-span-1">
             <div className="bg-cream-light rounded-3xl p-6 md:p-8 shadow-lg sticky top-24">
               <h2 className="font-sans font-bold text-xl xl:text-2xl text-dark mb-6 flex items-center gap-2">
-                <ShoppingCart className="w-6 h-6 text-primary" />
+                <ShoppingCart className="w-5 h-5 sm:w-6 sm:h-6 text-primary text-xl sm:text-2xl" />
                 <span>Order Summary</span>
               </h2>
 
@@ -765,19 +768,21 @@ const Checkout = () => {
               <div className="border-t-2 border-gray-200 pt-4 space-y-3">
                 <div className="flex justify-between text-dark-gray">
                   <span>Subtotal</span>
-                  <span>
+                  <span className="text-sm sm:text-base">
                     {currencySymbol}.{subtotal.toFixed(2)}
                   </span>
                 </div>
                 <div className="flex justify-between text-dark-gray">
                   <span>Delivery Fee</span>
-                  <span>
+                  <span className="text-sm sm:text-base">
                     {currencySymbol}.{deliveryFee.toFixed(2)}
                   </span>
                 </div>
                 <div className="border-t-2 border-gray-200 pt-3 flex justify-between items-center">
-                  <span className="font-sans text-xl text-dark">Total</span>
-                  <span className="font-sans text-xl xl:text-2xl text-primary">
+                  <span className="font-sans text-xl sm:text-2xl text-dark">
+                    Total
+                  </span>
+                  <span className="font-sans text-lg sm:text-xl text-primary">
                     {currencySymbol}.{grandTotal.toFixed(2)}
                   </span>
                 </div>
@@ -785,7 +790,7 @@ const Checkout = () => {
 
               {/* Orders closed banner */}
               {!acceptingOrders && (
-                <div className="mt-4 bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 text-sm font-semibold text-center">
+                <div className="mt-4 bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 text-xs sm:text-sm font-semibold text-center">
                   We are not accepting online orders right now. Please try again
                   later.
                 </div>
@@ -795,7 +800,7 @@ const Checkout = () => {
               <button
                 onClick={handlePlaceOrder}
                 disabled={isProcessing || !acceptingOrders}
-                className={`w-full mt-6 py-2 xl:py-4 rounded-2xl font-sans text-lg transition-all shadow-xl flex items-center justify-center gap-2 ${
+                className={`w-full mt-6 py-2 xl:py-4 rounded-2xl font-sans text-sm sm:text-lg transition-all shadow-xl flex items-center justify-center gap-2 ${
                   isProcessing || !acceptingOrders
                     ? "bg-gray-400 cursor-not-allowed"
                     : "bg-gradient-to-r from-primary to-primary-dark hover:from-primary-dark hover:to-primary text-white hover:shadow-2xl hover:scale-105"
@@ -814,7 +819,7 @@ const Checkout = () => {
                 )}
               </button>
 
-              <p className="text-xs text-center text-dark-gray mt-4">
+              <p className="text-[10px] sm:text-xs text-center text-dark-gray mt-4">
                 By placing this order, you agree to our terms and conditions
               </p>
             </div>
