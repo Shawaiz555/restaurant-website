@@ -131,29 +131,29 @@ const StaffLogin = () => {
                 {
                   label: "Super Admin",
                   icon: Shield,
-                  color: "bg-purple-100 text-purple-700",
+                  color: "border border-gray-300 text-dark",
                 },
                 {
                   label: "Manager",
                   icon: Users,
-                  color: "bg-blue-100 text-blue-700",
+                  color: "border border-gray-300 text-dark",
                 },
                 {
                   label: "Employee",
                   icon: Users,
-                  color: "bg-green-100 text-green-700",
+                  color: "border border-gray-300 text-dark",
                 },
                 {
                   label: "Chef",
                   icon: ChefHat,
-                  color: "bg-gray-300 text-dark",
+                  color: "border border-gray-300 text-dark",
                 },
               ].map(({ label, icon: Icon, color }) => (
                 <span
                   key={label}
-                  className={`inline-flex items-center gap-1 px-3 py-2 rounded-full text-[10px] sm:text-xs font-semibold ${color}`}
+                  className={`inline-flex items-center gap-1 px-3 py-2 rounded-xl text-[10px] sm:text-xs font-semibold ${color}`}
                 >
-                  <Icon className="w-3 h-3" />
+                  <Icon className="w-3.5 h-3.5" />
                   {label}
                 </span>
               ))}
@@ -255,7 +255,7 @@ const StaffLogin = () => {
         </div>
 
         {/* Bottom label */}
-        <p className="text-center text-white/50 text-xs mt-4">
+        <p className="text-center text-xs sm:text-sm mt-4 text-gray-500">
           Staff portal — authorized access only
         </p>
       </div>

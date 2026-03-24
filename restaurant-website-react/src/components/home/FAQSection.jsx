@@ -97,9 +97,9 @@ const FAQSection = () => {
               >
                 <button
                   onClick={() => toggleFAQ(index)}
-                  className="w-full p-2 py-3 lg:p-6 lg:py-5 text-left flex items-start justify-between gap-4 group"
+                  className="w-full p-2 py-3 lg:p-6 lg:py-5 text-left flex items-center justify-between gap-4 group"
                 >
-                  <div className="flex items-start gap-4 flex-1">
+                  <div className="flex items-center gap-4 flex-1">
                     <div
                       className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-all ${
                         openIndex === index

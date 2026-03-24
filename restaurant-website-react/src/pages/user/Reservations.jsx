@@ -46,7 +46,11 @@ function generateTimeSlots(openingTime, closingTime, slotDurationMins = 60) {
   const closeMins = closeH * 60 + closeM;
   const lastSlotMins = closeMins - slotDurationMins;
   const slots = [];
-  for (let t = openMins; t <= lastSlotMins && t < closeMins; t += slotDurationMins) {
+  for (
+    let t = openMins;
+    t <= lastSlotMins && t < closeMins;
+    t += slotDurationMins
+  ) {
     const h = Math.floor(t / 60);
     const m = t % 60;
     slots.push(`${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`);
@@ -86,10 +90,16 @@ const Reservations = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { currentUser, isAuthenticated } = useSelector((s) => s.auth);
-  const { acceptingReservations, maxPartySize, openingTime, closingTime, slotDurationMins } = useSettings();
+  const {
+    acceptingReservations,
+    maxPartySize,
+    openingTime,
+    closingTime,
+    slotDurationMins,
+  } = useSettings();
   const timeSlots = useMemo(
     () => generateTimeSlots(openingTime, closingTime, slotDurationMins),
-    [openingTime, closingTime, slotDurationMins]
+    [openingTime, closingTime, slotDurationMins],
   );
 
   const [step, setStep] = useState(1); // 1: Date/Time/Size, 2: Table, 3: Contact, 4: Confirmation
@@ -684,7 +694,8 @@ const Reservations = () => {
                           <div className="px-5 py-4 text-sm text-gray-400 italic text-center">
                             No time slots configured
                           </div>
-                        ) : timeSlots.filter((t) => !bookedTimes.includes(t)).length === 0 ? (
+                        ) : timeSlots.filter((t) => !bookedTimes.includes(t))
+                            .length === 0 ? (
                           <div className="px-5 py-4 text-sm text-gray-400 italic text-center">
                             No available slots for this date
                           </div>

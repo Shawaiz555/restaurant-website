@@ -289,7 +289,7 @@ const Navbar = () => {
                           <Link
                             to="/staff/login"
                             onClick={() => setShowProfileDropdown(false)}
-                            className="inline-flex items-center gap-1.5 bg-primary px-10 py-2 text-xs text-white hover:bg-primary-dark rounded-xl transition-colors font-medium"
+                            className="w-full flex items-center justify-center gap-1.5 bg-primary py-3 text-xs sm:text-sm text-white hover:bg-primary-dark rounded-xl transition-colors font-medium"
                           >
                             <LayoutDashboard className="w-3 h-3" />
                             Staff Portal

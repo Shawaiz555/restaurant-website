@@ -77,7 +77,7 @@ const Footer = () => {
       <div className="container mx-auto px-3 sm:px-6 lg:px-10 xl:px-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           {/* Company Info */}
-          <div>
+          <div className="mt-4">
             <Link to="/" className="max-w-xs mb-6">
               <img
                 src="/assets/images/BitesLogo.png"
@@ -149,14 +149,6 @@ const Footer = () => {
                   <ArrowRight className="w-4 h-4 text-primary" /> Services
                 </Link>
               </li>
-              <li>
-                <a
-                  href="/#faq"
-                  className="text-dark-gray text-sm sm:text-base hover:text-primary transition-colors flex items-center gap-2"
-                >
-                  <ArrowRight className="w-4 h-4 text-primary" /> FAQ
-                </a>
-              </li>
             </ul>
           </div>
 
@@ -172,9 +164,6 @@ const Footer = () => {
               <li className="text-dark-gray text-sm sm:text-base flex items-start gap-2">
                 <Check className="w-4 h-4 text-primary mt-1" /> Dine-In
                 Experience
-              </li>
-              <li className="text-dark-gray text-sm sm:text-base flex items-start gap-2">
-                <Check className="w-4 h-4 text-primary mt-1" /> Takeaway Service
               </li>
               <li className="text-dark-gray text-sm sm:text-base flex items-start gap-2">
                 <Check className="w-4 h-4 text-primary mt-1" /> Event Catering
@@ -228,16 +217,6 @@ const Footer = () => {
                 </span>
               </li>
             </ul>
-          </div>
-        </div>
-
-        {/* Bottom Footer */}
-        <div className="border-t border-dark/10 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-dark-gray text-center text-sm sm:text-base">
-              © {new Date().getFullYear()} {restaurantName}. All rights
-              reserved.
-            </p>
           </div>
         </div>
       </div>
