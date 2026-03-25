@@ -42,32 +42,6 @@ const calcItemTotal = (item) => {
   return (base + addonTotal) * item.qty;
 };
 
-// ─── Addon Counter ───────────────────────────────────────────────────────────
-
-const AddonCounter = ({ addon, qty, onInc, onDec }) => (
-  <div className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
-    <div className="flex-1 min-w-0">
-      <p className="text-sm font-medium text-dark truncate">{addon.name}</p>
-      <p className="text-xs text-primary font-semibold">+ Rs. {addon.price}</p>
-    </div>
-    <div className="flex items-center gap-2 ml-3">
-      <button
-        onClick={onDec}
-        className="w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
-      >
-        <Minus className="w-3 h-3 text-dark-gray" />
-      </button>
-      <span className="w-6 text-center text-sm font-bold text-dark">{qty}</span>
-      <button
-        onClick={onInc}
-        className="w-7 h-7 rounded-full bg-primary/10 hover:bg-primary/20 flex items-center justify-center transition-colors"
-      >
-        <Plus className="w-3 h-3 text-primary" />
-      </button>
-    </div>
-  </div>
-);
-
 // ─── Product Configurator Panel ──────────────────────────────────────────────
 
 const ProductConfigurator = ({ product, onAdd, onClose }) => {
@@ -77,37 +51,9 @@ const ProductConfigurator = ({ product, onAdd, onClose }) => {
   const [selectedSize, setSelectedSize] = useState(defaultSize);
   const [selectedSpice, setSelectedSpice] = useState(null);
   const [qty, setQty] = useState(1);
-  const [drinkQtys, setDrinkQtys] = useState({});
-  const [dessertQtys, setDessertQtys] = useState({});
-  const [extraQtys, setExtraQtys] = useState({});
 
   const basePrice = selectedSize ? selectedSize.price : product.basePrice;
-
-  const getAddonList = (type) => {
-    const qtys = {
-      drinks: drinkQtys,
-      desserts: dessertQtys,
-      extras: extraQtys,
-    }[type];
-    const items = product[type] || [];
-    return items
-      .filter((a) => qtys[a.name] > 0)
-      .map((a) => ({ ...a, qty: qtys[a.name] }));
-  };
-
-  const addonTotal = [
-    ...(product.drinks || [])
-      .filter((a) => drinkQtys[a.name] > 0)
-      .map((a) => ({ ...a, qty: drinkQtys[a.name] })),
-    ...(product.desserts || [])
-      .filter((a) => dessertQtys[a.name] > 0)
-      .map((a) => ({ ...a, qty: dessertQtys[a.name] })),
-    ...(product.extras || [])
-      .filter((a) => extraQtys[a.name] > 0)
-      .map((a) => ({ ...a, qty: extraQtys[a.name] })),
-  ].reduce((s, a) => s + a.price * a.qty, 0);
-
-  const lineTotal = (basePrice + addonTotal) * qty;
+  const lineTotal = basePrice * qty;
 
   const handleAdd = () => {
     onAdd({
@@ -118,19 +64,13 @@ const ProductConfigurator = ({ product, onAdd, onClose }) => {
       image: product.imageUrl || product.imageId,
       selectedSize,
       selectedSpice,
-      selectedDrinks: getAddonList("drinks"),
-      selectedDesserts: getAddonList("desserts"),
-      selectedExtras: getAddonList("extras"),
+      selectedDrinks: [],
+      selectedDesserts: [],
+      selectedExtras: [],
       qty,
     });
     onClose();
   };
-
-  const makeQtyUpdater = (setter) => (name, delta) =>
-    setter((prev) => ({
-      ...prev,
-      [name]: Math.max(0, (prev[name] || 0) + delta),
-    }));
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-dark/60 backdrop-blur-sm">
@@ -214,73 +154,13 @@ const ProductConfigurator = ({ product, onAdd, onClose }) => {
                           : "bg-white text-dark border-gray-200 hover:border-primary"
                       }`}
                     >
-                      🌶 {s.name}
+                      {s.name}
                     </button>
                   ))}
                 </div>
               </div>
             )}
 
-          {/* Drinks */}
-          {product.addOnsConfig?.showDrinks && product.drinks?.length > 0 && (
-            <div>
-              <p className="text-xs font-bold text-dark-gray uppercase tracking-wider mb-2">
-                Drinks
-              </p>
-              <div className="bg-gray-50 rounded-xl p-3">
-                {product.drinks.map((a) => (
-                  <AddonCounter
-                    key={a.name}
-                    addon={a}
-                    qty={drinkQtys[a.name] || 0}
-                    onInc={() => makeQtyUpdater(setDrinkQtys)(a.name, 1)}
-                    onDec={() => makeQtyUpdater(setDrinkQtys)(a.name, -1)}
-                  />
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Desserts */}
-          {product.addOnsConfig?.showDesserts &&
-            product.desserts?.length > 0 && (
-              <div>
-                <p className="text-xs font-bold text-dark-gray uppercase tracking-wider mb-2">
-                  Desserts
-                </p>
-                <div className="bg-gray-50 rounded-xl p-3">
-                  {product.desserts.map((a) => (
-                    <AddonCounter
-                      key={a.name}
-                      addon={a}
-                      qty={dessertQtys[a.name] || 0}
-                      onInc={() => makeQtyUpdater(setDessertQtys)(a.name, 1)}
-                      onDec={() => makeQtyUpdater(setDessertQtys)(a.name, -1)}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
-
-          {/* Extras */}
-          {product.addOnsConfig?.showExtras && product.extras?.length > 0 && (
-            <div>
-              <p className="text-xs font-bold text-dark-gray uppercase tracking-wider mb-2">
-                Extras
-              </p>
-              <div className="bg-gray-50 rounded-xl p-3">
-                {product.extras.map((a) => (
-                  <AddonCounter
-                    key={a.name}
-                    addon={a}
-                    qty={extraQtys[a.name] || 0}
-                    onInc={() => makeQtyUpdater(setExtraQtys)(a.name, 1)}
-                    onDec={() => makeQtyUpdater(setExtraQtys)(a.name, -1)}
-                  />
-                ))}
-              </div>
-            </div>
-          )}
         </div>
 
         {/* Footer — quantity & add */}
@@ -340,14 +220,21 @@ const CartItemRow = ({ item, onRemove, onQtyChange, formatPrice }) => {
   return (
     <div className="flex items-start gap-3 py-3 border-b border-gray-100 last:border-0">
       <div className="flex-1 min-w-0">
-        <p className="font-semibold text-dark text-sm truncate">{item.name}</p>
+        <div className="flex items-center gap-1.5 flex-wrap">
+          <p className="font-semibold text-dark text-sm truncate">
+            {item.name}
+          </p>
+          {item._isAddon && (
+            <span className="inline-flex items-center px-1.5 py-0.5 rounded-md bg-teal-50 text-teal-700 text-[10px] font-bold border border-teal-200 leading-none shrink-0">
+              Add-on
+            </span>
+          )}
+        </div>
         {item.selectedSize && (
           <p className="text-xs text-dark-gray">{item.selectedSize.name}</p>
         )}
         {item.selectedSpice && (
-          <p className="text-xs text-orange-500">
-            🌶 {item.selectedSpice.name}
-          </p>
+          <p className="text-xs text-orange-500">{item.selectedSpice.name}</p>
         )}
         {allAddons.length > 0 && (
           <p className="text-xs text-dark-gray truncate">
@@ -496,6 +383,24 @@ const AdminPOS = () => {
     }
   }, [orderType, loadAvailableTables]);
 
+  // Derived: aggregated add-on items (unique by name across all products)
+  const addonItems = useMemo(() => {
+    const seen = { drinks: {}, desserts: {}, extras: {} };
+    products.forEach((p) => {
+      ["drinks", "desserts", "extras"].forEach((type) => {
+        (p[type] || []).forEach((a) => {
+          if (!seen[type][a.name])
+            seen[type][a.name] = { ...a, _addonType: type };
+        });
+      });
+    });
+    return {
+      drinks: Object.values(seen.drinks),
+      desserts: Object.values(seen.desserts),
+      extras: Object.values(seen.extras),
+    };
+  }, [products]);
+
   // Derived: categories
   const categories = useMemo(() => {
     const cats = [...new Set(products.map((p) => p.category))]
@@ -577,8 +482,8 @@ const AdminPOS = () => {
     try {
       // Build order items in the format the backend expects
       const items = cartItems.map((item) => ({
-        productId: item.productId,
-        id: item.productId,
+        productId: item._isAddon ? null : item.productId,
+        id: item._isAddon ? null : item.productId,
         name: item.name,
         price: item.selectedSize ? item.selectedSize.price : item.basePrice,
         quantity: item.qty,
@@ -852,6 +757,8 @@ const AdminPOS = () => {
             onClear={clearCart}
             onPlace={handlePlaceOrder}
             formatPrice={formatPrice}
+            addonItems={addonItems}
+            onAddAddon={addToCart}
           />
         </div>
       </div>
@@ -904,6 +811,8 @@ const AdminPOS = () => {
                   handlePlaceOrder();
                 }}
                 formatPrice={formatPrice}
+                addonItems={addonItems}
+                onAddAddon={addToCart}
                 isMobile
               />
             </div>
@@ -924,6 +833,12 @@ const AdminPOS = () => {
 };
 
 // ─── Order Panel (extracted for reuse in mobile drawer) ──────────────────────
+
+const ADDON_TABS = [
+  { key: "drinks", label: "Drinks" },
+  { key: "desserts", label: "Desserts" },
+  { key: "extras", label: "Extras" },
+];
 
 const OrderPanel = ({
   cartItems,
@@ -947,8 +862,46 @@ const OrderPanel = ({
   onClear,
   onPlace,
   formatPrice,
+  addonItems,
+  onAddAddon,
   isMobile = false,
-}) => (
+}) => {
+  const hasAnyAddon =
+    addonItems &&
+    (addonItems.drinks.length > 0 ||
+      addonItems.desserts.length > 0 ||
+      addonItems.extras.length > 0);
+
+  // Default to first tab that actually has items
+  const firstTab =
+    addonItems &&
+    (ADDON_TABS.find((t) => addonItems[t.key].length > 0)?.key || "drinks");
+
+  const [activeAddonTab, setActiveAddonTab] = useState(firstTab || "drinks");
+
+  const addonCartId = (addon, type) =>
+    cartItems.find((i) => i.productId === `addon-${type}-${addon.name}`)?.cartId || null;
+
+  const addonCartQty = (addon, type) =>
+    cartItems.find((i) => i.productId === `addon-${type}-${addon.name}`)?.qty || 0;
+
+  const addAddonToCart = (addon, type) =>
+    onAddAddon({
+      productId: `addon-${type}-${addon.name}`,
+      id: `addon-${type}-${addon.name}`,
+      name: addon.name,
+      basePrice: addon.price,
+      image: null,
+      selectedSize: null,
+      selectedSpice: null,
+      selectedDrinks: [],
+      selectedDesserts: [],
+      selectedExtras: [],
+      qty: 1,
+      _isAddon: true,
+    });
+
+  return (
   <div className={`space-y-3 ${isMobile ? "" : ""}`}>
     {/* Order type selector */}
     <div className="bg-white rounded-2xl p-4 shadow-lg border border-gray-100">
@@ -1109,6 +1062,75 @@ const OrderPanel = ({
       )}
     </div>
 
+    {/* Add-ons */}
+    {hasAnyAddon && (
+      <div className="bg-white rounded-2xl p-4 shadow-lg border border-gray-100">
+        <p className="text-xs font-bold text-dark-gray uppercase tracking-wider mb-3">
+          Add-ons
+        </p>
+        {/* Tabs */}
+        <div className="flex gap-1 mb-3 bg-gray-100 rounded-xl p-1">
+          {ADDON_TABS.filter((t) => addonItems[t.key].length > 0).map((t) => (
+            <button
+              key={t.key}
+              onClick={() => setActiveAddonTab(t.key)}
+              className={`flex-1 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                activeAddonTab === t.key
+                  ? "bg-white text-dark shadow-sm"
+                  : "text-dark-gray hover:text-dark"
+              }`}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+        {/* Addon rows — synced directly to cart */}
+        <div className="space-y-1">
+          {(addonItems[activeAddonTab] || []).map((addon) => {
+            const cartId = addonCartId(addon, activeAddonTab);
+            const qty = addonCartQty(addon, activeAddonTab);
+            const inCart = qty > 0;
+            return (
+              <div
+                key={addon.name}
+                onClick={() => inCart ? onRemove(cartId) : addAddonToCart(addon, activeAddonTab)}
+                className={`flex items-center justify-between py-2 px-2 rounded-xl border cursor-pointer transition-all ${
+                  inCart
+                    ? "bg-primary/5 border-primary/20"
+                    : "border-transparent hover:bg-gray-50"
+                }`}
+              >
+                <div className="flex-1 min-w-0 mr-3">
+                  <p className={`text-sm truncate font-medium ${inCart ? "text-primary" : "text-dark"}`}>{addon.name}</p>
+                  <p className="text-xs text-dark-gray">Rs. {addon.price}</p>
+                </div>
+                {inCart && (
+                  <div
+                    className="flex items-center gap-1.5 shrink-0"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <button
+                      onClick={() => onQtyChange(cartId, -1)}
+                      className="w-6 h-6 rounded-md bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+                    >
+                      <Minus className="w-3 h-3 text-dark-gray" />
+                    </button>
+                    <span className="w-5 text-center text-xs font-bold text-primary">{qty}</span>
+                    <button
+                      onClick={() => onQtyChange(cartId, 1)}
+                      className="w-6 h-6 rounded-md bg-primary/10 hover:bg-primary/20 flex items-center justify-center transition-colors"
+                    >
+                      <Plus className="w-3 h-3 text-primary" />
+                    </button>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    )}
+
     {/* Customer info */}
     <div className="bg-white rounded-2xl p-4 shadow-lg border border-gray-100">
       <p className="text-xs font-bold text-dark-gray uppercase tracking-wider mb-3">
@@ -1204,6 +1226,7 @@ const OrderPanel = ({
       </button>
     </div>
   </div>
-);
+  );
+};
 
 export default AdminPOS;
