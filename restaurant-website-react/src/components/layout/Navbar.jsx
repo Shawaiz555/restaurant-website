@@ -53,7 +53,7 @@ const Navbar = () => {
         }),
       );
       setShowProfileDropdown(false);
-      navigate("/");
+      navigate(isStaff ? "/staff/login" : "/login");
       setIsLoggingOut(false);
     }, 800);
   };

@@ -20,28 +20,30 @@ import {
   Users,
   Settings,
   CreditCard,
+  ShoppingBag,
 } from "lucide-react";
 import { useAuth } from "../../../hooks/useAuth";
 import { getSidebarConfig, getRoleLabel } from "../../../hooks/usePermissions";
 
 // Icon map keyed by route label
 const ICON_MAP = {
-  Dashboard:    LayoutDashboard,
-  Orders:       Package,
-  Products:     Pizza,
-  Tables:       TableIcon,
+  Dashboard: LayoutDashboard,
+  "POS / New Order": ShoppingBag,
+  Orders: Package,
+  Products: Pizza,
+  Tables: TableIcon,
   Reservations: CalendarCheck,
-  Deals:        Tag,
-  Expenses:     DollarSign,
-  Analytics:    TrendingUp,
-  Payments:     CreditCard,
-  Staff:        Users,
-  Settings:     Settings,
-  Ingredients:  ShoppingBasket,
-  Suppliers:    Truck,
-  Purchases:    ShoppingCart,
-  Recipes:      ChefHat,
-  Wastage:      Trash2,
+  Deals: Tag,
+  Expenses: DollarSign,
+  Analytics: TrendingUp,
+  Payments: CreditCard,
+  Staff: Users,
+  Settings: Settings,
+  Ingredients: ShoppingBasket,
+  Suppliers: Truck,
+  Purchases: ShoppingCart,
+  Recipes: ChefHat,
+  Wastage: Trash2,
   "Addon Stock": CupSoda,
   "Stock Reports": BarChart3,
 };
@@ -58,7 +60,7 @@ const NavLink = ({ item, onClose, isActive }) => {
         relative flex items-center gap-4 px-4 py-3 rounded-2xl transition-all duration-300 ease-in-out group outline-none
         ${
           active
-            ? "bg-gradient-to-r from-primary to-primary-dark text-white shadow-[0_8px_20px_rgba(230,126,34,0.3)] shadow-primary/30 font-semibold border border-primary-light/20 scale-[1.02]"
+            ? "bg-gradient-to-r from-primary to-primary-dark text-white shadow-[0_8px_20px_rgba(230,126,34,0.3)] shadow-primary/30 border border-primary-light/20"
             : "text-dark-gray hover:bg-cream-light hover:text-primary hover:shadow-md hover:shadow-gray-200/50 hover:scale-[1.02] border border-transparent"
         }
       `}

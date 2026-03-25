@@ -17,6 +17,7 @@ import {
   RefreshCw,
   XCircle,
   Users,
+  ShoppingBag,
 } from "lucide-react";
 
 const STATUS_CONFIG = {
@@ -175,21 +176,28 @@ const EmployeeDashboard = () => {
         <h2 className="text-lg font-sans font-bold text-dark mb-4">
           Quick Actions
         </h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
           {[
+            {
+              label: "New Order",
+              icon: ShoppingBag,
+              path: "/admin/pos",
+              style:
+                "bg-gradient-to-r from-primary to-primary-dark text-white shadow-md shadow-primary/20",
+            },
             {
               label: "All Orders",
               icon: Package,
               path: "/admin/orders",
               style:
-                "bg-gradient-to-r from-primary to-primary-light text-white",
+                "border-2 border-primary text-primary hover:bg-primary hover:text-white",
             },
             {
               label: "Reservations",
               icon: CalendarCheck,
               path: "/admin/reservations",
               style:
-                "border-2 border-primary text-primary hover:bg-primary hover:text-white",
+                "border-2 border-indigo-400 text-indigo-600 hover:bg-indigo-50",
             },
             {
               label: "Tables",

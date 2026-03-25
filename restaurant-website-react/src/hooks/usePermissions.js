@@ -10,6 +10,8 @@ import { useAuth } from './useAuth';
  */
 const ROLE_PERMISSIONS = {
   super_admin: {
+    // POS
+    managePOS: true,
     // Orders
     viewOrders: true,
     updateOrderStatus: true,
@@ -53,6 +55,7 @@ const ROLE_PERMISSIONS = {
   },
 
   manager: {
+    managePOS: true,
     viewOrders: true,
     updateOrderStatus: true,
     deleteOrders: true,
@@ -85,6 +88,7 @@ const ROLE_PERMISSIONS = {
   },
 
   employee: {
+    managePOS: true,
     viewOrders: true,
     updateOrderStatus: true,
     deleteOrders: false,
@@ -117,6 +121,7 @@ const ROLE_PERMISSIONS = {
   },
 
   chef: {
+    managePOS: false,
     viewOrders: true,
     updateOrderStatus: true,
     deleteOrders: false,
@@ -150,6 +155,7 @@ const ROLE_PERMISSIONS = {
 
   user: {
     // Regular customers have no staff permissions
+    managePOS: false,
     viewOrders: false,
     updateOrderStatus: false,
     deleteOrders: false,
@@ -192,6 +198,7 @@ export const usePermissions = () => {
 export const getSidebarConfig = (role) => {
   const mainMenu = [
     { path: '/admin/dashboard',    label: 'Dashboard',    roles: ['super_admin', 'manager', 'employee', 'chef'] },
+    { path: '/admin/pos',          label: 'POS / New Order', roles: ['super_admin', 'manager', 'employee'] },
     { path: '/admin/orders',       label: 'Orders',       roles: ['super_admin', 'manager', 'employee', 'chef'] },
     { path: '/admin/products',     label: 'Products',     roles: ['super_admin', 'manager'] },
     { path: '/admin/tables',       label: 'Tables',       roles: ['super_admin', 'manager', 'employee'] },

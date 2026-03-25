@@ -116,8 +116,11 @@ const placeOrder = async (req, res) => {
       console.error('Addon stock deduction error (non-fatal):', addonStockErr);
     }
 
-    // Send emails
-    const emailStatus = await sendOrderEmails(order.toObject());
+    // Send emails — skip for in-store orders (staff placed them directly)
+    let emailStatus = { customerEmailSent: false, adminEmailSent: false };
+    if (orderData.orderSource !== 'in-store') {
+      emailStatus = await sendOrderEmails(order.toObject());
+    }
 
     res.status(201).json({
       success: true,
@@ -145,7 +148,7 @@ const placeOrder = async (req, res) => {
 // @access  Private (Admin)
 const getOrders = async (req, res) => {
   try {
-    const { status, userType, search, sortBy = 'orderDate', order = 'desc' } = req.query;
+    const { status, userType, search, sortBy = 'orderDate', order = 'desc', orderSource, orderType } = req.query;
 
     let query = {};
 
@@ -159,6 +162,16 @@ const getOrders = async (req, res) => {
       query.isGuestOrder = true;
     } else if (userType === 'Registered') {
       query.isGuestOrder = false;
+    }
+
+    // Filter by order source (online / in-store)
+    if (orderSource && orderSource !== 'All') {
+      query.orderSource = orderSource;
+    }
+
+    // Filter by order type (delivery / takeaway / dine-in)
+    if (orderType && orderType !== 'All') {
+      query.orderType = orderType;
     }
 
     // Search
@@ -203,8 +216,10 @@ const getOrderById = async (req, res) => {
       });
     }
 
-    // Check authorization (admin or order owner)
-    if (req.user.role !== 'admin' && order.userId?.toString() !== req.user._id.toString()) {
+    // Check authorization: staff roles can view any order; customers can only view their own
+    const STAFF_ROLES = ['super_admin', 'manager', 'employee', 'chef'];
+    const isStaff = STAFF_ROLES.includes(req.user.role);
+    if (!isStaff && order.userId?.toString() !== req.user._id.toString()) {
       return res.status(403).json({
         success: false,
         message: 'Not authorized to view this order'

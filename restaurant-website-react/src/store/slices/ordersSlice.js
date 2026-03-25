@@ -6,7 +6,9 @@ const initialState = {
     status: 'All',
     search: '',
     dateRange: null,
-    userType: 'All', // All, Guest, Registered
+    userType: 'All',     // All, Guest, Registered
+    orderSource: 'All',  // All, online, in-store
+    orderType: 'All',    // All, delivery, takeaway, dine-in
   },
   loading: false,
   error: null,
@@ -98,6 +100,16 @@ export const selectFilteredOrders = (state) => {
     } else if (filters.userType === 'Registered') {
       filtered = filtered.filter((order) => !order.isGuestOrder);
     }
+  }
+
+  // Filter by order source (online / in-store)
+  if (filters.orderSource && filters.orderSource !== 'All') {
+    filtered = filtered.filter((order) => (order.orderSource || 'online') === filters.orderSource);
+  }
+
+  // Filter by order type (delivery / takeaway / dine-in)
+  if (filters.orderType && filters.orderType !== 'All') {
+    filtered = filtered.filter((order) => (order.orderType || 'delivery') === filters.orderType);
   }
 
   // Filter by search

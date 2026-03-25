@@ -3,8 +3,8 @@ const mongoose = require('mongoose');
 const orderSchema = new mongoose.Schema({
   orderId: {
     type: String,
-    required: true,
     unique: true,
+    // Not required here — the pre-save hook always generates it before validation
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -13,11 +13,11 @@ const orderSchema = new mongoose.Schema({
   },
   customerInfo: {
     fullName: { type: String, required: true },
-    email: { type: String, required: true },
-    phone: { type: String, required: true },
-    address: { type: String, required: true },
-    city: { type: String, required: true },
-    postalCode: { type: String, required: true },
+    email: { type: String },
+    phone: { type: String },
+    address: { type: String },
+    city: { type: String },
+    postalCode: { type: String },
     additionalNotes: String
   },
   items: [{
@@ -63,15 +63,33 @@ const orderSchema = new mongoose.Schema({
     timestamp: { type: Date, default: Date.now }
   }],
   isGuestOrder: { type: Boolean, default: false, index: true },
+  orderSource: { type: String, enum: ['online', 'in-store'], default: 'online', index: true },
+  orderType: { type: String, enum: ['delivery', 'takeaway', 'dine-in'], default: 'delivery' },
+  tableNumber: { type: String, default: null },
   orderDate: { type: Date, default: Date.now, index: true }
 }, {
   timestamps: true
 });
 
 // Generate orderId before saving if not provided
+// Also enforce required fields for online orders
 orderSchema.pre('save', function (next) {
   if (!this.orderId) {
     this.orderId = `ORD-${Date.now()}`;
+  }
+  // Online orders require delivery address fields
+  if (this.orderSource === 'online' || !this.orderSource) {
+    const ci = this.customerInfo || {};
+    if (!ci.email) return next(new Error('Email is required for online orders'));
+    if (!ci.phone) return next(new Error('Phone is required for online orders'));
+    if (!ci.address) return next(new Error('Address is required for online orders'));
+    if (!ci.city) return next(new Error('City is required for online orders'));
+    if (!ci.postalCode) return next(new Error('Postal code is required for online orders'));
+  }
+  // Default fullName for in-store anonymous orders
+  if (this.orderSource === 'in-store' && !this.customerInfo?.fullName) {
+    if (!this.customerInfo) this.customerInfo = {};
+    this.customerInfo.fullName = 'Walk-in Customer';
   }
   next();
 });

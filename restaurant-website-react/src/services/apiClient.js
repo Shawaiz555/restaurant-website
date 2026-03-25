@@ -36,9 +36,17 @@ class APIClient {
       return data.accessToken;
     } catch (error) {
       // Refresh failed, user needs to login
+      // Check role BEFORE clearing storage to redirect to the right login page
+      const STAFF_ROLES = ['super_admin', 'manager', 'employee', 'chef'];
+      let isStaff = false;
+      try {
+        const stored = localStorage.getItem('currentUser');
+        const user = stored ? JSON.parse(stored) : null;
+        isStaff = user && STAFF_ROLES.includes(user.role);
+      } catch {}
       this.setToken(null);
       localStorage.removeItem('currentUser');
-      window.location.href = '/login';
+      window.location.href = isStaff ? '/staff/login' : '/login';
       throw error;
     }
   }

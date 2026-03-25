@@ -131,27 +131,27 @@ const StaffLogin = () => {
                 {
                   label: "Super Admin",
                   icon: Shield,
-                  color: "border border-gray-300 text-dark",
+                  color: "text-dark",
                 },
                 {
                   label: "Manager",
                   icon: Users,
-                  color: "border border-gray-300 text-dark",
+                  color: "text-dark",
                 },
                 {
                   label: "Employee",
                   icon: Users,
-                  color: "border border-gray-300 text-dark",
+                  color: "text-dark",
                 },
                 {
                   label: "Chef",
                   icon: ChefHat,
-                  color: "border border-gray-300 text-dark",
+                  color: "text-dark",
                 },
               ].map(({ label, icon: Icon, color }) => (
                 <span
                   key={label}
-                  className={`inline-flex items-center gap-1 px-3 py-2 rounded-xl text-[10px] sm:text-xs font-semibold ${color}`}
+                  className={`inline-flex items-center justify-center gap-1 px-3 py-2 rounded-xl text-[10px] sm:text-xs font-semibold ${color}`}
                 >
                   <Icon className="w-3.5 h-3.5" />
                   {label}

@@ -38,6 +38,10 @@ import {
   ChevronsLeft,
   ChevronsRight,
   Trash2,
+  ShoppingBag,
+  TableIcon,
+  Wifi,
+  Store,
 } from "lucide-react";
 
 const getPrintColumns = (currencySymbol) => [
@@ -259,12 +263,13 @@ const AdminOrders = () => {
   useEffect(() => {
     setCurrentPage(1);
     setSelectedIds([]);
-  }, [filters.search, filters.status, filters.userType]);
+  }, [filters.search, filters.status, filters.userType, filters.orderSource, filters.orderType]);
 
   const buildSubtitle = () => {
     const parts = [];
     if (filters.status !== "All") parts.push(`Status: ${filters.status}`);
     if (filters.userType !== "All") parts.push(`Type: ${filters.userType}`);
+    if (filters.orderSource !== "All") parts.push(`Source: ${filters.orderSource}`);
     if (filters.search) parts.push(`Search: "${filters.search}"`);
     if (selectedIds.length > 0)
       parts.push(`${selectedIds.length} rows selected`);
@@ -314,7 +319,7 @@ const AdminOrders = () => {
 
       {/* Filters */}
       <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-lg border border-gray-100">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4">
           {/* Search */}
           <SearchBar
             placeholder="Search by Order Id, Name, or Email..."
@@ -332,6 +337,17 @@ const AdminOrders = () => {
             <option value="Processing">Processing</option>
             <option value="Completed">Completed</option>
             <option value="Cancelled">Cancelled</option>
+          </select>
+
+          {/* Order Source Filter */}
+          <select
+            value={filters.orderSource}
+            onChange={(e) => handleFilterChange("orderSource", e.target.value)}
+            className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all bg-white text-sm sm:text-md"
+          >
+            <option value="All">All Sources</option>
+            <option value="online">Online Orders</option>
+            <option value="in-store">In-Store (POS)</option>
           </select>
 
           {/* User Type Filter */}
@@ -535,6 +551,29 @@ const AdminOrders = () => {
                           <span className="text-xs font-mono font-semibold text-dark group-hover:text-primary transition-colors">
                             {order.orderId?.substring(0, 12)}...
                           </span>
+                          {order.orderSource === "in-store" ? (
+                            <span className="inline-flex items-center text-[10px] bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full font-semibold gap-1">
+                              <Store className="w-3 h-3" />
+                              In-Store
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center text-[10px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full font-semibold gap-1">
+                              <Wifi className="w-3 h-3" />
+                              Online
+                            </span>
+                          )}
+                          {order.orderSource === "in-store" && order.orderType === "dine-in" && (
+                            <span className="inline-flex items-center text-[10px] bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-full font-semibold gap-1">
+                              <TableIcon className="w-3 h-3" />
+                              {order.tableNumber ? `T${order.tableNumber}` : "Dine-In"}
+                            </span>
+                          )}
+                          {order.orderSource === "in-store" && order.orderType === "takeaway" && (
+                            <span className="inline-flex items-center text-[10px] bg-amber-50 text-amber-600 px-2 py-0.5 rounded-full font-semibold gap-1">
+                              <ShoppingBag className="w-3 h-3" />
+                              Takeaway
+                            </span>
+                          )}
                           {order.isGuestOrder && (
                             <span className="inline-flex items-center text-[10px] bg-gray-100 text-gray-700 px-2 py-0.5 rounded-full font-semibold gap-1">
                               <User className="w-3 h-3" />

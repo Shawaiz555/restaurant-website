@@ -8,10 +8,10 @@ const {
   deleteOrder,
   getOrderStats
 } = require('../controllers/orderController');
-const { protect, authorize } = require('../middleware/auth');
+const { protect, authorize, optionalAuth } = require('../middleware/auth');
 
-// Public — guests and logged-in users can place orders
-router.post('/', placeOrder);
+// Public — guests and logged-in users can place orders; optionalAuth attaches staff user if token present
+router.post('/', optionalAuth, placeOrder);
 
 // All staff can view orders and update status
 router.get('/',              protect, authorize('super_admin', 'manager', 'employee', 'chef'), getOrders);

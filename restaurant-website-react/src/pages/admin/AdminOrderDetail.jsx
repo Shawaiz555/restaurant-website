@@ -28,6 +28,10 @@ import {
   ClipboardList,
   ChevronDown,
   Tag,
+  Store,
+  ShoppingBag,
+  TableIcon,
+  Wifi,
 } from "lucide-react";
 
 const STATUS_OPTIONS = ["Pending", "Processing", "Completed", "Cancelled"];
@@ -171,6 +175,17 @@ const AdminOrderDetail = () => {
                 {order.isGuestOrder && (
                   <span className="inline-flex items-center px-2.5 py-0.5 rounded-lg text-xs font-medium bg-orange-100 text-orange-700">
                     Guest Order
+                  </span>
+                )}
+                {order.orderSource === "in-store" ? (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg text-xs font-medium bg-amber-100 text-amber-700">
+                    <Store className="w-3 h-3" />
+                    In-Store
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg text-xs font-medium bg-blue-50 text-blue-600">
+                    <Wifi className="w-3 h-3" />
+                    Online
                   </span>
                 )}
               </div>
@@ -343,6 +358,24 @@ const AdminOrderDetail = () => {
                 <StatusBadge status={order.status} />
               </div>
             </div>
+            {/* In-store order type */}
+            {order.orderSource === "in-store" && (
+              <div className="flex items-start gap-3 bg-amber-50 rounded-xl p-3.5 border border-amber-100">
+                {order.orderType === "dine-in" ? (
+                  <TableIcon className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
+                ) : (
+                  <ShoppingBag className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
+                )}
+                <div>
+                  <p className="text-xs text-amber-700 font-semibold mb-0.5">Order Type</p>
+                  <p className="text-sm font-bold text-amber-800 capitalize">
+                    {order.orderType === "dine-in"
+                      ? `Dine-In${order.tableNumber ? ` — Table ${order.tableNumber}` : ""}`
+                      : "Takeaway"}
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

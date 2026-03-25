@@ -2,7 +2,7 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 
-const STAFF_ROLES = ["super_admin", "manager", "employee", "chef"];
+const STAFF_ROLES = ["super_admin", "manager", "employee", "chef"]; // used for role permission check below
 
 /**
  * ProtectedRoute
@@ -17,7 +17,8 @@ const ProtectedRoute = ({ children, requiredRole, allowedRoles }) => {
   const { isAuthenticated, userRole } = useAuth();
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    // ProtectedRoute is ONLY used on /admin/* routes, so always redirect to staff login
+    return <Navigate to="/staff/login" replace />;
   }
 
   // Resolve which roles are allowed

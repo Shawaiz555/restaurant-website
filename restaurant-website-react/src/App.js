@@ -47,6 +47,7 @@ import AdminStaffManagement from './pages/admin/AdminStaffManagement';
 import AdminPayments from './pages/admin/AdminPayments';
 import AdminKitchenQueue from './pages/admin/AdminKitchenQueue';
 import AdminSystemSettings from './pages/admin/AdminSystemSettings';
+import AdminPOS from './pages/admin/AdminPOS';
 
 // Auth Pages
 import StaffLogin from './pages/StaffLogin';
@@ -247,6 +248,13 @@ function AppContent() {
           <Route path="kitchen-queue" element={
             <RoleGuard allowedRoles={['super_admin', 'manager', 'chef']}>
               <AdminKitchenQueue />
+            </RoleGuard>
+          } />
+
+          {/* POS / New Order — super_admin, manager, employee */}
+          <Route path="pos" element={
+            <RoleGuard allowedRoles={['super_admin', 'manager', 'employee']}>
+              <AdminPOS />
             </RoleGuard>
           } />
 

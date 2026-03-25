@@ -29,15 +29,16 @@ const AdminHeader = ({ onMenuToggle }) => {
   }, []);
 
   const handleLogout = () => {
+    // Navigate BEFORE clearing auth state so ProtectedRoute sees /staff/login, not /admin/*
+    navigate("/staff/login", { replace: true });
     dispatch(logout());
     localStorage.removeItem("token");
     dispatch(
       showNotification({
         type: "success",
-        message: "Admin Logged out successfully!",
+        message: "Logged out successfully!",
       }),
     );
-    navigate("/");
   };
 
   // Generate breadcrumbs from pathname
