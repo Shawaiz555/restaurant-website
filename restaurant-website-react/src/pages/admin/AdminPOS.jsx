@@ -160,7 +160,6 @@ const ProductConfigurator = ({ product, onAdd, onClose }) => {
                 </div>
               </div>
             )}
-
         </div>
 
         {/* Footer — quantity & add */}
@@ -348,6 +347,7 @@ const AdminPOS = () => {
   const [placing, setPlacing] = useState(false);
   const [successOrder, setSuccessOrder] = useState(null); // { orderId, orderType, tableNumber }
   const [showMobileCart, setShowMobileCart] = useState(false);
+  const [showAddons, setShowAddons] = useState(false);
 
   // Load products
   const loadProducts = useCallback(async () => {
@@ -648,15 +648,18 @@ const AdminPOS = () => {
             </div>
           </div>
 
-          {/* Category tabs */}
+          {/* Category tabs + Add-ons toggle */}
           <div className="bg-white rounded-2xl p-4 shadow-lg border border-gray-100">
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
               {categories.map((cat) => (
                 <button
                   key={cat}
-                  onClick={() => setActiveCategory(cat)}
+                  onClick={() => {
+                    setActiveCategory(cat);
+                    setShowAddons(false);
+                  }}
                   className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
-                    activeCategory === cat
+                    !showAddons && activeCategory === cat
                       ? "bg-gradient-to-r from-primary to-primary-dark text-white shadow-md"
                       : "bg-gray-100 text-dark-gray hover:bg-primary hover:text-white"
                   }`}
@@ -664,73 +667,96 @@ const AdminPOS = () => {
                   {cat}
                 </button>
               ))}
+              {(addonItems.drinks.length > 0 ||
+                addonItems.desserts.length > 0 ||
+                addonItems.extras.length > 0) && (
+                <button
+                  onClick={() => setShowAddons((v) => !v)}
+                  className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
+                    showAddons
+                      ? "bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-md"
+                      : "bg-teal-50 text-teal-700 border border-teal-200 hover:bg-teal-100"
+                  }`}
+                >
+                  Add-ons
+                </button>
+              )}
             </div>
           </div>
 
-          {/* Product Grid */}
-          <div className="bg-white rounded-2xl p-4 shadow-lg border border-gray-100">
-            {loadingProducts ? (
-              <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3">
-                {[...Array(8)].map((_, i) => (
-                  <div
-                    key={i}
-                    className="rounded-xl bg-gray-100 animate-pulse h-44"
-                  />
-                ))}
-              </div>
-            ) : filteredProducts.length === 0 ? (
-              <div className="text-center py-16">
-                <Package className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-                <p className="text-dark-gray font-semibold">
-                  No products found
-                </p>
-                <p className="text-sm text-gray-400 mt-1">
-                  Try a different category or search term
-                </p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3">
-                {filteredProducts.map((product) => (
-                  <button
-                    key={product._id}
-                    onClick={() => setConfigProduct(product)}
-                    className="group relative flex flex-col bg-white rounded-xl border-2 border-gray-100 hover:border-primary/40 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 overflow-hidden text-left"
-                  >
-                    <div className="relative w-full aspect-[4/3] bg-cream-light overflow-hidden">
-                      <img
-                        src={getImageUrl(product)}
-                        alt={product.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        onError={(e) => {
-                          e.target.src =
-                            "https://via.placeholder.com/160x120?text=No+Image";
-                        }}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-dark/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                      <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center shadow-lg">
-                          <Plus className="w-4 h-4 text-white" />
+          {/* Product Grid or Add-ons Panel */}
+          {showAddons ? (
+            <LeftAddonPanel
+              addonItems={addonItems}
+              cartItems={cartItems}
+              onAddAddon={addToCart}
+              onQtyChange={changeQty}
+            />
+          ) : (
+            <div className="bg-white rounded-2xl p-4 shadow-lg border border-gray-100">
+              {loadingProducts ? (
+                <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3">
+                  {[...Array(8)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="rounded-xl bg-gray-100 animate-pulse h-44"
+                    />
+                  ))}
+                </div>
+              ) : filteredProducts.length === 0 ? (
+                <div className="text-center py-16">
+                  <Package className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+                  <p className="text-dark-gray font-semibold">
+                    No products found
+                  </p>
+                  <p className="text-sm text-gray-400 mt-1">
+                    Try a different category or search term
+                  </p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3">
+                  {filteredProducts.map((product) => (
+                    <button
+                      key={product._id}
+                      onClick={() => setConfigProduct(product)}
+                      className="group relative flex flex-col bg-white rounded-xl border-2 border-gray-100 hover:border-primary/40 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 overflow-hidden text-left"
+                    >
+                      <div className="relative w-full aspect-[4/3] bg-cream-light overflow-hidden">
+                        <img
+                          src={getImageUrl(product)}
+                          alt={product.name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          onError={(e) => {
+                            e.target.src =
+                              "https://via.placeholder.com/160x120?text=No+Image";
+                          }}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-dark/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center shadow-lg">
+                            <Plus className="w-4 h-4 text-white" />
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="p-3">
-                      <p className="font-semibold text-dark text-sm leading-tight line-clamp-2">
-                        {product.name}
-                      </p>
-                      <p className="text-primary font-bold text-sm mt-1">
-                        {formatPrice(
-                          product.sizes?.[0]?.price || product.basePrice,
-                        )}
-                      </p>
-                      <p className="text-xs text-dark-gray mt-0.5">
-                        {product.category}
-                      </p>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+                      <div className="p-3">
+                        <p className="font-semibold text-dark text-sm leading-tight line-clamp-2">
+                          {product.name}
+                        </p>
+                        <p className="text-primary font-bold text-sm mt-1">
+                          {formatPrice(
+                            product.sizes?.[0]?.price || product.basePrice,
+                          )}
+                        </p>
+                        <p className="text-xs text-dark-gray mt-0.5">
+                          {product.category}
+                        </p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* ── Right: Order Panel (desktop) ── */}
@@ -757,8 +783,6 @@ const AdminPOS = () => {
             onClear={clearCart}
             onPlace={handlePlaceOrder}
             formatPrice={formatPrice}
-            addonItems={addonItems}
-            onAddAddon={addToCart}
           />
         </div>
       </div>
@@ -811,8 +835,6 @@ const AdminPOS = () => {
                   handlePlaceOrder();
                 }}
                 formatPrice={formatPrice}
-                addonItems={addonItems}
-                onAddAddon={addToCart}
                 isMobile
               />
             </div>
@@ -832,13 +854,123 @@ const AdminPOS = () => {
   );
 };
 
-// ─── Order Panel (extracted for reuse in mobile drawer) ──────────────────────
+// ─── Left Add-ons Panel ───────────────────────────────────────────────────────
 
 const ADDON_TABS = [
   { key: "drinks", label: "Drinks" },
   { key: "desserts", label: "Desserts" },
   { key: "extras", label: "Extras" },
 ];
+
+const LeftAddonPanel = ({ addonItems, cartItems, onAddAddon, onQtyChange }) => {
+  const firstTab =
+    ADDON_TABS.find((t) => addonItems[t.key].length > 0)?.key || "drinks";
+  const [activeAddonTab, setActiveAddonTab] = useState(firstTab);
+
+  const addonCartId = (addon, type) =>
+    cartItems.find((i) => i.productId === `addon-${type}-${addon.name}`)
+      ?.cartId || null;
+
+  const addonCartQty = (addon, type) =>
+    cartItems.find((i) => i.productId === `addon-${type}-${addon.name}`)?.qty ||
+    0;
+
+  const addAddonToCart = (addon, type) =>
+    onAddAddon({
+      productId: `addon-${type}-${addon.name}`,
+      id: `addon-${type}-${addon.name}`,
+      name: addon.name,
+      basePrice: addon.price,
+      image: null,
+      selectedSize: null,
+      selectedSpice: null,
+      selectedDrinks: [],
+      selectedDesserts: [],
+      selectedExtras: [],
+      qty: 1,
+      _isAddon: true,
+    });
+
+  return (
+    <div className="bg-white rounded-2xl p-4 shadow-lg border border-gray-100">
+      <p className="text-xs font-bold text-dark-gray uppercase tracking-wider mb-3">
+        Add-ons
+      </p>
+      {/* Tabs */}
+      <div className="flex gap-1 mb-4 bg-gray-100 rounded-xl p-1">
+        {ADDON_TABS.filter((t) => addonItems[t.key].length > 0).map((t) => (
+          <button
+            key={t.key}
+            onClick={() => setActiveAddonTab(t.key)}
+            className={`flex-1 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+              activeAddonTab === t.key
+                ? "bg-white text-dark shadow-sm"
+                : "text-dark-gray hover:text-dark"
+            }`}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+      {/* Addon rows */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-2">
+        {(addonItems[activeAddonTab] || []).map((addon) => {
+          const cartId = addonCartId(addon, activeAddonTab);
+          const qty = addonCartQty(addon, activeAddonTab);
+          const inCart = qty > 0;
+          return (
+            <div
+              key={addon.name}
+              onClick={() => !inCart && addAddonToCart(addon, activeAddonTab)}
+              className={`flex flex-col p-3 rounded-xl border-2 transition-all cursor-pointer ${
+                inCart
+                  ? "bg-teal-50 border-teal-300"
+                  : "bg-white border-gray-100 hover:border-teal-300 hover:shadow-md hover:scale-[1.02]"
+              }`}
+            >
+              <p
+                className={`text-sm font-semibold leading-tight mb-1 ${inCart ? "text-teal-700" : "text-dark"}`}
+              >
+                {addon.name}
+              </p>
+              <p className="text-xs text-dark-gray mb-2">Rs. {addon.price}</p>
+              {inCart ? (
+                <div
+                  className="flex items-center gap-1.5 mt-auto"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <button
+                    onClick={() => onQtyChange(cartId, -1)}
+                    className="w-6 h-6 rounded-md bg-white border border-gray-200 hover:bg-gray-100 flex items-center justify-center transition-colors"
+                  >
+                    <Minus className="w-3 h-3 text-dark-gray" />
+                  </button>
+                  <span className="w-5 text-center text-xs font-bold text-teal-700">
+                    {qty}
+                  </span>
+                  <button
+                    onClick={() => onQtyChange(cartId, 1)}
+                    className="w-6 h-6 rounded-md bg-teal-100 hover:bg-teal-200 flex items-center justify-center transition-colors"
+                  >
+                    <Plus className="w-3 h-3 text-teal-700" />
+                  </button>
+                </div>
+              ) : (
+                <div className="mt-auto flex justify-end">
+                  <div className="w-6 h-6 bg-teal-100 rounded-full flex items-center justify-center">
+                    <Plus className="w-3.5 h-3.5 text-teal-600" />
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+// ─── Order Panel (extracted for reuse in mobile drawer) ──────────────────────
 
 const OrderPanel = ({
   cartItems,
@@ -862,370 +994,268 @@ const OrderPanel = ({
   onClear,
   onPlace,
   formatPrice,
-  addonItems,
-  onAddAddon,
   isMobile = false,
 }) => {
-  const hasAnyAddon =
-    addonItems &&
-    (addonItems.drinks.length > 0 ||
-      addonItems.desserts.length > 0 ||
-      addonItems.extras.length > 0);
-
-  // Default to first tab that actually has items
-  const firstTab =
-    addonItems &&
-    (ADDON_TABS.find((t) => addonItems[t.key].length > 0)?.key || "drinks");
-
-  const [activeAddonTab, setActiveAddonTab] = useState(firstTab || "drinks");
-
-  const addonCartId = (addon, type) =>
-    cartItems.find((i) => i.productId === `addon-${type}-${addon.name}`)?.cartId || null;
-
-  const addonCartQty = (addon, type) =>
-    cartItems.find((i) => i.productId === `addon-${type}-${addon.name}`)?.qty || 0;
-
-  const addAddonToCart = (addon, type) =>
-    onAddAddon({
-      productId: `addon-${type}-${addon.name}`,
-      id: `addon-${type}-${addon.name}`,
-      name: addon.name,
-      basePrice: addon.price,
-      image: null,
-      selectedSize: null,
-      selectedSpice: null,
-      selectedDrinks: [],
-      selectedDesserts: [],
-      selectedExtras: [],
-      qty: 1,
-      _isAddon: true,
-    });
-
   return (
-  <div className={`space-y-3 ${isMobile ? "" : ""}`}>
-    {/* Order type selector */}
-    <div className="bg-white rounded-2xl p-4 shadow-lg border border-gray-100">
-      <p className="text-xs font-bold text-dark-gray uppercase tracking-wider mb-3">
-        Order Type
-      </p>
-      <div className="grid grid-cols-2 gap-2">
-        <button
-          onClick={() => setOrderType("takeaway")}
-          className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 transition-all font-semibold text-sm ${
-            orderType === "takeaway"
-              ? "bg-primary/10 border-primary text-primary"
-              : "border-gray-200 text-dark-gray hover:border-primary/40"
-          }`}
-        >
-          <ShoppingBag className="w-5 h-5" />
-          Takeaway
-        </button>
-        <button
-          onClick={() => setOrderType("dine-in")}
-          className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 transition-all font-semibold text-sm ${
-            orderType === "dine-in"
-              ? "bg-blue-50 border-blue-500 text-blue-600"
-              : "border-gray-200 text-dark-gray hover:border-blue-300"
-          }`}
-        >
-          <TableIcon className="w-5 h-5" />
-          Dine-In
-        </button>
-      </div>
-
-      {/* Dine-In: Available Table Picker */}
-      {orderType === "dine-in" && (
-        <div className="mt-3">
-          <div className="flex items-center justify-between mb-2">
-            <label className="text-xs font-bold text-dark-gray uppercase tracking-wider">
-              Select Table *
-            </label>
-            <button
-              onClick={onRefreshTables}
-              disabled={loadingTables}
-              className="flex items-center gap-1 text-[11px] font-semibold text-blue-500 hover:text-blue-700 transition-colors"
-            >
-              <RefreshCw
-                className={`w-3 h-3 ${loadingTables ? "animate-spin" : ""}`}
-              />
-              Refresh
-            </button>
-          </div>
-
-          {loadingTables ? (
-            <div className="flex items-center justify-center py-6 gap-2 text-sm text-dark-gray">
-              <Loader2 className="w-4 h-4 animate-spin text-blue-500" />
-              Loading tables...
-            </div>
-          ) : availableTables.length === 0 ? (
-            <div className="text-center py-5 bg-red-50 rounded-xl border border-red-200">
-              <TableIcon className="w-7 h-7 mx-auto mb-1.5 text-red-400" />
-              <p className="text-xs font-semibold text-red-600">
-                No available tables
-              </p>
-              <p className="text-[11px] text-red-500 mt-0.5">
-                All tables are currently occupied or reserved
-              </p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-3 gap-2">
-              {availableTables.map((table) => {
-                const isSelected = selectedTable?._id === table._id;
-                return (
-                  <button
-                    key={table._id}
-                    onClick={() => setSelectedTable(isSelected ? null : table)}
-                    className={`relative flex flex-col items-center gap-1 p-2.5 rounded-xl border-2 transition-all ${
-                      isSelected
-                        ? "bg-blue-50 border-blue-500 text-blue-700 shadow-md"
-                        : "bg-gray-50 border-gray-200 text-dark-gray hover:border-blue-300 hover:bg-blue-50/50"
-                    }`}
-                  >
-                    {isSelected && (
-                      <div className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
-                        <CheckCircle className="w-2.5 h-2.5 text-white" />
-                      </div>
-                    )}
-                    <TableIcon
-                      className={`w-5 h-5 ${isSelected ? "text-blue-500" : "text-gray-400"}`}
-                    />
-                    <span className="text-xs font-bold leading-none">
-                      T{table.tableNumber}
-                    </span>
-                    <div className="flex items-center gap-0.5 text-[10px] opacity-70">
-                      <Users className="w-2.5 h-2.5" />
-                      {table.capacity}
-                    </div>
-                    {table.location && (
-                      <span className="text-[9px] opacity-60 truncate w-full text-center leading-none">
-                        {table.location}
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          )}
-
-          {selectedTable && (
-            <div className="mt-2 flex items-center gap-2 px-3 py-2 bg-blue-50 rounded-xl border border-blue-200">
-              <TableIcon className="w-3.5 h-3.5 text-blue-500 shrink-0" />
-              <p className="text-xs font-semibold text-blue-700 flex-1">
-                Table {selectedTable.tableNumber}
-                {selectedTable.name ? ` — ${selectedTable.name}` : ""}
-              </p>
-              <div className="flex items-center gap-1 text-[11px] text-blue-600">
-                <Users className="w-3 h-3" />
-                {selectedTable.capacity} seats
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-    </div>
-
-    {/* Cart items */}
-    <div className="bg-white rounded-2xl p-4 shadow-lg border border-gray-100">
-      <div className="flex items-center justify-between mb-3">
-        <p className="text-xs font-bold text-dark-gray uppercase tracking-wider">
-          Items
-        </p>
-        {cartItems.length > 0 && (
-          <button
-            onClick={onClear}
-            className="text-xs text-red-500 font-semibold hover:text-red-700 transition-colors"
-          >
-            Clear All
-          </button>
-        )}
-      </div>
-      {cartItems.length === 0 ? (
-        <div className="text-center py-8">
-          <UtensilsCrossed className="w-10 h-10 mx-auto mb-2 text-gray-300" />
-          <p className="text-sm text-dark-gray">No items yet</p>
-          <p className="text-xs text-gray-400 mt-1">
-            Select products from the menu
-          </p>
-        </div>
-      ) : (
-        <div>
-          {cartItems.map((item) => (
-            <CartItemRow
-              key={item.cartId}
-              item={item}
-              onRemove={onRemove}
-              onQtyChange={onQtyChange}
-              formatPrice={formatPrice}
-            />
-          ))}
-        </div>
-      )}
-    </div>
-
-    {/* Add-ons */}
-    {hasAnyAddon && (
+    <div className={`space-y-3 ${isMobile ? "" : ""}`}>
+      {/* Order type selector */}
       <div className="bg-white rounded-2xl p-4 shadow-lg border border-gray-100">
         <p className="text-xs font-bold text-dark-gray uppercase tracking-wider mb-3">
-          Add-ons
+          Order Type
         </p>
-        {/* Tabs */}
-        <div className="flex gap-1 mb-3 bg-gray-100 rounded-xl p-1">
-          {ADDON_TABS.filter((t) => addonItems[t.key].length > 0).map((t) => (
-            <button
-              key={t.key}
-              onClick={() => setActiveAddonTab(t.key)}
-              className={`flex-1 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                activeAddonTab === t.key
-                  ? "bg-white text-dark shadow-sm"
-                  : "text-dark-gray hover:text-dark"
-              }`}
-            >
-              {t.label}
-            </button>
-          ))}
+        <div className="grid grid-cols-2 gap-2">
+          <button
+            onClick={() => setOrderType("takeaway")}
+            className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 transition-all font-semibold text-sm ${
+              orderType === "takeaway"
+                ? "bg-primary/10 border-primary text-primary"
+                : "border-gray-200 text-dark-gray hover:border-primary/40"
+            }`}
+          >
+            <ShoppingBag className="w-5 h-5" />
+            Takeaway
+          </button>
+          <button
+            onClick={() => setOrderType("dine-in")}
+            className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 transition-all font-semibold text-sm ${
+              orderType === "dine-in"
+                ? "bg-blue-50 border-blue-500 text-blue-600"
+                : "border-gray-200 text-dark-gray hover:border-blue-300"
+            }`}
+          >
+            <TableIcon className="w-5 h-5" />
+            Dine-In
+          </button>
         </div>
-        {/* Addon rows — synced directly to cart */}
-        <div className="space-y-1">
-          {(addonItems[activeAddonTab] || []).map((addon) => {
-            const cartId = addonCartId(addon, activeAddonTab);
-            const qty = addonCartQty(addon, activeAddonTab);
-            const inCart = qty > 0;
-            return (
-              <div
-                key={addon.name}
-                onClick={() => inCart ? onRemove(cartId) : addAddonToCart(addon, activeAddonTab)}
-                className={`flex items-center justify-between py-2 px-2 rounded-xl border cursor-pointer transition-all ${
-                  inCart
-                    ? "bg-primary/5 border-primary/20"
-                    : "border-transparent hover:bg-gray-50"
-                }`}
+
+        {/* Dine-In: Available Table Picker */}
+        {orderType === "dine-in" && (
+          <div className="mt-3">
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-xs font-bold text-dark-gray uppercase tracking-wider">
+                Select Table *
+              </label>
+              <button
+                onClick={onRefreshTables}
+                disabled={loadingTables}
+                className="flex items-center gap-1 text-[11px] font-semibold text-blue-500 hover:text-blue-700 transition-colors"
               >
-                <div className="flex-1 min-w-0 mr-3">
-                  <p className={`text-sm truncate font-medium ${inCart ? "text-primary" : "text-dark"}`}>{addon.name}</p>
-                  <p className="text-xs text-dark-gray">Rs. {addon.price}</p>
-                </div>
-                {inCart && (
-                  <div
-                    className="flex items-center gap-1.5 shrink-0"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <button
-                      onClick={() => onQtyChange(cartId, -1)}
-                      className="w-6 h-6 rounded-md bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
-                    >
-                      <Minus className="w-3 h-3 text-dark-gray" />
-                    </button>
-                    <span className="w-5 text-center text-xs font-bold text-primary">{qty}</span>
-                    <button
-                      onClick={() => onQtyChange(cartId, 1)}
-                      className="w-6 h-6 rounded-md bg-primary/10 hover:bg-primary/20 flex items-center justify-center transition-colors"
-                    >
-                      <Plus className="w-3 h-3 text-primary" />
-                    </button>
-                  </div>
-                )}
+                <RefreshCw
+                  className={`w-3 h-3 ${loadingTables ? "animate-spin" : ""}`}
+                />
+                Refresh
+              </button>
+            </div>
+
+            {loadingTables ? (
+              <div className="flex items-center justify-center py-6 gap-2 text-sm text-dark-gray">
+                <Loader2 className="w-4 h-4 animate-spin text-blue-500" />
+                Loading tables...
               </div>
-            );
-          })}
-        </div>
-      </div>
-    )}
+            ) : availableTables.length === 0 ? (
+              <div className="text-center py-5 bg-red-50 rounded-xl border border-red-200">
+                <TableIcon className="w-7 h-7 mx-auto mb-1.5 text-red-400" />
+                <p className="text-xs font-semibold text-red-600">
+                  No available tables
+                </p>
+                <p className="text-[11px] text-red-500 mt-0.5">
+                  All tables are currently occupied or reserved
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-3 gap-2">
+                {availableTables.map((table) => {
+                  const isSelected = selectedTable?._id === table._id;
+                  return (
+                    <button
+                      key={table._id}
+                      onClick={() =>
+                        setSelectedTable(isSelected ? null : table)
+                      }
+                      className={`relative flex flex-col items-center gap-1 p-2.5 rounded-xl border-2 transition-all ${
+                        isSelected
+                          ? "bg-blue-50 border-blue-500 text-blue-700 shadow-md"
+                          : "bg-gray-50 border-gray-200 text-dark-gray hover:border-blue-300 hover:bg-blue-50/50"
+                      }`}
+                    >
+                      {isSelected && (
+                        <div className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
+                          <CheckCircle className="w-2.5 h-2.5 text-white" />
+                        </div>
+                      )}
+                      <TableIcon
+                        className={`w-5 h-5 ${isSelected ? "text-blue-500" : "text-gray-400"}`}
+                      />
+                      <span className="text-xs font-bold leading-none">
+                        T{table.tableNumber}
+                      </span>
+                      <div className="flex items-center gap-0.5 text-[10px] opacity-70">
+                        <Users className="w-2.5 h-2.5" />
+                        {table.capacity}
+                      </div>
+                      {table.location && (
+                        <span className="text-[9px] opacity-60 truncate w-full text-center leading-none">
+                          {table.location}
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
 
-    {/* Customer info */}
-    <div className="bg-white rounded-2xl p-4 shadow-lg border border-gray-100">
-      <p className="text-xs font-bold text-dark-gray uppercase tracking-wider mb-3">
-        Customer Info{" "}
-        <span className="normal-case font-normal text-gray-400">
-          (optional)
-        </span>
-      </p>
-      <div className="space-y-2">
-        <div className="relative">
-          <User className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Customer name"
-            value={customerName}
-            onChange={(e) => setCustomerName(e.target.value)}
-            className="w-full pl-8 pr-3 py-2 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all text-xs"
-          />
-        </div>
-        <div className="relative">
-          <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
-          <input
-            type="tel"
-            placeholder="Phone number"
-            value={customerPhone}
-            onChange={(e) => setCustomerPhone(e.target.value)}
-            className="w-full pl-8 pr-3 py-2 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all text-xs"
-          />
-        </div>
-        <div className="relative">
-          <ChefHat className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
-          <input
-            type="email"
-            placeholder="Email (for receipt)"
-            value={customerEmail}
-            onChange={(e) => setCustomerEmail(e.target.value)}
-            className="w-full pl-8 pr-3 py-2 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all text-xs"
-          />
-        </div>
-      </div>
-    </div>
-
-    {/* Summary & Place */}
-    <div className="bg-white rounded-2xl p-4 shadow-lg border border-gray-100">
-      <div className="space-y-2 mb-4">
-        <div className="flex justify-between text-sm">
-          <span className="text-dark-gray">Subtotal</span>
-          <span className="font-semibold text-dark">
-            {formatPrice(subtotal)}
-          </span>
-        </div>
-        <div className="flex justify-between text-sm">
-          <span className="text-dark-gray">Delivery Fee</span>
-          <span className="font-semibold text-green-600">Free (In-Store)</span>
-        </div>
-        <div className="flex justify-between items-center pt-2 border-t border-gray-100">
-          <span className="font-bold text-dark">Total</span>
-          <span className="font-bold text-xl text-primary">
-            {formatPrice(subtotal)}
-          </span>
-        </div>
-      </div>
-      {/* Payment badge */}
-      <div className="flex items-center gap-2 p-3 bg-green-50 rounded-xl border border-green-200 mb-3">
-        <Banknote className="w-4 h-4 text-green-600 shrink-0" />
-        <div>
-          <p className="text-xs font-bold text-green-700">Cash Payment</p>
-          <p className="text-[11px] text-green-600">
-            Collect payment at counter
-          </p>
-        </div>
-      </div>
-      <button
-        onClick={onPlace}
-        disabled={placing || cartItems.length === 0}
-        className={`w-full py-3.5 font-bold rounded-xl text-base transition-all flex items-center justify-center gap-2 ${
-          placing || cartItems.length === 0
-            ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-            : "bg-gradient-to-r from-primary to-primary-dark text-white hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
-        }`}
-      >
-        {placing ? (
-          <>
-            <RefreshCw className="w-4 h-4 animate-spin" />
-            Placing Order...
-          </>
-        ) : (
-          <>
-            <ChevronRight className="w-5 h-5" />
-            Place Order
-          </>
+            {selectedTable && (
+              <div className="mt-2 flex items-center gap-2 px-3 py-2 bg-blue-50 rounded-xl border border-blue-200">
+                <TableIcon className="w-3.5 h-3.5 text-blue-500 shrink-0" />
+                <p className="text-xs font-semibold text-blue-700 flex-1">
+                  Table {selectedTable.tableNumber}
+                  {selectedTable.name ? ` — ${selectedTable.name}` : ""}
+                </p>
+                <div className="flex items-center gap-1 text-[11px] text-blue-600">
+                  <Users className="w-3 h-3" />
+                  {selectedTable.capacity} seats
+                </div>
+              </div>
+            )}
+          </div>
         )}
-      </button>
+      </div>
+
+      {/* Cart items */}
+      <div className="bg-white rounded-2xl p-4 shadow-lg border border-gray-100">
+        <div className="flex items-center justify-between mb-3">
+          <p className="text-xs font-bold text-dark-gray uppercase tracking-wider">
+            Items
+          </p>
+          {cartItems.length > 0 && (
+            <button
+              onClick={onClear}
+              className="text-xs text-red-500 font-semibold hover:text-red-700 transition-colors"
+            >
+              Clear All
+            </button>
+          )}
+        </div>
+        {cartItems.length === 0 ? (
+          <div className="text-center py-8">
+            <UtensilsCrossed className="w-10 h-10 mx-auto mb-2 text-gray-300" />
+            <p className="text-sm text-dark-gray">No items yet</p>
+            <p className="text-xs text-gray-400 mt-1">
+              Select products from the menu
+            </p>
+          </div>
+        ) : (
+          <div>
+            {cartItems.map((item) => (
+              <CartItemRow
+                key={item.cartId}
+                item={item}
+                onRemove={onRemove}
+                onQtyChange={onQtyChange}
+                formatPrice={formatPrice}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Customer info */}
+      <div className="bg-white rounded-2xl p-4 shadow-lg border border-gray-100">
+        <p className="text-xs font-bold text-dark-gray uppercase tracking-wider mb-3">
+          Customer Info{" "}
+          <span className="normal-case font-normal text-gray-400">
+            (optional)
+          </span>
+        </p>
+        <div className="space-y-2">
+          <div className="relative">
+            <User className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Customer name"
+              value={customerName}
+              onChange={(e) => setCustomerName(e.target.value)}
+              className="w-full pl-8 pr-3 py-2 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all text-xs"
+            />
+          </div>
+          <div className="relative">
+            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
+            <input
+              type="tel"
+              placeholder="Phone number"
+              value={customerPhone}
+              onChange={(e) => setCustomerPhone(e.target.value)}
+              className="w-full pl-8 pr-3 py-2 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all text-xs"
+            />
+          </div>
+          <div className="relative">
+            <ChefHat className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
+            <input
+              type="email"
+              placeholder="Email (for receipt)"
+              value={customerEmail}
+              onChange={(e) => setCustomerEmail(e.target.value)}
+              className="w-full pl-8 pr-3 py-2 rounded-xl border-2 border-gray-200 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all text-xs"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Summary & Place */}
+      <div className="bg-white rounded-2xl p-4 shadow-lg border border-gray-100">
+        <div className="space-y-2 mb-4">
+          <div className="flex justify-between text-sm">
+            <span className="text-dark-gray">Subtotal</span>
+            <span className="font-semibold text-dark">
+              {formatPrice(subtotal)}
+            </span>
+          </div>
+          <div className="flex justify-between text-sm">
+            <span className="text-dark-gray">Delivery Fee</span>
+            <span className="font-semibold text-green-600">
+              Free (In-Store)
+            </span>
+          </div>
+          <div className="flex justify-between items-center pt-2 border-t border-gray-100">
+            <span className="font-bold text-dark">Total</span>
+            <span className="font-bold text-xl text-primary">
+              {formatPrice(subtotal)}
+            </span>
+          </div>
+        </div>
+        {/* Payment badge */}
+        <div className="flex items-center gap-2 p-3 bg-green-50 rounded-xl border border-green-200 mb-3">
+          <Banknote className="w-4 h-4 text-green-600 shrink-0" />
+          <div>
+            <p className="text-xs font-bold text-green-700">Cash Payment</p>
+            <p className="text-[11px] text-green-600">
+              Collect payment at counter
+            </p>
+          </div>
+        </div>
+        <button
+          onClick={onPlace}
+          disabled={placing || cartItems.length === 0}
+          className={`w-full py-3.5 font-bold rounded-xl text-base transition-all flex items-center justify-center gap-2 ${
+            placing || cartItems.length === 0
+              ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+              : "bg-gradient-to-r from-primary to-primary-dark text-white hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
+          }`}
+        >
+          {placing ? (
+            <>
+              <RefreshCw className="w-4 h-4 animate-spin" />
+              Placing Order...
+            </>
+          ) : (
+            <>
+              <ChevronRight className="w-5 h-5" />
+              Place Order
+            </>
+          )}
+        </button>
+      </div>
     </div>
-  </div>
   );
 };
 
